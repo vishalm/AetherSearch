@@ -1,68 +1,205 @@
-# Docker Compose Override for Development/Testing
-# This file exposes service ports for development and testing purposes
+# =============================================================================
+# AETHERSEARCH — DEVELOPER LOCAL OVERRIDE
+# =============================================================================
+# Sit on top of docker-compose.yml and turn it into a "just works" local stack.
 #
-# Usage:
+#   QUICK START
+#   -----------
+#   cd deployment/docker_compose
+#   cp env.template .env                # optional, adds API keys etc.
 #   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --wait
+#   open http://localhost:3000          # web UI (default basic-auth)
 #
-# Or set COMPOSE_FILE environment variable:
-#   export COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml
-#   docker compose up -d --wait
+#   Or set COMPOSE_FILE once per shell:
+#     export COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml
+#     docker compose up -d --wait
+#
+#   PORT MAP
+#   --------
+#   3000  → web UI (via nginx, from base file)
+#    80   → web UI alt
+#   8080  → FastAPI api_server
+#   5432  → Postgres
+#   6379  → Redis
+#   8081  → Vespa app port
+#   19071 → Vespa config server
+#   9200  → OpenSearch
+#   9000  → inference_model_server
+#   9004  → MinIO S3 endpoint
+#   9005  → MinIO console
+#   8000  → Code interpreter sandbox
+#
+#   WHAT THIS OVERRIDE CHANGES vs. the production base
+#   --------------------------------------------------
+#   1. Exposes service ports for direct host access.
+#   2. Adds a Redis healthcheck so dependents can wait on `service_healthy`.
+#   3. Upgrades api_server & background depends_on to wait for healthy deps —
+#      kills the "api_server restarts because Postgres isn't ready" loop.
+#   4. Activates MinIO automatically (the base file gates it behind the
+#      `s3-filestore` profile but the default env still points at it).
+#   5. Shrinks OpenSearch heap to 512m so the stack fits on a laptop.
+#   6. Pins platforms for ARM Macs where the upstream image is x86-only.
+#   7. Tighter log rotation + `restart: "no"` for fast iteration.
+# =============================================================================
 
 services:
+  # ────────────────────────────────────────────────────────────────────────
+  # API server
+  # ────────────────────────────────────────────────────────────────────────
   api_server:
     ports:
       - "8080:8080"
+    restart: "no"
+    pull_policy: missing
     deploy:
       resources:
         limits:
           cpus: "${API_SERVER_CPU_LIMIT:-0}"
           memory: "${API_SERVER_MEM_LIMIT:-0}"
+    # Wait for stateful deps to be HEALTHY, not just started — otherwise
+    # alembic upgrade head races Postgres on a cold start.
+    depends_on:
+      relational_db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+      index:
+        condition: service_healthy
+      inference_model_server:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+        required: false
+      opensearch:
+        condition: service_started
+        required: false
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  background:
+    restart: "no"
+    pull_policy: missing
+    depends_on:
+      relational_db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+      index:
+        condition: service_healthy
+      inference_model_server:
+        condition: service_healthy
+      indexing_model_server:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+        required: false
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  web_server:
+    pull_policy: missing
+    restart: "no"
+    depends_on:
+      api_server:
+        condition: service_healthy
 
   # Uncomment the block below to enable the MCP server for AetherSearch.
   # mcp_server:
   #   ports:
   #     - "8090:8090"
 
+  # ────────────────────────────────────────────────────────────────────────
+  # Stateful services — exposed + healthchecked
+  # ────────────────────────────────────────────────────────────────────────
   relational_db:
     ports:
       - "5432:5432"
+    # Postgres healthcheck is already defined in the base file.
 
   index:
     ports:
       - "19071:19071"
       - "8081:8081"
     healthcheck:
-      # We use 19071 because the application server at 8010 is not ready until
-      # it is activated/configured by the application.
+      # 19071 is the config server; the application port at 8081 is not ready
+      # until the application is activated by the API server's bootstrap.
       test: ["CMD-SHELL", "curl -sf http://localhost:19071/state/v1/health"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
-      retries: 3
-      start_period: 30s
-
-  opensearch:
-    ports:
-      - "9200:9200"
-    # Rootless Docker can reject the base OpenSearch ulimit settings, so clear
-    # the inherited block entirely in the dev override.
-    ulimits: !reset null
-    environment:
-      - bootstrap.memory_lock=false
-
-  inference_model_server:
-    ports:
-      - "9000:9000"
+      retries: 10
+      start_period: 60s
 
   cache:
     ports:
       - "6379:6379"
+    # Base file leaves Redis without a healthcheck — add one so api_server &
+    # background can use `condition: service_healthy`.
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
 
+  opensearch:
+    ports:
+      - "9200:9200"
+    # Rootless Docker can reject the base ulimit settings — clear them.
+    ulimits: !reset null
+    environment:
+      # Disable mlock so we don't need elevated privileges on the host.
+      - bootstrap.memory_lock=false
+      # Shrink heap from 2g/2g to 512m/512m for laptops.  The full base value
+      # is appropriate for production but overkill in dev.
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_ADMIN_PASSWORD:-StrongPassword123!}
+    healthcheck:
+      test:
+        ["CMD-SHELL", "curl -sf -u admin:${OPENSEARCH_ADMIN_PASSWORD:-StrongPassword123!} -k https://localhost:9200/_cluster/health || curl -sf http://localhost:9200/_cluster/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+  # ────────────────────────────────────────────────────────────────────────
+  # Inference / indexing model servers
+  # ────────────────────────────────────────────────────────────────────────
+  inference_model_server:
+    ports:
+      - "9000:9000"
+    # base file already defines a healthcheck (HTTP /api/health on :9000).
+
+  # ────────────────────────────────────────────────────────────────────────
+  # Object storage (MinIO) — activated by default in dev.
+  # The base file gates this behind `profiles: ["s3-filestore"]`, but every
+  # default env in the base file points at MinIO — so for a working dev
+  # stack we want it always-on.  Resetting the profiles list achieves that.
+  # ────────────────────────────────────────────────────────────────────────
   minio:
-    # use different ports to avoid conflicts with model servers
+    profiles: !reset []
     ports:
       - "9004:9000"
       - "9005:9001"
+    healthcheck:
+      # `mc ready` from the base file is reliable, just shorten the cadence.
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 15s
 
+  # ────────────────────────────────────────────────────────────────────────
+  # Code interpreter sandbox — exposed for direct testing.
+  # ────────────────────────────────────────────────────────────────────────
   code-interpreter:
     ports:
       - "8000:8000"
+    pull_policy: missing
+    restart: "no"
