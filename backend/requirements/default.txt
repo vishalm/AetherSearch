@@ -1090,7 +1090,7 @@ voyageai==0.2.3
     # via aethersearch
 watchfiles==1.1.1
     # via fastmcp
-wcwidth==0.2.14
+wcwidth==0.6.0
     # via prompt-toolkit
 webencodings==0.5.1
     # via html5lib

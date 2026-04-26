@@ -610,7 +610,7 @@ virtualenv==20.36.1
     # via pre-commit
 voyageai==0.2.3
     # via aethersearch
-wcwidth==0.2.14
+wcwidth==0.6.0
     # via prompt-toolkit
 websocket-client==1.9.0
     # via kubernetes
