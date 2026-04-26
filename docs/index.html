@@ -1,0 +1,1175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="dark" />
+<title>AetherSearch — Enterprise AI Search & Agentic Knowledge Platform</title>
+<meta name="description" content="AetherSearch is a self-hostable enterprise AI search platform: agentic RAG, deep research, custom agents, voice, code execution, and 60+ connectors over your team's knowledge." />
+
+<meta property="og:title" content="AetherSearch — Enterprise AI Search & Agentic Knowledge Platform" />
+<meta property="og:description" content="Connect every system, every team, every document. Self-hostable agentic AI search for the enterprise." />
+<meta property="og:type" content="website" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="styles.css" />
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236a8bff'/%3E%3Cstop offset='1' stop-color='%23ff5cb4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Cpath d='M20 44L32 18L44 44M24 36H40' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+<!-- ─────────────────────────────────  NAV  ───────────────────────────────── -->
+<header class="nav" id="nav">
+  <div class="shell nav-inner">
+    <a class="brand" href="#top" aria-label="AetherSearch home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 19L12 4L19 19M8 14H16"/>
+        </svg>
+      </span>
+      <span>AetherSearch</span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#features">Features</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#workers">Workers</a>
+      <a href="#connectors">Connectors</a>
+      <a href="#deploy">Deploy</a>
+      <a class="nav-cta" href="https://github.com/vishalm/ai-enterprise-search-chat-aethersearch" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.4 7.86 10.93.58.11.79-.25.79-.56v-2c-3.2.69-3.87-1.36-3.87-1.36-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.69 1.25 3.35.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.18.91-.25 1.89-.38 2.86-.38.97 0 1.95.13 2.86.38 2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.76.11 3.05.74.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.13v3.16c0 .31.21.67.79.56C20.21 21.39 23.5 17.07 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
+        Star on GitHub
+      </a>
+    </nav>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────  HERO  ──────────────────────────────── -->
+<section class="hero" id="top">
+  <div class="hero-aurora" aria-hidden="true"></div>
+  <div class="shell hero-stage">
+    <span class="eyebrow"><span class="dot"></span> Open Source · Self-Hostable · MIT Licensed</span>
+    <h1>The <span class="gradient-text">application layer</span> for LLMs.</h1>
+    <p class="subtitle">
+      AetherSearch is a feature-rich, self-hostable enterprise AI platform for retrieval-augmented generation,
+      deep research, custom agents, and agentic workflows — over every system your team uses.
+    </p>
+    <div class="hero-cta-row">
+      <a class="btn btn-primary" href="#architecture">
+        Explore the architecture
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+      <a class="btn btn-secondary" href="https://github.com/vishalm/ai-enterprise-search-chat-aethersearch" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.4 7.86 10.93.58.11.79-.25.79-.56v-2c-3.2.69-3.87-1.36-3.87-1.36-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.69 1.25 3.35.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.18.91-.25 1.89-.38 2.86-.38.97 0 1.95.13 2.86.38 2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.76.11 3.05.74.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.13v3.16c0 .31.21.67.79.56C20.21 21.39 23.5 17.07 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
+        View source
+      </a>
+    </div>
+
+    <!-- Hero Stats -->
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">62+</div>
+        <div class="hero-stat-label">Connectors</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">9</div>
+        <div class="hero-stat-label">Celery Workers</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">50+</div>
+        <div class="hero-stat-label">LLM Providers</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">MIT</div>
+        <div class="hero-stat-label">License</div>
+      </div>
+    </div>
+
+    <!-- Hero Orbit Visualization -->
+    <div class="hero-orbit reveal" aria-hidden="true">
+      <svg viewBox="0 0 880 500" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="core-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#8a5cff" stop-opacity="1"/>
+            <stop offset="55%" stop-color="#6a8bff" stop-opacity=".4"/>
+            <stop offset="100%" stop-color="#6a8bff" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="ring-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#6a8bff"/>
+            <stop offset=".5" stop-color="#8a5cff"/>
+            <stop offset="1" stop-color="#ff5cb4"/>
+          </linearGradient>
+          <filter id="soft-blur"><feGaussianBlur stdDeviation="2"/></filter>
+        </defs>
+
+        <!-- Outer halo -->
+        <circle cx="440" cy="250" r="220" fill="url(#core-glow)" opacity=".55"/>
+
+        <!-- Concentric rings -->
+        <g fill="none" stroke="url(#ring-grad)" stroke-opacity=".35">
+          <ellipse cx="440" cy="250" rx="320" ry="120" stroke-width="1"/>
+          <ellipse cx="440" cy="250" rx="240" ry="90" stroke-width="1"/>
+          <ellipse cx="440" cy="250" rx="160" ry="60" stroke-width="1"/>
+        </g>
+
+        <!-- Rotating dotted rings -->
+        <g style="transform-origin:440px 250px; animation: spin-slow 38s linear infinite;">
+          <ellipse cx="440" cy="250" rx="320" ry="120" fill="none" stroke="#8a5cff" stroke-opacity=".7" stroke-width="1.4" stroke-dasharray="2 18"/>
+        </g>
+        <g style="transform-origin:440px 250px; animation: spin-slow 26s linear infinite reverse;">
+          <ellipse cx="440" cy="250" rx="240" ry="90" fill="none" stroke="#34f0c8" stroke-opacity=".5" stroke-width="1.2" stroke-dasharray="2 16"/>
+        </g>
+
+        <!-- Core node -->
+        <g style="transform-origin:440px 250px;" class="svg-pulse-node">
+          <circle cx="440" cy="250" r="46" fill="#0a0d1a" stroke="url(#ring-grad)" stroke-width="2"/>
+          <circle cx="440" cy="250" r="34" fill="url(#ring-grad)" opacity=".18"/>
+          <path d="M428 268L440 234L452 268M433 258H447" stroke="url(#ring-grad)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </g>
+
+        <!-- Orbiting connector nodes (positioned around outer ellipse) -->
+        <g font-family="Inter, sans-serif" font-size="11" fill="#e8ecff">
+          <!-- Slack -->
+          <g transform="translate(120,250)">
+            <circle r="20" fill="#0a0d1a" stroke="#6a8bff" stroke-width="1.4"/>
+            <text text-anchor="middle" dy="4" fill="#9bb0ff" font-weight="600">SK</text>
+          </g>
+          <!-- Notion -->
+          <g transform="translate(220,160)">
+            <circle r="18" fill="#0a0d1a" stroke="#8a5cff" stroke-width="1.4"/>
+            <text text-anchor="middle" dy="4" fill="#b89bff" font-weight="600">NT</text>
+          </g>
+          <!-- GitHub -->
+          <g transform="translate(330,360)">
+            <circle r="16" fill="#0a0d1a" stroke="#34f0c8" stroke-width="1.4"/>
+            <text text-anchor="middle" dy="4" fill="#34f0c8" font-weight="600">GH</text>
+          </g>
+          <!-- Gmail -->
+          <g transform="translate(660,150)">
+            <circle r="18" fill="#0a0d1a" stroke="#ff5cb4" stroke-width="1.4"/>
+            <text text-anchor="middle" dy="4" fill="#ffb0db" font-weight="600">GM</text>
+          </g>
+          <!-- Confluence -->
+          <g transform="translate(760,250)">
+            <circle r="20" fill="#0a0d1a" stroke="#6a8bff" stroke-width="1.4"/>
+            <text text-anchor="middle" dy="4" fill="#9bb0ff" font-weight="600">CF</text>
+          </g>
+          <!-- Drive -->
+          <g transform="translate(560,360)">
+            <circle r="18" fill="#0a0d1a" stroke="#ffce5c" stroke-width="1.4"/>
+            <text text-anchor="middle" dy="4" fill="#ffce5c" font-weight="600">GD</text>
+          </g>
+          <!-- Jira -->
+          <g transform="translate(180,360)">
+            <circle r="14" fill="#0a0d1a" stroke="#9bb0ff" stroke-width="1.2"/>
+            <text text-anchor="middle" dy="3.5" fill="#9bb0ff" font-weight="600" font-size="9">JR</text>
+          </g>
+          <!-- Linear -->
+          <g transform="translate(700,340)">
+            <circle r="14" fill="#0a0d1a" stroke="#b89bff" stroke-width="1.2"/>
+            <text text-anchor="middle" dy="3.5" fill="#b89bff" font-weight="600" font-size="9">LN</text>
+          </g>
+        </g>
+
+        <!-- Connection lines from core to a few nodes -->
+        <g stroke-width="1.2" fill="none" opacity=".55">
+          <path d="M440 250 L120 250" stroke="#6a8bff" class="svg-flow"/>
+          <path d="M440 250 L760 250" stroke="#6a8bff" class="svg-flow" style="animation-delay:.4s"/>
+          <path d="M440 250 L220 160" stroke="#8a5cff" class="svg-flow" style="animation-delay:.8s"/>
+          <path d="M440 250 L660 150" stroke="#ff5cb4" class="svg-flow" style="animation-delay:1.2s"/>
+          <path d="M440 250 L330 360" stroke="#34f0c8" class="svg-flow" style="animation-delay:1.6s"/>
+          <path d="M440 250 L560 360" stroke="#ffce5c" class="svg-flow" style="animation-delay:2s"/>
+        </g>
+
+        <!-- Floating flecks -->
+        <g fill="#fff" opacity=".5">
+          <circle cx="80"  cy="60"  r="1.4"/>
+          <circle cx="820" cy="80"  r="1"/>
+          <circle cx="40"  cy="420" r="1.2"/>
+          <circle cx="850" cy="430" r="1"/>
+          <circle cx="430" cy="40"  r="1"/>
+          <circle cx="430" cy="470" r="1.2"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  FEATURES  ─────────────────────────────── -->
+<section id="features">
+  <div class="shell">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span> Capabilities</span>
+      <h2>Everything an enterprise needs from <span class="gradient-text">applied AI</span>.</h2>
+      <p>From hybrid retrieval to agentic research, voice, and code execution — AetherSearch unifies the toolbox for grounded, auditable AI in your stack.</p>
+    </div>
+
+    <div class="features-grid">
+      <!-- Agentic RAG -->
+      <article class="feature-card reveal">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9bb0ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="6.5"/>
+            <path d="M16 16l4.5 4.5"/>
+            <path d="M11 7v8M7 11h8" stroke="#ff5cb4"/>
+          </svg>
+        </div>
+        <h3>Agentic RAG</h3>
+        <p>Best-in-class retrieval quality with hybrid keyword + vector search and AI agents that plan, retrieve, and reason.</p>
+      </article>
+
+      <!-- Deep Research -->
+      <article class="feature-card reveal">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#b89bff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 4h18v3H3zM3 10.5h18v3H3zM3 17h12v3H3z"/>
+            <circle cx="19" cy="18.5" r="3" stroke="#34f0c8"/>
+            <path d="M21 20.5l2 2" stroke="#34f0c8"/>
+          </svg>
+        </div>
+        <h3>Deep Research</h3>
+        <p>Multi-step research flow that generates rigorously cited, in-depth reports — built on iterative agentic exploration.</p>
+      </article>
+
+      <!-- Custom Agents -->
+      <article class="feature-card reveal">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#34f0c8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="6" width="16" height="12" rx="3"/>
+            <circle cx="9" cy="12" r="1.4" fill="#34f0c8"/>
+            <circle cx="15" cy="12" r="1.4" fill="#34f0c8"/>
+            <path d="M12 6V3M9 21h6" stroke="#9bb0ff"/>
+          </svg>
+        </div>
+        <h3>Custom Agents</h3>
+        <p>Build agents with bespoke instructions, tools, knowledge, and actions — composable for any workflow.</p>
+      </article>
+
+      <!-- Web Search -->
+      <article class="feature-card reveal">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffce5c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>
+          </svg>
+        </div>
+        <h3>Live Web Search</h3>
+        <p>Pluggable web providers — Serper, Google PSE, Brave, SearXNG — for fresh, citable answers from the open internet.</p>
+      </article>
+
+      <!-- Artifacts -->
+      <article class="feature-card reveal">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ff5cb4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+            <path d="M14 3v6h6" stroke="#9bb0ff"/>
+            <path d="M9 13h6M9 17h6"/>
+          </svg>
+        </div>
+        <h3>Artifacts</h3>
+        <p>Generate documents, graphics, and downloadable assets directly from a chat — output that goes beyond text.</p>
+      </article>
+
+      <!-- Actions / MCP -->
+      <article class="feature-card reveal">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6a8bff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v18M3 12h18"/>
+            <circle cx="12" cy="12" r="4" stroke="#ff5cb4"/>
+          </svg>
+        </div>
+        <h3>Actions & MCP</h3>
+        <p>Let agents talk back to your tools — read and write across systems with flexible auth and a Model Context Protocol bridge.</p>
+      </article>
+
+      <!-- Code Execution -->
+      <article class="feature-card reveal">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#34f0c8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 6l-5 6 5 6M16 6l5 6-5 6M14 4l-4 16"/>
+          </svg>
+        </div>
+        <h3>Code Execution</h3>
+        <p>Run code in a sandbox to analyze data, render charts, transform files, and explore datasets in-conversation.</p>
+      </article>
+
+      <!-- Voice + Image -->
+      <article class="feature-card reveal">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffce5c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="3" width="6" height="12" rx="3"/>
+            <path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/>
+          </svg>
+        </div>
+        <h3>Voice & Image</h3>
+        <p>Speech-to-text and text-to-speech for natural conversation, plus prompt-driven image generation.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  ARCHITECTURE  ─────────────────────────── -->
+<section id="architecture">
+  <div class="shell">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span> System Design</span>
+      <h2>A composed system, <span class="gradient-text">built for scale</span>.</h2>
+      <p>Every layer is replaceable, observable, and self-hostable. Nothing leaves your perimeter unless you say so.</p>
+    </div>
+
+    <div class="arch-wrap reveal">
+      <svg class="arch-svg" viewBox="0 0 1180 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AetherSearch system architecture diagram">
+        <defs>
+          <linearGradient id="ax-grad-1" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0" stop-color="#6a8bff"/>
+            <stop offset="1" stop-color="#8a5cff"/>
+          </linearGradient>
+          <linearGradient id="ax-grad-2" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0" stop-color="#8a5cff"/>
+            <stop offset="1" stop-color="#ff5cb4"/>
+          </linearGradient>
+          <linearGradient id="ax-grad-3" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0" stop-color="#34f0c8"/>
+            <stop offset="1" stop-color="#6a8bff"/>
+          </linearGradient>
+          <linearGradient id="ax-grad-4" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0" stop-color="#ffce5c"/>
+            <stop offset="1" stop-color="#ff5cb4"/>
+          </linearGradient>
+          <pattern id="dotgrid" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="1" fill="#ffffff" fill-opacity=".06"/>
+          </pattern>
+        </defs>
+
+        <!-- Background -->
+        <rect width="1180" height="720" fill="url(#dotgrid)" rx="20"/>
+
+        <!-- Layer dividers (soft) -->
+        <g stroke="#ffffff" stroke-opacity=".05" stroke-dasharray="3 6">
+          <line x1="40" y1="160" x2="1140" y2="160"/>
+          <line x1="40" y1="320" x2="1140" y2="320"/>
+          <line x1="40" y1="500" x2="1140" y2="500"/>
+        </g>
+
+        <!-- Layer labels -->
+        <g font-family="Inter, sans-serif" font-size="11" font-weight="700" letter-spacing="2.5" fill="#6b7090">
+          <text x="50"   y="50">CLIENTS</text>
+          <text x="50"   y="195">EDGE / API</text>
+          <text x="50"   y="355">SERVICES &amp; WORKERS</text>
+          <text x="50"   y="535">DATA &amp; INFERENCE</text>
+        </g>
+
+        <!-- ───── CLIENTS ───── -->
+        <g font-family="Inter, sans-serif" font-size="13" fill="#e8ecff">
+          <!-- Web -->
+          <g transform="translate(160,70)">
+            <rect width="170" height="70" rx="14" fill="#11152a" stroke="url(#ax-grad-1)" stroke-width="1.4"/>
+            <rect x="14" y="14" width="32" height="32" rx="8" fill="rgba(106,139,255,.15)"/>
+            <path d="M22 30h16M30 22v16" stroke="#9bb0ff" stroke-width="2" stroke-linecap="round"/>
+            <text x="58" y="32" font-weight="700">Next.js Web</text>
+            <text x="58" y="50" fill="#a3a8c3" font-size="11">React 18 · App Router</text>
+          </g>
+          <!-- Desktop -->
+          <g transform="translate(360,70)">
+            <rect width="170" height="70" rx="14" fill="#11152a" stroke="url(#ax-grad-1)" stroke-width="1.4"/>
+            <rect x="14" y="14" width="32" height="32" rx="8" fill="rgba(106,139,255,.15)"/>
+            <rect x="20" y="20" width="20" height="14" rx="2" fill="none" stroke="#9bb0ff" stroke-width="1.6"/>
+            <path d="M26 38h8" stroke="#9bb0ff" stroke-width="1.6"/>
+            <text x="58" y="32" font-weight="700">Desktop</text>
+            <text x="58" y="50" fill="#a3a8c3" font-size="11">Native shell · macOS / Windows</text>
+          </g>
+          <!-- Widget -->
+          <g transform="translate(560,70)">
+            <rect width="170" height="70" rx="14" fill="#11152a" stroke="url(#ax-grad-1)" stroke-width="1.4"/>
+            <rect x="14" y="14" width="32" height="32" rx="8" fill="rgba(106,139,255,.15)"/>
+            <path d="M22 24h12M22 30h12M22 36h8" stroke="#9bb0ff" stroke-width="1.6" stroke-linecap="round"/>
+            <text x="58" y="32" font-weight="700">Embeddable Widget</text>
+            <text x="58" y="50" fill="#a3a8c3" font-size="11">Drop-in chat for any site</text>
+          </g>
+          <!-- CLI / SDK -->
+          <g transform="translate(760,70)">
+            <rect width="170" height="70" rx="14" fill="#11152a" stroke="url(#ax-grad-1)" stroke-width="1.4"/>
+            <rect x="14" y="14" width="32" height="32" rx="8" fill="rgba(106,139,255,.15)"/>
+            <path d="M20 24l4 6-4 6M30 36h10" stroke="#9bb0ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <text x="58" y="32" font-weight="700">CLI / SDK</text>
+            <text x="58" y="50" fill="#a3a8c3" font-size="11">Programmatic access</text>
+          </g>
+          <!-- MCP -->
+          <g transform="translate(960,70)">
+            <rect width="170" height="70" rx="14" fill="#11152a" stroke="url(#ax-grad-1)" stroke-width="1.4"/>
+            <rect x="14" y="14" width="32" height="32" rx="8" fill="rgba(106,139,255,.15)"/>
+            <circle cx="30" cy="30" r="9" fill="none" stroke="#9bb0ff" stroke-width="1.8"/>
+            <path d="M30 21v18M21 30h18" stroke="#9bb0ff" stroke-width="1.8"/>
+            <text x="58" y="32" font-weight="700">MCP Clients</text>
+            <text x="58" y="50" fill="#a3a8c3" font-size="11">External LLM hosts</text>
+          </g>
+        </g>
+
+        <!-- Down arrows from clients to API -->
+        <g stroke="url(#ax-grad-1)" stroke-width="1.5" fill="none" opacity=".7">
+          <path d="M245 140 L245 220" class="svg-flow"/>
+          <path d="M445 140 L445 220" class="svg-flow" style="animation-delay:.2s"/>
+          <path d="M645 140 L645 220" class="svg-flow" style="animation-delay:.4s"/>
+          <path d="M845 140 L845 220" class="svg-flow" style="animation-delay:.6s"/>
+          <path d="M1045 140 L1045 220" class="svg-flow" style="animation-delay:.8s"/>
+        </g>
+
+        <!-- ───── EDGE / API ───── -->
+        <g font-family="Inter, sans-serif" font-size="13" fill="#e8ecff">
+          <!-- Auth gateway -->
+          <g transform="translate(160,220)">
+            <rect width="240" height="80" rx="14" fill="#11152a" stroke="url(#ax-grad-2)" stroke-width="1.4"/>
+            <rect x="16" y="20" width="40" height="40" rx="10" fill="rgba(138,92,255,.15)"/>
+            <path d="M36 28a6 6 0 0 0-6 6v6h12v-6a6 6 0 0 0-6-6z M30 40h12v10H30z" fill="none" stroke="#b89bff" stroke-width="1.8" stroke-linejoin="round"/>
+            <text x="68" y="38" font-weight="700">Auth Gateway</text>
+            <text x="68" y="56" fill="#a3a8c3" font-size="11">OAuth · OIDC · SAML · SCIM</text>
+          </g>
+          <!-- API Server -->
+          <g transform="translate(420,220)">
+            <rect width="340" height="80" rx="14" fill="#11152a" stroke="url(#ax-grad-2)" stroke-width="2"/>
+            <rect x="16" y="20" width="40" height="40" rx="10" fill="rgba(138,92,255,.18)"/>
+            <path d="M22 32h28M22 40h22M22 48h28" stroke="#b89bff" stroke-width="2" stroke-linecap="round"/>
+            <text x="68" y="38" font-weight="700">FastAPI API Server</text>
+            <text x="68" y="56" fill="#a3a8c3" font-size="11">Routers · Pydantic · Streaming · WebSockets</text>
+          </g>
+          <!-- MCP Server -->
+          <g transform="translate(780,220)">
+            <rect width="240" height="80" rx="14" fill="#11152a" stroke="url(#ax-grad-2)" stroke-width="1.4"/>
+            <rect x="16" y="20" width="40" height="40" rx="10" fill="rgba(138,92,255,.15)"/>
+            <circle cx="36" cy="40" r="11" fill="none" stroke="#b89bff" stroke-width="1.8"/>
+            <path d="M36 30v20M26 40h20" stroke="#b89bff" stroke-width="1.8"/>
+            <text x="68" y="38" font-weight="700">MCP Server</text>
+            <text x="68" y="56" fill="#a3a8c3" font-size="11">Tool-use protocol surface</text>
+          </g>
+        </g>
+
+        <!-- API → services -->
+        <g stroke="url(#ax-grad-3)" stroke-width="1.4" fill="none" opacity=".6">
+          <path d="M280 300 L280 360" class="svg-flow"/>
+          <path d="M590 300 L590 360" class="svg-flow" style="animation-delay:.3s"/>
+          <path d="M900 300 L900 360" class="svg-flow" style="animation-delay:.6s"/>
+        </g>
+
+        <!-- ───── SERVICES & WORKERS ───── -->
+        <g font-family="Inter, sans-serif" font-size="12" fill="#e8ecff">
+          <!-- Chat / Agents -->
+          <g transform="translate(80,360)">
+            <rect width="180" height="120" rx="14" fill="#11152a" stroke="url(#ax-grad-3)" stroke-width="1.4"/>
+            <text x="20" y="34" font-weight="700">Chat &amp; Agents</text>
+            <text x="20" y="56" font-size="11" fill="#a3a8c3">Plans &amp; tool-calls</text>
+            <text x="20" y="74" font-size="11" fill="#a3a8c3">Citation processor</text>
+            <text x="20" y="92" font-size="11" fill="#a3a8c3">Streaming pipelines</text>
+            <text x="20" y="110" font-size="11" fill="#a3a8c3">Voice / artifacts</text>
+          </g>
+          <!-- Indexing -->
+          <g transform="translate(280,360)">
+            <rect width="180" height="120" rx="14" fill="#11152a" stroke="url(#ax-grad-3)" stroke-width="1.4"/>
+            <text x="20" y="34" font-weight="700">Indexing</text>
+            <text x="20" y="56" font-size="11" fill="#a3a8c3">Chunking</text>
+            <text x="20" y="74" font-size="11" fill="#a3a8c3">Contextualization</text>
+            <text x="20" y="92" font-size="11" fill="#a3a8c3">Embedding · KG</text>
+            <text x="20" y="110" font-size="11" fill="#a3a8c3">Vespa upsert</text>
+          </g>
+          <!-- Connectors -->
+          <g transform="translate(480,360)">
+            <rect width="180" height="120" rx="14" fill="#11152a" stroke="url(#ax-grad-3)" stroke-width="1.4"/>
+            <text x="20" y="34" font-weight="700">Connectors</text>
+            <text x="20" y="56" font-size="11" fill="#a3a8c3">62+ sources</text>
+            <text x="20" y="74" font-size="11" fill="#a3a8c3">Federated &amp; native</text>
+            <text x="20" y="92" font-size="11" fill="#a3a8c3">Permissions sync</text>
+            <text x="20" y="110" font-size="11" fill="#a3a8c3">Pruning &amp; backfill</text>
+          </g>
+          <!-- Celery cluster -->
+          <g transform="translate(680,360)">
+            <rect width="220" height="120" rx="14" fill="#11152a" stroke="url(#ax-grad-4)" stroke-width="1.6"/>
+            <text x="20" y="34" font-weight="700">Celery Cluster</text>
+            <g font-size="10" fill="#a3a8c3">
+              <text x="20" y="56">primary · light · heavy</text>
+              <text x="20" y="74">docfetching · docprocessing</text>
+              <text x="20" y="92">kg_processing · monitoring</text>
+              <text x="20" y="110">user_files · beat scheduler</text>
+            </g>
+          </g>
+          <!-- Tools -->
+          <g transform="translate(920,360)">
+            <rect width="180" height="120" rx="14" fill="#11152a" stroke="url(#ax-grad-3)" stroke-width="1.4"/>
+            <text x="20" y="34" font-weight="700">Tools</text>
+            <text x="20" y="56" font-size="11" fill="#a3a8c3">Web search providers</text>
+            <text x="20" y="74" font-size="11" fill="#a3a8c3">Code sandbox</text>
+            <text x="20" y="92" font-size="11" fill="#a3a8c3">Image gen</text>
+            <text x="20" y="110" font-size="11" fill="#a3a8c3">Custom actions</text>
+          </g>
+        </g>
+
+        <!-- Down arrows to data -->
+        <g stroke="url(#ax-grad-4)" stroke-width="1.4" fill="none" opacity=".6">
+          <path d="M170 480 L170 540" class="svg-flow"/>
+          <path d="M370 480 L370 540" class="svg-flow" style="animation-delay:.2s"/>
+          <path d="M570 480 L570 540" class="svg-flow" style="animation-delay:.4s"/>
+          <path d="M790 480 L790 540" class="svg-flow" style="animation-delay:.6s"/>
+          <path d="M1010 480 L1010 540" class="svg-flow" style="animation-delay:.8s"/>
+        </g>
+
+        <!-- ───── DATA & INFERENCE ───── -->
+        <g font-family="Inter, sans-serif" font-size="12" fill="#e8ecff">
+          <!-- Postgres -->
+          <g transform="translate(80,540)">
+            <rect width="170" height="120" rx="14" fill="#11152a" stroke="url(#ax-grad-3)" stroke-width="1.4"/>
+            <g transform="translate(20,20)">
+              <ellipse cx="22" cy="8"  rx="22" ry="8" fill="none" stroke="#34f0c8" stroke-width="1.6"/>
+              <path d="M0 8v16M44 8v16" stroke="#34f0c8" stroke-width="1.6" fill="none"/>
+              <path d="M0 24a22 8 0 0 0 44 0" fill="none" stroke="#34f0c8" stroke-width="1.6"/>
+              <path d="M0 16a22 8 0 0 0 44 0" fill="none" stroke="#34f0c8" stroke-width="1.6"/>
+            </g>
+            <text x="80" y="38" font-weight="700">PostgreSQL</text>
+            <text x="80" y="56" font-size="11" fill="#a3a8c3">App + tenant state</text>
+            <text x="20" y="92" font-size="11" fill="#a3a8c3">SQLAlchemy</text>
+            <text x="20" y="110" font-size="11" fill="#a3a8c3">Alembic · multi-tenant</text>
+          </g>
+          <!-- Redis -->
+          <g transform="translate(270,540)">
+            <rect width="170" height="120" rx="14" fill="#11152a" stroke="url(#ax-grad-3)" stroke-width="1.4"/>
+            <g transform="translate(24,22)" stroke="#ff5cb4" stroke-width="1.8" fill="none">
+              <path d="M2 14c2-7 14-11 24-7c10 4 14 14 6 16c-8 2-22-1-26-3z"/>
+              <path d="M5 6c4-3 14-4 22 0"/>
+            </g>
+            <text x="80" y="38" font-weight="700">Redis</text>
+            <text x="80" y="56" font-size="11" fill="#a3a8c3">Cache · pub-sub · locks</text>
+            <text x="20" y="92" font-size="11" fill="#a3a8c3">Worker coordination</text>
+            <text x="20" y="110" font-size="11" fill="#a3a8c3">Heartbeats · queues</text>
+          </g>
+          <!-- Vespa -->
+          <g transform="translate(460,540)">
+            <rect width="170" height="120" rx="14" fill="#11152a" stroke="url(#ax-grad-2)" stroke-width="1.6"/>
+            <g transform="translate(24,22)" stroke="#8a5cff" stroke-width="1.8" fill="none">
+              <path d="M0 12 L20 0 L40 12 L20 24z"/>
+              <path d="M0 18 L20 30 L40 18"/>
+            </g>
+            <text x="80" y="38" font-weight="700">Vespa</text>
+            <text x="80" y="56" font-size="11" fill="#a3a8c3">Hybrid index</text>
+            <text x="20" y="92" font-size="11" fill="#a3a8c3">Vectors + keyword</text>
+            <text x="20" y="110" font-size="11" fill="#a3a8c3">Chunked retrieval</text>
+          </g>
+          <!-- MinIO / S3 -->
+          <g transform="translate(650,540)">
+            <rect width="170" height="120" rx="14" fill="#11152a" stroke="url(#ax-grad-3)" stroke-width="1.4"/>
+            <g transform="translate(24,22)" stroke="#ffce5c" stroke-width="1.8" fill="none">
+              <path d="M0 8 L8 0 L40 0 L40 24 L0 24z"/>
+              <path d="M8 0 L8 24M0 8 L40 8"/>
+            </g>
+            <text x="80" y="38" font-weight="700">Blob Store</text>
+            <text x="80" y="56" font-size="11" fill="#a3a8c3">MinIO / S3</text>
+            <text x="20" y="92" font-size="11" fill="#a3a8c3">Files · attachments</text>
+            <text x="20" y="110" font-size="11" fill="#a3a8c3">Artifacts</text>
+          </g>
+          <!-- Model Server -->
+          <g transform="translate(840,540)">
+            <rect width="220" height="120" rx="14" fill="#11152a" stroke="url(#ax-grad-2)" stroke-width="1.4"/>
+            <g transform="translate(24,22)" stroke="#b89bff" stroke-width="1.8" fill="none">
+              <circle cx="20" cy="12" r="11"/>
+              <circle cx="20" cy="12" r="5"/>
+              <path d="M20 1v22M9 12h22"/>
+            </g>
+            <text x="80" y="38" font-weight="700">Model Server</text>
+            <text x="80" y="56" font-size="11" fill="#a3a8c3">Embeddings · rerankers</text>
+            <text x="20" y="92" font-size="11" fill="#a3a8c3">LiteLLM bridge</text>
+            <text x="20" y="110" font-size="11" fill="#a3a8c3">Anthropic · OpenAI · Ollama · Gemini · vLLM</text>
+          </g>
+        </g>
+
+        <!-- Title plate -->
+        <g transform="translate(40,690)">
+          <text font-family="JetBrains Mono, monospace" font-size="11" fill="#6b7090">
+            &gt; aethersearch.system_diagram() · request flow · data flow · async tasks
+          </text>
+        </g>
+      </svg>
+
+      <div class="arch-legend">
+        <div><span class="swatch" style="background:linear-gradient(90deg,#6a8bff,#8a5cff)"></span>Sync request path</div>
+        <div><span class="swatch" style="background:linear-gradient(90deg,#34f0c8,#6a8bff)"></span>Service layer</div>
+        <div><span class="swatch" style="background:linear-gradient(90deg,#ffce5c,#ff5cb4)"></span>Async / background</div>
+        <div><span class="swatch" style="background:linear-gradient(90deg,#8a5cff,#ff5cb4)"></span>Stateful infrastructure</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  PIPELINE  ─────────────────────────────── -->
+<section id="pipeline">
+  <div class="shell">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span> Document Pipeline</span>
+      <h2>From source to <span class="gradient-text">searchable answer</span> — automatically.</h2>
+      <p>Documents flow through a streamlined ingestion pipeline coordinated by Celery. Every step is idempotent, observable, and resumable.</p>
+    </div>
+
+    <div class="pipeline reveal">
+      <svg viewBox="0 0 1180 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Document ingestion pipeline">
+        <defs>
+          <linearGradient id="px-1" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0" stop-color="#6a8bff"/>
+            <stop offset="1" stop-color="#8a5cff"/>
+          </linearGradient>
+          <linearGradient id="px-2" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0" stop-color="#8a5cff"/>
+            <stop offset="1" stop-color="#ff5cb4"/>
+          </linearGradient>
+          <linearGradient id="px-3" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0" stop-color="#ff5cb4"/>
+            <stop offset="1" stop-color="#ffce5c"/>
+          </linearGradient>
+          <linearGradient id="px-4" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0" stop-color="#ffce5c"/>
+            <stop offset="1" stop-color="#34f0c8"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Connecting rail -->
+        <line x1="100" y1="140" x2="1080" y2="140" stroke="#ffffff" stroke-opacity=".08" stroke-width="2"/>
+        <line x1="100" y1="140" x2="1080" y2="140" stroke="url(#px-1)" stroke-width="2" stroke-dasharray="4 8" class="svg-flow"/>
+
+        <!-- Nodes -->
+        <g font-family="Inter, sans-serif" font-size="12" text-anchor="middle">
+          <!-- 1. Source -->
+          <g transform="translate(100,140)">
+            <circle r="36" fill="#0a0d1a" stroke="url(#px-1)" stroke-width="2"/>
+            <g transform="translate(-12,-12)" stroke="#9bb0ff" stroke-width="1.8" fill="none">
+              <path d="M2 4h20v16H2zM2 10h20"/>
+              <circle cx="6" cy="7" r="1" fill="#9bb0ff"/>
+            </g>
+            <text y="62" fill="#e8ecff" font-weight="700">Source</text>
+            <text y="80" fill="#a3a8c3" font-size="10">Slack · GDrive · Jira…</text>
+          </g>
+          <!-- 2. Connector -->
+          <g transform="translate(263,140)">
+            <circle r="36" fill="#0a0d1a" stroke="url(#px-1)" stroke-width="2"/>
+            <g transform="translate(-14,-12)" stroke="#9bb0ff" stroke-width="1.8" fill="none">
+              <path d="M0 12 L8 12 M20 12 L28 12"/>
+              <rect x="8" y="6" width="12" height="12" rx="3"/>
+            </g>
+            <text y="62" fill="#e8ecff" font-weight="700">Connector</text>
+            <text y="80" fill="#a3a8c3" font-size="10">Auth · pagination</text>
+          </g>
+          <!-- 3. Docfetching -->
+          <g transform="translate(426,140)">
+            <circle r="36" fill="#0a0d1a" stroke="url(#px-2)" stroke-width="2"/>
+            <g transform="translate(-12,-14)" stroke="#b89bff" stroke-width="1.8" fill="none" stroke-linecap="round">
+              <path d="M12 2v18M5 13l7 7 7-7"/>
+            </g>
+            <text y="62" fill="#e8ecff" font-weight="700">Docfetching</text>
+            <text y="80" fill="#a3a8c3" font-size="10">Watchdog · batches</text>
+          </g>
+          <!-- 4. Docprocessing -->
+          <g transform="translate(589,140)">
+            <circle r="36" fill="#0a0d1a" stroke="url(#px-2)" stroke-width="2"/>
+            <g transform="translate(-12,-12)" stroke="#b89bff" stroke-width="1.8" fill="none">
+              <rect x="0" y="0" width="24" height="24" rx="4"/>
+              <path d="M6 8h12M6 12h12M6 16h8"/>
+            </g>
+            <text y="62" fill="#e8ecff" font-weight="700">Docprocessing</text>
+            <text y="80" fill="#a3a8c3" font-size="10">Chunk + contextualize</text>
+          </g>
+          <!-- 5. Embedding -->
+          <g transform="translate(752,140)">
+            <circle r="36" fill="#0a0d1a" stroke="url(#px-3)" stroke-width="2"/>
+            <g transform="translate(-13,-13)" stroke="#ff5cb4" stroke-width="1.8" fill="none">
+              <circle cx="13" cy="13" r="11"/>
+              <path d="M2 13h22M13 2v22M5 5l16 16M21 5L5 21"/>
+            </g>
+            <text y="62" fill="#e8ecff" font-weight="700">Embed</text>
+            <text y="80" fill="#a3a8c3" font-size="10">Model server</text>
+          </g>
+          <!-- 6. Vespa -->
+          <g transform="translate(915,140)">
+            <circle r="36" fill="#0a0d1a" stroke="url(#px-4)" stroke-width="2"/>
+            <g transform="translate(-14,-12)" stroke="#ffce5c" stroke-width="1.8" fill="none">
+              <path d="M0 12 L14 0 L28 12 L14 24z"/>
+              <path d="M0 18 L14 30 L28 18"/>
+            </g>
+            <text y="62" fill="#e8ecff" font-weight="700">Vespa Index</text>
+            <text y="80" fill="#a3a8c3" font-size="10">Hybrid retrieval</text>
+          </g>
+          <!-- 7. Answer -->
+          <g transform="translate(1080,140)">
+            <circle r="36" fill="#0a0d1a" stroke="url(#px-4)" stroke-width="2"/>
+            <g transform="translate(-13,-13)" stroke="#34f0c8" stroke-width="1.8" fill="none" stroke-linecap="round">
+              <path d="M2 18 L10 22 L24 6"/>
+              <circle cx="13" cy="13" r="11"/>
+            </g>
+            <text y="62" fill="#e8ecff" font-weight="700">Answer</text>
+            <text y="80" fill="#a3a8c3" font-size="10">Cited · grounded</text>
+          </g>
+        </g>
+
+        <!-- Floating data dots traveling the rail -->
+        <g>
+          <circle r="4" fill="#6a8bff">
+            <animateMotion dur="6s" repeatCount="indefinite" path="M100 140 L1080 140"/>
+          </circle>
+          <circle r="3" fill="#ff5cb4">
+            <animateMotion dur="6s" begin="1.5s" repeatCount="indefinite" path="M100 140 L1080 140"/>
+          </circle>
+          <circle r="3" fill="#34f0c8">
+            <animateMotion dur="6s" begin="3s" repeatCount="indefinite" path="M100 140 L1080 140"/>
+          </circle>
+          <circle r="3" fill="#ffce5c">
+            <animateMotion dur="6s" begin="4.5s" repeatCount="indefinite" path="M100 140 L1080 140"/>
+          </circle>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  WORKERS  ──────────────────────────────── -->
+<section id="workers">
+  <div class="shell">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span> Background Processing</span>
+      <h2>Nine specialized workers, <span class="gradient-text">orchestrated by Celery</span>.</h2>
+      <p>AetherSearch separates concerns across thread-pool workers so heavy tasks never block the request path. Each worker is multi-tenant, observable, and independently scalable.</p>
+    </div>
+
+    <div class="workers-grid">
+      <article class="worker-card reveal">
+        <div class="worker-head">
+          <div class="worker-badge" style="background:linear-gradient(135deg,#6a8bff,#8a5cff)">PR</div>
+          <div>
+            <h3 class="worker-title">Primary</h3>
+            <div class="worker-meta">4 threads · core orchestration</div>
+          </div>
+        </div>
+        <p>Coordinates connector lifecycle, vespa sync, pruning checks, and system-wide periodic tasks.</p>
+      </article>
+
+      <article class="worker-card reveal">
+        <div class="worker-head">
+          <div class="worker-badge" style="background:linear-gradient(135deg,#34f0c8,#6a8bff)">DF</div>
+          <div>
+            <h3 class="worker-title">Docfetching</h3>
+            <div class="worker-meta">env-tuned · per-source pulls</div>
+          </div>
+        </div>
+        <p>Pulls documents from external sources, batches them, and spawns docprocessing tasks. Watchdog monitors stuck connectors.</p>
+      </article>
+
+      <article class="worker-card reveal">
+        <div class="worker-head">
+          <div class="worker-badge" style="background:linear-gradient(135deg,#8a5cff,#ff5cb4)">DP</div>
+          <div>
+            <h3 class="worker-title">Docprocessing</h3>
+            <div class="worker-meta">indexing pipeline core</div>
+          </div>
+        </div>
+        <p>Upserts to Postgres, chunks, contextualizes, embeds via model server, and writes to Vespa.</p>
+      </article>
+
+      <article class="worker-card reveal">
+        <div class="worker-head">
+          <div class="worker-badge" style="background:linear-gradient(135deg,#34f0c8,#6a8bff)">LT</div>
+          <div>
+            <h3 class="worker-title">Light</h3>
+            <div class="worker-meta">high concurrency · &lt;1s tasks</div>
+          </div>
+        </div>
+        <p>Vespa metadata sync, doc permission upserts, checkpoint cleanup — fast tasks at high throughput.</p>
+      </article>
+
+      <article class="worker-card reveal">
+        <div class="worker-head">
+          <div class="worker-badge" style="background:linear-gradient(135deg,#ff5cb4,#8a5cff)">HV</div>
+          <div>
+            <h3 class="worker-title">Heavy</h3>
+            <div class="worker-meta">4 threads · long-running</div>
+          </div>
+        </div>
+        <p>Connector pruning, document permissions sync, external group sync, large CSV exports.</p>
+      </article>
+
+      <article class="worker-card reveal">
+        <div class="worker-head">
+          <div class="worker-badge" style="background:linear-gradient(135deg,#ffce5c,#ff5cb4)">KG</div>
+          <div>
+            <h3 class="worker-title">KG Processing</h3>
+            <div class="worker-meta">graph + clustering</div>
+          </div>
+        </div>
+        <p>Builds the Knowledge Graph by extracting relationships between documents and running clustering.</p>
+      </article>
+
+      <article class="worker-card reveal">
+        <div class="worker-head">
+          <div class="worker-badge" style="background:linear-gradient(135deg,#34f0c8,#ffce5c)">MN</div>
+          <div>
+            <h3 class="worker-title">Monitoring</h3>
+            <div class="worker-meta">single thread · observability</div>
+          </div>
+        </div>
+        <p>Tracks queue depth, process memory, system health, and Celery liveness across the cluster.</p>
+      </article>
+
+      <article class="worker-card reveal">
+        <div class="worker-head">
+          <div class="worker-badge" style="background:linear-gradient(135deg,#6a8bff,#34f0c8)">UF</div>
+          <div>
+            <h3 class="worker-title">User Files</h3>
+            <div class="worker-meta">user uploads · projects</div>
+          </div>
+        </div>
+        <p>Indexes user-uploaded files and synchronizes them into the project workspace they belong to.</p>
+      </article>
+
+      <article class="worker-card reveal">
+        <div class="worker-head">
+          <div class="worker-badge" style="background:linear-gradient(135deg,#ff5cb4,#ffce5c)">BT</div>
+          <div>
+            <h3 class="worker-title">Beat Scheduler</h3>
+            <div class="worker-meta">multi-tenant cron</div>
+          </div>
+        </div>
+        <p>The DynamicTenantScheduler dispatches periodic tasks: indexing checks, sync probes, KG rounds, cleanups.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  CONNECTORS  ───────────────────────────── -->
+<section id="connectors">
+  <div class="shell">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span> Knowledge Sources</span>
+      <h2>62+ connectors. <span class="gradient-text">One unified index.</span></h2>
+      <p>Hook into the systems your team already uses. AetherSearch keeps every document, ticket, and message indexed, permission-aware, and continuously fresh.</p>
+    </div>
+  </div>
+
+  <!-- Marquee row 1 -->
+  <div class="connectors-marquee reveal">
+    <div class="marquee-row">
+      <span class="connector-pill"><span class="dot" style="background:#36C5F0"></span>Slack</span>
+      <span class="connector-pill"><span class="dot" style="background:#000"></span>GitHub</span>
+      <span class="connector-pill"><span class="dot" style="background:#FC6D26"></span>GitLab</span>
+      <span class="connector-pill"><span class="dot" style="background:#0052CC"></span>Bitbucket</span>
+      <span class="connector-pill"><span class="dot" style="background:#000"></span>Notion</span>
+      <span class="connector-pill"><span class="dot" style="background:#172B4D"></span>Confluence</span>
+      <span class="connector-pill"><span class="dot" style="background:#0052CC"></span>Jira</span>
+      <span class="connector-pill"><span class="dot" style="background:#5E6AD2"></span>Linear</span>
+      <span class="connector-pill"><span class="dot" style="background:#F06A6A"></span>Asana</span>
+      <span class="connector-pill"><span class="dot" style="background:#00A1E0"></span>Salesforce</span>
+      <span class="connector-pill"><span class="dot" style="background:#FF7A59"></span>HubSpot</span>
+      <span class="connector-pill"><span class="dot" style="background:#03363D"></span>Zendesk</span>
+      <span class="connector-pill"><span class="dot" style="background:#1F8DED"></span>Freshdesk</span>
+      <span class="connector-pill"><span class="dot" style="background:#1AB394"></span>Intercom</span>
+      <span class="connector-pill"><span class="dot" style="background:#4285F4"></span>Google Drive</span>
+      <span class="connector-pill"><span class="dot" style="background:#EA4335"></span>Gmail</span>
+      <span class="connector-pill"><span class="dot" style="background:#5059C9"></span>MS Teams</span>
+      <span class="connector-pill"><span class="dot" style="background:#0078D4"></span>SharePoint</span>
+      <span class="connector-pill"><span class="dot" style="background:#0061FF"></span>Dropbox</span>
+      <span class="connector-pill"><span class="dot" style="background:#00B4E5"></span>Box</span>
+      <span class="connector-pill"><span class="dot" style="background:#0061FE"></span>Egnyte</span>
+      <!-- Duplicate for seamless loop -->
+      <span class="connector-pill"><span class="dot" style="background:#36C5F0"></span>Slack</span>
+      <span class="connector-pill"><span class="dot" style="background:#000"></span>GitHub</span>
+      <span class="connector-pill"><span class="dot" style="background:#FC6D26"></span>GitLab</span>
+      <span class="connector-pill"><span class="dot" style="background:#0052CC"></span>Bitbucket</span>
+      <span class="connector-pill"><span class="dot" style="background:#000"></span>Notion</span>
+      <span class="connector-pill"><span class="dot" style="background:#172B4D"></span>Confluence</span>
+      <span class="connector-pill"><span class="dot" style="background:#0052CC"></span>Jira</span>
+      <span class="connector-pill"><span class="dot" style="background:#5E6AD2"></span>Linear</span>
+      <span class="connector-pill"><span class="dot" style="background:#F06A6A"></span>Asana</span>
+      <span class="connector-pill"><span class="dot" style="background:#00A1E0"></span>Salesforce</span>
+      <span class="connector-pill"><span class="dot" style="background:#FF7A59"></span>HubSpot</span>
+      <span class="connector-pill"><span class="dot" style="background:#03363D"></span>Zendesk</span>
+      <span class="connector-pill"><span class="dot" style="background:#1F8DED"></span>Freshdesk</span>
+      <span class="connector-pill"><span class="dot" style="background:#1AB394"></span>Intercom</span>
+      <span class="connector-pill"><span class="dot" style="background:#4285F4"></span>Google Drive</span>
+      <span class="connector-pill"><span class="dot" style="background:#EA4335"></span>Gmail</span>
+      <span class="connector-pill"><span class="dot" style="background:#5059C9"></span>MS Teams</span>
+      <span class="connector-pill"><span class="dot" style="background:#0078D4"></span>SharePoint</span>
+      <span class="connector-pill"><span class="dot" style="background:#0061FF"></span>Dropbox</span>
+      <span class="connector-pill"><span class="dot" style="background:#00B4E5"></span>Box</span>
+      <span class="connector-pill"><span class="dot" style="background:#0061FE"></span>Egnyte</span>
+    </div>
+  </div>
+
+  <!-- Marquee row 2 -->
+  <div class="connectors-marquee reveal" style="margin-top: 12px;">
+    <div class="marquee-row reverse">
+      <span class="connector-pill"><span class="dot" style="background:#FFCD1C"></span>Discourse</span>
+      <span class="connector-pill"><span class="dot" style="background:#5865F2"></span>Discord</span>
+      <span class="connector-pill"><span class="dot" style="background:#36C5F0"></span>Zulip</span>
+      <span class="connector-pill"><span class="dot" style="background:#FFB400"></span>Airtable</span>
+      <span class="connector-pill"><span class="dot" style="background:#7B68EE"></span>ClickUp</span>
+      <span class="connector-pill"><span class="dot" style="background:#F25C54"></span>monday</span>
+      <span class="connector-pill"><span class="dot" style="background:#FF6B35"></span>Coda</span>
+      <span class="connector-pill"><span class="dot" style="background:#9F69F0"></span>Outline</span>
+      <span class="connector-pill"><span class="dot" style="background:#0CB295"></span>BookStack</span>
+      <span class="connector-pill"><span class="dot" style="background:#FF6F00"></span>GitBook</span>
+      <span class="connector-pill"><span class="dot" style="background:#1F84D7"></span>MediaWiki</span>
+      <span class="connector-pill"><span class="dot" style="background:#3D8A40"></span>Wikipedia</span>
+      <span class="connector-pill"><span class="dot" style="background:#0080A0"></span>Document360</span>
+      <span class="connector-pill"><span class="dot" style="background:#5C2D91"></span>Drupal Wiki</span>
+      <span class="connector-pill"><span class="dot" style="background:#FF6900"></span>Productboard</span>
+      <span class="connector-pill"><span class="dot" style="background:#262626"></span>Highspot</span>
+      <span class="connector-pill"><span class="dot" style="background:#FB7209"></span>Loopio</span>
+      <span class="connector-pill"><span class="dot" style="background:#231F20"></span>Guru</span>
+      <span class="connector-pill"><span class="dot" style="background:#0099CC"></span>TestRail</span>
+      <span class="connector-pill"><span class="dot" style="background:#FFB81C"></span>Gong</span>
+      <span class="connector-pill"><span class="dot" style="background:#5E2BFF"></span>Fireflies</span>
+      <!-- duplicates -->
+      <span class="connector-pill"><span class="dot" style="background:#FFCD1C"></span>Discourse</span>
+      <span class="connector-pill"><span class="dot" style="background:#5865F2"></span>Discord</span>
+      <span class="connector-pill"><span class="dot" style="background:#36C5F0"></span>Zulip</span>
+      <span class="connector-pill"><span class="dot" style="background:#FFB400"></span>Airtable</span>
+      <span class="connector-pill"><span class="dot" style="background:#7B68EE"></span>ClickUp</span>
+      <span class="connector-pill"><span class="dot" style="background:#F25C54"></span>monday</span>
+      <span class="connector-pill"><span class="dot" style="background:#FF6B35"></span>Coda</span>
+      <span class="connector-pill"><span class="dot" style="background:#9F69F0"></span>Outline</span>
+      <span class="connector-pill"><span class="dot" style="background:#0CB295"></span>BookStack</span>
+      <span class="connector-pill"><span class="dot" style="background:#FF6F00"></span>GitBook</span>
+      <span class="connector-pill"><span class="dot" style="background:#1F84D7"></span>MediaWiki</span>
+      <span class="connector-pill"><span class="dot" style="background:#3D8A40"></span>Wikipedia</span>
+      <span class="connector-pill"><span class="dot" style="background:#0080A0"></span>Document360</span>
+      <span class="connector-pill"><span class="dot" style="background:#5C2D91"></span>Drupal Wiki</span>
+      <span class="connector-pill"><span class="dot" style="background:#FF6900"></span>Productboard</span>
+      <span class="connector-pill"><span class="dot" style="background:#262626"></span>Highspot</span>
+      <span class="connector-pill"><span class="dot" style="background:#FB7209"></span>Loopio</span>
+      <span class="connector-pill"><span class="dot" style="background:#231F20"></span>Guru</span>
+      <span class="connector-pill"><span class="dot" style="background:#0099CC"></span>TestRail</span>
+      <span class="connector-pill"><span class="dot" style="background:#FFB81C"></span>Gong</span>
+      <span class="connector-pill"><span class="dot" style="background:#5E2BFF"></span>Fireflies</span>
+    </div>
+  </div>
+
+  <!-- Marquee row 3 -->
+  <div class="connectors-marquee reveal" style="margin-top: 12px;">
+    <div class="marquee-row">
+      <span class="connector-pill"><span class="dot" style="background:#039BE5"></span>Canvas</span>
+      <span class="connector-pill"><span class="dot" style="background:#172B4D"></span>Slab</span>
+      <span class="connector-pill"><span class="dot" style="background:#000"></span>Axero</span>
+      <span class="connector-pill"><span class="dot" style="background:#FF6E40"></span>Xenforo</span>
+      <span class="connector-pill"><span class="dot" style="background:#0064FF"></span>RequestTracker</span>
+      <span class="connector-pill"><span class="dot" style="background:#9CC03B"></span>IMAP</span>
+      <span class="connector-pill"><span class="dot" style="background:#34A853"></span>Google Sites</span>
+      <span class="connector-pill"><span class="dot" style="background:#FFB400"></span>Files (S3/MinIO)</span>
+      <span class="connector-pill"><span class="dot" style="background:#3673E5"></span>Web Scrape</span>
+      <span class="connector-pill"><span class="dot" style="background:#888"></span>+ Many more</span>
+      <span class="connector-pill"><span class="dot" style="background:#34f0c8"></span>Custom via MCP</span>
+      <!-- duplicates -->
+      <span class="connector-pill"><span class="dot" style="background:#039BE5"></span>Canvas</span>
+      <span class="connector-pill"><span class="dot" style="background:#172B4D"></span>Slab</span>
+      <span class="connector-pill"><span class="dot" style="background:#000"></span>Axero</span>
+      <span class="connector-pill"><span class="dot" style="background:#FF6E40"></span>Xenforo</span>
+      <span class="connector-pill"><span class="dot" style="background:#0064FF"></span>RequestTracker</span>
+      <span class="connector-pill"><span class="dot" style="background:#9CC03B"></span>IMAP</span>
+      <span class="connector-pill"><span class="dot" style="background:#34A853"></span>Google Sites</span>
+      <span class="connector-pill"><span class="dot" style="background:#FFB400"></span>Files (S3/MinIO)</span>
+      <span class="connector-pill"><span class="dot" style="background:#3673E5"></span>Web Scrape</span>
+      <span class="connector-pill"><span class="dot" style="background:#888"></span>+ Many more</span>
+      <span class="connector-pill"><span class="dot" style="background:#34f0c8"></span>Custom via MCP</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  TECH STACK  ───────────────────────────── -->
+<section id="stack">
+  <div class="shell">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span> Stack</span>
+      <h2>Built on a <span class="gradient-text">battle-tested</span> stack.</h2>
+      <p>Pragmatic technology choices: production frameworks, mature data systems, and a pluggable AI layer.</p>
+    </div>
+
+    <div class="stack-wrap">
+      <svg class="stack-svg reveal" viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="sx-1" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#6a8bff"/>
+            <stop offset="1" stop-color="#8a5cff"/>
+          </linearGradient>
+          <linearGradient id="sx-2" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#8a5cff"/>
+            <stop offset="1" stop-color="#ff5cb4"/>
+          </linearGradient>
+          <linearGradient id="sx-3" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#ff5cb4"/>
+            <stop offset="1" stop-color="#ffce5c"/>
+          </linearGradient>
+          <linearGradient id="sx-4" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#ffce5c"/>
+            <stop offset="1" stop-color="#34f0c8"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Layered isometric stack -->
+        <g transform="translate(40,80)" font-family="Inter, sans-serif" font-weight="700" font-size="14" fill="white">
+          <!-- Layer 1 - top -->
+          <g transform="translate(80,0)">
+            <path d="M0 30 L160 0 L320 30 L160 60 z" fill="url(#sx-1)" opacity=".95"/>
+            <text x="160" y="34" text-anchor="middle">Frontend · Next.js / React / TS</text>
+          </g>
+          <!-- Layer 2 -->
+          <g transform="translate(60,80)">
+            <path d="M0 30 L180 0 L360 30 L180 60 z" fill="url(#sx-2)" opacity=".93"/>
+            <text x="180" y="34" text-anchor="middle">API · FastAPI / Pydantic</text>
+          </g>
+          <!-- Layer 3 -->
+          <g transform="translate(40,160)">
+            <path d="M0 30 L200 0 L400 30 L200 60 z" fill="url(#sx-3)" opacity=".93"/>
+            <text x="200" y="34" text-anchor="middle">Workers · Celery / Redis</text>
+          </g>
+          <!-- Layer 4 -->
+          <g transform="translate(20,240)">
+            <path d="M0 30 L220 0 L440 30 L220 60 z" fill="url(#sx-4)" opacity=".93"/>
+            <text x="220" y="34" text-anchor="middle">Data · Postgres · Vespa · MinIO</text>
+          </g>
+          <!-- Layer 5 - bottom -->
+          <g transform="translate(0,320)">
+            <path d="M0 30 L240 0 L480 30 L240 60 z" fill="#11152a" stroke="url(#sx-1)" stroke-width="1.5" opacity="1"/>
+            <text x="240" y="34" text-anchor="middle">Inference · LiteLLM · Anthropic / OpenAI / Ollama</text>
+          </g>
+        </g>
+      </svg>
+
+      <div class="stack-list">
+        <div class="stack-item reveal">
+          <div class="stack-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9bb0ff" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6v6H9z"/></svg>
+          </div>
+          <div>
+            <h4>Frontend</h4>
+            <p>Next.js 15 · React 18 · TypeScript · Tailwind · Radix · Headless UI · dnd-kit · Storybook</p>
+          </div>
+        </div>
+        <div class="stack-item reveal">
+          <div class="stack-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b89bff" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+          </div>
+          <div>
+            <h4>Backend</h4>
+            <p>Python 3.11 · FastAPI · SQLAlchemy · Alembic · Pydantic · Celery · LangChain</p>
+          </div>
+        </div>
+        <div class="stack-item reveal">
+          <div class="stack-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff5cb4" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v6c0 1.7 4 3 9 3s9-1.3 9-3V5M3 11v6c0 1.7 4 3 9 3s9-1.3 9-3v-6"/></svg>
+          </div>
+          <div>
+            <h4>Data</h4>
+            <p>PostgreSQL (multi-tenant) · Vespa hybrid index · Redis · MinIO/S3 blob store</p>
+          </div>
+        </div>
+        <div class="stack-item reveal">
+          <div class="stack-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#34f0c8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.5 5.5l2 2M16.5 16.5l2 2M5.5 18.5l2-2M16.5 7.5l2-2"/></svg>
+          </div>
+          <div>
+            <h4>AI Layer</h4>
+            <p>LiteLLM bridge · Anthropic · OpenAI · Gemini · Ollama · vLLM · custom embeddings &amp; rerankers</p>
+          </div>
+        </div>
+        <div class="stack-item reveal">
+          <div class="stack-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffce5c" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M12 2l8 4v6c0 5-4 9-8 10-4-1-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+          </div>
+          <div>
+            <h4>Auth &amp; Security</h4>
+            <p>OAuth2 · OIDC · SAML · SCIM · RBAC · encrypted credentials · audit log</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  DEPLOYMENT  ───────────────────────────── -->
+<section id="deploy">
+  <div class="shell">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span> Deployment</span>
+      <h2>Run it your way — <span class="gradient-text">on-prem, cloud, or laptop</span>.</h2>
+      <p>Pick the footprint that fits the moment. Scale up when you're ready, never lose data ownership.</p>
+    </div>
+
+    <div class="deploy-grid">
+      <article class="deploy-card tier reveal">
+        <span class="deploy-tag lite">Lite</span>
+        <h3>AetherSearch Lite</h3>
+        <p>Sub-1GB memory footprint. Get a chat UI + agents running in minutes.</p>
+        <ul>
+          <li>Single Docker container</li>
+          <li>Chat UI &amp; custom agents</li>
+          <li>Bring-your-own LLM</li>
+          <li>Great for solo &amp; trial</li>
+        </ul>
+      </article>
+
+      <article class="deploy-card tier reveal" style="background:radial-gradient(400px 200px at 0% 0%, rgba(138,92,255,0.18), transparent 60%), linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));">
+        <span class="deploy-tag std">Standard</span>
+        <h3>Full Platform</h3>
+        <p>The complete stack with hybrid index, workers, and indexing pipelines.</p>
+        <ul>
+          <li>Vector + keyword index</li>
+          <li>9 background workers</li>
+          <li>Redis cache · MinIO blobs</li>
+          <li>Connector ingestion at scale</li>
+        </ul>
+      </article>
+
+      <article class="deploy-card tier reveal" style="background:radial-gradient(400px 200px at 0% 0%, rgba(255,206,92,0.18), transparent 60%), linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));">
+        <span class="deploy-tag ent">Enterprise</span>
+        <h3>Enterprise Edition</h3>
+        <p>Add governance, identity, analytics, and whitelabeling for org-wide adoption.</p>
+        <ul>
+          <li>SSO · SCIM · RBAC</li>
+          <li>Usage analytics &amp; audit</li>
+          <li>Custom code hooks · PII scrubbing</li>
+          <li>Whitelabel &amp; theming</li>
+        </ul>
+      </article>
+    </div>
+
+    <!-- Final CTA -->
+    <div class="cta-final reveal">
+      <span class="eyebrow"><span class="dot"></span> Ready?</span>
+      <h2>Bring AI <span class="gradient-text">to every doc, ticket, and message</span>.</h2>
+      <p>AetherSearch is open source, MIT licensed, and built for the long run.</p>
+      <div class="hero-cta-row">
+        <a class="btn btn-primary" href="https://github.com/vishalm/ai-enterprise-search-chat-aethersearch" target="_blank" rel="noopener">
+          Star on GitHub
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+        </a>
+        <a class="btn btn-secondary" href="https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">
+          Read the contributing guide
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="shell footer-inner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 19L12 4L19 19M8 14H16"/>
+        </svg>
+      </span>
+      <span>AetherSearch</span>
+    </div>
+    <nav class="footer-links" aria-label="Footer">
+      <a href="https://github.com/vishalm/ai-enterprise-search-chat-aethersearch" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/blob/main/README.md" target="_blank" rel="noopener">README</a>
+      <a href="https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+      <a href="https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+    </nav>
+    <div>© 2025 · Open Source · MIT</div>
+  </div>
+</footer>
+
+<script src="main.js" defer></script>
+</body>
+</html>
