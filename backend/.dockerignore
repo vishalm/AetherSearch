@@ -1,0 +1,23 @@
+**/__pycache__
+venv/
+env/
+*.egg-info
+.cache
+.git/
+.svn/
+.vscode/
+.idea/
+*.log
+log/
+.env
+secrets.yaml
+build/
+dist/
+.coverage
+htmlcov/
+model_server/legacy/
+
+# Craft: demo_data directory should be unzipped at container startup, not copied
+**/demo_data/
+# Craft: templates/outputs/venv is created at container startup
+**/templates/outputs/venv

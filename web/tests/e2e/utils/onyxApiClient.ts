@@ -1,0 +1,1306 @@
+import { APIRequestContext, expect, APIResponse } from "@playwright/test";
+
+const E2E_LLM_PROVIDER_API_KEY =
+  process.env.E2E_LLM_PROVIDER_API_KEY ||
+  process.env.OPENAI_API_KEY ||
+  "e2e-placeholder-api-key-not-used";
+
+const E2E_WEB_SEARCH_API_KEY =
+  process.env.E2E_WEB_SEARCH_API_KEY ||
+  process.env.EXA_API_KEY ||
+  process.env.BRAVE_SEARCH_API_KEY ||
+  process.env.SERPER_API_KEY ||
+  "e2e-placeholder-web-search-key";
+
+const E2E_IMAGE_GEN_API_KEY =
+  process.env.E2E_IMAGE_GEN_API_KEY ||
+  process.env.OPENAI_API_KEY ||
+  E2E_LLM_PROVIDER_API_KEY;
+
+/**
+ * API Client for Onyx backend operations in E2E tests.
+ *
+ * Provides a type-safe, abstracted interface for interacting with the Onyx backend API.
+ * All methods handle authentication via the Playwright page context and include automatic
+ * error handling, logging, and polling for asynchronous operations.
+ *
+ * **Available Endpoints:**
+ *
+ * **Connectors:**
+ * - `createFileConnector(name)` - Creates a file connector with mock credentials
+ * - `deleteCCPair(ccPairId)` - Deletes a connector-credential pair (with polling until complete)
+ *
+ * **Document Sets:**
+ * - `createDocumentSet(name, ccPairIds)` - Creates a document set from connector pairs
+ * - `deleteDocumentSet(id)` - Deletes a document set (with polling until complete)
+ *
+ * **LLM Providers:**
+ * - `listLlmProviders()` - Lists LLM providers (admin endpoint, includes is_public)
+ * - `ensurePublicProvider(name?)` - Idempotently creates a public default LLM provider
+ * - `createRestrictedProvider(name, groupId)` - Creates a restricted LLM provider assigned to a group
+ * - `setProviderAsDefault(id)` - Sets an LLM provider as the default for chat
+ * - `deleteProvider(id)` - Deletes an LLM provider
+ *
+ * **User Groups:**
+ * - `getUserGroups()` - Lists all user groups (including default system groups)
+ * - `createUserGroup(name)` - Creates a user group
+ * - `deleteUserGroup(id)` - Deletes a user group
+ *
+ * **Tool Providers:**
+ * - `createWebSearchProvider(type, name)` - Creates and activates a web search provider
+ * - `deleteWebSearchProvider(id)` - Deletes a web search provider
+ * - `createImageGenerationConfig(id, model, provider, isDefault)` - Creates an image generation config (enables image gen tool)
+ * - `deleteImageGenerationConfig(id)` - Deletes an image generation config
+ *
+ * **Chat Sessions:**
+ * - `createChatSession(description, personaId?)` - Creates a chat session with a description
+ * - `deleteChatSession(chatId)` - Deletes a chat session
+ *
+ * **Projects:**
+ * - `createProject(name)` - Creates a project with a name
+ * - `deleteProject(projectId)` - Deletes a project
+ *
+ * **Usage Example:**
+ * ```typescript
+ * // From a test with a Page:
+ * const client = new OnyxApiClient(page.request);
+ *
+ * // From global-setup with a standalone context (pass baseURL explicitly):
+ * const ctx = await request.newContext({ baseURL, storageState: "admin_auth.json" });
+ * const client = new OnyxApiClient(ctx, baseURL);
+ * ```
+ *
+ * @param request - Playwright APIRequestContext with authenticated session
+ *                  (e.g. `page.request`, `context.request`, or `request.newContext()`)
+ * @param baseUrl - Optional base URL override (e.g. `http://localhost:3000`).
+ *                  Defaults to `process.env.BASE_URL` or `http://localhost:3000`.
+ *                  Pass this when the Playwright-configured baseURL differs from
+ *                  the env var (e.g. in `global-setup.ts` where the config value
+ *                  is authoritative).
+ */
+export class OnyxApiClient {
+  private baseUrl: string;
+
+  constructor(
+    private request: APIRequestContext,
+    baseUrl?: string
+  ) {
+    this.baseUrl = `${
+      baseUrl ?? process.env.BASE_URL ?? "http://localhost:3000"
+    }/api`;
+  }
+
+  /**
+   * Generic GET request to the API.
+   *
+   * @param endpoint - API endpoint path (e.g., "/manage/document-set/123")
+   * @returns The API response
+   */
+  private async get(endpoint: string): Promise<APIResponse> {
+    return await this.request.get(`${this.baseUrl}${endpoint}`);
+  }
+
+  /**
+   * Generic POST request to the API.
+   *
+   * @param endpoint - API endpoint path (e.g., "/manage/admin/document-set")
+   * @param data - Optional request body data
+   * @returns The API response
+   */
+  private async post(endpoint: string, data?: any): Promise<APIResponse> {
+    return await this.request.post(`${this.baseUrl}${endpoint}`, {
+      data,
+    });
+  }
+
+  /**
+   * Generic DELETE request to the API.
+   *
+   * @param endpoint - API endpoint path (e.g., "/manage/admin/document-set/123")
+   * @returns The API response
+   */
+  private async delete(endpoint: string): Promise<APIResponse> {
+    return await this.request.delete(`${this.baseUrl}${endpoint}`);
+  }
+
+  /**
+   * Generic PUT request to the API.
+   *
+   * @param endpoint - API endpoint path (e.g., "/manage/admin/cc-pair/123/status")
+   * @param data - Optional request body data
+   * @returns The API response
+   */
+  private async put(endpoint: string, data?: any): Promise<APIResponse> {
+    return await this.request.put(`${this.baseUrl}${endpoint}`, {
+      data,
+    });
+  }
+
+  /**
+   * Handle API response - parse JSON and handle errors.
+   *
+   * @param response - The API response to handle
+   * @param errorMessage - Error message prefix to use if request failed
+   * @returns Parsed JSON response data
+   * @throws Error if the response is not ok
+   */
+  private async handleResponse<T>(
+    response: APIResponse,
+    errorMessage: string
+  ): Promise<T> {
+    if (!response.ok()) {
+      const errorText = await response.text();
+      throw new Error(`${errorMessage}: ${response.status()} - ${errorText}`);
+    }
+    return await response.json();
+  }
+
+  /**
+   * Handle API response with logging on error (non-throwing).
+   * Used for cleanup operations where we want to log errors but not fail the test.
+   *
+   * @param response - The API response to handle
+   * @param errorMessage - Error message prefix to use if request failed
+   * @returns true if response was ok, false otherwise
+   */
+  private async handleResponseSoft(
+    response: APIResponse,
+    errorMessage: string
+  ): Promise<boolean> {
+    if (!response.ok()) {
+      const errorText = await response.text();
+      console.error(
+        `[OnyxApiClient] ${errorMessage}: ${response.status()} - ${errorText}`
+      );
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Wait for a resource to be deleted by polling until 404.
+   * Uses Playwright's expect.poll() with automatic retry and exponential backoff.
+   * We poll here because the deletion endpoint is asynchronous (kicks off a celery task)
+   * and we want to wait for it to complete.
+   *
+   * @param endpoint - API endpoint to poll (e.g., "/manage/document-set/123")
+   * @param resourceType - Human-readable resource type for error messages (e.g., "Document set")
+   * @param resourceId - The resource ID for error messages
+   * @param timeout - Maximum time to wait in milliseconds (default: 30000)
+   * @returns Promise that resolves when resource returns 404, or rejects on timeout
+   */
+  private async waitForDeletion(
+    endpoint: string,
+    resourceType: string,
+    resourceId: number | string,
+    timeout: number = 30000
+  ): Promise<void> {
+    await expect
+      .poll(
+        async () => {
+          const checkResponse = await this.get(endpoint);
+          return checkResponse.status();
+        },
+        {
+          message: `${resourceType} ${resourceId} was not deleted`,
+          timeout,
+        }
+      )
+      .toBe(404);
+  }
+
+  /**
+   * Log an action with consistent formatting.
+   *
+   * @param message - The message to log (will be prefixed with "[OnyxApiClient]")
+   */
+  private log(message: string): void {
+    console.log(`[OnyxApiClient] ${message}`);
+  }
+
+  /**
+   * Checks whether the vector database is enabled in this deployment.
+   *
+   * @returns true if vector DB is enabled, false if DISABLE_VECTOR_DB is set
+   */
+  async isVectorDbEnabled(): Promise<boolean> {
+    const response = await this.get("/settings");
+    const data = await this.handleResponse<{ vector_db_enabled: boolean }>(
+      response,
+      "Failed to fetch settings"
+    );
+    return data.vector_db_enabled;
+  }
+
+  /**
+   * Creates a simple file connector with mock credentials.
+   * This enables the Knowledge toggle in assistant creation.
+   *
+   * @param connectorName - Name for the connector (defaults to "Test File Connector")
+   * @param accessType - Access type for the connector (defaults to "public")
+   * @returns The connector-credential pair ID (ccPairId)
+   * @throws Error if the connector creation fails
+   */
+  async createFileConnector(
+    connectorName: string = "Test File Connector",
+    accessType: "public" | "private" = "public"
+  ): Promise<number> {
+    const response = await this.post(
+      "/manage/admin/connector-with-mock-credential",
+      {
+        name: connectorName,
+        source: "file",
+        input_type: "load_state",
+        connector_specific_config: {
+          file_locations: [],
+        },
+        refresh_freq: null,
+        prune_freq: null,
+        indexing_start: null,
+        access_type: accessType,
+        groups: [],
+      }
+    );
+
+    const responseData = await this.handleResponse<{ data: number }>(
+      response,
+      "Failed to create connector"
+    );
+
+    const ccPairId = responseData.data;
+    this.log(
+      `Created file connector: ${connectorName} (CC Pair ID: ${ccPairId})`
+    );
+
+    // Pause the connector immediately to prevent indexing during tests
+    await this.pauseConnector(ccPairId);
+
+    return ccPairId;
+  }
+
+  /**
+   * Pauses a connector-credential pair to prevent indexing.
+   *
+   * @param ccPairId - The connector-credential pair ID to pause
+   * @throws Error if the pause operation fails
+   */
+  async pauseConnector(ccPairId: number): Promise<void> {
+    const response = await this.put(
+      `/manage/admin/cc-pair/${ccPairId}/status`,
+      {
+        status: "PAUSED",
+      }
+    );
+
+    await this.handleResponse(response, "Failed to pause connector");
+    this.log(`Paused connector CC Pair ID: ${ccPairId}`);
+  }
+
+  /**
+   * Creates a document set from connector-credential pairs.
+   *
+   * @param documentSetName - Name for the document set
+   * @param ccPairIds - Array of connector-credential pair IDs to include in the set
+   * @returns The document set ID
+   * @throws Error if the document set creation fails
+   */
+  async createDocumentSet(
+    documentSetName: string,
+    ccPairIds: number[]
+  ): Promise<number> {
+    const response = await this.post("/manage/admin/document-set", {
+      name: documentSetName,
+      description: `Test document set: ${documentSetName}`,
+      cc_pair_ids: ccPairIds,
+      is_public: true,
+      users: [],
+      groups: [],
+      federated_connectors: [],
+    });
+
+    const documentSetId = await this.handleResponse<number>(
+      response,
+      "Failed to create document set"
+    );
+
+    this.log(`Created document set: ${documentSetName} (ID: ${documentSetId})`);
+    return documentSetId;
+  }
+
+  /**
+   * Deletes a document set and waits for deletion to complete.
+   * Uses polling to verify the deletion was successful (waits for 404 response).
+   *
+   * @param documentSetId - The document set ID to delete
+   * @returns Promise that resolves when deletion is confirmed, or rejects on timeout
+   */
+  async deleteDocumentSet(documentSetId: number): Promise<void> {
+    const response = await this.delete(
+      `/manage/admin/document-set/${documentSetId}`
+    );
+
+    if (
+      !(await this.handleResponseSoft(
+        response,
+        `Failed to delete document set ${documentSetId}`
+      ))
+    ) {
+      return;
+    }
+
+    this.log(`Initiated deletion for document set: ${documentSetId}`);
+    await this.waitForDeletion(
+      `/manage/document-set/${documentSetId}`,
+      "Document set",
+      documentSetId
+    );
+    this.log(`Document set ${documentSetId} deletion confirmed`);
+  }
+
+  /**
+   * Deletes a connector-credential pair and waits for deletion to complete.
+   * Fetches the CC pair details to get connector/credential IDs, then initiates deletion
+   * and polls until the deletion is confirmed (waits for 404 response).
+   *
+   * @param ccPairId - The connector-credential pair ID to delete
+   * @returns Promise that resolves when deletion is confirmed, or rejects on timeout
+   */
+  async deleteCCPair(ccPairId: number): Promise<void> {
+    // Get CC pair details to extract connector_id and credential_id
+    const getResponse = await this.get(`/manage/admin/cc-pair/${ccPairId}`);
+
+    if (
+      !(await this.handleResponseSoft(
+        getResponse,
+        `Failed to get CC pair ${ccPairId} details`
+      ))
+    ) {
+      return;
+    }
+
+    const ccPairInfo = await getResponse.json();
+    const {
+      connector: { id: connectorId },
+      credential: { id: credentialId },
+    } = ccPairInfo;
+
+    // Delete using the deletion-attempt endpoint
+    const deleteResponse = await this.post("/manage/admin/deletion-attempt", {
+      connector_id: connectorId,
+      credential_id: credentialId,
+    });
+
+    if (
+      !(await this.handleResponseSoft(
+        deleteResponse,
+        `Failed to delete CC pair ${ccPairId}`
+      ))
+    ) {
+      return;
+    }
+
+    this.log(
+      `Initiated deletion for CC pair: ${ccPairId} (connector: ${connectorId}, credential: ${credentialId})`
+    );
+    await this.waitForDeletion(
+      `/manage/admin/cc-pair/${ccPairId}`,
+      "CC pair",
+      ccPairId
+    );
+    this.log(`CC pair ${ccPairId} deletion confirmed`);
+  }
+
+  /**
+   * Creates a restricted LLM provider assigned to a specific user group.
+   *
+   * @param providerName - Name for the provider
+   * @param groupId - The user group ID that should have access to this provider
+   * @returns The provider ID
+   * @throws Error if the provider creation fails
+   */
+  async createRestrictedProvider(
+    providerName: string,
+    groupId: number
+  ): Promise<number> {
+    const response = await this.request.put(
+      `${this.baseUrl}/admin/llm/provider?is_creation=true`,
+      {
+        data: {
+          name: providerName,
+          provider: "openai",
+          api_key: E2E_LLM_PROVIDER_API_KEY,
+          default_model_name: "gpt-4o",
+          is_public: false,
+          groups: [groupId],
+          personas: [],
+        },
+      }
+    );
+
+    const responseData = await this.handleResponse<{ id: number }>(
+      response,
+      "Failed to create restricted provider"
+    );
+
+    this.log(
+      `Created restricted LLM provider: ${providerName} (ID: ${responseData.id}, Group: ${groupId})`
+    );
+    return responseData.id;
+  }
+
+  /**
+   * Lists LLM providers visible to the admin (includes `is_public`).
+   *
+   * @returns Array of LLM providers with id and is_public fields
+   */
+  async listLlmProviders(): Promise<
+    Array<{
+      id: number;
+      is_public?: boolean;
+    }>
+  > {
+    const response = await this.get("/admin/llm/provider");
+    const data = await this.handleResponse<{
+      providers: Array<{ id: number; is_public?: boolean }>;
+    }>(response, "Failed to list LLM providers");
+    return data.providers;
+  }
+
+  /**
+   * Ensure at least one public LLM provider exists and is set as default.
+   *
+   * Idempotent — returns `null` if a public provider already exists,
+   * or the new provider ID if one was created.
+   *
+   * @param providerName - Name for the provider (default: "PW Default Provider")
+   * @returns The provider ID if one was created, or `null` if already present
+   */
+  async ensurePublicProvider(
+    providerName: string = "PW Default Provider"
+  ): Promise<number | null> {
+    const providers = await this.listLlmProviders();
+    const hasPublic = providers.some((p) => p.is_public);
+
+    if (hasPublic) {
+      return null;
+    }
+
+    const defaultModelName = "gpt-4o";
+    const response = await this.request.put(
+      `${this.baseUrl}/admin/llm/provider?is_creation=true`,
+      {
+        data: {
+          name: providerName,
+          provider: "openai",
+          api_key: E2E_LLM_PROVIDER_API_KEY,
+          is_public: true,
+          groups: [],
+          personas: [],
+          model_configurations: [{ name: defaultModelName, is_visible: true }],
+        },
+      }
+    );
+
+    const responseData = await this.handleResponse<{ id: number }>(
+      response,
+      "Failed to create public provider"
+    );
+
+    // Set as default so get_default_llm() works (needed for tokenization, etc.)
+    await this.setProviderAsDefault(responseData.id, defaultModelName);
+
+    this.log(
+      `Created public LLM provider: ${providerName} (ID: ${responseData.id})`
+    );
+    return responseData.id;
+  }
+
+  /**
+   * Sets an LLM provider + model as the default for chat.
+   *
+   * @param providerId - The provider ID to set as default
+   * @param modelName - The model name to set as default
+   */
+  async setProviderAsDefault(
+    providerId: number,
+    modelName: string
+  ): Promise<void> {
+    const response = await this.post("/admin/llm/default", {
+      provider_id: providerId,
+      model_name: modelName,
+    });
+
+    await this.handleResponseSoft(
+      response,
+      `Failed to set provider ${providerId} as default`
+    );
+
+    this.log(`Set LLM provider ${providerId} as default`);
+  }
+
+  /**
+   * Deletes an LLM provider.
+   *
+   * @param providerId - The provider ID to delete
+   */
+  async deleteProvider(
+    providerId: number,
+    { force = false }: { force?: boolean } = {}
+  ): Promise<void> {
+    const query = force ? "?force=true" : "";
+    const response = await this.delete(
+      `/admin/llm/provider/${providerId}${query}`
+    );
+
+    await this.handleResponseSoft(
+      response,
+      `Failed to delete provider ${providerId}`
+    );
+
+    this.log(`Deleted LLM provider: ${providerId}`);
+  }
+
+  /**
+   * Creates a user group.
+   *
+   * @param groupName - Name for the user group
+   * @param userIds - Optional list of user IDs to add to the group
+   * @param ccPairIds - Optional list of connector-credential pair IDs to associate
+   * @returns The user group ID
+   * @throws Error if the user group creation fails
+   */
+  async createUserGroup(
+    groupName: string,
+    userIds: string[] = [],
+    ccPairIds: number[] = []
+  ): Promise<number> {
+    const response = await this.post("/manage/admin/user-group", {
+      name: groupName,
+      user_ids: userIds,
+      cc_pair_ids: ccPairIds,
+    });
+
+    const responseData = await this.handleResponse<{ id: number }>(
+      response,
+      "Failed to create user group"
+    );
+
+    this.log(`Created user group: ${groupName} (ID: ${responseData.id})`);
+    return responseData.id;
+  }
+
+  /**
+   * Polls until a user group has finished syncing (is_up_to_date === true).
+   * Newly created groups start syncing immediately; many mutation endpoints
+   * reject requests while the group is still syncing.
+   */
+  async waitForGroupSync(
+    groupId: number,
+    timeout: number = 30000
+  ): Promise<void> {
+    await expect
+      .poll(
+        async () => {
+          const res = await this.get("/manage/admin/user-group");
+          const groups = await res.json();
+          const group = groups.find(
+            (g: { id: number; is_up_to_date: boolean }) => g.id === groupId
+          );
+          return group?.is_up_to_date ?? false;
+        },
+        {
+          message: `User group ${groupId} did not finish syncing`,
+          timeout,
+        }
+      )
+      .toBe(true);
+    this.log(`User group ${groupId} finished syncing`);
+  }
+
+  /**
+   * Deletes a user group.
+   *
+   * @param groupId - The user group ID to delete
+   */
+  async deleteUserGroup(groupId: number): Promise<void> {
+    const response = await this.delete(`/manage/admin/user-group/${groupId}`);
+
+    await this.handleResponseSoft(
+      response,
+      `Failed to delete user group ${groupId}`
+    );
+
+    this.log(`Deleted user group: ${groupId}`);
+  }
+
+  /**
+   * Lists all user groups.
+   */
+  async getUserGroups(): Promise<
+    Array<{ id: number; name: string; is_default: boolean }>
+  > {
+    const response = await this.get(
+      "/manage/admin/user-group?include_default=true"
+    );
+    return response.json();
+  }
+
+  async setUserRole(
+    email: string,
+    role: "admin" | "curator" | "global_curator" | "basic",
+    explicitOverride = false
+  ): Promise<void> {
+    const response = await this.request.patch(
+      `${this.baseUrl}/manage/set-user-role`,
+      {
+        data: {
+          user_email: email,
+          new_role: role,
+          explicit_override: explicitOverride,
+        },
+      }
+    );
+    await this.handleResponse(response, `Failed to set user role for ${email}`);
+    this.log(`Updated role for ${email} to ${role}`);
+  }
+
+  async deleteMcpServer(serverId: number): Promise<boolean> {
+    const response = await this.request.delete(
+      `${this.baseUrl}/admin/mcp/server/${serverId}`
+    );
+    const success = await this.handleResponseSoft(
+      response,
+      `Failed to delete MCP server ${serverId}`
+    );
+    if (success) {
+      this.log(`Deleted MCP server ${serverId}`);
+    }
+    return success;
+  }
+
+  async deleteCustomTool(toolId: number): Promise<boolean> {
+    const response = await this.request.delete(
+      `${this.baseUrl}/admin/tool/custom/${toolId}`
+    );
+    const success = await this.handleResponseSoft(
+      response,
+      `Failed to delete custom tool ${toolId}`
+    );
+    if (success) {
+      this.log(`Deleted custom tool ${toolId}`);
+    }
+    return success;
+  }
+
+  async listOpenApiTools(): Promise<
+    Array<{ id: number; name: string; description: string }>
+  > {
+    const response = await this.get("/tool/openapi");
+    return await this.handleResponse(response, "Failed to list OpenAPI tools");
+  }
+
+  async findToolByName(
+    name: string
+  ): Promise<{ id: number; name: string; description: string } | null> {
+    const tools = await this.listOpenApiTools();
+    return tools.find((tool) => tool.name === name) ?? null;
+  }
+
+  async deleteAgent(agentId: number): Promise<boolean> {
+    const response = await this.request.delete(
+      `${this.baseUrl}/persona/${agentId}`
+    );
+    const success = await this.handleResponseSoft(
+      response,
+      `Failed to delete assistant ${agentId}`
+    );
+    if (success) {
+      this.log(`Deleted assistant ${agentId}`);
+    }
+    return success;
+  }
+
+  async getAssistant(agentId: number): Promise<{
+    id: number;
+    is_public: boolean;
+    users: Array<{ id: string }>;
+    groups: number[];
+    tools: Array<{
+      id: number;
+      in_code_tool_id?: string | null;
+      mcp_server_id?: number | null;
+    }>;
+  }> {
+    const response = await this.get(`/persona/${agentId}`);
+    return await this.handleResponse(
+      response,
+      `Failed to fetch assistant ${agentId}`
+    );
+  }
+
+  async updateAgentSharing(
+    agentId: number,
+    options: {
+      userIds?: string[];
+      groupIds?: number[];
+      isPublic?: boolean;
+      labelIds?: number[];
+    }
+  ): Promise<void> {
+    const response = await this.request.patch(
+      `${this.baseUrl}/persona/${agentId}/share`,
+      {
+        data: {
+          user_ids: options.userIds,
+          group_ids: options.groupIds,
+          is_public: options.isPublic,
+          label_ids: options.labelIds,
+        },
+      }
+    );
+    await this.handleResponse(
+      response,
+      `Failed to update sharing for assistant ${agentId}`
+    );
+    this.log(
+      `Updated assistant sharing: ${agentId} (is_public=${String(
+        options.isPublic
+      )})`
+    );
+  }
+
+  async listMcpServers(): Promise<any[]> {
+    const response = await this.get(`/admin/mcp/servers`);
+    const data = await this.handleResponse<{ mcp_servers: any[] }>(
+      response,
+      "Failed to list MCP servers"
+    );
+    return data.mcp_servers;
+  }
+
+  async listAgents(options?: {
+    includeDeleted?: boolean;
+    getEditable?: boolean;
+  }): Promise<any[]> {
+    const params = new URLSearchParams();
+    if (options?.includeDeleted) {
+      params.set("include_deleted", "true");
+    }
+    if (options?.getEditable ?? true) {
+      params.set("get_editable", "true");
+    }
+    const query = params.toString();
+    const response = await this.get(
+      `/admin/persona${query ? `?${query}` : ""}`
+    );
+    return await this.handleResponse<any[]>(
+      response,
+      "Failed to list assistants"
+    );
+  }
+
+  async findAgentByName(
+    name: string,
+    options?: { includeDeleted?: boolean; getEditable?: boolean }
+  ): Promise<any | null> {
+    const assistants = await this.listAgents(options);
+    return assistants.find((assistant) => assistant.name === name) ?? null;
+  }
+
+  async registerUser(email: string, password: string): Promise<{ id: string }> {
+    const response = await this.request.post(`${this.baseUrl}/auth/register`, {
+      data: {
+        email,
+        username: email,
+        password,
+      },
+    });
+    const data = await this.handleResponse<{ id: string }>(
+      response,
+      `Failed to register user ${email}`
+    );
+    return data;
+  }
+
+  async getUserByEmail(email: string): Promise<{
+    id: string;
+    email: string;
+    role: string;
+  } | null> {
+    const response = await this.request.get(
+      `${this.baseUrl}/manage/users/accepted`,
+      {
+        params: {
+          q: email,
+          page_size: 1,
+        },
+      }
+    );
+    const data = await this.handleResponse<{ items: any[] }>(
+      response,
+      `Failed to fetch user ${email}`
+    );
+    const [user] = data.items;
+    return user
+      ? {
+          id: user.id,
+          email: user.email,
+          role: user.role,
+        }
+      : null;
+  }
+
+  async setCuratorStatus(
+    userGroupId: string,
+    userId: string,
+    isCurator: boolean = true
+  ): Promise<void> {
+    const response = await this.request.post(
+      `${this.baseUrl}/manage/admin/user-group/${userGroupId}/set-curator`,
+      {
+        data: {
+          user_id: userId,
+          is_curator: isCurator,
+        },
+      }
+    );
+    await this.handleResponse(
+      response,
+      `Failed to update curator status for ${userId}`
+    );
+  }
+
+  /**
+   * Create and activate a web search provider for testing.
+   * Uses env-backed keys when available and falls back to a placeholder key.
+   *
+   * @param providerType - Type of provider: "exa", "brave", "serper", "google_pse", "searxng"
+   * @param name - Optional name for the provider (defaults to "Test Provider")
+   * @returns The created provider ID
+   */
+  async createWebSearchProvider(
+    providerType: "exa" | "brave" | "serper" | "google_pse" | "searxng" = "exa",
+    name: string = "Test Provider"
+  ): Promise<number> {
+    const config: Record<string, string> = {};
+    if (providerType === "google_pse") {
+      config.search_engine_id = "test-engine-id";
+    }
+    if (providerType === "searxng") {
+      config.searxng_base_url = "https://test-searxng.example.com";
+    }
+
+    const response = await this.post("/admin/web-search/search-providers", {
+      name,
+      provider_type: providerType,
+      api_key: E2E_WEB_SEARCH_API_KEY,
+      api_key_changed: true,
+      config: Object.keys(config).length > 0 ? config : undefined,
+      activate: true,
+    });
+
+    const data = await this.handleResponse<{ id: number }>(
+      response,
+      `Failed to create web search provider ${providerType}`
+    );
+    return data.id;
+  }
+
+  /**
+   * Delete a web search provider.
+   *
+   * @param providerId - ID of the provider to delete
+   */
+  async deleteWebSearchProvider(providerId: number): Promise<void> {
+    const response = await this.delete(
+      `/admin/web-search/search-providers/${providerId}`
+    );
+    if (!response.ok()) {
+      const errorText = await response.text();
+      console.warn(
+        `Failed to delete web search provider ${providerId}: ${response.status()} - ${errorText}`
+      );
+    }
+  }
+
+  /**
+   * Creates an image generation configuration for testing.
+   * This enables the image generation tool in assistants.
+   *
+   * API: POST /api/admin/image-generation/config
+   * Schema (ImageGenerationConfigCreate):
+   *   - image_provider_id: string (required) - unique key
+   *   - model_name: string (required) - e.g., "dall-e-3"
+   *   - provider: string - e.g., "openai"
+   *   - api_key: string
+   *   - is_default: boolean
+   *
+   * @param imageProviderId - Unique identifier for the image generation config
+   * @param modelName - Model name (defaults to "dall-e-3")
+   * @param provider - Provider name (defaults to "openai")
+   * @param isDefault - Whether this should be the default config (defaults to true)
+   * @returns The image_provider_id
+   */
+  async createImageGenerationConfig(
+    imageProviderId: string,
+    modelName: string = "dall-e-3",
+    provider: string = "openai",
+    isDefault: boolean = true
+  ): Promise<string> {
+    const response = await this.post("/admin/image-generation/config", {
+      image_provider_id: imageProviderId,
+      model_name: modelName,
+      provider: provider,
+      api_key: E2E_IMAGE_GEN_API_KEY,
+      is_default: isDefault,
+    });
+
+    await this.handleResponse(
+      response,
+      "Failed to create image generation config"
+    );
+
+    this.log(`Created image generation config: ${imageProviderId}`);
+    return imageProviderId;
+  }
+
+  /**
+   * Deletes an image generation configuration.
+   *
+   * @param imageProviderId - The image_provider_id to delete
+   */
+  async deleteImageGenerationConfig(imageProviderId: string): Promise<void> {
+    const response = await this.delete(
+      `/admin/image-generation/config/${imageProviderId}`
+    );
+
+    await this.handleResponseSoft(
+      response,
+      `Failed to delete image generation config ${imageProviderId}`
+    );
+
+    this.log(`Deleted image generation config: ${imageProviderId}`);
+  }
+
+  // === Discord Bot Methods ===
+
+  /**
+   * Creates a Discord guild configuration.
+   * Returns the guild config with registration key (shown once).
+   *
+   * @returns The created guild config with id and registration_key
+   */
+  async createDiscordGuild(): Promise<{
+    id: number;
+    registration_key: string;
+    guild_name: string | null;
+  }> {
+    const response = await this.post("/manage/admin/discord-bot/guilds");
+
+    const guild = await this.handleResponse<{
+      id: number;
+      registration_key: string;
+      guild_name: string | null;
+    }>(response, "Failed to create Discord guild config");
+
+    this.log(
+      `Created Discord guild config: id=${guild.id}, registration_key=${guild.registration_key}`
+    );
+    return guild;
+  }
+
+  /**
+   * Lists all Discord guild configurations.
+   *
+   * @returns Array of guild configs
+   */
+  async listDiscordGuilds(): Promise<
+    Array<{
+      id: number;
+      guild_id: string | null;
+      guild_name: string | null;
+      enabled: boolean;
+    }>
+  > {
+    const response = await this.get("/manage/admin/discord-bot/guilds");
+    return await this.handleResponse(response, "Failed to list Discord guilds");
+  }
+
+  /**
+   * Gets a specific Discord guild configuration.
+   *
+   * @param guildId - The internal guild config ID
+   * @returns The guild config or null if not found
+   */
+  async getDiscordGuild(guildId: number): Promise<{
+    id: number;
+    guild_id: string | null;
+    guild_name: string | null;
+    enabled: boolean;
+    default_persona_id: number | null;
+  } | null> {
+    const response = await this.get(
+      `/manage/admin/discord-bot/guilds/${guildId}`
+    );
+    if (response.status() === 404) {
+      return null;
+    }
+    return await this.handleResponse(
+      response,
+      `Failed to get Discord guild ${guildId}`
+    );
+  }
+
+  /**
+   * Updates a Discord guild configuration.
+   *
+   * @param guildId - The internal guild config ID
+   * @param updates - The fields to update
+   * @returns The updated guild config
+   */
+  async updateDiscordGuild(
+    guildId: number,
+    updates: { enabled?: boolean; default_persona_id?: number | null }
+  ): Promise<{
+    id: number;
+    guild_id: string | null;
+    guild_name: string | null;
+    enabled: boolean;
+  }> {
+    const response = await this.request.patch(
+      `${this.baseUrl}/manage/admin/discord-bot/guilds/${guildId}`,
+      { data: updates }
+    );
+    return await this.handleResponse(
+      response,
+      `Failed to update Discord guild ${guildId}`
+    );
+  }
+
+  /**
+   * Deletes a Discord guild configuration.
+   *
+   * @param guildId - The internal guild config ID
+   */
+  async deleteDiscordGuild(guildId: number): Promise<void> {
+    const response = await this.delete(
+      `/manage/admin/discord-bot/guilds/${guildId}`
+    );
+
+    await this.handleResponseSoft(
+      response,
+      `Failed to delete Discord guild ${guildId}`
+    );
+
+    this.log(`Deleted Discord guild config: ${guildId}`);
+  }
+
+  /**
+   * Lists channels for a Discord guild configuration.
+   *
+   * @param guildConfigId - The internal guild config ID
+   * @returns Array of channel configs
+   */
+  async listDiscordChannels(guildConfigId: number): Promise<
+    Array<{
+      id: number;
+      channel_id: string;
+      channel_name: string;
+      channel_type: string;
+      enabled: boolean;
+    }>
+  > {
+    const response = await this.get(
+      `/manage/admin/discord-bot/guilds/${guildConfigId}/channels`
+    );
+    return await this.handleResponse(
+      response,
+      `Failed to list channels for guild ${guildConfigId}`
+    );
+  }
+
+  /**
+   * Updates a Discord channel configuration.
+   *
+   * @param guildConfigId - The internal guild config ID
+   * @param channelConfigId - The internal channel config ID
+   * @param updates - The fields to update
+   * @returns The updated channel config
+   */
+  async updateDiscordChannel(
+    guildConfigId: number,
+    channelConfigId: number,
+    updates: {
+      enabled?: boolean;
+      thread_only_mode?: boolean;
+      require_bot_invocation?: boolean;
+      persona_override_id?: number | null;
+    }
+  ): Promise<{
+    id: number;
+    channel_id: string;
+    channel_name: string;
+    enabled: boolean;
+  }> {
+    const response = await this.request.patch(
+      `${this.baseUrl}/manage/admin/discord-bot/guilds/${guildConfigId}/channels/${channelConfigId}`,
+      { data: updates }
+    );
+    return await this.handleResponse(
+      response,
+      `Failed to update channel ${channelConfigId}`
+    );
+  }
+
+  // === User Management Methods ===
+
+  async deactivateUser(email: string): Promise<void> {
+    const response = await this.request.patch(
+      `${this.baseUrl}/manage/admin/deactivate-user`,
+      { data: { user_email: email } }
+    );
+    await this.handleResponse(response, `Failed to deactivate user ${email}`);
+    this.log(`Deactivated user: ${email}`);
+  }
+
+  async activateUser(email: string): Promise<void> {
+    const response = await this.request.patch(
+      `${this.baseUrl}/manage/admin/activate-user`,
+      { data: { user_email: email } }
+    );
+    await this.handleResponse(response, `Failed to activate user ${email}`);
+    this.log(`Activated user: ${email}`);
+  }
+
+  async deleteUser(email: string): Promise<void> {
+    const response = await this.request.delete(
+      `${this.baseUrl}/manage/admin/delete-user`,
+      { data: { user_email: email } }
+    );
+    await this.handleResponse(response, `Failed to delete user ${email}`);
+    this.log(`Deleted user: ${email}`);
+  }
+
+  async cancelInvite(email: string): Promise<void> {
+    const response = await this.request.patch(
+      `${this.baseUrl}/manage/admin/remove-invited-user`,
+      { data: { user_email: email } }
+    );
+    await this.handleResponse(response, `Failed to cancel invite for ${email}`);
+    this.log(`Cancelled invite for: ${email}`);
+  }
+
+  async inviteUsers(emails: string[]): Promise<void> {
+    const response = await this.put("/manage/admin/users", { emails });
+    await this.handleResponse(response, `Failed to invite users`);
+    this.log(`Invited users: ${emails.join(", ")}`);
+  }
+
+  async setPersonalName(name: string): Promise<void> {
+    const response = await this.request.patch(
+      `${this.baseUrl}/user/personalization`,
+      { data: { name } }
+    );
+    await this.handleResponse(
+      response,
+      `Failed to set personal name to ${name}`
+    );
+    this.log(`Set personal name: ${name}`);
+  }
+
+  // === Chat Session Methods ===
+
+  /**
+   * Creates a chat session with a specific description.
+   *
+   * @param description - The description/title for the chat session
+   * @param personaId - The persona/assistant ID to use (defaults to 0)
+   * @returns The chat session ID
+   * @throws Error if the chat session creation fails
+   */
+  async createChatSession(
+    description: string,
+    personaId: number = 0
+  ): Promise<string> {
+    const response = await this.post("/chat/create-chat-session", {
+      persona_id: personaId,
+      description,
+    });
+    const data = await this.handleResponse<{ chat_session_id: string }>(
+      response,
+      "Failed to create chat session"
+    );
+    this.log(
+      `Created chat session: ${description} (ID: ${data.chat_session_id})`
+    );
+    return data.chat_session_id;
+  }
+
+  /**
+   * Deletes a chat session.
+   *
+   * @param chatId - The chat session ID to delete
+   */
+  async deleteChatSession(chatId: string): Promise<void> {
+    const response = await this.delete(`/chat/delete-chat-session/${chatId}`);
+    await this.handleResponseSoft(
+      response,
+      `Failed to delete chat session ${chatId}`
+    );
+    this.log(`Deleted chat session: ${chatId}`);
+  }
+
+  // === Project Methods ===
+
+  /**
+   * Creates a project with a specific name.
+   *
+   * @param name - The name for the project
+   * @returns The project ID
+   * @throws Error if the project creation fails
+   */
+  async createProject(name: string): Promise<number> {
+    const response = await this.post(
+      `/user/projects/create?name=${encodeURIComponent(name)}`
+    );
+    const data = await this.handleResponse<{ id: number }>(
+      response,
+      "Failed to create project"
+    );
+    this.log(`Created project: ${name} (ID: ${data.id})`);
+    return data.id;
+  }
+
+  /**
+   * Deletes a project.
+   *
+   * @param projectId - The project ID to delete
+   */
+  async deleteProject(projectId: number): Promise<void> {
+    const response = await this.delete(`/user/projects/${projectId}`);
+    await this.handleResponseSoft(
+      response,
+      `Failed to delete project ${projectId}`
+    );
+    this.log(`Deleted project: ${projectId}`);
+  }
+
+  /**
+   * Sets the current user's default app mode preference.
+   *
+   * @param mode - The default mode to persist ("CHAT" or "SEARCH")
+   */
+  async setDefaultAppMode(mode: "CHAT" | "SEARCH"): Promise<void> {
+    const response = await this.request.patch(
+      `${this.baseUrl}/user/default-app-mode`,
+      {
+        data: { default_app_mode: mode },
+      }
+    );
+    await this.handleResponse(
+      response,
+      `Failed to set default app mode to ${mode}`
+    );
+    this.log(`Set default app mode: ${mode}`);
+  }
+}

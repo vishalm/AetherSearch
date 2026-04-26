@@ -1,0 +1,402 @@
+from __future__ import annotations
+
+from enum import Enum as PyEnum
+from typing import ClassVar
+
+
+class AccountType(str, PyEnum):
+    """
+    What kind of account this is — determines whether the user
+    enters the group-based permission system.
+
+    STANDARD + SERVICE_ACCOUNT → participate in group system
+    BOT, EXT_PERM_USER, ANONYMOUS → fixed behavior
+    """
+
+    STANDARD = "STANDARD"
+    BOT = "BOT"
+    EXT_PERM_USER = "EXT_PERM_USER"
+    SERVICE_ACCOUNT = "SERVICE_ACCOUNT"
+    ANONYMOUS = "ANONYMOUS"
+
+    def is_web_login(self) -> bool:
+        """Whether this account type supports interactive web login."""
+        return self not in (
+            AccountType.BOT,
+            AccountType.EXT_PERM_USER,
+        )
+
+
+class GrantSource(str, PyEnum):
+    """How a permission grant was created."""
+
+    USER = "USER"
+    SCIM = "SCIM"
+    SYSTEM = "SYSTEM"
+
+
+class IndexingStatus(str, PyEnum):
+    NOT_STARTED = "not_started"
+    IN_PROGRESS = "in_progress"
+    SUCCESS = "success"
+    CANCELED = "canceled"
+    FAILED = "failed"
+    COMPLETED_WITH_ERRORS = "completed_with_errors"
+
+    def is_terminal(self) -> bool:
+        terminal_states = {
+            IndexingStatus.SUCCESS,
+            IndexingStatus.COMPLETED_WITH_ERRORS,
+            IndexingStatus.CANCELED,
+            IndexingStatus.FAILED,
+        }
+        return self in terminal_states
+
+    def is_successful(self) -> bool:
+        return (
+            self == IndexingStatus.SUCCESS
+            or self == IndexingStatus.COMPLETED_WITH_ERRORS
+        )
+
+
+class PermissionSyncStatus(str, PyEnum):
+    """Status enum for permission sync attempts"""
+
+    NOT_STARTED = "not_started"
+    IN_PROGRESS = "in_progress"
+    SUCCESS = "success"
+    CANCELED = "canceled"
+    FAILED = "failed"
+    COMPLETED_WITH_ERRORS = "completed_with_errors"
+
+    def is_terminal(self) -> bool:
+        terminal_states = {
+            PermissionSyncStatus.SUCCESS,
+            PermissionSyncStatus.COMPLETED_WITH_ERRORS,
+            PermissionSyncStatus.CANCELED,
+            PermissionSyncStatus.FAILED,
+        }
+        return self in terminal_states
+
+    def is_successful(self) -> bool:
+        return (
+            self == PermissionSyncStatus.SUCCESS
+            or self == PermissionSyncStatus.COMPLETED_WITH_ERRORS
+        )
+
+
+class IndexingMode(str, PyEnum):
+    UPDATE = "update"
+    REINDEX = "reindex"
+
+
+class ProcessingMode(str, PyEnum):
+    """Determines how documents are processed after fetching."""
+
+    REGULAR = "REGULAR"  # Full pipeline: chunk → embed → Vespa
+    FILE_SYSTEM = "FILE_SYSTEM"  # Write to file system only (JSON documents)
+    RAW_BINARY = "RAW_BINARY"  # Write raw binary to S3 (no text extraction)
+
+
+class SyncType(str, PyEnum):
+    DOCUMENT_SET = "document_set"
+    USER_GROUP = "user_group"
+    CONNECTOR_DELETION = "connector_deletion"
+    PRUNING = "pruning"  # not really a sync, but close enough
+    EXTERNAL_PERMISSIONS = "external_permissions"
+    EXTERNAL_GROUP = "external_group"
+
+    def __str__(self) -> str:
+        return self.value
+
+
+class SyncStatus(str, PyEnum):
+    IN_PROGRESS = "in_progress"
+    SUCCESS = "success"
+    FAILED = "failed"
+    CANCELED = "canceled"
+
+    def is_terminal(self) -> bool:
+        terminal_states = {
+            SyncStatus.SUCCESS,
+            SyncStatus.FAILED,
+        }
+        return self in terminal_states
+
+
+class MCPAuthenticationType(str, PyEnum):
+    NONE = "NONE"
+    API_TOKEN = "API_TOKEN"
+    OAUTH = "OAUTH"
+    PT_OAUTH = "PT_OAUTH"  # Pass-Through OAuth
+
+
+class MCPTransport(str, PyEnum):
+    """MCP transport types"""
+
+    STDIO = "STDIO"  # TODO: currently unsupported, need to add a user guide for setup
+    SSE = "SSE"  # Server-Sent Events (deprecated but still used)
+    STREAMABLE_HTTP = "STREAMABLE_HTTP"  # Modern HTTP streaming
+
+
+class MCPAuthenticationPerformer(str, PyEnum):
+    ADMIN = "ADMIN"
+    PER_USER = "PER_USER"
+
+
+class MCPServerStatus(str, PyEnum):
+    CREATED = "CREATED"  # Server created, needs auth configuration
+    AWAITING_AUTH = "AWAITING_AUTH"  # Auth configured, pending user authentication
+    FETCHING_TOOLS = "FETCHING_TOOLS"  # Auth complete, fetching tools
+    CONNECTED = "CONNECTED"  # Fully configured and connected
+    DISCONNECTED = "DISCONNECTED"  # Server disconnected, but not deleted
+
+
+# Consistent with Celery task statuses
+class TaskStatus(str, PyEnum):
+    PENDING = "PENDING"
+    STARTED = "STARTED"
+    SUCCESS = "SUCCESS"
+    FAILURE = "FAILURE"
+
+
+class IndexModelStatus(str, PyEnum):
+    PAST = "PAST"
+    PRESENT = "PRESENT"
+    FUTURE = "FUTURE"
+
+    def is_current(self) -> bool:
+        return self == IndexModelStatus.PRESENT
+
+    def is_future(self) -> bool:
+        return self == IndexModelStatus.FUTURE
+
+
+class ChatSessionSharedStatus(str, PyEnum):
+    PUBLIC = "public"
+    PRIVATE = "private"
+
+
+class ConnectorCredentialPairStatus(str, PyEnum):
+    SCHEDULED = "SCHEDULED"
+    INITIAL_INDEXING = "INITIAL_INDEXING"
+    ACTIVE = "ACTIVE"
+    PAUSED = "PAUSED"
+    DELETING = "DELETING"
+    INVALID = "INVALID"
+
+    @classmethod
+    def active_statuses(cls) -> list["ConnectorCredentialPairStatus"]:
+        return [
+            ConnectorCredentialPairStatus.ACTIVE,
+            ConnectorCredentialPairStatus.SCHEDULED,
+            ConnectorCredentialPairStatus.INITIAL_INDEXING,
+        ]
+
+    @classmethod
+    def indexable_statuses(self) -> list["ConnectorCredentialPairStatus"]:
+        # Superset of active statuses for indexing model swaps
+        return self.active_statuses() + [
+            ConnectorCredentialPairStatus.PAUSED,
+        ]
+
+    def is_active(self) -> bool:
+        return self in self.active_statuses()
+
+
+class AccessType(str, PyEnum):
+    PUBLIC = "public"
+    PRIVATE = "private"
+    SYNC = "sync"
+
+
+class EmbeddingPrecision(str, PyEnum):
+    # matches vespa tensor type
+    # only support float / bfloat16 for now, since there's not a
+    # good reason to specify anything else
+    BFLOAT16 = "bfloat16"
+    FLOAT = "float"
+
+
+class UserFileStatus(str, PyEnum):
+    PROCESSING = "PROCESSING"
+    INDEXING = "INDEXING"
+    COMPLETED = "COMPLETED"
+    SKIPPED = "SKIPPED"
+    FAILED = "FAILED"
+    CANCELED = "CANCELED"
+    DELETING = "DELETING"
+
+
+class ThemePreference(str, PyEnum):
+    LIGHT = "light"
+    DARK = "dark"
+    SYSTEM = "system"
+
+
+class DefaultAppMode(str, PyEnum):
+    AUTO = "AUTO"
+    CHAT = "CHAT"
+    SEARCH = "SEARCH"
+
+
+class SwitchoverType(str, PyEnum):
+    REINDEX = "reindex"
+    ACTIVE_ONLY = "active_only"
+    INSTANT = "instant"
+
+
+class OpenSearchDocumentMigrationStatus(str, PyEnum):
+    """Status for Vespa to OpenSearch migration per document."""
+
+    PENDING = "pending"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    PERMANENTLY_FAILED = "permanently_failed"
+
+
+class OpenSearchTenantMigrationStatus(str, PyEnum):
+    """Status for tenant-level OpenSearch migration."""
+
+    PENDING = "pending"
+    COMPLETED = "completed"
+
+
+# Onyx Build Mode Enums
+class BuildSessionStatus(str, PyEnum):
+    ACTIVE = "active"
+    IDLE = "idle"
+
+
+class SharingScope(str, PyEnum):
+    PRIVATE = "private"
+    PUBLIC_ORG = "public_org"
+    PUBLIC_GLOBAL = "public_global"
+
+
+class SandboxStatus(str, PyEnum):
+    PROVISIONING = "provisioning"
+    RUNNING = "running"
+    SLEEPING = "sleeping"  # Pod terminated, snapshots saved to S3
+    TERMINATED = "terminated"
+    FAILED = "failed"
+
+    def is_active(self) -> bool:
+        """Check if sandbox is in an active state (running)."""
+        return self == SandboxStatus.RUNNING
+
+    def is_terminal(self) -> bool:
+        """Check if sandbox is in a terminal state."""
+        return self in (SandboxStatus.TERMINATED, SandboxStatus.FAILED)
+
+    def is_sleeping(self) -> bool:
+        """Check if sandbox is sleeping (pod terminated but can be restored)."""
+        return self == SandboxStatus.SLEEPING
+
+
+class ArtifactType(str, PyEnum):
+    WEB_APP = "web_app"
+    PPTX = "pptx"
+    DOCX = "docx"
+    IMAGE = "image"
+    MARKDOWN = "markdown"
+    EXCEL = "excel"
+
+
+class HierarchyNodeType(str, PyEnum):
+    """Types of hierarchy nodes across different sources"""
+
+    # Generic
+    FOLDER = "folder"
+
+    # Root-level type
+    SOURCE = "source"  # Root node for a source (e.g., "Google Drive")
+
+    # Google Drive
+    SHARED_DRIVE = "shared_drive"
+    MY_DRIVE = "my_drive"
+
+    # Confluence
+    SPACE = "space"
+    PAGE = "page"  # Confluence pages can be both hierarchy nodes AND documents
+
+    # Jira
+    PROJECT = "project"
+
+    # Notion
+    DATABASE = "database"
+    WORKSPACE = "workspace"
+
+    # Sharepoint
+    SITE = "site"
+    DRIVE = "drive"  # Document library within a site
+
+    # Slack
+    CHANNEL = "channel"
+
+
+class LLMModelFlowType(str, PyEnum):
+    CHAT = "chat"
+    VISION = "vision"
+    CONTEXTUAL_RAG = "contextual_rag"
+
+
+class HookPoint(str, PyEnum):
+    DOCUMENT_INGESTION = "document_ingestion"
+    QUERY_PROCESSING = "query_processing"
+
+
+class HookFailStrategy(str, PyEnum):
+    HARD = "hard"  # exception propagates, pipeline aborts
+    SOFT = "soft"  # log error, return original input, pipeline continues
+
+
+class Permission(str, PyEnum):
+    """
+    Permission tokens for group-based authorization.
+    19 tokens total. full_admin_panel_access is an override —
+    if present, any permission check passes.
+    """
+
+    # Basic (auto-granted to every new group)
+    BASIC_ACCESS = "basic"
+
+    # Read tokens — implied only, never granted directly
+    READ_CONNECTORS = "read:connectors"
+    READ_DOCUMENT_SETS = "read:document_sets"
+    READ_AGENTS = "read:agents"
+    READ_USERS = "read:users"
+
+    # Add / Manage pairs
+    ADD_AGENTS = "add:agents"
+    MANAGE_AGENTS = "manage:agents"
+    MANAGE_DOCUMENT_SETS = "manage:document_sets"
+    ADD_CONNECTORS = "add:connectors"
+    MANAGE_CONNECTORS = "manage:connectors"
+    MANAGE_LLMS = "manage:llms"
+
+    # Toggle tokens
+    READ_AGENT_ANALYTICS = "read:agent_analytics"
+    MANAGE_ACTIONS = "manage:actions"
+    READ_QUERY_HISTORY = "read:query_history"
+    MANAGE_USER_GROUPS = "manage:user_groups"
+    CREATE_USER_API_KEYS = "create:user_api_keys"
+    CREATE_SERVICE_ACCOUNT_API_KEYS = "create:service_account_api_keys"
+    CREATE_SLACK_DISCORD_BOTS = "create:slack_discord_bots"
+
+    # Override — any permission check passes
+    FULL_ADMIN_PANEL_ACCESS = "admin"
+
+    # Permissions that are implied by other grants and must never be stored
+    # directly in the permission_grant table.
+    IMPLIED: ClassVar[frozenset[Permission]]
+
+
+Permission.IMPLIED = frozenset(
+    {
+        Permission.READ_CONNECTORS,
+        Permission.READ_DOCUMENT_SETS,
+        Permission.READ_AGENTS,
+        Permission.READ_USERS,
+    }
+)
