@@ -1,7 +1,7 @@
-from onyx.indexing.chunking.tabular_section_chunker.analysis import SheetAnalysis
-from onyx.indexing.chunking.tabular_section_chunker.util import label
-from onyx.indexing.chunking.tabular_section_chunker.util import pack_lines
-from onyx.natural_language_processing.utils import BaseTokenizer
+from aethersearch.indexing.chunking.tabular_section_chunker.analysis import SheetAnalysis
+from aethersearch.indexing.chunking.tabular_section_chunker.util import label
+from aethersearch.indexing.chunking.tabular_section_chunker.util import pack_lines
+from aethersearch.natural_language_processing.utils import BaseTokenizer
 
 MAX_NUMERIC_COLS = 12
 MAX_CATEGORICAL_COLS = 6

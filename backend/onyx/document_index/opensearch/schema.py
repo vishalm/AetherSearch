@@ -12,23 +12,23 @@ from pydantic import model_serializer
 from pydantic import model_validator
 from pydantic import SerializerFunctionWrapHandler
 
-from onyx.configs.app_configs import OPENSEARCH_INDEX_NUM_REPLICAS
-from onyx.configs.app_configs import OPENSEARCH_INDEX_NUM_SHARDS
-from onyx.configs.app_configs import OPENSEARCH_TEXT_ANALYZER
-from onyx.configs.app_configs import USING_AWS_MANAGED_OPENSEARCH
-from onyx.document_index.interfaces_new import TenantState
-from onyx.document_index.opensearch.constants import DEFAULT_MAX_CHUNK_SIZE
-from onyx.document_index.opensearch.constants import EF_CONSTRUCTION
-from onyx.document_index.opensearch.constants import EF_SEARCH
-from onyx.document_index.opensearch.constants import M
-from onyx.document_index.opensearch.string_filtering import DocumentIDTooLongError
-from onyx.document_index.opensearch.string_filtering import (
+from aethersearch.configs.app_configs import OPENSEARCH_INDEX_NUM_REPLICAS
+from aethersearch.configs.app_configs import OPENSEARCH_INDEX_NUM_SHARDS
+from aethersearch.configs.app_configs import OPENSEARCH_TEXT_ANALYZER
+from aethersearch.configs.app_configs import USING_AWS_MANAGED_OPENSEARCH
+from aethersearch.document_index.interfaces_new import TenantState
+from aethersearch.document_index.opensearch.constants import DEFAULT_MAX_CHUNK_SIZE
+from aethersearch.document_index.opensearch.constants import EF_CONSTRUCTION
+from aethersearch.document_index.opensearch.constants import EF_SEARCH
+from aethersearch.document_index.opensearch.constants import M
+from aethersearch.document_index.opensearch.string_filtering import DocumentIDTooLongError
+from aethersearch.document_index.opensearch.string_filtering import (
     filter_and_validate_document_id,
 )
-from onyx.document_index.opensearch.string_filtering import (
+from aethersearch.document_index.opensearch.string_filtering import (
     MAX_DOCUMENT_ID_ENCODED_LENGTH,
 )
-from onyx.utils.tenant import get_tenant_id_short_string
+from aethersearch.utils.tenant import get_tenant_id_short_string
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.contextvars import get_current_tenant_id
 

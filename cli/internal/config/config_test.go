@@ -19,18 +19,18 @@ func clearEnvVars(t *testing.T) {
 
 func writeConfig(t *testing.T, dir string, data []byte) {
 	t.Helper()
-	onyxDir := filepath.Join(dir, "onyx-cli")
-	if err := os.MkdirAll(onyxDir, 0o755); err != nil {
+	aethersearchDir := filepath.Join(dir, "aethersearch-cli")
+	if err := os.MkdirAll(aethersearchDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(filepath.Join(onyxDir, "config.json"), data, 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(aethersearchDir, "config.json"), data, 0o644); err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestDefaultConfig(t *testing.T) {
 	cfg := DefaultConfig()
-	if cfg.ServerURL != "https://cloud.onyx.app" {
+	if cfg.ServerURL != "https://cloud.aethersearch.app" {
 		t.Errorf("expected default server URL, got %s", cfg.ServerURL)
 	}
 	if cfg.APIKey != "" {
@@ -58,7 +58,7 @@ func TestLoadDefaults(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", dir)
 
 	cfg := Load()
-	if cfg.ServerURL != "https://cloud.onyx.app" {
+	if cfg.ServerURL != "https://cloud.aethersearch.app" {
 		t.Errorf("expected default URL, got %s", cfg.ServerURL)
 	}
 	if cfg.APIKey != "" {
@@ -72,14 +72,14 @@ func TestLoadFromFile(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", dir)
 
 	data, _ := json.Marshal(map[string]interface{}{
-		"server_url":         "https://my-onyx.example.com",
+		"server_url":         "https://my-aethersearch.example.com",
 		"api_key":            "test-key-123",
 		"default_persona_id": 5,
 	})
 	writeConfig(t, dir, data)
 
 	cfg := Load()
-	if cfg.ServerURL != "https://my-onyx.example.com" {
+	if cfg.ServerURL != "https://my-aethersearch.example.com" {
 		t.Errorf("got %s", cfg.ServerURL)
 	}
 	if cfg.APIKey != "test-key-123" {
@@ -98,7 +98,7 @@ func TestLoadCorruptFile(t *testing.T) {
 	writeConfig(t, dir, []byte("not valid json {{{"))
 
 	cfg := Load()
-	if cfg.ServerURL != "https://cloud.onyx.app" {
+	if cfg.ServerURL != "https://cloud.aethersearch.app" {
 		t.Errorf("expected default URL on corrupt file, got %s", cfg.ServerURL)
 	}
 }
@@ -178,7 +178,7 @@ func TestSaveAndReload(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("XDG_CONFIG_HOME", dir)
 
-	cfg := OnyxCliConfig{
+	cfg := AetherSearchCliConfig{
 		ServerURL:      "https://saved.example.com",
 		APIKey:         "saved-key",
 		DefaultAgentID: 10,
@@ -247,7 +247,7 @@ func TestSaveCreatesParentDirs(t *testing.T) {
 	nested := filepath.Join(dir, "deep", "nested")
 	t.Setenv("XDG_CONFIG_HOME", nested)
 
-	if err := Save(OnyxCliConfig{APIKey: "test"}); err != nil {
+	if err := Save(AetherSearchCliConfig{APIKey: "test"}); err != nil {
 		t.Fatal(err)
 	}
 

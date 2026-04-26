@@ -259,7 +259,7 @@ export default function AgentViewerModal({ agent }: AgentViewerModalProps) {
             )}
             <Content
               icon={SvgUser}
-              title={agent.owner?.email ?? "Onyx"}
+              title={agent.owner?.email ?? "AetherSearch"}
               sizePreset="main-ui"
               variant="body"
               prominence="muted"
@@ -350,7 +350,7 @@ export default function AgentViewerModal({ agent }: AgentViewerModalProps) {
                 {defaultModel && (
                   <InputHorizontal
                     title="Default Model"
-                    description="This model will be used by Onyx by default in your chats."
+                    description="This model will be used by AetherSearch by default in your chats."
                   >
                     <Text>{defaultModel}</Text>
                   </InputHorizontal>

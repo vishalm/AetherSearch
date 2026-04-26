@@ -1,7 +1,7 @@
 """
 Test suite for MCP Pass-Through OAuth (PT_OAUTH) integration.
 
-Tests the pass-through OAuth flow where Onyx forwards the user's login OAuth token
+Tests the pass-through OAuth flow where AetherSearch forwards the user's login OAuth token
 to an MCP server for authentication.
 
 This test:
@@ -21,21 +21,21 @@ from uuid import uuid4
 import pytest
 from sqlalchemy.orm import Session
 
-from onyx.chat.emitter import Emitter
-from onyx.db.enums import MCPAuthenticationPerformer
-from onyx.db.enums import MCPAuthenticationType
-from onyx.db.enums import MCPTransport
-from onyx.db.mcp import create_mcp_server__no_commit
-from onyx.db.models import OAuthAccount
-from onyx.db.models import Persona
-from onyx.db.models import Tool
-from onyx.db.models import User
-from onyx.llm.factory import get_default_llm
-from onyx.server.query_and_chat.placement import Placement
-from onyx.tools.models import CustomToolCallSummary
-from onyx.tools.tool_constructor import construct_tools
-from onyx.tools.tool_constructor import SearchToolConfig
-from onyx.tools.tool_implementations.mcp.mcp_tool import MCPTool
+from aethersearch.chat.emitter import Emitter
+from aethersearch.db.enums import MCPAuthenticationPerformer
+from aethersearch.db.enums import MCPAuthenticationType
+from aethersearch.db.enums import MCPTransport
+from aethersearch.db.mcp import create_mcp_server__no_commit
+from aethersearch.db.models import OAuthAccount
+from aethersearch.db.models import Persona
+from aethersearch.db.models import Tool
+from aethersearch.db.models import User
+from aethersearch.llm.factory import get_default_llm
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.tools.models import CustomToolCallSummary
+from aethersearch.tools.tool_constructor import construct_tools
+from aethersearch.tools.tool_constructor import SearchToolConfig
+from aethersearch.tools.tool_implementations.mcp.mcp_tool import MCPTool
 from tests.external_dependency_unit.answer.conftest import ensure_default_llm_provider
 from tests.external_dependency_unit.conftest import create_test_user
 
@@ -77,7 +77,7 @@ class TestMCPPassThroughOAuth:
         """
         Test that PT_OAUTH correctly passes the user's login OAuth token to MCPTool.
 
-        This simulates a user who logged into Onyx with Google OAuth and is using
+        This simulates a user who logged into AetherSearch with Google OAuth and is using
         an MCP server that requires their Google token for authentication.
         """
         # Create user with login OAuth token (simulating Google OAuth login)
@@ -378,7 +378,7 @@ class TestMCPPassThroughOAuth:
             return mocked_response
 
         with patch(
-            "onyx.tools.tool_implementations.mcp.mcp_tool.call_mcp_tool",
+            "aethersearch.tools.tool_implementations.mcp.mcp_tool.call_mcp_tool",
             side_effect=mock_call_mcp_tool,
         ):
             # Run the tool

@@ -4,14 +4,14 @@
 
 This Enterprise Edition Contribution IP Assignment Agreement (the “**Agreement**”) is entered into by and between:
 
-- **DanswerAI, Inc.** (“**Company**”), the maintainer of the Onyx product, and  
+- **DanswerAI, Inc.** (“**Company**”), the maintainer of the AetherSearch product, and  
 - **Contributor:** ______________________ (“**Contributor**”)
 
 Company and Contributor may be referred to individually as a “**Party**” and collectively as the “**Parties**.”
 
 ## 1. Purpose and scope
 
-Onyx’s repository is primarily licensed under the MIT License, but includes **proprietary-licensed Enterprise Edition components** (as defined below). This Agreement applies **only** to Contributions made to the Enterprise Edition components and is intended to ensure Company owns all rights necessary to license, distribute, and commercialize Enterprise Edition features.
+AetherSearch’s repository is primarily licensed under the MIT License, but includes **proprietary-licensed Enterprise Edition components** (as defined below). This Agreement applies **only** to Contributions made to the Enterprise Edition components and is intended to ensure Company owns all rights necessary to license, distribute, and commercialize Enterprise Edition features.
 
 ## 2. Definitions
 

@@ -1,6 +1,6 @@
 variable "name" {
   type        = string
-  description = "Name of the AetherSearch resources. Example: 'onyx'"
+  description = "Name of the AetherSearch resources. Example: 'aethersearch'"
   default     = "aethersearch"
 }
 

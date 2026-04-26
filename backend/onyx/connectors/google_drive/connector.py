@@ -21,75 +21,75 @@ from google.oauth2.service_account import Credentials as ServiceAccountCredentia
 from googleapiclient.errors import HttpError
 from typing_extensions import override
 
-from onyx.access.models import ExternalAccess
-from onyx.configs.app_configs import GOOGLE_DRIVE_CONNECTOR_SIZE_THRESHOLD
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.app_configs import MAX_DRIVE_WORKERS
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.connectors.exceptions import CredentialExpiredError
-from onyx.connectors.exceptions import InsufficientPermissionsError
-from onyx.connectors.google_drive.doc_conversion import build_slim_document
-from onyx.connectors.google_drive.doc_conversion import convert_drive_item_to_document
-from onyx.connectors.google_drive.doc_conversion import onyx_document_id_from_drive_file
-from onyx.connectors.google_drive.doc_conversion import PermissionSyncContext
-from onyx.connectors.google_drive.file_retrieval import crawl_folders_for_files
-from onyx.connectors.google_drive.file_retrieval import DriveFileFieldType
-from onyx.connectors.google_drive.file_retrieval import get_all_files_for_oauth
-from onyx.connectors.google_drive.file_retrieval import (
+from aethersearch.access.models import ExternalAccess
+from aethersearch.configs.app_configs import GOOGLE_DRIVE_CONNECTOR_SIZE_THRESHOLD
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.app_configs import MAX_DRIVE_WORKERS
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.connectors.exceptions import CredentialExpiredError
+from aethersearch.connectors.exceptions import InsufficientPermissionsError
+from aethersearch.connectors.google_drive.doc_conversion import build_slim_document
+from aethersearch.connectors.google_drive.doc_conversion import convert_drive_item_to_document
+from aethersearch.connectors.google_drive.doc_conversion import aethersearch_document_id_from_drive_file
+from aethersearch.connectors.google_drive.doc_conversion import PermissionSyncContext
+from aethersearch.connectors.google_drive.file_retrieval import crawl_folders_for_files
+from aethersearch.connectors.google_drive.file_retrieval import DriveFileFieldType
+from aethersearch.connectors.google_drive.file_retrieval import get_all_files_for_oauth
+from aethersearch.connectors.google_drive.file_retrieval import (
     get_all_files_in_my_drive_and_shared,
 )
-from onyx.connectors.google_drive.file_retrieval import get_external_access_for_folder
-from onyx.connectors.google_drive.file_retrieval import (
+from aethersearch.connectors.google_drive.file_retrieval import get_external_access_for_folder
+from aethersearch.connectors.google_drive.file_retrieval import (
     get_files_by_web_view_links_batch,
 )
-from onyx.connectors.google_drive.file_retrieval import get_files_in_shared_drive
-from onyx.connectors.google_drive.file_retrieval import get_folder_metadata
-from onyx.connectors.google_drive.file_retrieval import get_root_folder_id
-from onyx.connectors.google_drive.file_retrieval import get_shared_drive_name
-from onyx.connectors.google_drive.file_retrieval import has_link_only_permission
-from onyx.connectors.google_drive.models import DriveRetrievalStage
-from onyx.connectors.google_drive.models import GoogleDriveCheckpoint
-from onyx.connectors.google_drive.models import GoogleDriveFileType
-from onyx.connectors.google_drive.models import RetrievedDriveFile
-from onyx.connectors.google_drive.models import StageCompletion
-from onyx.connectors.google_utils.google_auth import get_google_creds
-from onyx.connectors.google_utils.google_utils import execute_paginated_retrieval
-from onyx.connectors.google_utils.google_utils import get_file_owners
-from onyx.connectors.google_utils.google_utils import GoogleFields
-from onyx.connectors.google_utils.resources import get_admin_service
-from onyx.connectors.google_utils.resources import get_drive_service
-from onyx.connectors.google_utils.resources import GoogleDriveService
-from onyx.connectors.google_utils.shared_constants import (
+from aethersearch.connectors.google_drive.file_retrieval import get_files_in_shared_drive
+from aethersearch.connectors.google_drive.file_retrieval import get_folder_metadata
+from aethersearch.connectors.google_drive.file_retrieval import get_root_folder_id
+from aethersearch.connectors.google_drive.file_retrieval import get_shared_drive_name
+from aethersearch.connectors.google_drive.file_retrieval import has_link_only_permission
+from aethersearch.connectors.google_drive.models import DriveRetrievalStage
+from aethersearch.connectors.google_drive.models import GoogleDriveCheckpoint
+from aethersearch.connectors.google_drive.models import GoogleDriveFileType
+from aethersearch.connectors.google_drive.models import RetrievedDriveFile
+from aethersearch.connectors.google_drive.models import StageCompletion
+from aethersearch.connectors.google_utils.google_auth import get_google_creds
+from aethersearch.connectors.google_utils.google_utils import execute_paginated_retrieval
+from aethersearch.connectors.google_utils.google_utils import get_file_owners
+from aethersearch.connectors.google_utils.google_utils import GoogleFields
+from aethersearch.connectors.google_utils.resources import get_admin_service
+from aethersearch.connectors.google_utils.resources import get_drive_service
+from aethersearch.connectors.google_utils.resources import GoogleDriveService
+from aethersearch.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_PRIMARY_ADMIN_KEY,
 )
-from onyx.connectors.google_utils.shared_constants import MISSING_SCOPES_ERROR_STR
-from onyx.connectors.google_utils.shared_constants import ONYX_SCOPE_INSTRUCTIONS
-from onyx.connectors.google_utils.shared_constants import SLIM_BATCH_SIZE
-from onyx.connectors.google_utils.shared_constants import USER_FIELDS
-from onyx.connectors.interfaces import CheckpointedConnectorWithPermSync
-from onyx.connectors.interfaces import CheckpointOutput
-from onyx.connectors.interfaces import GenerateSlimDocumentOutput
-from onyx.connectors.interfaces import NormalizationResult
-from onyx.connectors.interfaces import Resolver
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.interfaces import SlimConnector
-from onyx.connectors.interfaces import SlimConnectorWithPermSync
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import ConnectorMissingCredentialError
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentFailure
-from onyx.connectors.models import EntityFailure
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import SlimDocument
-from onyx.db.enums import HierarchyNodeType
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.utils.logger import setup_logger
-from onyx.utils.retry_wrapper import retry_builder
-from onyx.utils.threadpool_concurrency import parallel_yield
-from onyx.utils.threadpool_concurrency import run_functions_tuples_in_parallel
-from onyx.utils.threadpool_concurrency import ThreadSafeDict
-from onyx.utils.threadpool_concurrency import ThreadSafeSet
+from aethersearch.connectors.google_utils.shared_constants import MISSING_SCOPES_ERROR_STR
+from aethersearch.connectors.google_utils.shared_constants import AETHERSEARCH_SCOPE_INSTRUCTIONS
+from aethersearch.connectors.google_utils.shared_constants import SLIM_BATCH_SIZE
+from aethersearch.connectors.google_utils.shared_constants import USER_FIELDS
+from aethersearch.connectors.interfaces import CheckpointedConnectorWithPermSync
+from aethersearch.connectors.interfaces import CheckpointOutput
+from aethersearch.connectors.interfaces import GenerateSlimDocumentOutput
+from aethersearch.connectors.interfaces import NormalizationResult
+from aethersearch.connectors.interfaces import Resolver
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.interfaces import SlimConnector
+from aethersearch.connectors.interfaces import SlimConnectorWithPermSync
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import ConnectorMissingCredentialError
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentFailure
+from aethersearch.connectors.models import EntityFailure
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import SlimDocument
+from aethersearch.db.enums import HierarchyNodeType
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.retry_wrapper import retry_builder
+from aethersearch.utils.threadpool_concurrency import parallel_yield
+from aethersearch.utils.threadpool_concurrency import run_functions_tuples_in_parallel
+from aethersearch.utils.threadpool_concurrency import ThreadSafeDict
+from aethersearch.utils.threadpool_concurrency import ThreadSafeSet
 
 logger = setup_logger()
 # TODO: Improve this by using the batch utility: https://googleapis.github.io/google-api-python-client/docs/batch.html
@@ -341,7 +341,7 @@ class GoogleDriveConnector(
         """Normalize a Google Drive URL to match the canonical Document.id format.
 
         Reuses the connector's existing document ID creation logic from
-        onyx_document_id_from_drive_file.
+        aethersearch_document_id_from_drive_file.
         """
         parsed = urlparse(url)
         netloc = parsed.netloc.lower()
@@ -380,7 +380,7 @@ class GoogleDriveConnector(
 
         # Create minimal file object for connector function
         file_obj = {"webViewLink": url, "id": file_id}
-        normalized = onyx_document_id_from_drive_file(file_obj).rstrip("/")
+        normalized = aethersearch_document_id_from_drive_file(file_obj).rstrip("/")
         return NormalizationResult(normalized_url=normalized, use_default=False)
 
     # TODO: ensure returned new_creds_dict is actually persisted when this is called?
@@ -1425,7 +1425,7 @@ class GoogleDriveConnector(
                 continue
 
             try:
-                document_id = onyx_document_id_from_drive_file(drive_file)
+                document_id = aethersearch_document_id_from_drive_file(drive_file)
             except KeyError as exc:
                 logger.warning(
                     "Drive file missing id/webViewLink (stage=%s user=%s). Skipping.",
@@ -1705,7 +1705,7 @@ class GoogleDriveConnector(
             )
         except Exception as e:
             if MISSING_SCOPES_ERROR_STR in str(e):
-                raise PermissionError(ONYX_SCOPE_INSTRUCTIONS) from e
+                raise PermissionError(AETHERSEARCH_SCOPE_INSTRUCTIONS) from e
             raise e
         checkpoint.retrieved_folder_and_drive_ids = self._retrieved_folder_and_drive_ids
 
@@ -1911,7 +1911,7 @@ class GoogleDriveConnector(
             logger.info("Drive slim doc retrieval complete")
         except Exception as e:
             if MISSING_SCOPES_ERROR_STR in str(e):
-                raise PermissionError(ONYX_SCOPE_INSTRUCTIONS) from e
+                raise PermissionError(AETHERSEARCH_SCOPE_INSTRUCTIONS) from e
             raise
 
     @override
@@ -1978,7 +1978,7 @@ class GoogleDriveConnector(
             # Check for scope-related hints from the error message
             if MISSING_SCOPES_ERROR_STR in str(e):
                 raise InsufficientPermissionsError(
-                    f"Google Drive credentials are missing required scopes. {ONYX_SCOPE_INSTRUCTIONS}"
+                    f"Google Drive credentials are missing required scopes. {AETHERSEARCH_SCOPE_INSTRUCTIONS}"
                 )
             raise ConnectorValidationError(
                 f"Unexpected error during Google Drive validation: {e}"

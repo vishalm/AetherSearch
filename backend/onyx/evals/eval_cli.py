@@ -12,15 +12,15 @@ from typing import Any
 import braintrust
 import requests
 
-from onyx.configs.app_configs import POSTGRES_API_SERVER_POOL_OVERFLOW
-from onyx.configs.app_configs import POSTGRES_API_SERVER_POOL_SIZE
-from onyx.configs.constants import POSTGRES_WEB_APP_NAME
-from onyx.db.engine.sql_engine import SqlEngine
-from onyx.evals.eval import run_eval
-from onyx.evals.models import EvalationAck
-from onyx.evals.models import EvalConfigurationOptions
-from onyx.evals.provider import get_provider
-from onyx.tracing.setup import setup_tracing
+from aethersearch.configs.app_configs import POSTGRES_API_SERVER_POOL_OVERFLOW
+from aethersearch.configs.app_configs import POSTGRES_API_SERVER_POOL_SIZE
+from aethersearch.configs.constants import POSTGRES_WEB_APP_NAME
+from aethersearch.db.engine.sql_engine import SqlEngine
+from aethersearch.evals.eval import run_eval
+from aethersearch.evals.models import EvalationAck
+from aethersearch.evals.models import EvalConfigurationOptions
+from aethersearch.evals.provider import get_provider
+from aethersearch.tracing.setup import setup_tracing
 
 
 def setup_session_factory() -> None:
@@ -141,7 +141,7 @@ def run_remote(
     Tool forcing and assertions are configured per-test in the dataset.
 
     Args:
-        base_url: Base URL of the remote server (e.g., "https://test.onyx.app")
+        base_url: Base URL of the remote server (e.g., "https://test.aethersearch.app")
         api_key: API key for authentication
         remote_dataset_name: Name of remote Braintrust dataset
         search_permissions_email: Email address to use for the evaluation.
@@ -192,7 +192,7 @@ def main() -> None:
         "--braintrust-project",
         type=str,
         help="Braintrust project name",
-        default="Onyx",
+        default="AetherSearch",
     )
 
     parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
@@ -201,8 +201,8 @@ def main() -> None:
     parser.add_argument(
         "--base-url",
         type=str,
-        default="https://test.onyx.app",
-        help="Base URL of the remote server (default: https://test.onyx.app)",
+        default="https://test.aethersearch.app",
+        help="Base URL of the remote server (default: https://test.aethersearch.app)",
     )
 
     parser.add_argument(
@@ -254,9 +254,9 @@ def main() -> None:
         print(f"Dataset size: {dataset_size}")
     if args.remote:
         if not args.api_key:
-            print("Using API Key from ONYX_EVAL_API_KEY")
+            print("Using API Key from AETHERSEARCH_EVAL_API_KEY")
         api_key: str = (
-            args.api_key if args.api_key else os.environ.get("ONYX_EVAL_API_KEY", "")
+            args.api_key if args.api_key else os.environ.get("AETHERSEARCH_EVAL_API_KEY", "")
         )
         print(f"Running evaluation on remote server: {args.base_url}")
 

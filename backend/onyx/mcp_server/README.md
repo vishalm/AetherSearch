@@ -1,17 +1,17 @@
-# Onyx MCP Server
+# AetherSearch MCP Server
 
 ## Overview
 
-The Onyx MCP server allows LLMs to connect to your Onyx instance and access its knowledge base and search capabilities through the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/).
+The AetherSearch MCP server allows LLMs to connect to your AetherSearch instance and access its knowledge base and search capabilities through the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/).
 
-With the Onyx MCP Server, you can search your knowledgebase,
-give your LLMs web search, and upload and manage documents in Onyx.
+With the AetherSearch MCP Server, you can search your knowledgebase,
+give your LLMs web search, and upload and manage documents in AetherSearch.
 
-All access controls are managed within the main Onyx application.
+All access controls are managed within the main AetherSearch application.
 
 ### Authentication
 
-Provide an Onyx Personal Access Token or API Key in the `Authorization` header as a Bearer token.
+Provide an AetherSearch Personal Access Token or API Key in the `Authorization` header as a Bearer token.
 The MCP server quickly validates and passes through the token on every request.
 
 Depending on usage, the MCP Server may support OAuth and stdio in the future.
@@ -24,7 +24,7 @@ Depending on usage, the MCP Server may support OAuth and stdio in the future.
 
 ### Architecture
 
-The MCP server is built on [FastMCP](https://github.com/jlowin/fastmcp) and runs alongside the main Onyx API server:
+The MCP server is built on [FastMCP](https://github.com/jlowin/fastmcp) and runs alongside the main AetherSearch API server:
 
 ```
 ┌─────────────────┐
@@ -62,11 +62,11 @@ Add to your Claude Desktop configuration (`~/Library/Application Support/Claude/
 ```json
 {
   "mcpServers": {
-    "onyx": {
-      "url": "https://[YOUR_ONYX_DOMAIN]:8090/",
+    "aethersearch": {
+      "url": "https://[YOUR_AETHERSEARCH_DOMAIN]:8090/",
       "transport": "http",
       "headers": {
-        "Authorization": "Bearer YOUR_ONYX_TOKEN_HERE"
+        "Authorization": "Bearer YOUR_AETHERSEARCH_TOKEN_HERE"
       }
     }
   }
@@ -84,7 +84,7 @@ Most MCP clients support HTTP transport with custom headers. Refer to your clien
 The server provides three tools for searching and retrieving information:
 
 1. `search_indexed_documents`
-Search the user's private knowledge base indexed in Onyx. Returns ranked documents with content snippets, scores, and metadata.
+Search the user's private knowledge base indexed in AetherSearch. Returns ranked documents with content snippets, scores, and metadata.
 
 2. `search_web`
 Search the public internet for current events and general knowledge. Returns web search results with titles, URLs, and snippets.
@@ -101,7 +101,7 @@ Lists all document sources currently indexed in the tenant (e.g., `"confluence"`
 
 ### Running the MCP Server
 
-The MCP Server automatically launches with the `Run All Onyx Services` task from the default launch.json.
+The MCP Server automatically launches with the `Run All AetherSearch Services` task from the default launch.json.
 
 You can also independently launch the Server via the vscode debugger.
 
@@ -118,7 +118,7 @@ npx @modelcontextprotocol/inspector http://localhost:8090/
 1. Ignore the OAuth configuration menus
 2. Open the **Authentication** tab
 3. Select **Bearer Token** authentication
-4. Paste your Onyx bearer token
+4. Paste your AetherSearch bearer token
 5. Click **Connect**
 
 Once connected, you can:
@@ -153,4 +153,4 @@ Expected response:
 **API Server Connection:**
 - `API_SERVER_PROTOCOL`: Protocol for API server connection (default: "http")
 - `API_SERVER_HOST`: Hostname for API server connection (default: "127.0.0.1")
-- `API_SERVER_URL_OVERRIDE_FOR_HTTP_REQUESTS`: Optional override URL. If set, takes precedence over the protocol/host variables. Used for self-hosting the MCP server with Onyx Cloud as the backend.
+- `API_SERVER_URL_OVERRIDE_FOR_HTTP_REQUESTS`: Optional override URL. If set, takes precedence over the protocol/host variables. Used for self-hosting the MCP server with AetherSearch Cloud as the backend.

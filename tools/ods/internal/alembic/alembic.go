@@ -10,9 +10,9 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/onyx-dot-app/onyx/tools/ods/internal/docker"
-	"github.com/onyx-dot-app/onyx/tools/ods/internal/paths"
-	"github.com/onyx-dot-app/onyx/tools/ods/internal/postgres"
+	"github.com/aethersearch-dot-app/aethersearch/tools/ods/internal/docker"
+	"github.com/aethersearch-dot-app/aethersearch/tools/ods/internal/paths"
+	"github.com/aethersearch-dot-app/aethersearch/tools/ods/internal/postgres"
 )
 
 // Schema represents an Alembic schema configuration.
@@ -149,8 +149,8 @@ func runViaDockerExec(args []string, schema Schema) error {
 
 // alembicContainerNames lists containers that typically have alembic installed.
 var alembicContainerNames = []string{
-	"onyx-api_server-1",
-	"onyx-stack-api_server-1",
+	"aethersearch-api_server-1",
+	"aethersearch-stack-api_server-1",
 	"api_server",
 }
 

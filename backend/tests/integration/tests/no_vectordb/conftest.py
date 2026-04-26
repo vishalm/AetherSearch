@@ -1,6 +1,6 @@
 """Fixtures for no-vector-DB integration tests.
 
-These tests are intended to run against an Onyx deployment started with
+These tests are intended to run against an AetherSearch deployment started with
 DISABLE_VECTOR_DB=true.  They are automatically **skipped** when the
 server reports vector_db_enabled=true (i.e. when Vespa is available).
 """

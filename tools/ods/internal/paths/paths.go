@@ -20,9 +20,9 @@ func GitRoot() (string, error) {
 	return strings.TrimSpace(string(output)), nil
 }
 
-// DataDir returns the data directory for onyx-dev tools.
-// On Linux/macOS: ~/.local/share/onyx-dev/
-// On Windows: %LOCALAPPDATA%/onyx-dev/
+// DataDir returns the data directory for aethersearch-dev tools.
+// On Linux/macOS: ~/.local/share/aethersearch-dev/
+// On Windows: %LOCALAPPDATA%/aethersearch-dev/
 func DataDir() string {
 	var base string
 	if runtime.GOOS == "windows" {
@@ -44,12 +44,12 @@ func DataDir() string {
 			base = filepath.Join(home, ".local", "share")
 		}
 	}
-	return filepath.Join(base, "onyx-dev")
+	return filepath.Join(base, "aethersearch-dev")
 }
 
-// ConfigDir returns the per-user config directory for onyx-dev tools.
-// On Linux/macOS: ~/.config/onyx-dev/ (respects XDG_CONFIG_HOME)
-// On Windows:    %APPDATA%/onyx-dev/
+// ConfigDir returns the per-user config directory for aethersearch-dev tools.
+// On Linux/macOS: ~/.config/aethersearch-dev/ (respects XDG_CONFIG_HOME)
+// On Windows:    %APPDATA%/aethersearch-dev/
 func ConfigDir() string {
 	var base string
 	if runtime.GOOS == "windows" {
@@ -71,7 +71,7 @@ func ConfigDir() string {
 			base = filepath.Join(home, ".config")
 		}
 	}
-	return filepath.Join(base, "onyx-dev")
+	return filepath.Join(base, "aethersearch-dev")
 }
 
 // ConfigFilePath returns the path to the ods config file.

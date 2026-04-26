@@ -15,14 +15,14 @@
             "args": [
               "celery",
               "-A",
-              "onyx.background.celery.versioned_apps.beat",
+              "aethersearch.background.celery.versioned_apps.beat",
               "beat",
               "--loglevel=INFO"
             ]
         },
         {
             "type": "shell",
-            "label": "Generate Onyx OpenAPI Python client",
+            "label": "Generate AetherSearch OpenAPI Python client",
             "cwd": "${workspaceFolder}/backend",
             "envFile": "${workspaceFolder}/.env",
             "options": {
@@ -38,9 +38,9 @@
                 "-g",
                 "python",
                 "-o",
-                "generated/onyx_openapi_client",
+                "generated/aethersearch_openapi_client",
                 "--package-name",
-                "onyx_openapi_client",
+                "aethersearch_openapi_client",
             ]
         },
         {
@@ -60,7 +60,7 @@
                 "-g",
                 "typescript-fetch",
                 "-o",
-                "${workspaceFolder}/web/src/lib/generated/onyx_api",
+                "${workspaceFolder}/web/src/lib/generated/aethersearch_api",
                 "--additional-properties=disallowAdditionalPropertiesIfNotPresent=false,legacyDiscriminatorBehavior=false,supportsES6=true",
             ]
         },
@@ -78,7 +78,7 @@
                 "openapi-typescript",
                 "../backend/generated/openapi.json",
                 "--output",
-                "./src/lib/generated/onyx-schema.ts",
+                "./src/lib/generated/aethersearch-schema.ts",
             ]
         },
         {

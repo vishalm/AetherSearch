@@ -4,23 +4,23 @@ from unittest.mock import Mock
 
 import pytest
 
-from onyx.chat.llm_loop import _build_empty_llm_response_error
-from onyx.chat.llm_loop import _try_fallback_tool_extraction
-from onyx.chat.llm_loop import construct_message_history
-from onyx.chat.llm_loop import EmptyLLMResponseError
-from onyx.chat.models import ChatLoadedFile
-from onyx.chat.models import ChatMessageSimple
-from onyx.chat.models import ContextFileMetadata
-from onyx.chat.models import ExtractedContextFiles
-from onyx.chat.models import FileToolMetadata
-from onyx.chat.models import LlmStepResult
-from onyx.chat.models import ToolCallSimple
-from onyx.configs.constants import MessageType
-from onyx.file_store.models import ChatFileType
-from onyx.llm.interfaces import LLMConfig
-from onyx.llm.interfaces import ToolChoiceOptions
-from onyx.server.query_and_chat.placement import Placement
-from onyx.tools.models import ToolCallKickoff
+from aethersearch.chat.llm_loop import _build_empty_llm_response_error
+from aethersearch.chat.llm_loop import _try_fallback_tool_extraction
+from aethersearch.chat.llm_loop import construct_message_history
+from aethersearch.chat.llm_loop import EmptyLLMResponseError
+from aethersearch.chat.models import ChatLoadedFile
+from aethersearch.chat.models import ChatMessageSimple
+from aethersearch.chat.models import ContextFileMetadata
+from aethersearch.chat.models import ExtractedContextFiles
+from aethersearch.chat.models import FileToolMetadata
+from aethersearch.chat.models import LlmStepResult
+from aethersearch.chat.models import ToolCallSimple
+from aethersearch.configs.constants import MessageType
+from aethersearch.file_store.models import ChatFileType
+from aethersearch.llm.interfaces import LLMConfig
+from aethersearch.llm.interfaces import ToolChoiceOptions
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.tools.models import ToolCallKickoff
 
 
 def create_message(
@@ -1114,7 +1114,7 @@ class TestFallbackToolExtraction:
             answer=(
                 '<function_calls><invoke name="internal_search">'
                 '<parameter name="queries" string="false">'
-                '["Onyx documentation", "Onyx docs", "Onyx platform"]'
+                '["AetherSearch documentation", "AetherSearch docs", "AetherSearch platform"]'
                 "</parameter></invoke></function_calls>"
             ),
             tool_calls=None,
@@ -1133,7 +1133,7 @@ class TestFallbackToolExtraction:
         assert len(result.tool_calls) == 1
         assert result.tool_calls[0].tool_name == "internal_search"
         assert result.tool_calls[0].tool_args == {
-            "queries": ["Onyx documentation", "Onyx docs", "Onyx platform"]
+            "queries": ["AetherSearch documentation", "AetherSearch docs", "AetherSearch platform"]
         }
         assert result.tool_calls[0].placement == Placement(turn_index=7)
 
@@ -1145,7 +1145,7 @@ class TestFallbackToolExtraction:
             raw_answer=(
                 '<function_calls><invoke name="internal_search">'
                 '<parameter name="queries" string="false">'
-                '["Onyx documentation", "Onyx docs", "Onyx internal docs"]'
+                '["AetherSearch documentation", "AetherSearch docs", "AetherSearch internal docs"]'
                 "</parameter></invoke></function_calls>"
             ),
             tool_calls=None,
@@ -1164,7 +1164,7 @@ class TestFallbackToolExtraction:
         assert len(result.tool_calls) == 1
         assert result.tool_calls[0].tool_name == "internal_search"
         assert result.tool_calls[0].tool_args == {
-            "queries": ["Onyx documentation", "Onyx docs", "Onyx internal docs"]
+            "queries": ["AetherSearch documentation", "AetherSearch docs", "AetherSearch internal docs"]
         }
         assert result.tool_calls[0].placement == Placement(turn_index=9)
 
@@ -1175,7 +1175,7 @@ class TestFallbackToolExtraction:
             raw_answer=(
                 '<function_calls><invoke name="internal_search">'
                 '<parameter name="queries" string="false">'
-                '["Onyx documentation", "Onyx docs"]'
+                '["AetherSearch documentation", "AetherSearch docs"]'
                 "</parameter></invoke></function_calls>"
             ),
             tool_calls=None,
@@ -1194,7 +1194,7 @@ class TestFallbackToolExtraction:
         assert len(result.tool_calls) == 1
         assert result.tool_calls[0].tool_name == "internal_search"
         assert result.tool_calls[0].tool_args == {
-            "queries": ["Onyx documentation", "Onyx docs"]
+            "queries": ["AetherSearch documentation", "AetherSearch docs"]
         }
         assert result.tool_calls[0].placement == Placement(turn_index=10)
 
@@ -1274,7 +1274,7 @@ class TestEmptyLlmResponseClassification:
     def test_openai_empty_stream_is_classified_as_budget_exceeded(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        monkeypatch.setattr("onyx.chat.llm_loop.is_true_openai_model", lambda *_: True)
+        monkeypatch.setattr("aethersearch.chat.llm_loop.is_true_openai_model", lambda *_: True)
 
         err = _build_empty_llm_response_error(
             llm=self._make_llm(),
@@ -1295,7 +1295,7 @@ class TestEmptyLlmResponseClassification:
     def test_reasoning_only_response_uses_generic_empty_response_error(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        monkeypatch.setattr("onyx.chat.llm_loop.is_true_openai_model", lambda *_: True)
+        monkeypatch.setattr("aethersearch.chat.llm_loop.is_true_openai_model", lambda *_: True)
 
         err = _build_empty_llm_response_error(
             llm=self._make_llm(),

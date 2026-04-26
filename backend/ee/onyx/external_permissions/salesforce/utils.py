@@ -1,9 +1,9 @@
 from simple_salesforce import Salesforce
 from sqlalchemy.orm import Session
 
-from onyx.db.connector_credential_pair import get_connector_credential_pair_from_id
-from onyx.db.document import get_cc_pairs_for_document
-from onyx.utils.logger import setup_logger
+from aethersearch.db.connector_credential_pair import get_connector_credential_pair_from_id
+from aethersearch.db.document import get_cc_pairs_for_document
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

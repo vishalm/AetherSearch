@@ -20,7 +20,7 @@ class SandboxBackend(str, Enum):
 SANDBOX_BACKEND = SandboxBackend(os.environ.get("SANDBOX_BACKEND", "local"))
 
 # Base directory path for persistent document storage (local filesystem)
-# Example: /var/onyx/file-system or /app/file-system
+# Example: /var/aethersearch/file-system or /app/file-system
 PERSISTENT_DOCUMENT_STORAGE_PATH = os.environ.get(
     "PERSISTENT_DOCUMENT_STORAGE_PATH", "/app/file-system"
 )
@@ -34,7 +34,7 @@ DEMO_DATA_PATH = str(
 )
 
 # Sandbox filesystem paths
-SANDBOX_BASE_PATH = os.environ.get("SANDBOX_BASE_PATH", "/tmp/onyx-sandboxes")
+SANDBOX_BASE_PATH = os.environ.get("SANDBOX_BASE_PATH", "/tmp/aethersearch-sandboxes")
 OUTPUTS_TEMPLATE_PATH = os.environ.get("OUTPUTS_TEMPLATE_PATH", "/templates/outputs")
 VENV_TEMPLATE_PATH = os.environ.get("VENV_TEMPLATE_PATH", "/templates/venv")
 
@@ -83,19 +83,19 @@ ATTACHMENTS_DIRECTORY = "attachments"
 # ============================================================================
 
 # Namespace where sandbox pods are created
-SANDBOX_NAMESPACE = os.environ.get("SANDBOX_NAMESPACE", "onyx-sandboxes")
+SANDBOX_NAMESPACE = os.environ.get("SANDBOX_NAMESPACE", "aethersearch-sandboxes")
 
 # Container image for sandbox pods
 # Should include Next.js template, opencode CLI, and demo_data zip
 SANDBOX_CONTAINER_IMAGE = os.environ.get(
-    "SANDBOX_CONTAINER_IMAGE", "onyxdotapp/sandbox:v0.1.5"
+    "SANDBOX_CONTAINER_IMAGE", "aethersearchdotapp/sandbox:v0.1.5"
 )
 
 # S3 bucket for sandbox file storage (snapshots, knowledge files, uploads)
 # Path structure: s3://{bucket}/{tenant_id}/snapshots/{session_id}/{snapshot_id}.tar.gz
 #                 s3://{bucket}/{tenant_id}/knowledge/{user_id}/
 #                 s3://{bucket}/{tenant_id}/uploads/{session_id}/
-SANDBOX_S3_BUCKET = os.environ.get("SANDBOX_S3_BUCKET", "onyx-sandbox-files")
+SANDBOX_S3_BUCKET = os.environ.get("SANDBOX_S3_BUCKET", "aethersearch-sandbox-files")
 
 # Service account for sandbox pods (NO IRSA - no AWS API access)
 SANDBOX_SERVICE_ACCOUNT_NAME = os.environ.get(

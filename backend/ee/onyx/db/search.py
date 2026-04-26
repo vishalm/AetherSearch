@@ -5,8 +5,8 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from onyx.db.engine.time_utils import get_db_current_time
-from onyx.db.models import SearchQuery
+from aethersearch.db.engine.time_utils import get_db_current_time
+from aethersearch.db.models import SearchQuery
 
 
 def create_search_query(

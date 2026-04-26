@@ -17,21 +17,21 @@ from uuid import uuid4
 import pytest
 from sqlalchemy.orm import Session
 
-from onyx.background.celery.tasks.docfetching.task_creation_utils import (
+from aethersearch.background.celery.tasks.docfetching.task_creation_utils import (
     try_creating_docfetching_task,
 )
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.connectors.models import InputType
-from onyx.db.enums import AccessType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import EmbeddingPrecision
-from onyx.db.enums import IndexModelStatus
-from onyx.db.models import Connector
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import Credential
-from onyx.db.models import SearchSettings
-from onyx.redis.redis_pool import get_redis_client
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.connectors.models import InputType
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import EmbeddingPrecision
+from aethersearch.db.enums import IndexModelStatus
+from aethersearch.db.models import Connector
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import Credential
+from aethersearch.db.models import SearchSettings
+from aethersearch.redis.redis_pool import get_redis_client
 from tests.external_dependency_unit.constants import TEST_TENANT_ID
 
 
@@ -119,20 +119,20 @@ class TestDocfetchingTaskPriorityWithRealObjects:
         "has_successful_index,expected_priority",
         [
             # First-time indexing (no last_successful_index_time) should get HIGH priority
-            (False, OnyxCeleryPriority.HIGH),
+            (False, AetherSearchCeleryPriority.HIGH),
             # Re-indexing (has last_successful_index_time) should get MEDIUM priority
-            (True, OnyxCeleryPriority.MEDIUM),
+            (True, AetherSearchCeleryPriority.MEDIUM),
         ],
     )
     @patch(
-        "onyx.background.celery.tasks.docfetching.task_creation_utils.IndexingCoordination.try_create_index_attempt"
+        "aethersearch.background.celery.tasks.docfetching.task_creation_utils.IndexingCoordination.try_create_index_attempt"
     )
     def test_priority_based_on_last_successful_index_time(
         self,
         mock_try_create_index_attempt: MagicMock,
         db_session: Session,
         has_successful_index: bool,
-        expected_priority: OnyxCeleryPriority,
+        expected_priority: AetherSearchCeleryPriority,
     ) -> None:
         """
         Test that first-time indexing connectors get higher priority than re-indexing.
@@ -201,7 +201,7 @@ class TestDocfetchingTaskPriorityWithRealObjects:
         ), f"Expected priority {expected_priority} for has_successful_index={has_successful_index}, but got {actual_priority}"
 
     @patch(
-        "onyx.background.celery.tasks.docfetching.task_creation_utils.IndexingCoordination.try_create_index_attempt"
+        "aethersearch.background.celery.tasks.docfetching.task_creation_utils.IndexingCoordination.try_create_index_attempt"
     )
     def test_no_task_created_when_deleting(
         self,
@@ -245,7 +245,7 @@ class TestDocfetchingTaskPriorityWithRealObjects:
         mock_try_create_index_attempt.assert_not_called()
 
     @patch(
-        "onyx.background.celery.tasks.docfetching.task_creation_utils.IndexingCoordination.try_create_index_attempt"
+        "aethersearch.background.celery.tasks.docfetching.task_creation_utils.IndexingCoordination.try_create_index_attempt"
     )
     def test_redis_lock_prevents_concurrent_task_creation(
         self,
@@ -283,7 +283,7 @@ class TestDocfetchingTaskPriorityWithRealObjects:
         redis_client = get_redis_client(tenant_id=TEST_TENANT_ID)
 
         # Acquire the lock before calling the function
-        from onyx.configs.constants import DANSWER_REDIS_FUNCTION_LOCK_PREFIX
+        from aethersearch.configs.constants import DANSWER_REDIS_FUNCTION_LOCK_PREFIX
 
         lock = redis_client.lock(
             DANSWER_REDIS_FUNCTION_LOCK_PREFIX + "try_creating_indexing_task",
@@ -315,7 +315,7 @@ class TestDocfetchingTaskPriorityWithRealObjects:
                 lock.release()
 
     @patch(
-        "onyx.background.celery.tasks.docfetching.task_creation_utils.IndexingCoordination.try_create_index_attempt"
+        "aethersearch.background.celery.tasks.docfetching.task_creation_utils.IndexingCoordination.try_create_index_attempt"
     )
     def test_lock_released_after_successful_task_creation(
         self,

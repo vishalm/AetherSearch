@@ -3,8 +3,8 @@ from typing import cast
 from redis.client import Redis
 from redis.lock import Lock as RedisLock
 
-from onyx.cache.interface import CacheBackend
-from onyx.cache.interface import CacheLock
+from aethersearch.cache.interface import CacheBackend
+from aethersearch.cache.interface import CacheLock
 
 
 class RedisCacheLock(CacheLock):

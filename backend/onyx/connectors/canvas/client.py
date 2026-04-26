@@ -6,9 +6,9 @@ from collections.abc import Iterator
 from typing import Any
 from urllib.parse import urlparse
 
-from onyx.connectors.cross_connector_utils.rate_limit_wrapper import rl_requests
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
+from aethersearch.connectors.cross_connector_utils.rate_limit_wrapper import rl_requests
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
 
 logger = logging.getLogger(__name__)
 
@@ -21,15 +21,15 @@ _CANVAS_API_VERSION: str = "/api/v1"
 _NEXT_LINK_PATTERN: re.Pattern[str] = re.compile(r'<([^>]+)>;\s*rel="next"')
 
 
-_STATUS_TO_ERROR_CODE: dict[int, OnyxErrorCode] = {
-    401: OnyxErrorCode.CREDENTIAL_EXPIRED,
-    403: OnyxErrorCode.INSUFFICIENT_PERMISSIONS,
-    404: OnyxErrorCode.BAD_GATEWAY,
+_STATUS_TO_ERROR_CODE: dict[int, AetherSearchErrorCode] = {
+    401: AetherSearchErrorCode.CREDENTIAL_EXPIRED,
+    403: AetherSearchErrorCode.INSUFFICIENT_PERMISSIONS,
+    404: AetherSearchErrorCode.BAD_GATEWAY,
 }
 
 
-def _error_code_for_status(status_code: int) -> OnyxErrorCode:
-    """Map an HTTP status code to the appropriate OnyxErrorCode.
+def _error_code_for_status(status_code: int) -> AetherSearchErrorCode:
+    """Map an HTTP status code to the appropriate AetherSearchErrorCode.
 
     Expects a >= 400 status code. Known codes (401, 403, 404) are
     mapped to specific error codes; all other codes (unrecognised 4xx
@@ -41,7 +41,7 @@ def _error_code_for_status(status_code: int) -> OnyxErrorCode:
     """
     if status_code in _STATUS_TO_ERROR_CODE:
         return _STATUS_TO_ERROR_CODE[status_code]
-    return OnyxErrorCode.BAD_GATEWAY
+    return AetherSearchErrorCode.BAD_GATEWAY
 
 
 class CanvasApiClient:
@@ -98,8 +98,8 @@ class CanvasApiClient:
             response_json = response.json()
         except ValueError as e:
             if response.status_code < 300:
-                raise OnyxError(
-                    OnyxErrorCode.BAD_GATEWAY,
+                raise AetherSearchError(
+                    AetherSearchErrorCode.BAD_GATEWAY,
                     detail=f"Invalid JSON in Canvas response: {e}",
                 )
             logger.warning(
@@ -136,7 +136,7 @@ class CanvasApiClient:
                             msg = first_error.get("message", "")
                             if msg:
                                 error = msg
-            raise OnyxError(
+            raise AetherSearchError(
                 _error_code_for_status(response.status_code),
                 detail=error,
                 status_code_override=response.status_code,
@@ -156,16 +156,16 @@ class CanvasApiClient:
             url = match.group(1)
             parsed_url = urlparse(url)
             if parsed_url.hostname != expected_host:
-                raise OnyxError(
-                    OnyxErrorCode.BAD_GATEWAY,
+                raise AetherSearchError(
+                    AetherSearchErrorCode.BAD_GATEWAY,
                     detail=(
                         "Canvas pagination returned an unexpected host "
                         f"({parsed_url.hostname}); expected {expected_host}"
                     ),
                 )
             if parsed_url.scheme != "https":
-                raise OnyxError(
-                    OnyxErrorCode.BAD_GATEWAY,
+                raise AetherSearchError(
+                    AetherSearchErrorCode.BAD_GATEWAY,
                     detail=(
                         "Canvas pagination link must use https, "
                         f"got {parsed_url.scheme!r}"

@@ -1,6 +1,6 @@
 from unittest import mock
 
-from onyx.connectors.confluence.onyx_confluence import extract_text_from_confluence_html
+from aethersearch.connectors.confluence.aethersearch_confluence import extract_text_from_confluence_html
 
 
 def _make_confluence_object(html: str) -> dict:

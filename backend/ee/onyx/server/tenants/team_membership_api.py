@@ -3,18 +3,18 @@ from fastapi import Depends
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from ee.onyx.server.tenants.provisioning import delete_user_from_control_plane
-from ee.onyx.server.tenants.user_mapping import remove_all_users_from_tenant
-from ee.onyx.server.tenants.user_mapping import remove_users_from_tenant
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import User
-from onyx.db.auth import get_user_count
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.users import delete_user_from_db
-from onyx.db.users import get_user_by_email
-from onyx.server.manage.models import UserByEmail
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.server.tenants.provisioning import delete_user_from_control_plane
+from ee.aethersearch.server.tenants.user_mapping import remove_all_users_from_tenant
+from ee.aethersearch.server.tenants.user_mapping import remove_users_from_tenant
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import User
+from aethersearch.db.auth import get_user_count
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.users import delete_user_from_db
+from aethersearch.db.users import get_user_by_email
+from aethersearch.server.manage.models import UserByEmail
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()

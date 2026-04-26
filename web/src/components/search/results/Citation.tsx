@@ -1,9 +1,9 @@
 import { ReactNode, JSX } from "react";
 import { CompactDocumentCard, CompactQuestionCard } from "../DocumentDisplay";
 import {
-  LoadedOnyxDocument,
-  MinimalOnyxDocument,
-  OnyxDocument,
+  LoadedAetherSearchDocument,
+  MinimalAetherSearchDocument,
+  AetherSearchDocument,
 } from "@/lib/search/interfaces";
 import {
   Tooltip,
@@ -20,8 +20,8 @@ import Text from "@/refresh-components/texts/Text";
 const MAX_CITATION_TEXT_LENGTH = 40;
 
 export interface DocumentCardProps {
-  document: LoadedOnyxDocument;
-  updatePresentingDocument: (document: MinimalOnyxDocument) => void;
+  document: LoadedAetherSearchDocument;
+  updatePresentingDocument: (document: MinimalAetherSearchDocument) => void;
   url?: string;
 }
 export interface QuestionCardProps {

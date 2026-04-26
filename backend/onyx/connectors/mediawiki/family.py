@@ -14,7 +14,7 @@ from pywikibot import pagegenerators
 from pywikibot.scripts import generate_family_file
 from pywikibot.scripts.generate_user_files import pywikibot
 
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

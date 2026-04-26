@@ -2,13 +2,13 @@
 
 import asyncio
 
-from onyx.db.discord_bot import get_guild_configs
-from onyx.db.discord_bot import get_or_create_discord_service_api_key
-from onyx.db.engine.sql_engine import get_session_with_tenant
-from onyx.db.engine.tenant_utils import get_all_tenant_ids
-from onyx.onyxbot.discord.exceptions import CacheError
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
+from aethersearch.db.discord_bot import get_guild_configs
+from aethersearch.db.discord_bot import get_or_create_discord_service_api_key
+from aethersearch.db.engine.sql_engine import get_session_with_tenant
+from aethersearch.db.engine.tenant_utils import get_all_tenant_ids
+from aethersearch.aethersearchbot.discord.exceptions import CacheError
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import fetch_ee_implementation_or_noop
 from shared_configs.contextvars import CURRENT_TENANT_ID_CONTEXTVAR
 
 logger = setup_logger()
@@ -40,7 +40,7 @@ class DiscordCacheManager:
 
             try:
                 gated = fetch_ee_implementation_or_noop(
-                    "onyx.server.tenants.product_gating",
+                    "aethersearch.server.tenants.product_gating",
                     "get_gated_tenants",
                     set(),
                 )()

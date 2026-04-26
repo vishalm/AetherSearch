@@ -1,15 +1,15 @@
-{{- if and (.Values.webserver.autoscaling.enabled) (ne (include "onyx.autoscaling.engine" .) "keda") }}
+{{- if and (.Values.webserver.autoscaling.enabled) (ne (include "aethersearch.autoscaling.engine" .) "keda") }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "onyx.fullname" . }}-webserver
+  name: {{ include "aethersearch.fullname" . }}-webserver
   labels:
-    {{- include "onyx.labels" . | nindent 4 }}
+    {{- include "aethersearch.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "onyx.fullname" . }}
+    name: {{ include "aethersearch.fullname" . }}
   minReplicas: {{ .Values.webserver.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.webserver.autoscaling.maxReplicas }}
   metrics:

@@ -24,30 +24,30 @@ from requests import RequestException
 from requests import Response
 from retry import retry
 
-from onyx.configs.app_configs import INDEXING_EMBEDDING_MODEL_NUM_THREADS
-from onyx.configs.app_configs import LARGE_CHUNK_RATIO
-from onyx.configs.model_configs import BATCH_SIZE_ENCODE_CHUNKS
-from onyx.configs.model_configs import (
+from aethersearch.configs.app_configs import INDEXING_EMBEDDING_MODEL_NUM_THREADS
+from aethersearch.configs.app_configs import LARGE_CHUNK_RATIO
+from aethersearch.configs.model_configs import BATCH_SIZE_ENCODE_CHUNKS
+from aethersearch.configs.model_configs import (
     BATCH_SIZE_ENCODE_CHUNKS_FOR_API_EMBEDDING_SERVICES,
 )
-from onyx.connectors.models import ConnectorStopSignal
-from onyx.db.models import SearchSettings
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.natural_language_processing.constants import DEFAULT_COHERE_MODEL
-from onyx.natural_language_processing.constants import DEFAULT_OPENAI_MODEL
-from onyx.natural_language_processing.constants import DEFAULT_VERTEX_MODEL
-from onyx.natural_language_processing.constants import DEFAULT_VOYAGE_MODEL
-from onyx.natural_language_processing.constants import EmbeddingModelTextType
-from onyx.natural_language_processing.exceptions import CohereBillingLimitError
-from onyx.natural_language_processing.exceptions import ModelServerRateLimitError
-from onyx.natural_language_processing.utils import get_tokenizer
-from onyx.natural_language_processing.utils import tokenizer_trim_content
-from onyx.server.metrics.embedding import observe_embedding_client
-from onyx.server.metrics.embedding import track_embedding_in_progress
-from onyx.utils.logger import setup_logger
-from onyx.utils.search_nlp_models_utils import pass_aws_key
-from onyx.utils.text_processing import remove_invalid_unicode_chars
-from onyx.utils.timing import log_function_time
+from aethersearch.connectors.models import ConnectorStopSignal
+from aethersearch.db.models import SearchSettings
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.natural_language_processing.constants import DEFAULT_COHERE_MODEL
+from aethersearch.natural_language_processing.constants import DEFAULT_OPENAI_MODEL
+from aethersearch.natural_language_processing.constants import DEFAULT_VERTEX_MODEL
+from aethersearch.natural_language_processing.constants import DEFAULT_VOYAGE_MODEL
+from aethersearch.natural_language_processing.constants import EmbeddingModelTextType
+from aethersearch.natural_language_processing.exceptions import CohereBillingLimitError
+from aethersearch.natural_language_processing.exceptions import ModelServerRateLimitError
+from aethersearch.natural_language_processing.utils import get_tokenizer
+from aethersearch.natural_language_processing.utils import tokenizer_trim_content
+from aethersearch.server.metrics.embedding import observe_embedding_client
+from aethersearch.server.metrics.embedding import track_embedding_in_progress
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.search_nlp_models_utils import pass_aws_key
+from aethersearch.utils.text_processing import remove_invalid_unicode_chars
+from aethersearch.utils.timing import log_function_time
 from shared_configs.configs import API_BASED_EMBEDDING_TIMEOUT
 from shared_configs.configs import DOC_EMBEDDING_CONTEXT_SIZE
 from shared_configs.configs import INDEXING_ONLY
@@ -174,9 +174,9 @@ def _cleanup_thread_local(func: Callable) -> Callable:
 
 
 WARM_UP_STRINGS = [
-    "Onyx is amazing!",
+    "AetherSearch is amazing!",
     "Check out our easy deployment guide at",
-    "https://docs.onyx.app/deployment/getting_started/quickstart",
+    "https://docs.aethersearch.app/deployment/getting_started/quickstart",
 ]
 
 
@@ -302,7 +302,7 @@ class CloudEmbedding:
 
         final_embeddings: list[Embedding] = []
         for text_batch in batch_list(texts, _COHERE_MAX_INPUT_LEN):
-            # Does not use the same tokenizer as the Onyx API server but it's approximately the same
+            # Does not use the same tokenizer as the AetherSearch API server but it's approximately the same
             # empirically it's only off by a very few tokens so it's not a big deal
             response = await client.embed(
                 texts=text_batch,
@@ -785,10 +785,10 @@ class EmbeddingModel:
         def _make_request() -> Response:
             headers = {}
             if tenant_id:
-                headers["X-Onyx-Tenant-ID"] = tenant_id
+                headers["X-AetherSearch-Tenant-ID"] = tenant_id
 
             if request_id:
-                headers["X-Onyx-Request-ID"] = request_id
+                headers["X-AetherSearch-Request-ID"] = request_id
 
             response = requests.post(
                 endpoint,

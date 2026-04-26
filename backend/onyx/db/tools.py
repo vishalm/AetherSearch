@@ -9,19 +9,19 @@ from sqlalchemy import or_
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from onyx.db.constants import UNSET
-from onyx.db.constants import UnsetType
-from onyx.db.enums import MCPServerStatus
-from onyx.db.models import MCPServer
-from onyx.db.models import OAuthConfig
-from onyx.db.models import Tool
-from onyx.db.models import ToolCall
-from onyx.server.features.tool.models import Header
-from onyx.tools.built_in_tools import BUILT_IN_TOOL_TYPES
-from onyx.utils.headers import HeaderItemDict
-from onyx.utils.logger import setup_logger
-from onyx.utils.postgres_sanitization import sanitize_json_like
-from onyx.utils.postgres_sanitization import sanitize_string
+from aethersearch.db.constants import UNSET
+from aethersearch.db.constants import UnsetType
+from aethersearch.db.enums import MCPServerStatus
+from aethersearch.db.models import MCPServer
+from aethersearch.db.models import OAuthConfig
+from aethersearch.db.models import Tool
+from aethersearch.db.models import ToolCall
+from aethersearch.server.features.tool.models import Header
+from aethersearch.tools.built_in_tools import BUILT_IN_TOOL_TYPES
+from aethersearch.utils.headers import HeaderItemDict
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.postgres_sanitization import sanitize_json_like
+from aethersearch.utils.postgres_sanitization import sanitize_string
 
 if TYPE_CHECKING:
     pass
@@ -215,7 +215,7 @@ def get_builtin_tool(
     Retrieves a built-in tool from the database based on the tool type.
     """
     # local import to avoid circular import. DB layer should not depend on tools layer.
-    from onyx.tools.built_in_tools import BUILT_IN_TOOL_MAP
+    from aethersearch.tools.built_in_tools import BUILT_IN_TOOL_MAP
 
     tool_id = next(
         (

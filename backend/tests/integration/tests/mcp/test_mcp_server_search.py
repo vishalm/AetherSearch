@@ -18,7 +18,7 @@ from mcp.types import CallToolResult
 from mcp.types import TextContent
 from pydantic import AnyUrl
 
-from onyx.db.enums import AccessType
+from aethersearch.db.enums import AccessType
 from tests.integration.common_utils.constants import MCP_SERVER_URL
 from tests.integration.common_utils.managers.api_key import APIKeyManager
 from tests.integration.common_utils.managers.cc_pair import CCPairManager

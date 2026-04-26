@@ -10,7 +10,7 @@ Reproduces two bugs:
 
 from unittest.mock import patch
 
-from onyx.connectors.notion.connector import NotionConnector
+from aethersearch.connectors.notion.connector import NotionConnector
 
 
 def _make_connector() -> NotionConnector:
@@ -86,7 +86,7 @@ class TestPeoplePropertyExtraction:
                     {
                         "object": "user",
                         "id": "bot-uuid-1",
-                        "name": "Onyx Integration",
+                        "name": "AetherSearch Integration",
                         "type": "bot",
                         "bot": {},
                     }
@@ -95,8 +95,8 @@ class TestPeoplePropertyExtraction:
         }
         result = NotionConnector._properties_to_str(properties)
         assert (
-            "Onyx Integration" in result
-        ), f"Expected 'Onyx Integration' in extracted text, got: {result!r}"
+            "AetherSearch Integration" in result
+        ), f"Expected 'AetherSearch Integration' in extracted text, got: {result!r}"
 
     def test_person_without_person_details(self) -> None:
         """Some user objects may have an empty/null person sub-dict."""

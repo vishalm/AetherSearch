@@ -4,23 +4,23 @@ from typing import Any
 
 import pytest
 
-from onyx.chat.llm_step import _extract_tool_call_kickoffs
-from onyx.chat.llm_step import _increment_turns
-from onyx.chat.llm_step import _parse_tool_args_to_dict
-from onyx.chat.llm_step import _resolve_tool_arguments
-from onyx.chat.llm_step import _XmlToolCallContentFilter
-from onyx.chat.llm_step import extract_tool_calls_from_response_text
-from onyx.chat.llm_step import translate_history_to_llm_format
-from onyx.chat.models import ChatMessageSimple
-from onyx.chat.models import ToolCallSimple
-from onyx.configs.constants import MessageType
-from onyx.llm.constants import LlmProviderNames
-from onyx.llm.interfaces import LLMConfig
-from onyx.llm.models import AssistantMessage
-from onyx.llm.models import ToolMessage
-from onyx.llm.models import UserMessage
-from onyx.server.query_and_chat.placement import Placement
-from onyx.utils.postgres_sanitization import sanitize_string
+from aethersearch.chat.llm_step import _extract_tool_call_kickoffs
+from aethersearch.chat.llm_step import _increment_turns
+from aethersearch.chat.llm_step import _parse_tool_args_to_dict
+from aethersearch.chat.llm_step import _resolve_tool_arguments
+from aethersearch.chat.llm_step import _XmlToolCallContentFilter
+from aethersearch.chat.llm_step import extract_tool_calls_from_response_text
+from aethersearch.chat.llm_step import translate_history_to_llm_format
+from aethersearch.chat.models import ChatMessageSimple
+from aethersearch.chat.models import ToolCallSimple
+from aethersearch.configs.constants import MessageType
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.llm.interfaces import LLMConfig
+from aethersearch.llm.models import AssistantMessage
+from aethersearch.llm.models import ToolMessage
+from aethersearch.llm.models import UserMessage
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.utils.postgres_sanitization import sanitize_string
 
 
 class TestSanitizeLlmOutput:
@@ -233,7 +233,7 @@ class TestExtractToolCallsFromResponseText:
         response_text = """
 <function_calls>
 <invoke name="internal_search">
-<parameter name="queries" string="false">["Onyx documentation", "Onyx docs", "Onyx platform"]</parameter>
+<parameter name="queries" string="false">["AetherSearch documentation", "AetherSearch docs", "AetherSearch platform"]</parameter>
 </invoke>
 </function_calls>
 """
@@ -245,14 +245,14 @@ class TestExtractToolCallsFromResponseText:
         assert len(tool_calls) == 1
         assert tool_calls[0].tool_name == "internal_search"
         assert tool_calls[0].tool_args == {
-            "queries": ["Onyx documentation", "Onyx docs", "Onyx platform"]
+            "queries": ["AetherSearch documentation", "AetherSearch docs", "AetherSearch platform"]
         }
 
     def test_ignores_unknown_tool_in_xml_style_invoke(self) -> None:
         response_text = """
 <function_calls>
 <invoke name="unknown_tool">
-<parameter name="queries" string="false">["Onyx docs"]</parameter>
+<parameter name="queries" string="false">["AetherSearch docs"]</parameter>
 </invoke>
 </function_calls>
 """
@@ -342,7 +342,7 @@ class TestXmlToolCallContentFilter:
         output = f.process(
             "prefix "
             '<function_calls><invoke name="internal_search">'
-            '<parameter name="queries" string="false">["Onyx docs"]</parameter>'
+            '<parameter name="queries" string="false">["AetherSearch docs"]</parameter>'
             "</invoke></function_calls> suffix"
         )
         output += f.flush()
@@ -354,7 +354,7 @@ class TestXmlToolCallContentFilter:
             "Start ",
             "<function_",
             'calls><invoke name="internal_search">',
-            '<parameter name="queries" string="false">["Onyx docs"]',
+            '<parameter name="queries" string="false">["AetherSearch docs"]',
             "</parameter></invoke></function_calls>",
             " End",
         ]

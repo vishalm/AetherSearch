@@ -1,6 +1,6 @@
-from onyx.db.enums import HookFailStrategy
-from onyx.db.enums import HookPoint
-from onyx.hooks.points.query_processing import QueryProcessingSpec
+from aethersearch.db.enums import HookFailStrategy
+from aethersearch.db.enums import HookPoint
+from aethersearch.hooks.points.query_processing import QueryProcessingSpec
 
 
 def test_hook_point_is_query_processing() -> None:

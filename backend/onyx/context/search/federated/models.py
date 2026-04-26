@@ -4,7 +4,7 @@ from typing import TypedDict
 
 from pydantic import BaseModel
 
-from onyx.onyxbot.slack.models import ChannelType
+from aethersearch.aethersearchbot.slack.models import ChannelType
 
 
 @dataclass(frozen=True)

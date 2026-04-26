@@ -4,13 +4,13 @@ from typing import Any
 
 import pytest
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.connectors.exceptions import CredentialExpiredError
-from onyx.connectors.models import ConnectorMissingCredentialError
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.outline.connector import OutlineConnector
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.connectors.exceptions import CredentialExpiredError
+from aethersearch.connectors.models import ConnectorMissingCredentialError
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.outline.connector import OutlineConnector
 
 
 class TestOutlineConnector:

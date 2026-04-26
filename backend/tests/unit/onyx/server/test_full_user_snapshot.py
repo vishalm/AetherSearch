@@ -2,10 +2,10 @@ import datetime
 from unittest.mock import MagicMock
 from uuid import uuid4
 
-from onyx.auth.schemas import UserRole
-from onyx.db.enums import AccountType
-from onyx.server.models import FullUserSnapshot
-from onyx.server.models import UserGroupInfo
+from aethersearch.auth.schemas import UserRole
+from aethersearch.db.enums import AccountType
+from aethersearch.server.models import FullUserSnapshot
+from aethersearch.server.models import UserGroupInfo
 
 
 def _mock_user(

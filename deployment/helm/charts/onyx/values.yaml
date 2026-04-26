@@ -537,7 +537,7 @@ celery_shared:
   startupProbe:
     # startupProbe fails after 2m
     exec:
-      command: ["test", "-f", "/app/onyx/main.py"]
+      command: ["test", "-f", "/app/aethersearch/main.py"]
     failureThreshold: 24
     periodSeconds: 5
     timeoutSeconds: 3
@@ -1309,10 +1309,10 @@ configMap:
   CELERY_WORKER_LIGHT_CONCURRENCY: ""
   CELERY_WORKER_LIGHT_PREFETCH_MULTIPLIER: ""
   CELERY_WORKER_USER_FILE_PROCESSING_CONCURRENCY: ""
-  # OnyxBot SlackBot Configs
-  ONYX_BOT_DISABLE_DOCS_ONLY_ANSWER: ""
-  ONYX_BOT_DISPLAY_ERROR_MSGS: ""
-  ONYX_BOT_RESPOND_EVERY_CHANNEL: ""
+  # AetherSearchBot SlackBot Configs
+  AETHERSEARCH_BOT_DISABLE_DOCS_ONLY_ANSWER: ""
+  AETHERSEARCH_BOT_DISPLAY_ERROR_MSGS: ""
+  AETHERSEARCH_BOT_RESPOND_EVERY_CHANNEL: ""
   NOTIFY_SLACKBOT_NO_ANSWER: ""
   DISCORD_BOT_TOKEN: ""
   DISCORD_BOT_INVOKE_CHAR: ""
@@ -1321,7 +1321,7 @@ configMap:
   DISABLE_TELEMETRY: ""
   LOG_LEVEL: ""
   LOG_ALL_MODEL_INTERACTIONS: ""
-  LOG_ONYX_MODEL_INTERACTIONS: ""
+  LOG_AETHERSEARCH_MODEL_INTERACTIONS: ""
   LOG_VESPA_TIMING_INFORMATION: ""
   # Shared or Non-backend Related
   WEB_DOMAIN: "http://localhost:3000"
@@ -1349,7 +1349,7 @@ extraManifests: []
 #     apiVersion: networking.k8s.io/v1
 #     kind: NetworkPolicy
 #     metadata:
-#       name: {{ include "onyx.fullname" . }}-extra
+#       name: {{ include "aethersearch.fullname" . }}-extra
 #     spec:
 #       podSelector: {}
 #       policyTypes:

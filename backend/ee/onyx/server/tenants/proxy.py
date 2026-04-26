@@ -1,6 +1,6 @@
 """Proxy endpoints for billing operations.
 
-These endpoints run on the CLOUD DATA PLANE (cloud.onyx.app) and serve as a proxy
+These endpoints run on the CLOUD DATA PLANE (cloud.aethersearch.app) and serve as a proxy
 for self-hosted instances to reach the control plane.
 
 Flow:
@@ -28,15 +28,15 @@ from fastapi import Header
 from fastapi import HTTPException
 from pydantic import BaseModel
 
-from ee.onyx.configs.app_configs import LICENSE_ENFORCEMENT_ENABLED
-from ee.onyx.server.billing.models import SeatUpdateRequest
-from ee.onyx.server.billing.models import SeatUpdateResponse
-from ee.onyx.server.license.models import LicensePayload
-from ee.onyx.server.tenants.access import generate_data_plane_token
-from ee.onyx.utils.license import is_license_valid
-from ee.onyx.utils.license import verify_license_signature
-from onyx.configs.app_configs import CONTROL_PLANE_API_BASE_URL
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.configs.app_configs import LICENSE_ENFORCEMENT_ENABLED
+from ee.aethersearch.server.billing.models import SeatUpdateRequest
+from ee.aethersearch.server.billing.models import SeatUpdateResponse
+from ee.aethersearch.server.license.models import LicensePayload
+from ee.aethersearch.server.tenants.access import generate_data_plane_token
+from ee.aethersearch.utils.license import is_license_valid
+from ee.aethersearch.utils.license import verify_license_signature
+from aethersearch.configs.app_configs import CONTROL_PLANE_API_BASE_URL
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

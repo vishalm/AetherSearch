@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from onyx.auth.users import UserManager
+from aethersearch.auth.users import UserManager
 
 
 def _build_db_session(return_ids: list[int]) -> MagicMock:

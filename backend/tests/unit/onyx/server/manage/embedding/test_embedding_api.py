@@ -2,13 +2,13 @@ from types import SimpleNamespace
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from onyx.db.models import SearchSettings
-from onyx.server.manage.embedding.api import list_embedding_models
-from onyx.server.manage.embedding.api import list_embedding_providers
-from onyx.utils.encryption import decrypt_bytes_to_string
-from onyx.utils.encryption import encrypt_string_to_bytes
-from onyx.utils.encryption import mask_string
-from onyx.utils.sensitive import SensitiveValue
+from aethersearch.db.models import SearchSettings
+from aethersearch.server.manage.embedding.api import list_embedding_models
+from aethersearch.server.manage.embedding.api import list_embedding_providers
+from aethersearch.utils.encryption import decrypt_bytes_to_string
+from aethersearch.utils.encryption import encrypt_string_to_bytes
+from aethersearch.utils.encryption import mask_string
+from aethersearch.utils.sensitive import SensitiveValue
 from shared_configs.enums import EmbeddingProvider
 
 
@@ -42,7 +42,7 @@ def test_list_embedding_models_masks_api_key() -> None:
     search_settings = _build_search_settings(raw_api_key)
 
     with patch(
-        "onyx.server.manage.embedding.api.get_all_search_settings",
+        "aethersearch.server.manage.embedding.api.get_all_search_settings",
         return_value=[search_settings],
     ):
         response = list_embedding_models(_=MagicMock(), db_session=MagicMock())
@@ -65,7 +65,7 @@ def test_list_embedding_models_returns_none_for_local_model_api_key() -> None:
     )
 
     with patch(
-        "onyx.server.manage.embedding.api.get_all_search_settings",
+        "aethersearch.server.manage.embedding.api.get_all_search_settings",
         return_value=[local_search_settings],
     ):
         response = list_embedding_models(_=MagicMock(), db_session=MagicMock())
@@ -85,7 +85,7 @@ def test_list_embedding_providers_uses_sensitive_value_masking_once() -> None:
     )
 
     with patch(
-        "onyx.server.manage.embedding.api.fetch_existing_embedding_providers",
+        "aethersearch.server.manage.embedding.api.fetch_existing_embedding_providers",
         return_value=[provider_model],
     ):
         response = list_embedding_providers(_=MagicMock(), db_session=MagicMock())

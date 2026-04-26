@@ -12,8 +12,8 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.file_processing.image_summarization import _summarize_image
-from onyx.file_processing.image_summarization import summarize_image_with_error_handling
+from aethersearch.file_processing.image_summarization import _summarize_image
+from aethersearch.file_processing.image_summarization import summarize_image_with_error_handling
 
 
 class TestSummarizeImageErrorMessage:
@@ -60,9 +60,9 @@ class TestUnsupportedMimeTypeLogging:
     """summarize_image_with_error_handling should log useful info for unsupported formats."""
 
     @patch(
-        "onyx.file_processing.image_summarization.summarize_image_pipeline",
+        "aethersearch.file_processing.image_summarization.summarize_image_pipeline",
         side_effect=__import__(
-            "onyx.file_processing.image_summarization",
+            "aethersearch.file_processing.image_summarization",
             fromlist=["UnsupportedImageFormatError"],
         ).UnsupportedImageFormatError("unsupported"),
     )
@@ -74,7 +74,7 @@ class TestUnsupportedMimeTypeLogging:
         # TIFF magic bytes (not in the supported list)
         image_data = b"\x49\x49\x2a\x00" + b"\x00" * 100
 
-        with patch("onyx.file_processing.image_summarization.logger") as mock_logger:
+        with patch("aethersearch.file_processing.image_summarization.logger") as mock_logger:
             result = summarize_image_with_error_handling(
                 llm=mock_llm,
                 image_data=image_data,

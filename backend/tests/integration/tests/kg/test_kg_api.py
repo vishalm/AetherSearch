@@ -5,19 +5,19 @@ from http import HTTPStatus
 import pytest
 import requests
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.models import InputType
-from onyx.db.connector import create_connector
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.kg_config import get_kg_config_settings
-from onyx.db.kg_config import set_kg_config_settings
-from onyx.db.models import Connector
-from onyx.server.documents.models import ConnectorBase
-from onyx.server.kg.models import DisableKGConfigRequest
-from onyx.server.kg.models import EnableKGConfigRequest
-from onyx.server.kg.models import EntityType
-from onyx.server.kg.models import KGConfig as KGConfigAPIModel
-from onyx.server.kg.models import SourceAndEntityTypeView
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.models import InputType
+from aethersearch.db.connector import create_connector
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.kg_config import get_kg_config_settings
+from aethersearch.db.kg_config import set_kg_config_settings
+from aethersearch.db.models import Connector
+from aethersearch.server.documents.models import ConnectorBase
+from aethersearch.server.kg.models import DisableKGConfigRequest
+from aethersearch.server.kg.models import EnableKGConfigRequest
+from aethersearch.server.kg.models import EntityType
+from aethersearch.server.kg.models import KGConfig as KGConfigAPIModel
+from aethersearch.server.kg.models import SourceAndEntityTypeView
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.managers.user import UserManager
 from tests.integration.common_utils.reset import reset_all

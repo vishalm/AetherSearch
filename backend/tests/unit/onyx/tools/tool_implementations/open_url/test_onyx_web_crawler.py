@@ -7,14 +7,14 @@ from unittest.mock import patch
 import pytest
 from pydantic import BaseModel
 
-import onyx.tools.tool_implementations.open_url.onyx_web_crawler as crawler_module
-from onyx.tools.tool_implementations.open_url.onyx_web_crawler import (
+import aethersearch.tools.tool_implementations.open_url.aethersearch_web_crawler as crawler_module
+from aethersearch.tools.tool_implementations.open_url.aethersearch_web_crawler import (
     DEFAULT_CONNECT_TIMEOUT_SECONDS,
 )
-from onyx.tools.tool_implementations.open_url.onyx_web_crawler import (
+from aethersearch.tools.tool_implementations.open_url.aethersearch_web_crawler import (
     DEFAULT_READ_TIMEOUT_SECONDS,
 )
-from onyx.tools.tool_implementations.open_url.onyx_web_crawler import OnyxWebCrawler
+from aethersearch.tools.tool_implementations.open_url.aethersearch_web_crawler import AetherSearchWebCrawler
 
 
 class FakeResponse(BaseModel):
@@ -27,7 +27,7 @@ class FakeResponse(BaseModel):
 
 
 def test_fetch_url_pdf_with_content_type(monkeypatch: pytest.MonkeyPatch) -> None:
-    crawler = OnyxWebCrawler()
+    crawler = AetherSearchWebCrawler()
     response = FakeResponse(
         status_code=200,
         headers={"Content-Type": "application/pdf"},
@@ -53,7 +53,7 @@ def test_fetch_url_pdf_with_content_type(monkeypatch: pytest.MonkeyPatch) -> Non
 
 
 def test_fetch_url_pdf_with_signature(monkeypatch: pytest.MonkeyPatch) -> None:
-    crawler = OnyxWebCrawler()
+    crawler = AetherSearchWebCrawler()
     response = FakeResponse(
         status_code=200,
         headers={"Content-Type": "application/octet-stream"},
@@ -79,7 +79,7 @@ def test_fetch_url_pdf_with_signature(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_fetch_url_decodes_html_bytes(monkeypatch: pytest.MonkeyPatch) -> None:
-    crawler = OnyxWebCrawler()
+    crawler = AetherSearchWebCrawler()
     html_bytes = b"<html><body>caf\xe9</body></html>"
     response = FakeResponse(
         status_code=200,
@@ -102,7 +102,7 @@ def test_fetch_url_decodes_html_bytes(monkeypatch: pytest.MonkeyPatch) -> None:
 
 def test_fetch_url_pdf_exceeds_size_limit(monkeypatch: pytest.MonkeyPatch) -> None:
     """PDF content exceeding max_pdf_size_bytes should be rejected."""
-    crawler = OnyxWebCrawler(max_pdf_size_bytes=100)
+    crawler = AetherSearchWebCrawler(max_pdf_size_bytes=100)
     response = FakeResponse(
         status_code=200,
         headers={"Content-Type": "application/pdf"},
@@ -124,7 +124,7 @@ def test_fetch_url_pdf_exceeds_size_limit(monkeypatch: pytest.MonkeyPatch) -> No
 
 def test_fetch_url_pdf_within_size_limit(monkeypatch: pytest.MonkeyPatch) -> None:
     """PDF content within max_pdf_size_bytes should be processed normally."""
-    crawler = OnyxWebCrawler(max_pdf_size_bytes=500)
+    crawler = AetherSearchWebCrawler(max_pdf_size_bytes=500)
     response = FakeResponse(
         status_code=200,
         headers={"Content-Type": "application/pdf"},
@@ -150,7 +150,7 @@ def test_fetch_url_pdf_within_size_limit(monkeypatch: pytest.MonkeyPatch) -> Non
 
 def test_fetch_url_html_exceeds_size_limit(monkeypatch: pytest.MonkeyPatch) -> None:
     """HTML content exceeding max_html_size_bytes should be rejected."""
-    crawler = OnyxWebCrawler(max_html_size_bytes=50)
+    crawler = AetherSearchWebCrawler(max_html_size_bytes=50)
     html_bytes = b"<html><body>" + b"x" * 100 + b"</body></html>"  # Exceeds 50 limit
     response = FakeResponse(
         status_code=200,
@@ -173,7 +173,7 @@ def test_fetch_url_html_exceeds_size_limit(monkeypatch: pytest.MonkeyPatch) -> N
 
 def test_fetch_url_html_within_size_limit(monkeypatch: pytest.MonkeyPatch) -> None:
     """HTML content within max_html_size_bytes should be processed normally."""
-    crawler = OnyxWebCrawler(max_html_size_bytes=500)
+    crawler = AetherSearchWebCrawler(max_html_size_bytes=500)
     html_bytes = b"<html><body>hello world</body></html>"
     response = FakeResponse(
         status_code=200,
@@ -231,7 +231,7 @@ def _make_mock_response(
 class TestParallelExecution:
     """Verify that contents() fetches URLs in parallel."""
 
-    @patch("onyx.tools.tool_implementations.open_url.onyx_web_crawler.ssrf_safe_get")
+    @patch("aethersearch.tools.tool_implementations.open_url.aethersearch_web_crawler.ssrf_safe_get")
     def test_multiple_urls_fetched_concurrently(self, mock_get: MagicMock) -> None:
         """With a per-URL delay, parallel execution should be much faster than sequential."""
         per_url_delay = 0.3
@@ -240,7 +240,7 @@ class TestParallelExecution:
 
         mock_get.return_value = _make_mock_response(delay=per_url_delay)
 
-        crawler = OnyxWebCrawler()
+        crawler = AetherSearchWebCrawler()
         start = time.monotonic()
         results = crawler.contents(urls)
         elapsed = time.monotonic() - start
@@ -250,17 +250,17 @@ class TestParallelExecution:
         assert len(results) == num_urls
         assert all(r.scrape_successful for r in results)
 
-    @patch("onyx.tools.tool_implementations.open_url.onyx_web_crawler.ssrf_safe_get")
+    @patch("aethersearch.tools.tool_implementations.open_url.aethersearch_web_crawler.ssrf_safe_get")
     def test_empty_urls_returns_empty(self, mock_get: MagicMock) -> None:
-        crawler = OnyxWebCrawler()
+        crawler = AetherSearchWebCrawler()
         results = crawler.contents([])
         assert results == []
         mock_get.assert_not_called()
 
-    @patch("onyx.tools.tool_implementations.open_url.onyx_web_crawler.ssrf_safe_get")
+    @patch("aethersearch.tools.tool_implementations.open_url.aethersearch_web_crawler.ssrf_safe_get")
     def test_single_url(self, mock_get: MagicMock) -> None:
         mock_get.return_value = _make_mock_response()
-        crawler = OnyxWebCrawler()
+        crawler = AetherSearchWebCrawler()
         results = crawler.contents(["http://example.com"])
         assert len(results) == 1
         assert results[0].scrape_successful
@@ -269,7 +269,7 @@ class TestParallelExecution:
 class TestFailureIsolation:
     """Verify that one URL failure doesn't affect others in the batch."""
 
-    @patch("onyx.tools.tool_implementations.open_url.onyx_web_crawler.ssrf_safe_get")
+    @patch("aethersearch.tools.tool_implementations.open_url.aethersearch_web_crawler.ssrf_safe_get")
     def test_one_failure_doesnt_kill_batch(self, mock_get: MagicMock) -> None:
         good_resp = _make_mock_response()
         bad_resp = _make_mock_response(status_code=500)
@@ -277,7 +277,7 @@ class TestFailureIsolation:
         # First and third URLs succeed, second fails
         mock_get.side_effect = [good_resp, bad_resp, good_resp]
 
-        crawler = OnyxWebCrawler()
+        crawler = AetherSearchWebCrawler()
         results = crawler.contents(["http://a.com", "http://b.com", "http://c.com"])
 
         assert len(results) == 3
@@ -285,7 +285,7 @@ class TestFailureIsolation:
         assert not results[1].scrape_successful
         assert results[2].scrape_successful
 
-    @patch("onyx.tools.tool_implementations.open_url.onyx_web_crawler.ssrf_safe_get")
+    @patch("aethersearch.tools.tool_implementations.open_url.aethersearch_web_crawler.ssrf_safe_get")
     def test_exception_doesnt_kill_batch(self, mock_get: MagicMock) -> None:
         good_resp = _make_mock_response()
 
@@ -296,7 +296,7 @@ class TestFailureIsolation:
             _make_mock_response(),
         ]
 
-        crawler = OnyxWebCrawler()
+        crawler = AetherSearchWebCrawler()
         results = crawler.contents(["http://a.com", "http://b.com", "http://c.com"])
 
         assert len(results) == 3
@@ -304,9 +304,9 @@ class TestFailureIsolation:
         assert not results[1].scrape_successful
         assert results[2].scrape_successful
 
-    @patch("onyx.tools.tool_implementations.open_url.onyx_web_crawler.ssrf_safe_get")
+    @patch("aethersearch.tools.tool_implementations.open_url.aethersearch_web_crawler.ssrf_safe_get")
     def test_ssrf_exception_doesnt_kill_batch(self, mock_get: MagicMock) -> None:
-        from onyx.utils.url import SSRFException
+        from aethersearch.utils.url import SSRFException
 
         good_resp = _make_mock_response()
         mock_get.side_effect = [
@@ -315,7 +315,7 @@ class TestFailureIsolation:
             _make_mock_response(),
         ]
 
-        crawler = OnyxWebCrawler()
+        crawler = AetherSearchWebCrawler()
         results = crawler.contents(
             ["http://a.com", "http://internal.local", "http://c.com"]
         )
@@ -329,11 +329,11 @@ class TestFailureIsolation:
 class TestTupleTimeout:
     """Verify that separate connect and read timeouts are passed correctly."""
 
-    @patch("onyx.tools.tool_implementations.open_url.onyx_web_crawler.ssrf_safe_get")
+    @patch("aethersearch.tools.tool_implementations.open_url.aethersearch_web_crawler.ssrf_safe_get")
     def test_default_tuple_timeout(self, mock_get: MagicMock) -> None:
         mock_get.return_value = _make_mock_response()
 
-        crawler = OnyxWebCrawler()
+        crawler = AetherSearchWebCrawler()
         crawler.contents(["http://example.com"])
 
         call_kwargs = mock_get.call_args
@@ -342,11 +342,11 @@ class TestTupleTimeout:
             DEFAULT_READ_TIMEOUT_SECONDS,
         )
 
-    @patch("onyx.tools.tool_implementations.open_url.onyx_web_crawler.ssrf_safe_get")
+    @patch("aethersearch.tools.tool_implementations.open_url.aethersearch_web_crawler.ssrf_safe_get")
     def test_custom_tuple_timeout(self, mock_get: MagicMock) -> None:
         mock_get.return_value = _make_mock_response()
 
-        crawler = OnyxWebCrawler(timeout_seconds=30, connect_timeout_seconds=3)
+        crawler = AetherSearchWebCrawler(timeout_seconds=30, connect_timeout_seconds=3)
         crawler.contents(["http://example.com"])
 
         call_kwargs = mock_get.call_args

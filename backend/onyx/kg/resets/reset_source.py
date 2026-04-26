@@ -1,21 +1,21 @@
 from redis.lock import Lock as RedisLock
 from sqlalchemy import or_
 
-from onyx.configs.constants import DocumentSource
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.models import Connector
-from onyx.db.models import Document
-from onyx.db.models import DocumentByConnectorCredentialPair
-from onyx.db.models import KGEntity
-from onyx.db.models import KGEntityExtractionStaging
-from onyx.db.models import KGEntityType
-from onyx.db.models import KGRelationship
-from onyx.db.models import KGRelationshipExtractionStaging
-from onyx.db.models import KGRelationshipType
-from onyx.db.models import KGRelationshipTypeExtractionStaging
-from onyx.db.models import KGStage
-from onyx.kg.resets.reset_index import reset_full_kg_index__commit
-from onyx.kg.resets.reset_vespa import reset_vespa_kg_index
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.models import Connector
+from aethersearch.db.models import Document
+from aethersearch.db.models import DocumentByConnectorCredentialPair
+from aethersearch.db.models import KGEntity
+from aethersearch.db.models import KGEntityExtractionStaging
+from aethersearch.db.models import KGEntityType
+from aethersearch.db.models import KGRelationship
+from aethersearch.db.models import KGRelationshipExtractionStaging
+from aethersearch.db.models import KGRelationshipType
+from aethersearch.db.models import KGRelationshipTypeExtractionStaging
+from aethersearch.db.models import KGStage
+from aethersearch.kg.resets.reset_index import reset_full_kg_index__commit
+from aethersearch.kg.resets.reset_vespa import reset_vespa_kg_index
 
 
 def reset_source_kg_index(

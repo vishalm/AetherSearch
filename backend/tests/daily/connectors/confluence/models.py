@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from ee.onyx.db.external_perm import ExternalUserGroup
+from ee.aethersearch.db.external_perm import ExternalUserGroup
 
 
 class ExternalUserGroupSet(BaseModel):

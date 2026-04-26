@@ -20,9 +20,9 @@ down_revision = "f7ca3e2f45d9"
 branch_labels = None
 depends_on = None
 
-# Must match constants in onyx/configs/constants.py file
+# Must match constants in aethersearch/configs/constants.py file
 ANONYMOUS_USER_UUID = "00000000-0000-0000-0000-000000000002"
-ANONYMOUS_USER_EMAIL = "anonymous@onyx.app"
+ANONYMOUS_USER_EMAIL = "anonymous@aethersearch.app"
 
 # Tables with user_id foreign key that may need migration
 TABLES_WITH_USER_ID = [

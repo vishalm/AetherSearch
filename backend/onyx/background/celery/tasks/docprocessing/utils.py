@@ -7,21 +7,21 @@ from redis.exceptions import LockError
 from redis.lock import Lock as RedisLock
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import DISABLE_INDEX_UPDATE_ON_SWAP
-from onyx.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
-from onyx.configs.constants import DocumentSource
-from onyx.db.engine.time_utils import get_db_current_time
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import IndexingStatus
-from onyx.db.enums import IndexModelStatus
-from onyx.db.index_attempt import get_last_attempt_for_cc_pair
-from onyx.db.index_attempt import get_recent_attempts_for_cc_pair
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import SearchSettings
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.redis.redis_connector import RedisConnector
-from onyx.redis.redis_pool import redis_lock_dump
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import DISABLE_INDEX_UPDATE_ON_SWAP
+from aethersearch.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.db.engine.time_utils import get_db_current_time
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import IndexingStatus
+from aethersearch.db.enums import IndexModelStatus
+from aethersearch.db.index_attempt import get_last_attempt_for_cc_pair
+from aethersearch.db.index_attempt import get_recent_attempts_for_cc_pair
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import SearchSettings
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.redis.redis_connector import RedisConnector
+from aethersearch.redis.redis_pool import redis_lock_dump
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

@@ -12,25 +12,25 @@ from unittest.mock import MagicMock
 from unittest.mock import patch
 from uuid import uuid4
 
-from onyx.background.celery.tasks.user_file_processing.tasks import (
+from aethersearch.background.celery.tasks.user_file_processing.tasks import (
     _process_user_file_without_vector_db,
 )
-from onyx.background.celery.tasks.user_file_processing.tasks import (
+from aethersearch.background.celery.tasks.user_file_processing.tasks import (
     delete_user_file_impl,
 )
-from onyx.background.celery.tasks.user_file_processing.tasks import (
+from aethersearch.background.celery.tasks.user_file_processing.tasks import (
     process_user_file_impl,
 )
-from onyx.background.celery.tasks.user_file_processing.tasks import (
+from aethersearch.background.celery.tasks.user_file_processing.tasks import (
     project_sync_user_file_impl,
 )
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.models import Document
-from onyx.connectors.models import TextSection
-from onyx.db.enums import UserFileStatus
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import TextSection
+from aethersearch.db.enums import UserFileStatus
 
-TASKS_MODULE = "onyx.background.celery.tasks.user_file_processing.tasks"
-LLM_FACTORY_MODULE = "onyx.llm.factory"
+TASKS_MODULE = "aethersearch.background.celery.tasks.user_file_processing.tasks"
+LLM_FACTORY_MODULE = "aethersearch.llm.factory"
 
 
 def _make_documents(texts: list[str]) -> list[Document]:

@@ -5,11 +5,11 @@ import json
 from datetime import datetime
 from datetime import timezone
 
-from onyx.configs.model_configs import PROMPT_CACHE_REDIS_TTL_MULTIPLIER
-from onyx.key_value_store.store import PgRedisKVStore
-from onyx.llm.interfaces import LanguageModelInput
-from onyx.llm.prompt_cache.models import CacheMetadata
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.model_configs import PROMPT_CACHE_REDIS_TTL_MULTIPLIER
+from aethersearch.key_value_store.store import PgRedisKVStore
+from aethersearch.llm.interfaces import LanguageModelInput
+from aethersearch.llm.prompt_cache.models import CacheMetadata
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()

@@ -15,7 +15,7 @@ pytest -xv backend/tests/unit
 
 ### External Dependency Unit Tests (`tests/external_dependency_unit/`)
 
-External services (Postgres, Redis, Vespa, OpenAI, etc.) are running, but Onyx
+External services (Postgres, Redis, Vespa, OpenAI, etc.) are running, but AetherSearch
 application containers are not. Tests call functions directly and can mock selectively.
 
 Use when you need a real database or real API calls but want control over setup.
@@ -26,7 +26,7 @@ python -m dotenv -f .vscode/.env run -- pytest backend/tests/external_dependency
 
 ### Integration Tests (`tests/integration/`)
 
-Full Onyx deployment running. No mocking. Prefer this over other test types when possible.
+Full AetherSearch deployment running. No mocking. Prefer this over other test types when possible.
 
 ```bash
 python -m dotenv -f .vscode/.env run -- pytest backend/tests/integration

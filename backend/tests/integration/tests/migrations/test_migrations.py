@@ -7,9 +7,9 @@ import json
 import pytest
 from sqlalchemy import text
 
-from onyx.configs.constants import ANONYMOUS_USER_UUID
-from onyx.configs.constants import DEFAULT_BOOST
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.configs.constants import ANONYMOUS_USER_UUID
+from aethersearch.configs.constants import DEFAULT_BOOST
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
 from tests.integration.common_utils.reset import downgrade_postgres
 from tests.integration.common_utils.reset import upgrade_postgres
 
@@ -357,9 +357,9 @@ def test_anonymous_user_migration_dedupes_null_notifications() -> None:
                         FALSE,
                         NOW(),
                         NOW(),
-                        'Onyx v2.10.0 is available!',
+                        'AetherSearch v2.10.0 is available!',
                         'Check out what''s new in v2.10.0',
-                        '{"version":"v2.10.0","link":"https://docs.onyx.app/changelog#v2-10-0"}'::jsonb
+                        '{"version":"v2.10.0","link":"https://docs.aethersearch.app/changelog#v2-10-0"}'::jsonb
                     ),
                     (
                         2,
@@ -368,9 +368,9 @@ def test_anonymous_user_migration_dedupes_null_notifications() -> None:
                         FALSE,
                         NOW(),
                         NOW(),
-                        'Onyx v2.10.0 is available!',
+                        'AetherSearch v2.10.0 is available!',
                         'Check out what''s new in v2.10.0',
-                        '{"version":"v2.10.0","link":"https://docs.onyx.app/changelog#v2-10-0"}'::jsonb
+                        '{"version":"v2.10.0","link":"https://docs.aethersearch.app/changelog#v2-10-0"}'::jsonb
                     )
                 """
             )
@@ -407,7 +407,7 @@ def test_anonymous_user_migration_dedupes_null_notifications() -> None:
     assert notifications[0].id == 2  # Higher id wins when timestamps are equal
     assert str(notifications[0].user_id) == ANONYMOUS_USER_UUID
     assert anonymous_user is not None
-    assert anonymous_user.email == "anonymous@onyx.app"
+    assert anonymous_user.email == "anonymous@aethersearch.app"
     assert anonymous_user.role == "LIMITED"
 
 
@@ -431,7 +431,7 @@ def test_anonymous_user_migration_collision_with_existing_anonymous_notification
             text(
                 """
                 INSERT INTO "user" (id, email, hashed_password, is_active, is_superuser, is_verified, role)
-                VALUES (:id, 'anonymous@onyx.app', '', TRUE, FALSE, TRUE, 'LIMITED')
+                VALUES (:id, 'anonymous@aethersearch.app', '', TRUE, FALSE, TRUE, 'LIMITED')
                 ON CONFLICT (id) DO NOTHING
                 """
             ),
@@ -448,15 +448,15 @@ def test_anonymous_user_migration_collision_with_existing_anonymous_notification
                 VALUES
                     (
                         1, 'RELEASE_NOTES', :user_id, FALSE, NOW(), NOW(),
-                        'Onyx v2.10.0 is available!',
+                        'AetherSearch v2.10.0 is available!',
                         'Check out what''s new in v2.10.0',
-                        '{"version":"v2.10.0","link":"https://docs.onyx.app/changelog#v2-10-0"}'::jsonb
+                        '{"version":"v2.10.0","link":"https://docs.aethersearch.app/changelog#v2-10-0"}'::jsonb
                     ),
                     (
                         2, 'RELEASE_NOTES', NULL, FALSE, NOW(), NOW(),
-                        'Onyx v2.10.0 is available!',
+                        'AetherSearch v2.10.0 is available!',
                         'Check out what''s new in v2.10.0',
-                        '{"version":"v2.10.0","link":"https://docs.onyx.app/changelog#v2-10-0"}'::jsonb
+                        '{"version":"v2.10.0","link":"https://docs.aethersearch.app/changelog#v2-10-0"}'::jsonb
                     )
                 """
             ),

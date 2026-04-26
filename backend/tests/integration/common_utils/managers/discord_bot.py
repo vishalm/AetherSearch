@@ -2,12 +2,12 @@
 
 import requests
 
-from onyx.db.discord_bot import create_channel_config
-from onyx.db.discord_bot import create_guild_config
-from onyx.db.discord_bot import register_guild
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.utils import DiscordChannelView
-from onyx.server.manage.discord_bot.utils import generate_discord_registration_key
+from aethersearch.db.discord_bot import create_channel_config
+from aethersearch.db.discord_bot import create_guild_config
+from aethersearch.db.discord_bot import register_guild
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.utils import DiscordChannelView
+from aethersearch.server.manage.discord_bot.utils import generate_discord_registration_key
 from shared_configs.contextvars import get_current_tenant_id
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.test_models import DATestDiscordChannelConfig

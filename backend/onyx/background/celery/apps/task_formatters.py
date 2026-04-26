@@ -2,8 +2,8 @@ import logging
 
 from celery import current_task
 
-from onyx.utils.logger import ColoredFormatter
-from onyx.utils.logger import PlainFormatter
+from aethersearch.utils.logger import ColoredFormatter
+from aethersearch.utils.logger import PlainFormatter
 
 
 class CeleryTaskPlainFormatter(PlainFormatter):

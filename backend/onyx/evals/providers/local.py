@@ -6,12 +6,12 @@ No external dependencies like Braintrust required.
 from collections.abc import Callable
 from typing import Any
 
-from onyx.evals.models import EvalationAck
-from onyx.evals.models import EvalConfigurationOptions
-from onyx.evals.models import EvalProvider
-from onyx.evals.models import EvalToolResult
-from onyx.evals.models import MultiTurnEvalResult
-from onyx.utils.logger import setup_logger
+from aethersearch.evals.models import EvalationAck
+from aethersearch.evals.models import EvalConfigurationOptions
+from aethersearch.evals.models import EvalProvider
+from aethersearch.evals.models import EvalToolResult
+from aethersearch.evals.models import MultiTurnEvalResult
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

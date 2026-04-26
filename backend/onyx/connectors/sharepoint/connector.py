@@ -36,51 +36,51 @@ from pydantic import BaseModel
 from pydantic import Field
 from requests.exceptions import HTTPError
 
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.app_configs import REQUEST_TIMEOUT_SECONDS
-from onyx.configs.app_configs import SHAREPOINT_CONNECTOR_SIZE_THRESHOLD
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import FileOrigin
-from onyx.connectors.cross_connector_utils.tabular_section_utils import (
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.app_configs import REQUEST_TIMEOUT_SECONDS
+from aethersearch.configs.app_configs import SHAREPOINT_CONNECTOR_SIZE_THRESHOLD
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.connectors.cross_connector_utils.tabular_section_utils import (
     extract_and_stage_tabular_file,
 )
-from onyx.connectors.cross_connector_utils.tabular_section_utils import is_tabular_file
-from onyx.connectors.cross_connector_utils.tabular_section_utils import (
+from aethersearch.connectors.cross_connector_utils.tabular_section_utils import is_tabular_file
+from aethersearch.connectors.cross_connector_utils.tabular_section_utils import (
     tabular_file_to_sections,
 )
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.connectors.interfaces import CheckpointedConnectorWithPermSync
-from onyx.connectors.interfaces import CheckpointOutput
-from onyx.connectors.interfaces import GenerateSlimDocumentOutput
-from onyx.connectors.interfaces import IndexingHeartbeatInterface
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.interfaces import SlimConnectorWithPermSync
-from onyx.connectors.microsoft_graph_env import resolve_microsoft_environment
-from onyx.connectors.models import BasicExpertInfo
-from onyx.connectors.models import ConnectorCheckpoint
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import ConnectorMissingCredentialError
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentFailure
-from onyx.connectors.models import EntityFailure
-from onyx.connectors.models import ExternalAccess
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import ImageSection
-from onyx.connectors.models import SlimDocument
-from onyx.connectors.models import TabularSection
-from onyx.connectors.models import TextSection
-from onyx.connectors.sharepoint.connector_utils import get_sharepoint_external_access
-from onyx.db.enums import HierarchyNodeType
-from onyx.file_processing.extract_file_text import extract_text_and_images
-from onyx.file_processing.extract_file_text import get_file_ext
-from onyx.file_processing.file_types import OnyxFileExtensions
-from onyx.file_processing.file_types import OnyxMimeTypes
-from onyx.file_processing.image_utils import store_image_and_create_section
-from onyx.file_store.staging import RawFileCallback
-from onyx.utils.b64 import get_image_type_from_bytes
-from onyx.utils.logger import setup_logger
-from onyx.utils.url import SSRFException
-from onyx.utils.url import validate_outbound_http_url
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.connectors.interfaces import CheckpointedConnectorWithPermSync
+from aethersearch.connectors.interfaces import CheckpointOutput
+from aethersearch.connectors.interfaces import GenerateSlimDocumentOutput
+from aethersearch.connectors.interfaces import IndexingHeartbeatInterface
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.interfaces import SlimConnectorWithPermSync
+from aethersearch.connectors.microsoft_graph_env import resolve_microsoft_environment
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.connectors.models import ConnectorCheckpoint
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import ConnectorMissingCredentialError
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentFailure
+from aethersearch.connectors.models import EntityFailure
+from aethersearch.connectors.models import ExternalAccess
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import ImageSection
+from aethersearch.connectors.models import SlimDocument
+from aethersearch.connectors.models import TabularSection
+from aethersearch.connectors.models import TextSection
+from aethersearch.connectors.sharepoint.connector_utils import get_sharepoint_external_access
+from aethersearch.db.enums import HierarchyNodeType
+from aethersearch.file_processing.extract_file_text import extract_text_and_images
+from aethersearch.file_processing.extract_file_text import get_file_ext
+from aethersearch.file_processing.file_types import AetherSearchFileExtensions
+from aethersearch.file_processing.file_types import AetherSearchMimeTypes
+from aethersearch.file_processing.image_utils import store_image_and_create_section
+from aethersearch.file_store.staging import RawFileCallback
+from aethersearch.utils.b64 import get_image_type_from_bytes
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.url import SSRFException
+from aethersearch.utils.url import validate_outbound_http_url
 
 logger = setup_logger()
 SLIM_BATCH_SIZE = 1000
@@ -548,7 +548,7 @@ def _convert_driveitem_to_document_with_permissions(
         raise ValueError("ClientContext is required for permissions")
 
     mime_type = driveitem.mime_type
-    if not mime_type or mime_type in OnyxMimeTypes.EXCLUDED_IMAGE_TYPES:
+    if not mime_type or mime_type in AetherSearchMimeTypes.EXCLUDED_IMAGE_TYPES:
         logger.debug(
             f"Skipping malformed or excluded mime type {mime_type} for {driveitem.name}"
         )
@@ -616,7 +616,7 @@ def _convert_driveitem_to_document_with_permissions(
         logger.warning(
             f"Zero-length content for '{driveitem.name}'. Skipping text/image extraction."
         )
-    elif file_ext in OnyxFileExtensions.IMAGE_EXTENSIONS:
+    elif file_ext in AetherSearchFileExtensions.IMAGE_EXTENSIONS:
         image_section, _ = store_image_and_create_section(
             image_data=content_bytes,
             file_id=driveitem.id,
@@ -661,7 +661,7 @@ def _convert_driveitem_to_document_with_permissions(
                 )
                 return
 
-            if img_mime in OnyxMimeTypes.EXCLUDED_IMAGE_TYPES:
+            if img_mime in AetherSearchMimeTypes.EXCLUDED_IMAGE_TYPES:
                 logger.debug(
                     "Skipping embedded image of excluded type %s for %s",
                     img_mime,
@@ -2458,14 +2458,14 @@ class SharepointConnector(
                     continue
 
                 driveitem_extension = get_file_ext(driveitem.name)
-                if driveitem_extension not in OnyxFileExtensions.ALL_ALLOWED_EXTENSIONS:
+                if driveitem_extension not in AetherSearchFileExtensions.ALL_ALLOWED_EXTENSIONS:
                     logger.warning(
                         f"Skipping {driveitem.web_url} as it is not a supported file type"
                     )
                     continue
 
                 should_yield_if_empty = (
-                    driveitem_extension in OnyxFileExtensions.IMAGE_EXTENSIONS
+                    driveitem_extension in AetherSearchFileExtensions.IMAGE_EXTENSIONS
                     or driveitem_extension == ".pdf"
                 )
 
@@ -2682,7 +2682,7 @@ class SharepointConnector(
 
 
 if __name__ == "__main__":
-    from onyx.connectors.connector_runner import ConnectorRunner
+    from aethersearch.connectors.connector_runner import ConnectorRunner
 
     connector = SharepointConnector(sites=os.environ["SHAREPOINT_SITES"].split(","))
 

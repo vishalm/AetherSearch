@@ -1,5 +1,5 @@
-from ee.onyx.feature_flags.posthog_provider import PostHogFeatureFlagProvider
-from onyx.feature_flags.interface import FeatureFlagProvider
+from ee.aethersearch.feature_flags.posthog_provider import PostHogFeatureFlagProvider
+from aethersearch.feature_flags.interface import FeatureFlagProvider
 
 
 def get_posthog_feature_flag_provider() -> FeatureFlagProvider:

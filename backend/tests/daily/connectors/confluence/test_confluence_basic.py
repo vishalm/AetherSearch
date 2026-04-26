@@ -6,11 +6,11 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.confluence.connector import ConfluenceConnector
-from onyx.connectors.confluence.utils import AttachmentProcessingResult
-from onyx.connectors.credentials_provider import OnyxStaticCredentialsProvider
-from onyx.connectors.models import Document
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.confluence.connector import ConfluenceConnector
+from aethersearch.connectors.confluence.utils import AttachmentProcessingResult
+from aethersearch.connectors.credentials_provider import AetherSearchStaticCredentialsProvider
+from aethersearch.connectors.models import Document
 from tests.daily.connectors.utils import load_all_from_connector
 
 
@@ -25,7 +25,7 @@ def _make_connector(
         scoped_token=scoped_token,
     )
 
-    credentials_provider = OnyxStaticCredentialsProvider(
+    credentials_provider = AetherSearchStaticCredentialsProvider(
         None,
         DocumentSource.CONFLUENCE,
         {
@@ -51,7 +51,7 @@ def confluence_connector_scoped(space: str) -> ConfluenceConnector:
 
 @pytest.mark.parametrize("space", [os.getenv("CONFLUENCE_TEST_SPACE") or "DailyConne"])
 @patch(
-    "onyx.file_processing.extract_file_text.get_unstructured_api_key",
+    "aethersearch.file_processing.extract_file_text.get_unstructured_api_key",
     return_value=None,
 )
 def test_confluence_connector_basic(
@@ -63,7 +63,7 @@ def test_confluence_connector_basic(
 
 @pytest.mark.parametrize("space", [os.getenv("CONFLUENCE_TEST_SPACE") or "DailyConne"])
 @patch(
-    "onyx.file_processing.extract_file_text.get_unstructured_api_key",
+    "aethersearch.file_processing.extract_file_text.get_unstructured_api_key",
     return_value=None,
 )
 def test_confluence_connector_basic_scoped(
@@ -179,7 +179,7 @@ def _test_confluence_connector_basic(
 
 @pytest.mark.parametrize("space", ["MI"])
 @patch(
-    "onyx.file_processing.extract_file_text.get_unstructured_api_key",
+    "aethersearch.file_processing.extract_file_text.get_unstructured_api_key",
     return_value=None,
 )
 def test_confluence_connector_skip_images(
@@ -221,11 +221,11 @@ def mock_process_image_attachment(
 
 @pytest.mark.parametrize("space", ["MI"])
 @patch(
-    "onyx.file_processing.extract_file_text.get_unstructured_api_key",
+    "aethersearch.file_processing.extract_file_text.get_unstructured_api_key",
     return_value=None,
 )
 @patch(
-    "onyx.connectors.confluence.utils._process_image_attachment",
+    "aethersearch.connectors.confluence.utils._process_image_attachment",
     side_effect=mock_process_image_attachment,
 )
 def test_confluence_connector_allow_images(

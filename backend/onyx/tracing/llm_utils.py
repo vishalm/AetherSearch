@@ -7,12 +7,12 @@ from contextlib import contextmanager
 from typing import Any
 from typing import cast
 
-from onyx.llm.interfaces import LLM
-from onyx.llm.model_response import ModelResponse
-from onyx.llm.models import ToolCall
-from onyx.tracing.framework.create import generation_span
-from onyx.tracing.framework.span_data import GenerationSpanData
-from onyx.tracing.framework.spans import Span
+from aethersearch.llm.interfaces import LLM
+from aethersearch.llm.model_response import ModelResponse
+from aethersearch.llm.models import ToolCall
+from aethersearch.tracing.framework.create import generation_span
+from aethersearch.tracing.framework.span_data import GenerationSpanData
+from aethersearch.tracing.framework.spans import Span
 
 
 def build_llm_model_config(llm: LLM, flow: str | None = None) -> dict[str, str]:

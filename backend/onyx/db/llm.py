@@ -5,28 +5,28 @@ from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import selectinload
 from sqlalchemy.orm import Session
 
-from onyx.db.enums import LLMModelFlowType
-from onyx.db.models import CloudEmbeddingProvider as CloudEmbeddingProviderModel
-from onyx.db.models import DocumentSet
-from onyx.db.models import ImageGenerationConfig
-from onyx.db.models import LLMModelFlow
-from onyx.db.models import LLMProvider as LLMProviderModel
-from onyx.db.models import LLMProvider__Persona
-from onyx.db.models import LLMProvider__UserGroup
-from onyx.db.models import ModelConfiguration
-from onyx.db.models import Persona
-from onyx.db.models import SearchSettings
-from onyx.db.models import Tool as ToolModel
-from onyx.db.models import User
-from onyx.db.models import User__UserGroup
-from onyx.llm.utils import model_supports_image_input
-from onyx.llm.well_known_providers.auto_update_models import LLMRecommendations
-from onyx.server.manage.embedding.models import CloudEmbeddingProvider
-from onyx.server.manage.embedding.models import CloudEmbeddingProviderCreationRequest
-from onyx.server.manage.llm.models import LLMProviderUpsertRequest
-from onyx.server.manage.llm.models import LLMProviderView
-from onyx.server.manage.llm.models import SyncModelEntry
-from onyx.utils.logger import setup_logger
+from aethersearch.db.enums import LLMModelFlowType
+from aethersearch.db.models import CloudEmbeddingProvider as CloudEmbeddingProviderModel
+from aethersearch.db.models import DocumentSet
+from aethersearch.db.models import ImageGenerationConfig
+from aethersearch.db.models import LLMModelFlow
+from aethersearch.db.models import LLMProvider as LLMProviderModel
+from aethersearch.db.models import LLMProvider__Persona
+from aethersearch.db.models import LLMProvider__UserGroup
+from aethersearch.db.models import ModelConfiguration
+from aethersearch.db.models import Persona
+from aethersearch.db.models import SearchSettings
+from aethersearch.db.models import Tool as ToolModel
+from aethersearch.db.models import User
+from aethersearch.db.models import User__UserGroup
+from aethersearch.llm.utils import model_supports_image_input
+from aethersearch.llm.well_known_providers.auto_update_models import LLMRecommendations
+from aethersearch.server.manage.embedding.models import CloudEmbeddingProvider
+from aethersearch.server.manage.embedding.models import CloudEmbeddingProviderCreationRequest
+from aethersearch.server.manage.llm.models import LLMProviderUpsertRequest
+from aethersearch.server.manage.llm.models import LLMProviderView
+from aethersearch.server.manage.llm.models import SyncModelEntry
+from aethersearch.utils.logger import setup_logger
 from shared_configs.enums import EmbeddingProvider
 
 logger = setup_logger()

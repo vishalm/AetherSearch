@@ -3,11 +3,11 @@ from uuid import uuid4
 
 import requests
 
-from onyx.llm.constants import LlmProviderNames
-from onyx.server.manage.llm.models import DefaultModel
-from onyx.server.manage.llm.models import LLMProviderUpsertRequest
-from onyx.server.manage.llm.models import LLMProviderView
-from onyx.server.manage.llm.models import ModelConfigurationUpsertRequest
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.server.manage.llm.models import DefaultModel
+from aethersearch.server.manage.llm.models import LLMProviderUpsertRequest
+from aethersearch.server.manage.llm.models import LLMProviderView
+from aethersearch.server.manage.llm.models import ModelConfigurationUpsertRequest
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.constants import GENERAL_HEADERS
 from tests.integration.common_utils.test_models import DATestLLMProvider

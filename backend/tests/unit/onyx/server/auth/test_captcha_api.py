@@ -7,17 +7,17 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from onyx.auth.captcha import CaptchaVerificationError
-from onyx.error_handling.exceptions import register_onyx_exception_handlers
-from onyx.server.auth import captcha_api as captcha_api_module
-from onyx.server.auth.captcha_api import CaptchaCookieMiddleware
-from onyx.server.auth.captcha_api import router as captcha_router
+from aethersearch.auth.captcha import CaptchaVerificationError
+from aethersearch.error_handling.exceptions import register_aethersearch_exception_handlers
+from aethersearch.server.auth import captcha_api as captcha_api_module
+from aethersearch.server.auth.captcha_api import CaptchaCookieMiddleware
+from aethersearch.server.auth.captcha_api import router as captcha_router
 
 
 def build_app_with_middleware() -> FastAPI:
     """Minimal app with the middleware + router + fake OAuth callback route."""
     app = FastAPI()
-    register_onyx_exception_handlers(app)
+    register_aethersearch_exception_handlers(app)
     app.add_middleware(CaptchaCookieMiddleware)
     app.include_router(captcha_router)
 
@@ -50,7 +50,7 @@ def test_verify_endpoint_returns_ok_when_captcha_disabled() -> None:
         res = client.post("/auth/captcha/oauth-verify", json={"token": "whatever"})
     assert res.status_code == 200
     assert res.json() == {"ok": True}
-    from onyx.auth.captcha import CAPTCHA_COOKIE_NAME
+    from aethersearch.auth.captcha import CAPTCHA_COOKIE_NAME
 
     assert CAPTCHA_COOKIE_NAME not in res.cookies
 
@@ -69,12 +69,12 @@ def test_verify_endpoint_sets_cookie_on_success() -> None:
         res = client.post("/auth/captcha/oauth-verify", json={"token": "valid-token"})
     assert res.status_code == 200
     assert res.json() == {"ok": True}
-    from onyx.auth.captcha import CAPTCHA_COOKIE_NAME
+    from aethersearch.auth.captcha import CAPTCHA_COOKIE_NAME
 
     assert CAPTCHA_COOKIE_NAME in res.cookies
 
 
-def test_verify_endpoint_raises_onyx_error_on_failure() -> None:
+def test_verify_endpoint_raises_aethersearch_error_on_failure() -> None:
     app = build_app_with_middleware()
     client = TestClient(app)
     with (
@@ -133,7 +133,7 @@ def test_middleware_allows_oauth_callback_with_valid_cookie() -> None:
     client = TestClient(app)
     with patch.object(captcha_api_module, "is_captcha_enabled", return_value=True):
         cookie_value = captcha_api_module.issue_captcha_cookie_value()
-        from onyx.auth.captcha import CAPTCHA_COOKIE_NAME
+        from aethersearch.auth.captcha import CAPTCHA_COOKIE_NAME
 
         res = client.get(
             "/auth/oauth/callback",
@@ -148,7 +148,7 @@ def test_middleware_clears_cookie_after_successful_callback() -> None:
     a replayed callback URL cannot re-enter without a fresh challenge."""
     app = build_app_with_middleware()
     client = TestClient(app)
-    from onyx.auth.captcha import CAPTCHA_COOKIE_NAME
+    from aethersearch.auth.captcha import CAPTCHA_COOKIE_NAME
 
     with patch.object(captcha_api_module, "is_captcha_enabled", return_value=True):
         cookie_value = captcha_api_module.issue_captcha_cookie_value()
@@ -168,7 +168,7 @@ def test_middleware_clears_cookie_after_successful_callback() -> None:
 def test_middleware_rejects_tampered_cookie() -> None:
     app = build_app_with_middleware()
     client = TestClient(app)
-    from onyx.auth.captcha import CAPTCHA_COOKIE_NAME
+    from aethersearch.auth.captcha import CAPTCHA_COOKIE_NAME
 
     with patch.object(captcha_api_module, "is_captcha_enabled", return_value=True):
         res = client.get(

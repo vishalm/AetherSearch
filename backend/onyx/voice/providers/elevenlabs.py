@@ -20,10 +20,10 @@ from typing import Any
 
 import aiohttp
 
-from onyx.voice.interface import StreamingSynthesizerProtocol
-from onyx.voice.interface import StreamingTranscriberProtocol
-from onyx.voice.interface import TranscriptResult
-from onyx.voice.interface import VoiceProviderInterface
+from aethersearch.voice.interface import StreamingSynthesizerProtocol
+from aethersearch.voice.interface import StreamingTranscriberProtocol
+from aethersearch.voice.interface import TranscriptResult
+from aethersearch.voice.interface import VoiceProviderInterface
 
 # Default ElevenLabs API base URL
 DEFAULT_ELEVENLABS_API_BASE = "https://api.elevenlabs.io"
@@ -103,7 +103,7 @@ class ElevenLabsStreamingTranscriber(StreamingTranscriberProtocol):
         api_base: str | None = None,
     ):
         # Import logger first
-        from onyx.utils.logger import setup_logger
+        from aethersearch.utils.logger import setup_logger
 
         self._logger = setup_logger()
 
@@ -417,7 +417,7 @@ class ElevenLabsStreamingSynthesizer(StreamingSynthesizerProtocol):
         api_base: str | None = None,
         speed: float = 1.0,
     ):
-        from onyx.utils.logger import setup_logger
+        from aethersearch.utils.logger import setup_logger
 
         self._logger = setup_logger()
         self.api_key = api_key
@@ -653,7 +653,7 @@ class ElevenLabsVoiceProvider(VoiceProviderInterface):
         if not self.api_key:
             raise ValueError("ElevenLabs API key required for transcription")
 
-        from onyx.utils.logger import setup_logger
+        from aethersearch.utils.logger import setup_logger
 
         logger = setup_logger()
 
@@ -718,7 +718,7 @@ class ElevenLabsVoiceProvider(VoiceProviderInterface):
         Yields:
             Audio data chunks (mp3 format)
         """
-        from onyx.utils.logger import setup_logger
+        from aethersearch.utils.logger import setup_logger
 
         logger = setup_logger()
 

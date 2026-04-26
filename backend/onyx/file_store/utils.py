@@ -7,18 +7,18 @@ from uuid import UUID
 import requests
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import WEB_DOMAIN
-from onyx.configs.constants import FileOrigin
-from onyx.db.models import UserFile
-from onyx.file_store.file_store import get_default_file_store
-from onyx.file_store.models import ChatFileType
-from onyx.file_store.models import FileDescriptor
-from onyx.file_store.models import InMemoryChatFile
-from onyx.server.query_and_chat.chat_utils import mime_type_to_chat_file_type
-from onyx.utils.b64 import get_image_type
-from onyx.utils.logger import setup_logger
-from onyx.utils.threadpool_concurrency import run_functions_tuples_in_parallel
-from onyx.utils.timing import log_function_time
+from aethersearch.configs.app_configs import WEB_DOMAIN
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.db.models import UserFile
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.file_store.models import ChatFileType
+from aethersearch.file_store.models import FileDescriptor
+from aethersearch.file_store.models import InMemoryChatFile
+from aethersearch.server.query_and_chat.chat_utils import mime_type_to_chat_file_type
+from aethersearch.utils.b64 import get_image_type
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.threadpool_concurrency import run_functions_tuples_in_parallel
+from aethersearch.utils.timing import log_function_time
 
 logger = setup_logger()
 
@@ -319,8 +319,8 @@ def verify_user_files(
     Raises:
         ValueError: If any file does not belong to the user or is not found
     """
-    from onyx.db.models import Project__UserFile
-    from onyx.db.projects import check_project_ownership
+    from aethersearch.db.models import Project__UserFile
+    from aethersearch.db.projects import check_project_ownership
 
     # Extract user_file_ids and project file_ids from the file descriptors
     user_file_ids = []

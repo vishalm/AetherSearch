@@ -11,18 +11,18 @@ from collections.abc import Iterator
 import httpx
 import pytest
 
-from onyx.db.enums import EmbeddingPrecision
-from onyx.document_index.interfaces_new import DocumentIndex as DocumentIndexNew
-from onyx.document_index.interfaces_new import TenantState
-from onyx.document_index.opensearch.opensearch_document_index import (
+from aethersearch.db.enums import EmbeddingPrecision
+from aethersearch.document_index.interfaces_new import DocumentIndex as DocumentIndexNew
+from aethersearch.document_index.interfaces_new import TenantState
+from aethersearch.document_index.opensearch.opensearch_document_index import (
     OpenSearchDocumentIndex,
 )
-from onyx.document_index.opensearch.opensearch_document_index import (
+from aethersearch.document_index.opensearch.opensearch_document_index import (
     OpenSearchOldDocumentIndex,
 )
-from onyx.document_index.vespa.index import VespaIndex
-from onyx.document_index.vespa.vespa_document_index import VespaDocumentIndex
-from onyx.indexing.models import DocMetadataAwareIndexChunk
+from aethersearch.document_index.vespa.index import VespaIndex
+from aethersearch.document_index.vespa.vespa_document_index import VespaDocumentIndex
+from aethersearch.indexing.models import DocMetadataAwareIndexChunk
 from tests.external_dependency_unit.constants import TEST_TENANT_ID
 from tests.external_dependency_unit.document_index.conftest import EMBEDDING_DIM
 from tests.external_dependency_unit.document_index.conftest import make_chunk

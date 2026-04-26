@@ -12,19 +12,19 @@ import gitlab
 import pytz
 from gitlab.v4.objects import Project
 
-from onyx.configs.app_configs import GITLAB_CONNECTOR_INCLUDE_CODE_FILES
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.interfaces import GenerateDocumentsOutput
-from onyx.connectors.interfaces import LoadConnector
-from onyx.connectors.interfaces import PollConnector
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.models import BasicExpertInfo
-from onyx.connectors.models import ConnectorMissingCredentialError
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import TextSection
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import GITLAB_CONNECTOR_INCLUDE_CODE_FILES
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.interfaces import GenerateDocumentsOutput
+from aethersearch.connectors.interfaces import LoadConnector
+from aethersearch.connectors.interfaces import PollConnector
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.connectors.models import ConnectorMissingCredentialError
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import TextSection
+from aethersearch.utils.logger import setup_logger
 
 T = TypeVar("T")
 

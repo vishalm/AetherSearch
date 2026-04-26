@@ -19,23 +19,23 @@ from redis.exceptions import TimeoutError as RedisTimeoutError
 from redis.lock import Lock as RedisLock
 from redis.retry import Retry
 
-from onyx.configs.app_configs import REDIS_AUTH_KEY_PREFIX
-from onyx.configs.app_configs import REDIS_DB_NUMBER
-from onyx.configs.app_configs import REDIS_HEALTH_CHECK_INTERVAL
-from onyx.configs.app_configs import REDIS_HOST
-from onyx.configs.app_configs import REDIS_PASSWORD
-from onyx.configs.app_configs import REDIS_POOL_MAX_CONNECTIONS
-from onyx.configs.app_configs import REDIS_PORT
-from onyx.configs.app_configs import REDIS_REPLICA_HOST
-from onyx.configs.app_configs import REDIS_SSL
-from onyx.configs.app_configs import REDIS_SSL_CA_CERTS
-from onyx.configs.app_configs import REDIS_SSL_CERT_REQS
-from onyx.configs.app_configs import USE_REDIS_IAM_AUTH
-from onyx.configs.constants import FASTAPI_USERS_AUTH_COOKIE_NAME
-from onyx.configs.constants import REDIS_SOCKET_KEEPALIVE_OPTIONS
-from onyx.redis.iam_auth import configure_redis_iam_auth
-from onyx.redis.iam_auth import create_redis_ssl_context_if_iam
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import REDIS_AUTH_KEY_PREFIX
+from aethersearch.configs.app_configs import REDIS_DB_NUMBER
+from aethersearch.configs.app_configs import REDIS_HEALTH_CHECK_INTERVAL
+from aethersearch.configs.app_configs import REDIS_HOST
+from aethersearch.configs.app_configs import REDIS_PASSWORD
+from aethersearch.configs.app_configs import REDIS_POOL_MAX_CONNECTIONS
+from aethersearch.configs.app_configs import REDIS_PORT
+from aethersearch.configs.app_configs import REDIS_REPLICA_HOST
+from aethersearch.configs.app_configs import REDIS_SSL
+from aethersearch.configs.app_configs import REDIS_SSL_CA_CERTS
+from aethersearch.configs.app_configs import REDIS_SSL_CERT_REQS
+from aethersearch.configs.app_configs import USE_REDIS_IAM_AUTH
+from aethersearch.configs.constants import FASTAPI_USERS_AUTH_COOKIE_NAME
+from aethersearch.configs.constants import REDIS_SOCKET_KEEPALIVE_OPTIONS
+from aethersearch.redis.iam_auth import configure_redis_iam_auth
+from aethersearch.redis.iam_auth import create_redis_ssl_context_if_iam
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import DEFAULT_REDIS_PREFIX
 from shared_configs.contextvars import get_current_tenant_id
 
@@ -47,7 +47,7 @@ SCAN_ITER_COUNT_DEFAULT = 4096
 # raised while Redis is loading its RDB snapshot after a restart or
 # failover. redis-py's default retry policy only covers ConnectionError,
 # so these surface as uncaught exceptions and ship to Sentry
-# (ONYX-BACKEND-H4NT / H43M).
+# (AETHERSEARCH-BACKEND-H4NT / H43M).
 _RETRYABLE_ERRORS: list[type[Exception]] = [
     BusyLoadingError,
     RedisConnectionError,

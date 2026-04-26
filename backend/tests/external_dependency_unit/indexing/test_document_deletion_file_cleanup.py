@@ -17,14 +17,14 @@ from uuid import uuid4
 import pytest
 from sqlalchemy.orm import Session
 
-from onyx.background.celery.tasks.shared.tasks import document_by_cc_pair_cleanup_task
-from onyx.connectors.models import Document
-from onyx.connectors.models import IndexAttemptMetadata
-from onyx.db.document import delete_all_documents_for_connector_credential_pair
-from onyx.db.document import upsert_document_by_connector_credential_pair
-from onyx.db.models import ConnectorCredentialPair
-from onyx.indexing.indexing_pipeline import index_doc_batch_prepare
-from onyx.server.onyx_api.ingestion import delete_ingestion_doc
+from aethersearch.background.celery.tasks.shared.tasks import document_by_cc_pair_cleanup_task
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import IndexAttemptMetadata
+from aethersearch.db.document import delete_all_documents_for_connector_credential_pair
+from aethersearch.db.document import upsert_document_by_connector_credential_pair
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.indexing.indexing_pipeline import index_doc_batch_prepare
+from aethersearch.server.aethersearch_api.ingestion import delete_ingestion_doc
 from tests.external_dependency_unit.constants import TEST_TENANT_ID
 from tests.external_dependency_unit.indexing_helpers import cleanup_cc_pair
 from tests.external_dependency_unit.indexing_helpers import get_doc_row
@@ -181,7 +181,7 @@ class TestDeleteIngestionDoc:
         # Patch out Vespa — we're testing the file cleanup, not the document
         # index integration.
         with patch(
-            "onyx.server.onyx_api.ingestion.get_all_document_indices",
+            "aethersearch.server.aethersearch_api.ingestion.get_all_document_indices",
             return_value=[],
         ):
             delete_ingestion_doc(
@@ -215,7 +215,7 @@ class TestDocumentByCcPairCleanupTask:
         # Patch out Vespa interaction — no chunks were ever written, and we're
         # not testing the document index here.
         with patch(
-            "onyx.background.celery.tasks.shared.tasks.get_all_document_indices",
+            "aethersearch.background.celery.tasks.shared.tasks.get_all_document_indices",
             return_value=[],
         ):
             result = document_by_cc_pair_cleanup_task.apply(
@@ -256,7 +256,7 @@ class TestDocumentByCcPairCleanupTask:
         db_session.commit()
 
         with patch(
-            "onyx.background.celery.tasks.shared.tasks.get_all_document_indices",
+            "aethersearch.background.celery.tasks.shared.tasks.get_all_document_indices",
             return_value=[],
         ):
             result = document_by_cc_pair_cleanup_task.apply(

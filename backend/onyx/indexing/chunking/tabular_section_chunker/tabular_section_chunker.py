@@ -2,25 +2,25 @@ from collections.abc import Iterable
 
 from pydantic import BaseModel
 
-from onyx.connectors.models import Section
-from onyx.indexing.chunking.section_chunker import AccumulatorState
-from onyx.indexing.chunking.section_chunker import ChunkPayload
-from onyx.indexing.chunking.section_chunker import SectionChunker
-from onyx.indexing.chunking.section_chunker import SectionChunkerOutput
-from onyx.indexing.chunking.tabular_section_chunker.analysis import analyze_sheet
-from onyx.indexing.chunking.tabular_section_chunker.sheet_descriptor import (
+from aethersearch.connectors.models import Section
+from aethersearch.indexing.chunking.section_chunker import AccumulatorState
+from aethersearch.indexing.chunking.section_chunker import ChunkPayload
+from aethersearch.indexing.chunking.section_chunker import SectionChunker
+from aethersearch.indexing.chunking.section_chunker import SectionChunkerOutput
+from aethersearch.indexing.chunking.tabular_section_chunker.analysis import analyze_sheet
+from aethersearch.indexing.chunking.tabular_section_chunker.sheet_descriptor import (
     build_sheet_descriptor_chunks,
 )
-from onyx.indexing.chunking.tabular_section_chunker.total_descriptor import (
+from aethersearch.indexing.chunking.tabular_section_chunker.total_descriptor import (
     build_total_descriptor_chunks,
 )
-from onyx.natural_language_processing.utils import BaseTokenizer
-from onyx.natural_language_processing.utils import count_tokens
-from onyx.natural_language_processing.utils import split_text_by_tokens
-from onyx.utils.csv_utils import parse_csv_string
-from onyx.utils.csv_utils import ParsedRow
-from onyx.utils.csv_utils import read_csv_header
-from onyx.utils.logger import setup_logger
+from aethersearch.natural_language_processing.utils import BaseTokenizer
+from aethersearch.natural_language_processing.utils import count_tokens
+from aethersearch.natural_language_processing.utils import split_text_by_tokens
+from aethersearch.utils.csv_utils import parse_csv_string
+from aethersearch.utils.csv_utils import ParsedRow
+from aethersearch.utils.csv_utils import read_csv_header
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

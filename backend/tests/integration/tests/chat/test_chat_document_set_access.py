@@ -16,8 +16,8 @@ from uuid import UUID
 import pytest
 import requests
 
-from onyx.configs.constants import DocumentSource
-from onyx.tools.constants import SEARCH_TOOL_ID
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.tools.constants import SEARCH_TOOL_ID
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.managers.cc_pair import CCPairManager
 from tests.integration.common_utils.managers.chat import ChatSessionManager

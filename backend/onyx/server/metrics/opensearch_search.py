@@ -12,7 +12,7 @@ from prometheus_client import Counter
 from prometheus_client import Gauge
 from prometheus_client import Histogram
 
-from onyx.document_index.opensearch.constants import OpenSearchSearchType
+from aethersearch.document_index.opensearch.constants import OpenSearchSearchType
 
 logger = logging.getLogger(__name__)
 
@@ -32,27 +32,27 @@ _SEARCH_LATENCY_BUCKETS = (
 )
 
 _client_duration = Histogram(
-    "onyx_opensearch_search_client_duration_seconds",
+    "aethersearch_opensearch_search_client_duration_seconds",
     "Client-side end-to-end latency of OpenSearch search calls",
     ["search_type"],
     buckets=_SEARCH_LATENCY_BUCKETS,
 )
 
 _server_duration = Histogram(
-    "onyx_opensearch_search_server_duration_seconds",
+    "aethersearch_opensearch_search_server_duration_seconds",
     "Server-side execution time reported by OpenSearch (took field)",
     ["search_type"],
     buckets=_SEARCH_LATENCY_BUCKETS,
 )
 
 _search_total = Counter(
-    "onyx_opensearch_search_total",
+    "aethersearch_opensearch_search_total",
     "Total number of search requests sent to OpenSearch",
     ["search_type"],
 )
 
 _searches_in_progress = Gauge(
-    "onyx_opensearch_searches_in_progress",
+    "aethersearch_opensearch_searches_in_progress",
     "Number of OpenSearch searches currently in-flight",
     ["search_type"],
 )

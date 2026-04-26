@@ -8,26 +8,26 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.configs.app_configs import MAX_DOCUMENT_CHARS
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentSource
-from onyx.connectors.models import ImageSection
-from onyx.connectors.models import TextSection
-from onyx.hooks.executor import HookSkipped
-from onyx.hooks.executor import HookSoftFailed
-from onyx.hooks.points.document_ingestion import DocumentIngestionResponse
-from onyx.hooks.points.document_ingestion import DocumentIngestionSection
-from onyx.indexing.chunker import Chunker
-from onyx.indexing.embedder import DefaultIndexingEmbedder
-from onyx.indexing.indexing_pipeline import _apply_document_ingestion_hook
-from onyx.indexing.indexing_pipeline import add_contextual_summaries
-from onyx.indexing.indexing_pipeline import filter_documents
-from onyx.indexing.indexing_pipeline import process_image_sections
-from onyx.llm.constants import LlmProviderNames
-from onyx.llm.model_response import Choice
-from onyx.llm.model_response import Message
-from onyx.llm.model_response import ModelResponse
-from onyx.llm.utils import get_max_input_tokens
+from aethersearch.configs.app_configs import MAX_DOCUMENT_CHARS
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentSource
+from aethersearch.connectors.models import ImageSection
+from aethersearch.connectors.models import TextSection
+from aethersearch.hooks.executor import HookSkipped
+from aethersearch.hooks.executor import HookSoftFailed
+from aethersearch.hooks.points.document_ingestion import DocumentIngestionResponse
+from aethersearch.hooks.points.document_ingestion import DocumentIngestionSection
+from aethersearch.indexing.chunker import Chunker
+from aethersearch.indexing.embedder import DefaultIndexingEmbedder
+from aethersearch.indexing.indexing_pipeline import _apply_document_ingestion_hook
+from aethersearch.indexing.indexing_pipeline import add_contextual_summaries
+from aethersearch.indexing.indexing_pipeline import filter_documents
+from aethersearch.indexing.indexing_pipeline import process_image_sections
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.llm.model_response import Choice
+from aethersearch.llm.model_response import Message
+from aethersearch.llm.model_response import ModelResponse
+from aethersearch.llm.utils import get_max_input_tokens
 
 
 def create_test_document(
@@ -146,7 +146,7 @@ def test_filter_documents_empty_batch() -> None:
     assert len(result) == 0
 
 
-@patch("onyx.llm.utils.GEN_AI_MAX_TOKENS", 4096)
+@patch("aethersearch.llm.utils.GEN_AI_MAX_TOKENS", 4096)
 @pytest.mark.parametrize("enable_contextual_rag", [True, False])
 def test_contextual_rag(
     embedder: DefaultIndexingEmbedder, enable_contextual_rag: bool
@@ -235,7 +235,7 @@ def test_contextual_rag(
 # _apply_document_ingestion_hook
 # ---------------------------------------------------------------------------
 
-_PATCH_EXECUTE_HOOK = "onyx.indexing.indexing_pipeline.execute_hook"
+_PATCH_EXECUTE_HOOK = "aethersearch.indexing.indexing_pipeline.execute_hook"
 
 
 def _make_doc(

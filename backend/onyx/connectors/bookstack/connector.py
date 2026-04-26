@@ -5,23 +5,23 @@ from datetime import datetime
 from datetime import timezone
 from typing import Any
 
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.bookstack.client import BookStackApiClient
-from onyx.connectors.bookstack.client import BookStackClientRequestFailedError
-from onyx.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.connectors.exceptions import CredentialExpiredError
-from onyx.connectors.exceptions import InsufficientPermissionsError
-from onyx.connectors.interfaces import GenerateDocumentsOutput
-from onyx.connectors.interfaces import LoadConnector
-from onyx.connectors.interfaces import PollConnector
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.models import ConnectorMissingCredentialError
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import TextSection
-from onyx.file_processing.html_utils import parse_html_page_basic
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.bookstack.client import BookStackApiClient
+from aethersearch.connectors.bookstack.client import BookStackClientRequestFailedError
+from aethersearch.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.connectors.exceptions import CredentialExpiredError
+from aethersearch.connectors.exceptions import InsufficientPermissionsError
+from aethersearch.connectors.interfaces import GenerateDocumentsOutput
+from aethersearch.connectors.interfaces import LoadConnector
+from aethersearch.connectors.interfaces import PollConnector
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.models import ConnectorMissingCredentialError
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import TextSection
+from aethersearch.file_processing.html_utils import parse_html_page_basic
 
 
 class BookstackConnector(LoadConnector, PollConnector):

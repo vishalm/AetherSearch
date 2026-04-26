@@ -1,13 +1,13 @@
 from fastapi import APIRouter
 from fastapi import Depends
 
-from ee.onyx.auth.users import current_cloud_superuser
-from onyx.background.celery.apps.client import celery_app as client_app
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.db.models import User
-from onyx.evals.models import EvalConfigurationOptions
-from onyx.server.evals.models import EvalRunAck
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.auth.users import current_cloud_superuser
+from aethersearch.background.celery.apps.client import celery_app as client_app
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.db.models import User
+from aethersearch.evals.models import EvalConfigurationOptions
+from aethersearch.server.evals.models import EvalRunAck
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -24,7 +24,7 @@ def eval_run(
     This endpoint requires a valid API key for authentication.
     """
     client_app.send_task(
-        OnyxCeleryTask.EVAL_RUN_TASK,
+        AetherSearchCeleryTask.EVAL_RUN_TASK,
         kwargs={
             "configuration_dict": request.model_dump(),
         },

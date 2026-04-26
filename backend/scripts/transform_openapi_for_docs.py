@@ -14,7 +14,7 @@ import json
 from typing import Any
 
 PUBLIC_TAG = "public"
-DOCS_SERVER_URL = "https://cloud.onyx.app/api"
+DOCS_SERVER_URL = "https://cloud.aethersearch.app/api"
 INTERNAL_PARAMETERS = {"tenant_id", "db_session"}
 
 
@@ -110,8 +110,8 @@ def transform_openapi(input_spec: dict[str, Any]) -> dict[str, Any]:
     output_spec: dict[str, Any] = {
         "openapi": input_spec.get("openapi", "3.1.0"),
         "info": {
-            "title": "Onyx API",
-            "description": "Onyx API for AI-powered enterprise search and chat",
+            "title": "AetherSearch API",
+            "description": "AetherSearch API for AI-powered enterprise search and chat",
             "version": input_spec.get("info", {}).get("version", "1.0.0"),
         },
         "servers": [{"url": DOCS_SERVER_URL}],

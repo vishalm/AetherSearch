@@ -1,11 +1,11 @@
 import re
 from typing import Any
 
-from onyx.access.models import ExternalAccess
-from onyx.connectors.models import BasicExpertInfo
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.utils.logger import setup_logger
+from aethersearch.access.models import ExternalAccess
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

@@ -2,8 +2,8 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.connectors.slab.connector import SlabConnector
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.connectors.slab.connector import SlabConnector
 
 
 def _build_connector(base_url: str = "https://myteam.slab.com") -> SlabConnector:
@@ -18,14 +18,14 @@ def test_validate_rejects_missing_scheme() -> None:
         connector.validate_connector_settings()
 
 
-@patch("onyx.connectors.slab.connector.get_all_post_ids", return_value=["id1"])
+@patch("aethersearch.connectors.slab.connector.get_all_post_ids", return_value=["id1"])
 def test_validate_success(mock_get_posts: object) -> None:  # noqa: ARG001
     connector = _build_connector()
     connector.validate_connector_settings()
 
 
 @patch(
-    "onyx.connectors.slab.connector.get_all_post_ids",
+    "aethersearch.connectors.slab.connector.get_all_post_ids",
     side_effect=Exception("401 Unauthorized"),
 )
 def test_validate_bad_token_raises(

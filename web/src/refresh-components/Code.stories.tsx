@@ -26,7 +26,7 @@ export const Default: Story = {
 
 export const WithoutCopyButton: Story = {
   args: {
-    children: `npm install @onyx/sdk`,
+    children: `npm install @aethersearch/sdk`,
     showCopyButton: false,
   },
 };

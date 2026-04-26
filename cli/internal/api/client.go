@@ -1,4 +1,4 @@
-// Package api provides the HTTP client for communicating with the Onyx server.
+// Package api provides the HTTP client for communicating with the AetherSearch server.
 package api
 
 import (
@@ -14,11 +14,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/onyx-dot-app/onyx/cli/internal/config"
-	"github.com/onyx-dot-app/onyx/cli/internal/models"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/config"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/models"
 )
 
-// Client is the Onyx API client.
+// Client is the AetherSearch API client.
 type Client struct {
 	baseURL        string
 	apiKey         string
@@ -27,7 +27,7 @@ type Client struct {
 }
 
 // NewClient creates a new API client from config.
-func NewClient(cfg config.OnyxCliConfig) *Client {
+func NewClient(cfg config.AetherSearchCliConfig) *Client {
 	var transport *http.Transport
 	if t, ok := http.DefaultTransport.(*http.Transport); ok {
 		transport = t.Clone()
@@ -49,7 +49,7 @@ func NewClient(cfg config.OnyxCliConfig) *Client {
 }
 
 // UpdateConfig replaces the client's config.
-func (c *Client) UpdateConfig(cfg config.OnyxCliConfig) {
+func (c *Client) UpdateConfig(cfg config.AetherSearchCliConfig) {
 	c.baseURL = strings.TrimRight(cfg.ServerURL, "/")
 	c.apiKey = cfg.APIKey
 }
@@ -62,7 +62,7 @@ func (c *Client) newRequest(ctx context.Context, method, path string, body io.Re
 	if c.apiKey != "" {
 		bearer := "Bearer " + c.apiKey
 		req.Header.Set("Authorization", bearer)
-		req.Header.Set("X-Onyx-Authorization", bearer)
+		req.Header.Set("X-AetherSearch-Authorization", bearer)
 	}
 	return req, nil
 }
@@ -93,7 +93,7 @@ func (c *Client) doJSON(ctx context.Context, method, path string, reqBody any, r
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		respBody, _ := io.ReadAll(resp.Body)
-		return &OnyxAPIError{StatusCode: resp.StatusCode, Detail: string(respBody)}
+		return &AetherSearchAPIError{StatusCode: resp.StatusCode, Detail: string(respBody)}
 	}
 
 	if result != nil {
@@ -149,7 +149,7 @@ func (c *Client) TestConnection(ctx context.Context) error {
 
 	if resp2.StatusCode == 401 || resp2.StatusCode == 403 {
 		if isHTML || strings.Contains(respServer, "awselb") {
-			return &AuthError{Message: fmt.Sprintf("HTTP %d from a reverse proxy (not the Onyx backend).\n  Check your deployment's ingress / proxy configuration", resp2.StatusCode)}
+			return &AuthError{Message: fmt.Sprintf("HTTP %d from a reverse proxy (not the AetherSearch backend).\n  Check your deployment's ingress / proxy configuration", resp2.StatusCode)}
 		}
 		if resp2.StatusCode == 401 {
 			return &AuthError{Message: fmt.Sprintf("invalid API key or token.\n  %s", body)}
@@ -250,7 +250,7 @@ func (c *Client) UploadFile(ctx context.Context, filePath string) (*models.FileD
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		body, _ := io.ReadAll(resp.Body)
-		return nil, &OnyxAPIError{StatusCode: resp.StatusCode, Detail: string(body)}
+		return nil, &AetherSearchAPIError{StatusCode: resp.StatusCode, Detail: string(body)}
 	}
 
 	var snapshot models.CategorizedFilesSnapshot
@@ -259,7 +259,7 @@ func (c *Client) UploadFile(ctx context.Context, filePath string) (*models.FileD
 	}
 
 	if len(snapshot.UserFiles) == 0 {
-		return nil, &OnyxAPIError{StatusCode: 400, Detail: "File upload returned no files"}
+		return nil, &AetherSearchAPIError{StatusCode: 400, Detail: "File upload returned no files"}
 	}
 
 	uf := snapshot.UserFiles[0]

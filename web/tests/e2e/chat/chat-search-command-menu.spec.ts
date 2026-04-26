@@ -1,5 +1,5 @@
 import { test, expect, Page, Locator } from "@playwright/test";
-import { OnyxApiClient } from "@tests/e2e/utils/onyxApiClient";
+import { AetherSearchApiClient } from "@tests/e2e/utils/aethersearchApiClient";
 import { loginAsWorkerUser } from "@tests/e2e/utils/auth";
 import { expectScreenshot } from "@tests/e2e/utils/visualRegression";
 
@@ -32,7 +32,7 @@ test.describe("Chat Search Command Menu", () => {
     const context = await browser.newContext();
     const page = await context.newPage();
     await loginAsWorkerUser(page, workerInfo.workerIndex);
-    const client = new OnyxApiClient(page.request);
+    const client = new AetherSearchApiClient(page.request);
 
     await page.goto("/app");
     await page.waitForLoadState("networkidle");
@@ -54,7 +54,7 @@ test.describe("Chat Search Command Menu", () => {
     const context = await browser.newContext();
     const page = await context.newPage();
     await loginAsWorkerUser(page, workerInfo.workerIndex);
-    const client = new OnyxApiClient(page.request);
+    const client = new AetherSearchApiClient(page.request);
 
     await page.goto("/app");
     await page.waitForLoadState("networkidle");

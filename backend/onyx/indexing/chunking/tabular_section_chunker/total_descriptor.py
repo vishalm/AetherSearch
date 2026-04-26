@@ -1,9 +1,9 @@
 from collections import Counter
 
-from onyx.indexing.chunking.tabular_section_chunker.analysis import SheetAnalysis
-from onyx.indexing.chunking.tabular_section_chunker.util import label
-from onyx.indexing.chunking.tabular_section_chunker.util import pack_lines
-from onyx.natural_language_processing.utils import BaseTokenizer
+from aethersearch.indexing.chunking.tabular_section_chunker.analysis import SheetAnalysis
+from aethersearch.indexing.chunking.tabular_section_chunker.util import label
+from aethersearch.indexing.chunking.tabular_section_chunker.util import pack_lines
+from aethersearch.natural_language_processing.utils import BaseTokenizer
 
 TOTALS_HEADER = (
     "Totals and overall aggregates across all rows. This sheet can answer "

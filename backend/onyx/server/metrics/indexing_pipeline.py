@@ -24,11 +24,11 @@ from prometheus_client.core import GaugeMetricFamily
 from prometheus_client.registry import Collector
 from redis import Redis
 
-from onyx.background.celery.celery_redis import celery_get_broker_client
-from onyx.background.celery.celery_redis import celery_get_queue_length
-from onyx.background.celery.celery_redis import celery_get_unacked_task_ids
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.utils.logger import setup_logger
+from aethersearch.background.celery.celery_redis import celery_get_broker_client
+from aethersearch.background.celery.celery_redis import celery_get_queue_length
+from aethersearch.background.celery.celery_redis import celery_get_unacked_task_ids
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -42,32 +42,32 @@ _DEFAULT_CACHE_TTL = 30.0
 _DEFAULT_COLLECT_TIMEOUT = 120.0
 
 _QUEUE_LABEL_MAP: dict[str, str] = {
-    OnyxCeleryQueues.PRIMARY: "primary",
-    OnyxCeleryQueues.DOCPROCESSING: "docprocessing",
-    OnyxCeleryQueues.CONNECTOR_DOC_FETCHING: "docfetching",
-    OnyxCeleryQueues.VESPA_METADATA_SYNC: "vespa_metadata_sync",
-    OnyxCeleryQueues.CONNECTOR_DELETION: "connector_deletion",
-    OnyxCeleryQueues.CONNECTOR_PRUNING: "connector_pruning",
-    OnyxCeleryQueues.CONNECTOR_DOC_PERMISSIONS_SYNC: "permissions_sync",
-    OnyxCeleryQueues.CONNECTOR_EXTERNAL_GROUP_SYNC: "external_group_sync",
-    OnyxCeleryQueues.DOC_PERMISSIONS_UPSERT: "permissions_upsert",
-    OnyxCeleryQueues.CONNECTOR_HIERARCHY_FETCHING: "hierarchy_fetching",
-    OnyxCeleryQueues.LLM_MODEL_UPDATE: "llm_model_update",
-    OnyxCeleryQueues.CHECKPOINT_CLEANUP: "checkpoint_cleanup",
-    OnyxCeleryQueues.INDEX_ATTEMPT_CLEANUP: "index_attempt_cleanup",
-    OnyxCeleryQueues.CSV_GENERATION: "csv_generation",
-    OnyxCeleryQueues.USER_FILE_PROCESSING: "user_file_processing",
-    OnyxCeleryQueues.USER_FILE_PROJECT_SYNC: "user_file_project_sync",
-    OnyxCeleryQueues.USER_FILE_DELETE: "user_file_delete",
-    OnyxCeleryQueues.MONITORING: "monitoring",
-    OnyxCeleryQueues.SANDBOX: "sandbox",
-    OnyxCeleryQueues.OPENSEARCH_MIGRATION: "opensearch_migration",
+    AetherSearchCeleryQueues.PRIMARY: "primary",
+    AetherSearchCeleryQueues.DOCPROCESSING: "docprocessing",
+    AetherSearchCeleryQueues.CONNECTOR_DOC_FETCHING: "docfetching",
+    AetherSearchCeleryQueues.VESPA_METADATA_SYNC: "vespa_metadata_sync",
+    AetherSearchCeleryQueues.CONNECTOR_DELETION: "connector_deletion",
+    AetherSearchCeleryQueues.CONNECTOR_PRUNING: "connector_pruning",
+    AetherSearchCeleryQueues.CONNECTOR_DOC_PERMISSIONS_SYNC: "permissions_sync",
+    AetherSearchCeleryQueues.CONNECTOR_EXTERNAL_GROUP_SYNC: "external_group_sync",
+    AetherSearchCeleryQueues.DOC_PERMISSIONS_UPSERT: "permissions_upsert",
+    AetherSearchCeleryQueues.CONNECTOR_HIERARCHY_FETCHING: "hierarchy_fetching",
+    AetherSearchCeleryQueues.LLM_MODEL_UPDATE: "llm_model_update",
+    AetherSearchCeleryQueues.CHECKPOINT_CLEANUP: "checkpoint_cleanup",
+    AetherSearchCeleryQueues.INDEX_ATTEMPT_CLEANUP: "index_attempt_cleanup",
+    AetherSearchCeleryQueues.CSV_GENERATION: "csv_generation",
+    AetherSearchCeleryQueues.USER_FILE_PROCESSING: "user_file_processing",
+    AetherSearchCeleryQueues.USER_FILE_PROJECT_SYNC: "user_file_project_sync",
+    AetherSearchCeleryQueues.USER_FILE_DELETE: "user_file_delete",
+    AetherSearchCeleryQueues.MONITORING: "monitoring",
+    AetherSearchCeleryQueues.SANDBOX: "sandbox",
+    AetherSearchCeleryQueues.OPENSEARCH_MIGRATION: "opensearch_migration",
 }
 
 # Queues where prefetched (unacked) task counts are meaningful
 _UNACKED_QUEUES: list[str] = [
-    OnyxCeleryQueues.CONNECTOR_DOC_FETCHING,
-    OnyxCeleryQueues.DOCPROCESSING,
+    AetherSearchCeleryQueues.CONNECTOR_DOC_FETCHING,
+    AetherSearchCeleryQueues.DOCPROCESSING,
 ]
 
 
@@ -160,17 +160,17 @@ class QueueDepthCollector(_CachedCollector):
         redis_client = celery_get_broker_client(self._celery_app)
 
         depth = GaugeMetricFamily(
-            "onyx_queue_depth",
+            "aethersearch_queue_depth",
             "Number of tasks waiting in Celery queue",
             labels=["queue"],
         )
         unacked = GaugeMetricFamily(
-            "onyx_queue_unacked",
+            "aethersearch_queue_unacked",
             "Number of prefetched (unacked) tasks for queue",
             labels=["queue"],
         )
         queue_age = GaugeMetricFamily(
-            "onyx_queue_oldest_task_age_seconds",
+            "aethersearch_queue_oldest_task_age_seconds",
             "Age of the oldest task in the queue (seconds since enqueue)",
             labels=["queue"],
         )
@@ -252,19 +252,19 @@ class RedisHealthCollector(_CachedCollector):
         redis_client = celery_get_broker_client(self._celery_app)
 
         memory_used = GaugeMetricFamily(
-            "onyx_redis_memory_used_bytes",
+            "aethersearch_redis_memory_used_bytes",
             "Redis used memory in bytes",
         )
         memory_peak = GaugeMetricFamily(
-            "onyx_redis_memory_peak_bytes",
+            "aethersearch_redis_memory_peak_bytes",
             "Redis peak used memory in bytes",
         )
         memory_frag = GaugeMetricFamily(
-            "onyx_redis_memory_fragmentation_ratio",
+            "aethersearch_redis_memory_fragmentation_ratio",
             "Redis memory fragmentation ratio (>1.5 indicates fragmentation)",
         )
         connected_clients = GaugeMetricFamily(
-            "onyx_redis_connected_clients",
+            "aethersearch_redis_connected_clients",
             "Number of connected Redis clients",
         )
 
@@ -419,7 +419,7 @@ class WorkerHealthCollector(_CachedCollector):
             return []
 
         active_workers = GaugeMetricFamily(
-            "onyx_celery_active_worker_count",
+            "aethersearch_celery_active_worker_count",
             "Number of active Celery workers with recent heartbeats",
         )
         # Celery hostnames are ``{worker_type}@{nodename}`` (see supervisord.conf).
@@ -429,7 +429,7 @@ class WorkerHealthCollector(_CachedCollector):
         # the pieces into separate labels so each replica is distinct; callers
         # can still ``sum by (worker_type)`` to recover the old aggregated view.
         worker_up = GaugeMetricFamily(
-            "onyx_celery_worker_up",
+            "aethersearch_celery_worker_up",
             "Whether a specific Celery worker is alive (1=up, 0=down)",
             labels=["worker_type", "hostname"],
         )

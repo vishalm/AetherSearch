@@ -4,8 +4,8 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 
-from onyx.file_processing.html_utils import web_html_cleanup
-from onyx.utils.logger import setup_logger
+from aethersearch.file_processing.html_utils import web_html_cleanup
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

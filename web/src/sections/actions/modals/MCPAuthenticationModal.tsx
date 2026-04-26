@@ -109,7 +109,7 @@ export default function MCPAuthenticationModal({
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Check if OAuth is enabled for the Onyx instance
+  // Check if OAuth is enabled for the AetherSearch instance
   const authType = useAuthType();
   const isOAuthEnabled =
     authType === AuthType.OIDC || authType === AuthType.GOOGLE_OAUTH;
@@ -428,7 +428,7 @@ export default function MCPAuthenticationModal({
                             {isOAuthEnabled && (
                               <InputSelect.Item
                                 value={MCPAuthenticationType.PT_OAUTH}
-                                description="Forward the user's OAuth access token used to authenticate Onyx."
+                                description="Forward the user's OAuth access token used to authenticate AetherSearch."
                               >
                                 OAuth Pass-through
                               </InputSelect.Item>
@@ -526,8 +526,8 @@ export default function MCPAuthenticationModal({
                         </Text>
                         <Text as="p" text03 secondaryBody>
                           If your server does not support DCR, you need register
-                          your Onyx instance with the server provider to obtain
-                          these credentials first. Make sure to grant Onyx
+                          your AetherSearch instance with the server provider to obtain
+                          these credentials first. Make sure to grant AetherSearch
                           necessary scopes/permissions for your actions.
                         </Text>
 
@@ -644,7 +644,7 @@ export default function MCPAuthenticationModal({
                   {values.auth_type === MCPAuthenticationType.PT_OAUTH && (
                     <MessageCard
                       title="Use pass-through for services with shared identity provider."
-                      description="Onyx will forward the user's OAuth access token directly to the server as an Authorization header. Make sure the server supports authentication with the same provider."
+                      description="AetherSearch will forward the user's OAuth access token directly to the server as an Authorization header. Make sure the server supports authentication with the same provider."
                     />
                   )}
                 </Modal.Body>

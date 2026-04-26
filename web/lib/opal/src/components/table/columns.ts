@@ -9,10 +9,10 @@ import {
 import type {
   ColumnWidth,
   QualifierContentType,
-  OnyxQualifierColumn,
-  OnyxDataColumn,
-  OnyxDisplayColumn,
-  OnyxActionsColumn,
+  AetherSearchQualifierColumn,
+  AetherSearchDataColumn,
+  AetherSearchDisplayColumn,
+  AetherSearchActionsColumn,
 } from "@opal/components/table/types";
 import type { TableSize } from "@opal/components/table/TableSizeContext";
 import type { IconFunctionComponent } from "@opal/types";
@@ -96,19 +96,19 @@ interface ActionsConfig<TData = any> {
 
 interface TableColumnsBuilder<TData> {
   /** Create a qualifier (leading avatar/checkbox) column. */
-  qualifier(config?: QualifierConfig<TData>): OnyxQualifierColumn<TData>;
+  qualifier(config?: QualifierConfig<TData>): AetherSearchQualifierColumn<TData>;
 
   /** Create a data (accessor) column. */
   column<TKey extends DeepKeys<TData>>(
     accessor: TKey,
     config: DataColumnConfig<TData, DeepValue<TData, TKey>>
-  ): OnyxDataColumn<TData>;
+  ): AetherSearchDataColumn<TData>;
 
   /** Create a display (non-accessor) column. */
-  displayColumn(config: DisplayColumnConfig<TData>): OnyxDisplayColumn<TData>;
+  displayColumn(config: DisplayColumnConfig<TData>): AetherSearchDisplayColumn<TData>;
 
   /** Create an actions column (visibility/sorting popovers). */
-  actions(config?: ActionsConfig<TData>): OnyxActionsColumn<TData>;
+  actions(config?: ActionsConfig<TData>): AetherSearchActionsColumn<TData>;
 }
 
 // ---------------------------------------------------------------------------
@@ -139,7 +139,7 @@ export function createTableColumns<TData>(): TableColumnsBuilder<TData> {
   const helper = createColumnHelper<TData>();
 
   return {
-    qualifier(config?: QualifierConfig<TData>): OnyxQualifierColumn<TData> {
+    qualifier(config?: QualifierConfig<TData>): AetherSearchQualifierColumn<TData> {
       const content = config?.content ?? "simple";
 
       const def: ColumnDef<TData, any> = helper.display({
@@ -169,7 +169,7 @@ export function createTableColumns<TData>(): TableColumnsBuilder<TData> {
     column<TKey extends DeepKeys<TData>>(
       accessor: TKey,
       config: DataColumnConfig<TData, DeepValue<TData, TKey>>
-    ): OnyxDataColumn<TData> {
+    ): AetherSearchDataColumn<TData> {
       const {
         header,
         cell,
@@ -202,7 +202,7 @@ export function createTableColumns<TData>(): TableColumnsBuilder<TData> {
 
     displayColumn(
       config: DisplayColumnConfig<TData>
-    ): OnyxDisplayColumn<TData> {
+    ): AetherSearchDisplayColumn<TData> {
       const { id, header, cell, width, enableHiding = true } = config;
 
       const def: ColumnDef<TData, any> = helper.display({
@@ -222,7 +222,7 @@ export function createTableColumns<TData>(): TableColumnsBuilder<TData> {
       };
     },
 
-    actions(config?: ActionsConfig<TData>): OnyxActionsColumn<TData> {
+    actions(config?: ActionsConfig<TData>): AetherSearchActionsColumn<TData> {
       const def: ColumnDef<TData, any> = {
         id: "__actions",
         enableHiding: false,

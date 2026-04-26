@@ -28,46 +28,46 @@ from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from ee.onyx.db.scim import ScimDAL
-from ee.onyx.server.scim.auth import ScimAuthError
-from ee.onyx.server.scim.auth import verify_scim_token
-from ee.onyx.server.scim.filtering import parse_scim_filter
-from ee.onyx.server.scim.models import SCIM_LIST_RESPONSE_SCHEMA
-from ee.onyx.server.scim.models import ScimError
-from ee.onyx.server.scim.models import ScimGroupMember
-from ee.onyx.server.scim.models import ScimGroupResource
-from ee.onyx.server.scim.models import ScimListResponse
-from ee.onyx.server.scim.models import ScimMappingFields
-from ee.onyx.server.scim.models import ScimName
-from ee.onyx.server.scim.models import ScimPatchRequest
-from ee.onyx.server.scim.models import ScimServiceProviderConfig
-from ee.onyx.server.scim.models import ScimUserResource
-from ee.onyx.server.scim.patch import apply_group_patch
-from ee.onyx.server.scim.patch import apply_user_patch
-from ee.onyx.server.scim.patch import ScimPatchError
-from ee.onyx.server.scim.providers.base import get_default_provider
-from ee.onyx.server.scim.providers.base import ScimProvider
-from ee.onyx.server.scim.providers.base import serialize_emails
-from ee.onyx.server.scim.schema_definitions import ENTERPRISE_USER_SCHEMA_DEF
-from ee.onyx.server.scim.schema_definitions import GROUP_RESOURCE_TYPE
-from ee.onyx.server.scim.schema_definitions import GROUP_SCHEMA_DEF
-from ee.onyx.server.scim.schema_definitions import SERVICE_PROVIDER_CONFIG
-from ee.onyx.server.scim.schema_definitions import USER_RESOURCE_TYPE
-from ee.onyx.server.scim.schema_definitions import USER_SCHEMA_DEF
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import AccountType
-from onyx.db.enums import GrantSource
-from onyx.db.enums import Permission
-from onyx.db.models import ScimToken
-from onyx.db.models import ScimUserMapping
-from onyx.db.models import User
-from onyx.db.models import UserGroup
-from onyx.db.models import UserRole
-from onyx.db.permissions import recompute_permissions_for_group__no_commit
-from onyx.db.permissions import recompute_user_permissions__no_commit
-from onyx.db.users import assign_user_to_default_groups__no_commit
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
+from ee.aethersearch.db.scim import ScimDAL
+from ee.aethersearch.server.scim.auth import ScimAuthError
+from ee.aethersearch.server.scim.auth import verify_scim_token
+from ee.aethersearch.server.scim.filtering import parse_scim_filter
+from ee.aethersearch.server.scim.models import SCIM_LIST_RESPONSE_SCHEMA
+from ee.aethersearch.server.scim.models import ScimError
+from ee.aethersearch.server.scim.models import ScimGroupMember
+from ee.aethersearch.server.scim.models import ScimGroupResource
+from ee.aethersearch.server.scim.models import ScimListResponse
+from ee.aethersearch.server.scim.models import ScimMappingFields
+from ee.aethersearch.server.scim.models import ScimName
+from ee.aethersearch.server.scim.models import ScimPatchRequest
+from ee.aethersearch.server.scim.models import ScimServiceProviderConfig
+from ee.aethersearch.server.scim.models import ScimUserResource
+from ee.aethersearch.server.scim.patch import apply_group_patch
+from ee.aethersearch.server.scim.patch import apply_user_patch
+from ee.aethersearch.server.scim.patch import ScimPatchError
+from ee.aethersearch.server.scim.providers.base import get_default_provider
+from ee.aethersearch.server.scim.providers.base import ScimProvider
+from ee.aethersearch.server.scim.providers.base import serialize_emails
+from ee.aethersearch.server.scim.schema_definitions import ENTERPRISE_USER_SCHEMA_DEF
+from ee.aethersearch.server.scim.schema_definitions import GROUP_RESOURCE_TYPE
+from ee.aethersearch.server.scim.schema_definitions import GROUP_SCHEMA_DEF
+from ee.aethersearch.server.scim.schema_definitions import SERVICE_PROVIDER_CONFIG
+from ee.aethersearch.server.scim.schema_definitions import USER_RESOURCE_TYPE
+from ee.aethersearch.server.scim.schema_definitions import USER_SCHEMA_DEF
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import AccountType
+from aethersearch.db.enums import GrantSource
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import ScimToken
+from aethersearch.db.models import ScimUserMapping
+from aethersearch.db.models import User
+from aethersearch.db.models import UserGroup
+from aethersearch.db.models import UserRole
+from aethersearch.db.permissions import recompute_permissions_for_group__no_commit
+from aethersearch.db.permissions import recompute_user_permissions__no_commit
+from aethersearch.db.users import assign_user_to_default_groups__no_commit
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import fetch_ee_implementation_or_noop
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()
@@ -78,7 +78,7 @@ _RESERVED_GROUP_NAMES = frozenset({"Admin", "Basic"})
 # Namespace prefix for the seat-allocation advisory lock. Hashed together
 # with the tenant ID so the lock is scoped per-tenant (unrelated tenants
 # never block each other) and cannot collide with unrelated advisory locks.
-_SEAT_LOCK_NAMESPACE = "onyx_scim_seat_lock"
+_SEAT_LOCK_NAMESPACE = "aethersearch_scim_seat_lock"
 
 
 def _seat_lock_id_for_tenant(tenant_id: str) -> int:
@@ -241,7 +241,7 @@ def _check_seat_availability(dal: ScimDAL) -> str | None:
     (which releases the lock for the next waiting request).
     """
     check_fn = fetch_ee_implementation_or_noop(
-        "onyx.db.license", "check_seat_availability", None
+        "aethersearch.db.license", "check_seat_availability", None
     )
     if check_fn is None:
         return None

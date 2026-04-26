@@ -50,14 +50,14 @@ export function checkUserIdOwnsAgent(
  * @throws Error if the API request fails
  */
 export async function pinAgents(pinnedAgentIds: number[]) {
-  // TODO: rename to agent — https://linear.app/onyx-app/issue/ENG-3766
+  // TODO: rename to agent — https://linear.app/aethersearch-app/issue/ENG-3766
   const response = await fetch(`/api/user/pinned-assistants`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      ordered_assistant_ids: pinnedAgentIds, // TODO: rename to agent — https://linear.app/onyx-app/issue/ENG-3766
+      ordered_assistant_ids: pinnedAgentIds, // TODO: rename to agent — https://linear.app/aethersearch-app/issue/ENG-3766
     }),
   });
   if (!response.ok) {

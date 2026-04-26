@@ -25,20 +25,20 @@ import httpx
 from pydantic import BaseModel
 from pydantic import Field
 
-from onyx.configs.app_configs import CAPTCHA_COOKIE_TTL_SECONDS
-from onyx.configs.app_configs import CAPTCHA_ENABLED
-from onyx.configs.app_configs import RECAPTCHA_ENTERPRISE_API_KEY
-from onyx.configs.app_configs import RECAPTCHA_ENTERPRISE_PROJECT_ID
-from onyx.configs.app_configs import RECAPTCHA_HOSTNAME_ALLOWLIST
-from onyx.configs.app_configs import RECAPTCHA_SCORE_THRESHOLD
-from onyx.configs.app_configs import RECAPTCHA_SITE_KEY
-from onyx.configs.app_configs import USER_AUTH_SECRET
-from onyx.redis.redis_pool import get_async_redis_connection
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import CAPTCHA_COOKIE_TTL_SECONDS
+from aethersearch.configs.app_configs import CAPTCHA_ENABLED
+from aethersearch.configs.app_configs import RECAPTCHA_ENTERPRISE_API_KEY
+from aethersearch.configs.app_configs import RECAPTCHA_ENTERPRISE_PROJECT_ID
+from aethersearch.configs.app_configs import RECAPTCHA_HOSTNAME_ALLOWLIST
+from aethersearch.configs.app_configs import RECAPTCHA_SCORE_THRESHOLD
+from aethersearch.configs.app_configs import RECAPTCHA_SITE_KEY
+from aethersearch.configs.app_configs import USER_AUTH_SECRET
+from aethersearch.redis.redis_pool import get_async_redis_connection
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
-CAPTCHA_COOKIE_NAME = "onyx_captcha_verified"
+CAPTCHA_COOKIE_NAME = "aethersearch_captcha_verified"
 
 # Enterprise Assessment reason enums defined by Google — not a
 # per-deployment tuning knob. Any of these reasons on a token means the
@@ -253,7 +253,7 @@ async def verify_captcha_token(token: str, action: CaptchaAction) -> None:
 
 def _cookie_signing_key() -> bytes:
     return hashlib.sha256(
-        f"onyx-captcha-cookie-v1::{USER_AUTH_SECRET}".encode("utf-8")
+        f"aethersearch-captcha-cookie-v1::{USER_AUTH_SECRET}".encode("utf-8")
     ).digest()
 
 

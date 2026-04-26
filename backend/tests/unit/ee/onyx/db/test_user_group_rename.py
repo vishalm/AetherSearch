@@ -5,16 +5,16 @@ from unittest.mock import patch
 
 import pytest
 
-from ee.onyx.db.user_group import rename_user_group
-from onyx.db.models import UserGroup
+from ee.aethersearch.db.user_group import rename_user_group
+from aethersearch.db.models import UserGroup
 
 
 class TestRenameUserGroup:
     """Tests for rename_user_group function."""
 
-    @patch("ee.onyx.db.user_group.DISABLE_VECTOR_DB", False)
+    @patch("ee.aethersearch.db.user_group.DISABLE_VECTOR_DB", False)
     @patch(
-        "ee.onyx.db.user_group._mark_user_group__cc_pair_relationships_outdated__no_commit"
+        "ee.aethersearch.db.user_group._mark_user_group__cc_pair_relationships_outdated__no_commit"
     )
     def test_rename_succeeds_and_triggers_sync(
         self, mock_mark_outdated: MagicMock

@@ -6,7 +6,7 @@ from redis import Redis
 from redis.lock import Lock as RedisLock
 from sqlalchemy.orm import Session
 
-from onyx.redis.redis_pool import get_redis_client
+from aethersearch.redis.redis_pool import get_redis_client
 
 
 class RedisObjectHelper(ABC):

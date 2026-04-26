@@ -7,8 +7,8 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.connectors.asana.asana_api import AsanaAPI
-from onyx.connectors.asana.connector import AsanaConnector
+from aethersearch.connectors.asana.asana_api import AsanaAPI
+from aethersearch.connectors.asana.connector import AsanaConnector
 
 
 class _AsanaTestSetup(NamedTuple):
@@ -86,7 +86,7 @@ def _build_api_with_mocks(
     plus the stories-api mock so tests can introspect call counts without
     fighting `ty` type inference on the original SDK attributes.
     """
-    with patch("onyx.connectors.asana.asana_api.asana"):
+    with patch("aethersearch.connectors.asana.asana_api.asana"):
         api = AsanaAPI(api_token="token", workspace_gid="ws", team_gid=None)
 
     project_api = MagicMock()

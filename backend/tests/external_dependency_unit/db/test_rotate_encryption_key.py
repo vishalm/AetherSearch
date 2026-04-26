@@ -20,21 +20,21 @@ from sqlalchemy import select
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from ee.onyx.utils.encryption import _decrypt_bytes
-from ee.onyx.utils.encryption import _encrypt_string
-from ee.onyx.utils.encryption import _get_trimmed_key
-from onyx.configs.constants import DocumentSource
-from onyx.db.models import Credential
-from onyx.db.models import EncryptedJson
-from onyx.db.models import EncryptedString
-from onyx.db.models import InternetSearchProvider
-from onyx.db.rotate_encryption_key import _discover_encrypted_columns
-from onyx.db.rotate_encryption_key import rotate_encryption_key
-from onyx.utils.variable_functionality import fetch_versioned_implementation
-from onyx.utils.variable_functionality import global_version
+from ee.aethersearch.utils.encryption import _decrypt_bytes
+from ee.aethersearch.utils.encryption import _encrypt_string
+from ee.aethersearch.utils.encryption import _get_trimmed_key
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.db.models import Credential
+from aethersearch.db.models import EncryptedJson
+from aethersearch.db.models import EncryptedString
+from aethersearch.db.models import InternetSearchProvider
+from aethersearch.db.rotate_encryption_key import _discover_encrypted_columns
+from aethersearch.db.rotate_encryption_key import rotate_encryption_key
+from aethersearch.utils.variable_functionality import fetch_versioned_implementation
+from aethersearch.utils.variable_functionality import global_version
 
-EE_MODULE = "ee.onyx.utils.encryption"
-ROTATE_MODULE = "onyx.db.rotate_encryption_key"
+EE_MODULE = "ee.aethersearch.utils.encryption"
+ROTATE_MODULE = "aethersearch.db.rotate_encryption_key"
 
 OLD_KEY = "o" * 16
 NEW_KEY = "n" * 16

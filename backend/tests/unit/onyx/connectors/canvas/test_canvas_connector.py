@@ -8,24 +8,24 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.access.models import ExternalAccess
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.canvas.client import CanvasApiClient
-from onyx.connectors.canvas.connector import _in_time_window
-from onyx.connectors.canvas.connector import _parse_canvas_dt
-from onyx.connectors.canvas.connector import _unix_to_canvas_time
-from onyx.connectors.canvas.connector import CanvasConnector
-from onyx.connectors.canvas.connector import CanvasConnectorCheckpoint
-from onyx.connectors.canvas.connector import CanvasStage
-from onyx.connectors.exceptions import CredentialExpiredError
-from onyx.connectors.exceptions import InsufficientPermissionsError
-from onyx.connectors.exceptions import UnexpectedValidationError
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import ConnectorMissingCredentialError
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
+from aethersearch.access.models import ExternalAccess
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.canvas.client import CanvasApiClient
+from aethersearch.connectors.canvas.connector import _in_time_window
+from aethersearch.connectors.canvas.connector import _parse_canvas_dt
+from aethersearch.connectors.canvas.connector import _unix_to_canvas_time
+from aethersearch.connectors.canvas.connector import CanvasConnector
+from aethersearch.connectors.canvas.connector import CanvasConnectorCheckpoint
+from aethersearch.connectors.canvas.connector import CanvasStage
+from aethersearch.connectors.exceptions import CredentialExpiredError
+from aethersearch.connectors.exceptions import InsufficientPermissionsError
+from aethersearch.connectors.exceptions import UnexpectedValidationError
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import ConnectorMissingCredentialError
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -51,7 +51,7 @@ def _mock_course(
 
 def _build_connector(base_url: str = FAKE_BASE_URL) -> CanvasConnector:
     """Build a connector with mocked credential validation."""
-    with patch("onyx.connectors.canvas.client.rl_requests") as mock_req:
+    with patch("aethersearch.connectors.canvas.client.rl_requests") as mock_req:
         mock_req.get.return_value = _mock_response(json_data=[_mock_course()])
         connector = CanvasConnector(canvas_base_url=base_url)
         connector.load_credentials({"canvas_access_token": FAKE_TOKEN})
@@ -286,7 +286,7 @@ class TestGet:
             canvas_base_url=FAKE_BASE_URL,
         )
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_success_returns_json_and_next_url(self, mock_requests: MagicMock) -> None:
         next_link = f"<{FAKE_BASE_URL}/api/v1/courses?page=2>; " 'rel="next"'
         mock_requests.get.return_value = _mock_response(
@@ -301,7 +301,7 @@ class TestGet:
         assert data == expected_data
         assert next_url == expected_next
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_success_no_next_page(self, mock_requests: MagicMock) -> None:
         mock_requests.get.return_value = _mock_response(json_data=[{"id": 1}])
 
@@ -310,25 +310,25 @@ class TestGet:
         assert data == [{"id": 1}]
         assert next_url is None
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_raises_on_error_status(self, mock_requests: MagicMock) -> None:
         mock_requests.get.return_value = _mock_response(403, {})
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             self.client.get("courses")
 
         assert exc_info.value.status_code == 403
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_raises_on_404(self, mock_requests: MagicMock) -> None:
         mock_requests.get.return_value = _mock_response(404, {})
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             self.client.get("courses")
 
         assert exc_info.value.status_code == 404
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_skips_params_when_using_full_url(self, mock_requests: MagicMock) -> None:
         mock_requests.get.return_value = _mock_response(json_data=[])
         full = f"{FAKE_BASE_URL}/api/v1/courses?page=2"
@@ -338,7 +338,7 @@ class TestGet:
         _, kwargs = mock_requests.get.call_args
         assert kwargs["params"] is None
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_error_extracts_message_from_error_dict(
         self, mock_requests: MagicMock
     ) -> None:
@@ -347,7 +347,7 @@ class TestGet:
             403, {"error": {"message": "Not authorized"}}
         )
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             self.client.get("courses")
 
         result = exc_info.value.detail
@@ -355,7 +355,7 @@ class TestGet:
 
         assert result == expected
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_error_extracts_message_from_error_string(
         self, mock_requests: MagicMock
     ) -> None:
@@ -364,7 +364,7 @@ class TestGet:
             401, {"error": "Invalid access token"}
         )
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             self.client.get("courses")
 
         result = exc_info.value.detail
@@ -372,7 +372,7 @@ class TestGet:
 
         assert result == expected
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_error_extracts_message_from_errors_list(
         self, mock_requests: MagicMock
     ) -> None:
@@ -381,7 +381,7 @@ class TestGet:
             400, {"errors": [{"message": "Invalid query"}]}
         )
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             self.client.get("courses")
 
         result = exc_info.value.detail
@@ -389,7 +389,7 @@ class TestGet:
 
         assert result == expected
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_error_dict_takes_priority_over_errors_list(
         self, mock_requests: MagicMock
     ) -> None:
@@ -398,7 +398,7 @@ class TestGet:
             403, {"error": "Specific error", "errors": [{"message": "Generic"}]}
         )
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             self.client.get("courses")
 
         result = exc_info.value.detail
@@ -406,14 +406,14 @@ class TestGet:
 
         assert result == expected
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_error_falls_back_to_reason_when_no_json_message(
         self, mock_requests: MagicMock
     ) -> None:
         """Empty error body falls back to response.reason."""
         mock_requests.get.return_value = _mock_response(500, {})
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             self.client.get("courses")
 
         result = exc_info.value.detail
@@ -421,19 +421,19 @@ class TestGet:
 
         assert result == expected
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_invalid_json_on_success_raises(self, mock_requests: MagicMock) -> None:
-        """Invalid JSON on a 2xx response raises OnyxError."""
+        """Invalid JSON on a 2xx response raises AetherSearchError."""
         resp = MagicMock()
         resp.status_code = 200
         resp.json.side_effect = ValueError("No JSON")
         resp.headers = {"Link": ""}
         mock_requests.get.return_value = resp
 
-        with pytest.raises(OnyxError, match="Invalid JSON"):
+        with pytest.raises(AetherSearchError, match="Invalid JSON"):
             self.client.get("courses")
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_invalid_json_on_error_falls_back_to_reason(
         self, mock_requests: MagicMock
     ) -> None:
@@ -445,7 +445,7 @@ class TestGet:
         resp.headers = {"Link": ""}
         mock_requests.get.return_value = resp
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             self.client.get("courses")
 
         result = exc_info.value.detail
@@ -460,7 +460,7 @@ class TestGet:
 
 
 class TestPaginate:
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_single_page(self, mock_requests: MagicMock) -> None:
         mock_requests.get.return_value = _mock_response(
             json_data=[{"id": 1}, {"id": 2}]
@@ -475,7 +475,7 @@ class TestPaginate:
         assert len(pages) == 1
         assert pages[0] == [{"id": 1}, {"id": 2}]
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_two_pages(self, mock_requests: MagicMock) -> None:
         next_link = f'<{FAKE_BASE_URL}/api/v1/courses?page=2>; rel="next"'
         page1 = _mock_response(json_data=[{"id": 1}], link_header=next_link)
@@ -492,7 +492,7 @@ class TestPaginate:
         assert pages[0] == [{"id": 1}]
         assert pages[1] == [{"id": 2}]
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_empty_response(self, mock_requests: MagicMock) -> None:
         mock_requests.get.return_value = _mock_response(json_data=[])
         client = CanvasApiClient(
@@ -504,7 +504,7 @@ class TestPaginate:
 
         assert pages == []
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_error_extracts_message_from_error_dict(
         self, mock_requests: MagicMock
     ) -> None:
@@ -517,7 +517,7 @@ class TestPaginate:
             canvas_base_url=FAKE_BASE_URL,
         )
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             client.get("courses")
 
         result = exc_info.value.detail
@@ -525,7 +525,7 @@ class TestPaginate:
 
         assert result == expected
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_error_extracts_message_from_error_string(
         self, mock_requests: MagicMock
     ) -> None:
@@ -538,7 +538,7 @@ class TestPaginate:
             canvas_base_url=FAKE_BASE_URL,
         )
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             client.get("courses")
 
         result = exc_info.value.detail
@@ -546,7 +546,7 @@ class TestPaginate:
 
         assert result == expected
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_error_extracts_message_from_errors_list(
         self, mock_requests: MagicMock
     ) -> None:
@@ -559,7 +559,7 @@ class TestPaginate:
             canvas_base_url=FAKE_BASE_URL,
         )
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             client.get("courses")
 
         result = exc_info.value.detail
@@ -567,7 +567,7 @@ class TestPaginate:
 
         assert result == expected
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_error_dict_takes_priority_over_errors_list(
         self, mock_requests: MagicMock
     ) -> None:
@@ -580,7 +580,7 @@ class TestPaginate:
             canvas_base_url=FAKE_BASE_URL,
         )
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             client.get("courses")
 
         result = exc_info.value.detail
@@ -588,7 +588,7 @@ class TestPaginate:
 
         assert result == expected
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_error_falls_back_to_reason_when_no_json_message(
         self, mock_requests: MagicMock
     ) -> None:
@@ -599,7 +599,7 @@ class TestPaginate:
             canvas_base_url=FAKE_BASE_URL,
         )
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             client.get("courses")
 
         result = exc_info.value.detail
@@ -607,9 +607,9 @@ class TestPaginate:
 
         assert result == expected
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_invalid_json_on_success_raises(self, mock_requests: MagicMock) -> None:
-        """Invalid JSON on a 2xx response raises OnyxError."""
+        """Invalid JSON on a 2xx response raises AetherSearchError."""
         resp = MagicMock()
         resp.status_code = 200
         resp.json.side_effect = ValueError("No JSON")
@@ -620,10 +620,10 @@ class TestPaginate:
             canvas_base_url=FAKE_BASE_URL,
         )
 
-        with pytest.raises(OnyxError, match="Invalid JSON"):
+        with pytest.raises(AetherSearchError, match="Invalid JSON"):
             client.get("courses")
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_invalid_json_on_error_falls_back_to_reason(
         self, mock_requests: MagicMock
     ) -> None:
@@ -639,7 +639,7 @@ class TestPaginate:
             canvas_base_url=FAKE_BASE_URL,
         )
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             client.get("courses")
 
         result = exc_info.value.detail
@@ -694,13 +694,13 @@ class TestParseNextLink:
     def test_rejects_host_mismatch(self) -> None:
         header = '<https://evil.example.com/api/v1/courses?page=2>; rel="next"'
 
-        with pytest.raises(OnyxError, match="unexpected host"):
+        with pytest.raises(AetherSearchError, match="unexpected host"):
             self.client._parse_next_link(header)
 
     def test_rejects_non_https_link(self) -> None:
         header = '<http://canvas.example.com/api/v1/courses?page=2>; rel="next"'
 
-        with pytest.raises(OnyxError, match="must use https"):
+        with pytest.raises(AetherSearchError, match="must use https"):
             self.client._parse_next_link(header)
 
 
@@ -722,7 +722,7 @@ class TestLoadCredentials:
         with pytest.raises(expected_error):
             connector.load_credentials({"canvas_access_token": FAKE_TOKEN})
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_load_credentials_success(self, mock_requests: MagicMock) -> None:
         mock_requests.get.return_value = _mock_response(json_data=[_mock_course()])
         connector = CanvasConnector(canvas_base_url=FAKE_BASE_URL)
@@ -738,11 +738,11 @@ class TestLoadCredentials:
         with pytest.raises(ConnectorMissingCredentialError):
             _ = connector.canvas_client
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_load_credentials_invalid_token(self, mock_requests: MagicMock) -> None:
         self._assert_load_credentials_raises(401, CredentialExpiredError, mock_requests)
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_load_credentials_insufficient_permissions(
         self, mock_requests: MagicMock
     ) -> None:
@@ -781,7 +781,7 @@ class TestConnectorUrlNormalization:
 
         assert result == expected
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_load_credentials_insufficient_permissions(
         self, mock_requests: MagicMock
     ) -> None:
@@ -802,7 +802,7 @@ class TestDocumentConversion:
         self.connector = _build_connector()
 
     def test_convert_page_to_document(self) -> None:
-        from onyx.connectors.canvas.connector import CanvasPage
+        from aethersearch.connectors.canvas.connector import CanvasPage
 
         page = CanvasPage(
             page_id=10,
@@ -829,7 +829,7 @@ class TestDocumentConversion:
         assert doc.doc_updated_at == expected_updated_at
 
     def test_convert_page_without_body(self) -> None:
-        from onyx.connectors.canvas.connector import CanvasPage
+        from aethersearch.connectors.canvas.connector import CanvasPage
 
         page = CanvasPage(
             page_id=11,
@@ -849,7 +849,7 @@ class TestDocumentConversion:
         assert "<p>" not in section_text
 
     def test_convert_assignment_to_document(self) -> None:
-        from onyx.connectors.canvas.connector import CanvasAssignment
+        from aethersearch.connectors.canvas.connector import CanvasAssignment
 
         assignment = CanvasAssignment(
             id=20,
@@ -874,7 +874,7 @@ class TestDocumentConversion:
         assert expected_due_text in doc.sections[0].text
 
     def test_convert_assignment_without_description(self) -> None:
-        from onyx.connectors.canvas.connector import CanvasAssignment
+        from aethersearch.connectors.canvas.connector import CanvasAssignment
 
         assignment = CanvasAssignment(
             id=21,
@@ -895,7 +895,7 @@ class TestDocumentConversion:
         assert "Due:" not in section_text
 
     def test_convert_announcement_to_document(self) -> None:
-        from onyx.connectors.canvas.connector import CanvasAnnouncement
+        from aethersearch.connectors.canvas.connector import CanvasAnnouncement
 
         announcement = CanvasAnnouncement(
             id=30,
@@ -917,7 +917,7 @@ class TestDocumentConversion:
         assert doc.doc_updated_at == expected_updated_at
 
     def test_convert_announcement_without_posted_at(self) -> None:
-        from onyx.connectors.canvas.connector import CanvasAnnouncement
+        from aethersearch.connectors.canvas.connector import CanvasAnnouncement
 
         announcement = CanvasAnnouncement(
             id=31,
@@ -954,22 +954,22 @@ class TestValidateConnectorSettings:
         with pytest.raises(expected_error):
             connector.validate_connector_settings()
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_validate_success(self, mock_requests: MagicMock) -> None:
         mock_requests.get.return_value = _mock_response(json_data=[_mock_course()])
         connector = _build_connector()
 
         connector.validate_connector_settings()  # should not raise
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_validate_expired_credential(self, mock_requests: MagicMock) -> None:
         self._assert_validate_raises(401, CredentialExpiredError, mock_requests)
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_validate_insufficient_permissions(self, mock_requests: MagicMock) -> None:
         self._assert_validate_raises(403, InsufficientPermissionsError, mock_requests)
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_validate_unexpected_error(self, mock_requests: MagicMock) -> None:
         self._assert_validate_raises(500, UnexpectedValidationError, mock_requests)
 
@@ -980,7 +980,7 @@ class TestValidateConnectorSettings:
 
 
 class TestListCourses:
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_single_page(self, mock_requests: MagicMock) -> None:
         mock_requests.get.return_value = _mock_response(
             json_data=[_mock_course(1), _mock_course(2, "CS201", "Data Structures")]
@@ -993,7 +993,7 @@ class TestListCourses:
         assert result[0].id == 1
         assert result[1].id == 2
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_empty_response(self, mock_requests: MagicMock) -> None:
         mock_requests.get.return_value = _mock_response(json_data=[])
         connector = _build_connector()
@@ -1004,7 +1004,7 @@ class TestListCourses:
 
 
 class TestListPages:
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_single_page(self, mock_requests: MagicMock) -> None:
         mock_requests.get.return_value = _mock_response(
             json_data=[_mock_page(10), _mock_page(11, "Notes")]
@@ -1017,7 +1017,7 @@ class TestListPages:
         assert result[0].page_id == 10
         assert result[1].page_id == 11
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_empty_response(self, mock_requests: MagicMock) -> None:
         mock_requests.get.return_value = _mock_response(json_data=[])
         connector = _build_connector()
@@ -1028,7 +1028,7 @@ class TestListPages:
 
 
 class TestListAssignments:
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_single_page(self, mock_requests: MagicMock) -> None:
         mock_requests.get.return_value = _mock_response(
             json_data=[_mock_assignment(20), _mock_assignment(21, "Quiz 1")]
@@ -1041,7 +1041,7 @@ class TestListAssignments:
         assert result[0].id == 20
         assert result[1].id == 21
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_empty_response(self, mock_requests: MagicMock) -> None:
         mock_requests.get.return_value = _mock_response(json_data=[])
         connector = _build_connector()
@@ -1052,7 +1052,7 @@ class TestListAssignments:
 
 
 class TestListAnnouncements:
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_single_page(self, mock_requests: MagicMock) -> None:
         mock_requests.get.return_value = _mock_response(
             json_data=[_mock_announcement(30), _mock_announcement(31, "Update")]
@@ -1065,7 +1065,7 @@ class TestListAnnouncements:
         assert result[0].id == 30
         assert result[1].id == 31
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_empty_response(self, mock_requests: MagicMock) -> None:
         mock_requests.get.return_value = _mock_response(json_data=[])
         connector = _build_connector()
@@ -1110,7 +1110,7 @@ class TestCheckpoint:
 
 
 class TestLoadFromCheckpoint:
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_first_call_materializes_courses(self, mock_requests: MagicMock) -> None:
         """First call should populate course_ids and yield no documents."""
         mock_requests.get.side_effect = _make_url_dispatcher(
@@ -1127,7 +1127,7 @@ class TestLoadFromCheckpoint:
         assert new_cp.stage == CanvasStage.PAGES
         assert new_cp.has_more is True
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_processes_pages_stage(self, mock_requests: MagicMock) -> None:
         """Pages stage yields page documents within the time window."""
         mock_requests.get.side_effect = _make_url_dispatcher(
@@ -1152,7 +1152,7 @@ class TestLoadFromCheckpoint:
         assert items[0].id == expected_id
         assert new_cp.stage == CanvasStage.ASSIGNMENTS
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_advances_through_all_stages(self, mock_requests: MagicMock) -> None:
         """Calling checkpoint 3 times advances pages -> assignments -> announcements -> next course."""
         page = _mock_page(10, updated_at="2025-06-15T12:00:00Z")
@@ -1196,7 +1196,7 @@ class TestLoadFromCheckpoint:
         assert cp.stage == CanvasStage.PAGES
         assert cp.has_more is False
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_filters_by_time_window(self, mock_requests: MagicMock) -> None:
         """Only documents within (start, end] are yielded."""
         old_page = _mock_page(10, updated_at="2025-01-01T00:00:00Z")
@@ -1221,7 +1221,7 @@ class TestLoadFromCheckpoint:
         assert isinstance(items[0], Document)
         assert items[0].id == expected_id
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_skips_announcement_without_posted_at(
         self, mock_requests: MagicMock
     ) -> None:
@@ -1257,8 +1257,8 @@ class TestLoadFromCheckpoint:
         with patch.object(
             connector,
             "_fetch_stage_page",
-            side_effect=OnyxError(
-                OnyxErrorCode.INTERNAL_ERROR,
+            side_effect=AetherSearchError(
+                AetherSearchErrorCode.INTERNAL_ERROR,
                 "boom",
                 status_code_override=500,
             ),
@@ -1290,8 +1290,8 @@ class TestLoadFromCheckpoint:
         with patch.object(
             connector,
             "_fetch_stage_page",
-            side_effect=OnyxError(
-                OnyxErrorCode.NOT_FOUND,
+            side_effect=AetherSearchError(
+                AetherSearchErrorCode.NOT_FOUND,
                 "course gone",
                 status_code_override=404,
             ),
@@ -1318,7 +1318,7 @@ class TestLoadFromCheckpoint:
             stage=CanvasStage.PAGES,
         )
 
-        with patch("onyx.connectors.canvas.client.rl_requests") as mock_requests:
+        with patch("aethersearch.connectors.canvas.client.rl_requests") as mock_requests:
             mock_requests.get.return_value = _mock_response(401, {})
             with pytest.raises(CredentialExpiredError):
                 _run_checkpoint(connector, cp)
@@ -1335,12 +1335,12 @@ class TestLoadFromCheckpoint:
         with patch.object(
             connector,
             "_fetch_stage_page",
-            side_effect=OnyxError(OnyxErrorCode.BAD_GATEWAY, "bad next link"),
+            side_effect=AetherSearchError(AetherSearchErrorCode.BAD_GATEWAY, "bad next link"),
         ):
-            with pytest.raises(OnyxError, match="bad next link"):
+            with pytest.raises(AetherSearchError, match="bad next link"):
                 _run_checkpoint(connector, cp)
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_per_document_conversion_failure_yields_connector_failure(
         self, mock_requests: MagicMock
     ) -> None:
@@ -1368,7 +1368,7 @@ class TestLoadFromCheckpoint:
         assert isinstance(items[0], ConnectorFailure)
         assert new_cp.stage == CanvasStage.ASSIGNMENTS
 
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_all_courses_done_sets_has_more_false(
         self, mock_requests: MagicMock
     ) -> None:
@@ -1403,8 +1403,8 @@ class TestLoadFromCheckpoint:
 
 
 class TestLoadFromCheckpointWithPermSync:
-    @patch("onyx.connectors.canvas.connector.get_course_permissions")
-    @patch("onyx.connectors.canvas.client.rl_requests")
+    @patch("aethersearch.connectors.canvas.connector.get_course_permissions")
+    @patch("aethersearch.connectors.canvas.client.rl_requests")
     def test_documents_have_external_access(
         self, mock_requests: MagicMock, mock_perms: MagicMock
     ) -> None:

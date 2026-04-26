@@ -6,7 +6,7 @@ from psycopg2 import OperationalError
 from pydantic import BaseModel
 from sqlalchemy import inspect
 
-from onyx.db.models import Base
+from aethersearch.db.models import Base
 
 
 def model_to_dict(model: Base) -> dict[str, Any]:

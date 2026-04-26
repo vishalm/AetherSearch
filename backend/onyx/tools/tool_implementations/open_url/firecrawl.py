@@ -8,10 +8,10 @@ from typing import Any
 
 import requests
 
-from onyx.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
-from onyx.tools.tool_implementations.open_url.models import WebContent
-from onyx.tools.tool_implementations.open_url.models import WebContentProvider
-from onyx.utils.logger import setup_logger
+from aethersearch.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
+from aethersearch.tools.tool_implementations.open_url.models import WebContent
+from aethersearch.tools.tool_implementations.open_url.models import WebContentProvider
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

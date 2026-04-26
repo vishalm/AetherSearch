@@ -1,12 +1,12 @@
 import pytest
 
-from onyx.chat.process_message import _resolve_query_processing_hook_result
-from onyx.chat.process_message import remove_answer_citations
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.hooks.executor import HookSkipped
-from onyx.hooks.executor import HookSoftFailed
-from onyx.hooks.points.query_processing import QueryProcessingResponse
+from aethersearch.chat.process_message import _resolve_query_processing_hook_result
+from aethersearch.chat.process_message import remove_answer_citations
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.hooks.executor import HookSkipped
+from aethersearch.hooks.executor import HookSoftFailed
+from aethersearch.hooks.points.query_processing import QueryProcessingResponse
 
 
 def test_remove_answer_citations_strips_http_markdown_citation() -> None:
@@ -58,42 +58,42 @@ def test_hook_soft_failed_leaves_message_text_unchanged() -> None:
 
 
 def test_null_query_raises_query_rejected() -> None:
-    with pytest.raises(OnyxError) as exc_info:
+    with pytest.raises(AetherSearchError) as exc_info:
         _resolve_query_processing_hook_result(
             QueryProcessingResponse(query=None), "original query"
         )
-    assert exc_info.value.error_code is OnyxErrorCode.QUERY_REJECTED
+    assert exc_info.value.error_code is AetherSearchErrorCode.QUERY_REJECTED
 
 
 def test_empty_string_query_raises_query_rejected() -> None:
     """Empty string is falsy — must be treated as rejection, same as None."""
-    with pytest.raises(OnyxError) as exc_info:
+    with pytest.raises(AetherSearchError) as exc_info:
         _resolve_query_processing_hook_result(
             QueryProcessingResponse(query=""), "original query"
         )
-    assert exc_info.value.error_code is OnyxErrorCode.QUERY_REJECTED
+    assert exc_info.value.error_code is AetherSearchErrorCode.QUERY_REJECTED
 
 
 def test_whitespace_only_query_raises_query_rejected() -> None:
     """Whitespace-only string is truthy but meaningless — must be treated as rejection."""
-    with pytest.raises(OnyxError) as exc_info:
+    with pytest.raises(AetherSearchError) as exc_info:
         _resolve_query_processing_hook_result(
             QueryProcessingResponse(query="   "), "original query"
         )
-    assert exc_info.value.error_code is OnyxErrorCode.QUERY_REJECTED
+    assert exc_info.value.error_code is AetherSearchErrorCode.QUERY_REJECTED
 
 
 def test_absent_query_field_raises_query_rejected() -> None:
     """query defaults to None when not provided."""
-    with pytest.raises(OnyxError) as exc_info:
+    with pytest.raises(AetherSearchError) as exc_info:
         _resolve_query_processing_hook_result(
             QueryProcessingResponse(), "original query"
         )
-    assert exc_info.value.error_code is OnyxErrorCode.QUERY_REJECTED
+    assert exc_info.value.error_code is AetherSearchErrorCode.QUERY_REJECTED
 
 
 def test_rejection_message_surfaced_in_error_when_provided() -> None:
-    with pytest.raises(OnyxError) as exc_info:
+    with pytest.raises(AetherSearchError) as exc_info:
         _resolve_query_processing_hook_result(
             QueryProcessingResponse(
                 query=None, rejection_message="Queries about X are not allowed."
@@ -104,8 +104,8 @@ def test_rejection_message_surfaced_in_error_when_provided() -> None:
 
 
 def test_fallback_rejection_message_when_none() -> None:
-    """No rejection_message → generic fallback used in OnyxError detail."""
-    with pytest.raises(OnyxError) as exc_info:
+    """No rejection_message → generic fallback used in AetherSearchError detail."""
+    with pytest.raises(AetherSearchError) as exc_info:
         _resolve_query_processing_hook_result(
             QueryProcessingResponse(query=None, rejection_message=None),
             "original query",

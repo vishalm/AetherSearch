@@ -21,35 +21,35 @@ from sentry_sdk.integrations.celery import CeleryIntegration
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from onyx import __version__
-from onyx.background.celery.apps.task_formatters import CeleryTaskColoredFormatter
-from onyx.background.celery.apps.task_formatters import CeleryTaskPlainFormatter
-from onyx.background.celery.celery_utils import celery_is_worker_primary
-from onyx.background.celery.celery_utils import make_probe_path
-from onyx.background.celery.tasks.vespa.document_sync import DOCUMENT_SYNC_PREFIX
-from onyx.background.celery.tasks.vespa.document_sync import DOCUMENT_SYNC_TASKSET_KEY
-from onyx.configs.app_configs import DISABLE_VECTOR_DB
-from onyx.configs.app_configs import ENABLE_OPENSEARCH_INDEXING_FOR_ONYX
-from onyx.configs.app_configs import ONYX_DISABLE_VESPA
-from onyx.configs.constants import ONYX_CLOUD_CELERY_TASK_PREFIX
-from onyx.configs.constants import OnyxRedisLocks
-from onyx.db.engine.sql_engine import get_sqlalchemy_engine
-from onyx.document_index.opensearch.client import wait_for_opensearch_with_timeout
-from onyx.document_index.vespa.shared_utils.utils import wait_for_vespa_with_timeout
-from onyx.httpx.httpx_pool import HttpxPool
-from onyx.redis.redis_connector import RedisConnector
-from onyx.redis.redis_connector_delete import RedisConnectorDelete
-from onyx.redis.redis_connector_doc_perm_sync import RedisConnectorPermissionSync
-from onyx.redis.redis_connector_ext_group_sync import RedisConnectorExternalGroupSync
-from onyx.redis.redis_connector_prune import RedisConnectorPrune
-from onyx.redis.redis_document_set import RedisDocumentSet
-from onyx.redis.redis_pool import get_redis_client
-from onyx.redis.redis_usergroup import RedisUserGroup
-from onyx.tracing.setup import setup_tracing
-from onyx.utils.logger import ColoredFormatter
-from onyx.utils.logger import LoggerContextVars
-from onyx.utils.logger import PlainFormatter
-from onyx.utils.logger import setup_logger
+from aethersearch import __version__
+from aethersearch.background.celery.apps.task_formatters import CeleryTaskColoredFormatter
+from aethersearch.background.celery.apps.task_formatters import CeleryTaskPlainFormatter
+from aethersearch.background.celery.celery_utils import celery_is_worker_primary
+from aethersearch.background.celery.celery_utils import make_probe_path
+from aethersearch.background.celery.tasks.vespa.document_sync import DOCUMENT_SYNC_PREFIX
+from aethersearch.background.celery.tasks.vespa.document_sync import DOCUMENT_SYNC_TASKSET_KEY
+from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
+from aethersearch.configs.app_configs import ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH
+from aethersearch.configs.app_configs import AETHERSEARCH_DISABLE_VESPA
+from aethersearch.configs.constants import AETHERSEARCH_CLOUD_CELERY_TASK_PREFIX
+from aethersearch.configs.constants import AetherSearchRedisLocks
+from aethersearch.db.engine.sql_engine import get_sqlalchemy_engine
+from aethersearch.document_index.opensearch.client import wait_for_opensearch_with_timeout
+from aethersearch.document_index.vespa.shared_utils.utils import wait_for_vespa_with_timeout
+from aethersearch.httpx.httpx_pool import HttpxPool
+from aethersearch.redis.redis_connector import RedisConnector
+from aethersearch.redis.redis_connector_delete import RedisConnectorDelete
+from aethersearch.redis.redis_connector_doc_perm_sync import RedisConnectorPermissionSync
+from aethersearch.redis.redis_connector_ext_group_sync import RedisConnectorExternalGroupSync
+from aethersearch.redis.redis_connector_prune import RedisConnectorPrune
+from aethersearch.redis.redis_document_set import RedisDocumentSet
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.redis.redis_usergroup import RedisUserGroup
+from aethersearch.tracing.setup import setup_tracing
+from aethersearch.utils.logger import ColoredFormatter
+from aethersearch.utils.logger import LoggerContextVars
+from aethersearch.utils.logger import PlainFormatter
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import DEV_LOGGING_ENABLED
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.configs import POSTGRES_DEFAULT_SCHEMA
@@ -63,7 +63,7 @@ logger = setup_logger()
 task_logger = get_task_logger(__name__)
 
 if SENTRY_DSN:
-    from onyx.configs.sentry import _add_instance_tags
+    from aethersearch.configs.sentry import _add_instance_tags
 
     sentry_sdk.init(
         dsn=SENTRY_DSN,
@@ -159,7 +159,7 @@ def on_task_postrun(
     if not task_id:
         return
 
-    if task.name.startswith(ONYX_CLOUD_CELERY_TASK_PREFIX):
+    if task.name.startswith(AETHERSEARCH_CLOUD_CELERY_TASK_PREFIX):
         # this is a cloud / all tenant task ... no postrun is needed
         return
 
@@ -353,7 +353,7 @@ def on_secondary_worker_init(sender: Any, **kwargs: Any) -> None:  # noqa: ARG00
 
     logger.info("Waiting for primary worker to be ready...")
     while True:
-        if r.exists(OnyxRedisLocks.PRIMARY_WORKER):
+        if r.exists(AetherSearchRedisLocks.PRIMARY_WORKER):
             break
 
         time_elapsed = time.monotonic() - time_start
@@ -510,7 +510,7 @@ class TenantContextFilter(logging.Filter):
 
         tenant_id = CURRENT_TENANT_ID_CONTEXTVAR.get()
         if tenant_id:
-            # Match the 8 character tenant abbreviation used in OnyxLoggingAdapter
+            # Match the 8 character tenant abbreviation used in AetherSearchLoggingAdapter
             tenant_id = tenant_id.split(TENANT_ID_PREFIX)[-1][:8]
             record.name = f"[t:{tenant_id}]"
         else:
@@ -544,7 +544,7 @@ def wait_for_document_index_or_shutdown() -> None:
         )
         return
 
-    if not ONYX_DISABLE_VESPA:
+    if not AETHERSEARCH_DISABLE_VESPA:
         if not wait_for_vespa_with_timeout():
             msg = (
                 "[Vespa] Readiness probe did not succeed within the timeout. Exiting..."
@@ -552,7 +552,7 @@ def wait_for_document_index_or_shutdown() -> None:
             logger.error(msg)
             raise WorkerShutdown(msg)
 
-    if ENABLE_OPENSEARCH_INDEXING_FOR_ONYX:
+    if ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH:
         if not wait_for_opensearch_with_timeout():
             msg = "[OpenSearch] Readiness probe did not succeed within the timeout. Exiting..."
             logger.error(msg)
@@ -593,19 +593,19 @@ def get_bootsteps() -> list[type]:
 # Task modules that require a vector DB (Vespa/OpenSearch).
 # When DISABLE_VECTOR_DB is True these are excluded from autodiscover lists.
 _VECTOR_DB_TASK_MODULES: set[str] = {
-    "onyx.background.celery.tasks.connector_deletion",
-    "onyx.background.celery.tasks.docprocessing",
-    "onyx.background.celery.tasks.docfetching",
-    "onyx.background.celery.tasks.pruning",
-    "onyx.background.celery.tasks.vespa",
-    "onyx.background.celery.tasks.opensearch_migration",
-    "onyx.background.celery.tasks.doc_permission_syncing",
-    "onyx.background.celery.tasks.hierarchyfetching",
+    "aethersearch.background.celery.tasks.connector_deletion",
+    "aethersearch.background.celery.tasks.docprocessing",
+    "aethersearch.background.celery.tasks.docfetching",
+    "aethersearch.background.celery.tasks.pruning",
+    "aethersearch.background.celery.tasks.vespa",
+    "aethersearch.background.celery.tasks.opensearch_migration",
+    "aethersearch.background.celery.tasks.doc_permission_syncing",
+    "aethersearch.background.celery.tasks.hierarchyfetching",
     # EE modules that are vector-DB-dependent
-    "ee.onyx.background.celery.tasks.doc_permission_syncing",
-    "ee.onyx.background.celery.tasks.external_group_syncing",
+    "ee.aethersearch.background.celery.tasks.doc_permission_syncing",
+    "ee.aethersearch.background.celery.tasks.external_group_syncing",
 }
-# NOTE: "onyx.background.celery.tasks.shared" is intentionally NOT in the set
+# NOTE: "aethersearch.background.celery.tasks.shared" is intentionally NOT in the set
 # above. It contains celery_beat_heartbeat (which only writes to Redis) alongside
 # document cleanup tasks. The cleanup tasks won't be invoked in minimal mode
 # because the periodic tasks that trigger them are in other filtered modules.

@@ -10,7 +10,7 @@ from prometheus_fastapi_instrumentator.metrics import Info
 from shared_configs.contextvars import CURRENT_TENANT_ID_CONTEXTVAR
 
 _requests_by_tenant = Counter(
-    "onyx_api_requests_by_tenant_total",
+    "aethersearch_api_requests_by_tenant_total",
     "Total API requests by tenant",
     ["tenant_id", "method", "handler", "status"],
 )

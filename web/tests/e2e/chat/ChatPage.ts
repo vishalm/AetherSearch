@@ -27,10 +27,10 @@ export class ChatPage {
     this.page = page;
     this.container = page.locator("[data-main-container]");
     this.scrollContainer = page.getByTestId("chat-scroll-container");
-    this.chatInputTextarea = page.locator("#onyx-chat-input-textarea");
-    this.sendButton = page.locator("#onyx-chat-input-send-button");
-    this.humanMessages = page.locator("#onyx-human-message");
-    this.aiMessages = page.getByTestId("onyx-ai-message");
+    this.chatInputTextarea = page.locator("#aethersearch-chat-input-textarea");
+    this.sendButton = page.locator("#aethersearch-chat-input-send-button");
+    this.humanMessages = page.locator("#aethersearch-human-message");
+    this.aiMessages = page.getByTestId("aethersearch-ai-message");
   }
 
   humanMessage(index = 0): Locator {

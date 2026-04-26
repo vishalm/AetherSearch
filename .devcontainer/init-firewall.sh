@@ -68,7 +68,7 @@ for domain in "${ALLOWED_DOMAINS[@]}"; do
 done
 
 # Allow traffic to the Docker gateway so the container can reach host services
-# (e.g. the Onyx stack at localhost:3000, localhost:8080, etc.)
+# (e.g. the AetherSearch stack at localhost:3000, localhost:8080, etc.)
 DOCKER_GATEWAY=$(ip -4 route show default | awk '{print $3}')
 if [ -n "$DOCKER_GATEWAY" ]; then
     if ! ipset add allowed-domains "$DOCKER_GATEWAY/32" -exist 2>&1; then

@@ -1,5 +1,5 @@
 import type { IconProps } from "@opal/types";
-const SvgOnyxLogo = ({ size, ...props }: IconProps) => (
+const SvgAetherSearchLogo = ({ size, ...props }: IconProps) => (
   <svg
     height={size}
     viewBox="0 0 64 64"
@@ -25,4 +25,4 @@ const SvgOnyxLogo = ({ size, ...props }: IconProps) => (
     />
   </svg>
 );
-export default SvgOnyxLogo;
+export default SvgAetherSearchLogo;

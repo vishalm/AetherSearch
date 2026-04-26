@@ -1,18 +1,18 @@
 from pytest import MonkeyPatch
 
-from onyx.access.models import ExternalAccess
-from onyx.connectors.models import BasicExpertInfo
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentSource
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import IndexAttemptMetadata
-from onyx.connectors.models import TextSection
-from onyx.db.enums import HierarchyNodeType
-from onyx.indexing import indexing_pipeline
-from onyx.utils.postgres_sanitization import sanitize_document_for_postgres
-from onyx.utils.postgres_sanitization import sanitize_hierarchy_node_for_postgres
-from onyx.utils.postgres_sanitization import sanitize_json_like
-from onyx.utils.postgres_sanitization import sanitize_string
+from aethersearch.access.models import ExternalAccess
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentSource
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import IndexAttemptMetadata
+from aethersearch.connectors.models import TextSection
+from aethersearch.db.enums import HierarchyNodeType
+from aethersearch.indexing import indexing_pipeline
+from aethersearch.utils.postgres_sanitization import sanitize_document_for_postgres
+from aethersearch.utils.postgres_sanitization import sanitize_hierarchy_node_for_postgres
+from aethersearch.utils.postgres_sanitization import sanitize_json_like
+from aethersearch.utils.postgres_sanitization import sanitize_string
 
 # ---- sanitize_string tests ----
 

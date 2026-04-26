@@ -4,9 +4,9 @@ from uuid import UUID
 import httpx
 from retry import retry
 
-from onyx.document_index.vespa_constants import DOCUMENT_ID_ENDPOINT
-from onyx.document_index.vespa_constants import NUM_THREADS
-from onyx.utils.logger import setup_logger
+from aethersearch.document_index.vespa_constants import DOCUMENT_ID_ENDPOINT
+from aethersearch.document_index.vespa_constants import NUM_THREADS
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

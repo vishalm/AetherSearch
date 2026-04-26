@@ -1,5 +1,5 @@
-from onyx.key_value_store.interface import KeyValueStore
-from onyx.key_value_store.store import PgRedisKVStore
+from aethersearch.key_value_store.interface import KeyValueStore
+from aethersearch.key_value_store.store import PgRedisKVStore
 from shared_configs.configs import DEFAULT_REDIS_PREFIX
 from shared_configs.contextvars import CURRENT_TENANT_ID_CONTEXTVAR
 

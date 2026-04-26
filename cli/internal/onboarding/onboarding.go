@@ -1,4 +1,4 @@
-// Package onboarding handles the first-run setup flow for Onyx CLI.
+// Package onboarding handles the first-run setup flow for AetherSearch CLI.
 package onboarding
 
 import (
@@ -8,10 +8,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/onyx-dot-app/onyx/cli/internal/api"
-	"github.com/onyx-dot-app/onyx/cli/internal/config"
-	"github.com/onyx-dot-app/onyx/cli/internal/tui"
-	"github.com/onyx-dot-app/onyx/cli/internal/util"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/api"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/config"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/tui"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/util"
 	"golang.org/x/term"
 )
 
@@ -34,7 +34,7 @@ func getTermSize() (int, int) {
 
 // Run executes the interactive onboarding flow.
 // Returns the validated config, or nil if the user cancels.
-func Run(existing *config.OnyxCliConfig) *config.OnyxCliConfig {
+func Run(existing *config.AetherSearchCliConfig) *config.AetherSearchCliConfig {
 	cfg := config.DefaultConfig()
 	if existing != nil {
 		cfg = *existing
@@ -44,13 +44,13 @@ func Run(existing *config.OnyxCliConfig) *config.OnyxCliConfig {
 	fmt.Print(tui.RenderSplashOnboarding(w, h))
 
 	fmt.Println()
-	fmt.Println("  Welcome to " + boldStyle.Render("Onyx CLI") + ".")
+	fmt.Println("  Welcome to " + boldStyle.Render("AetherSearch CLI") + ".")
 	fmt.Println()
 
 	reader := bufio.NewReader(os.Stdin)
 
 	// Server URL
-	serverURL := prompt(reader, "  Onyx server URL", cfg.ServerURL)
+	serverURL := prompt(reader, "  AetherSearch server URL", cfg.ServerURL)
 	if serverURL == "" {
 		return nil
 	}
@@ -83,7 +83,7 @@ func Run(existing *config.OnyxCliConfig) *config.OnyxCliConfig {
 	}
 
 	// Test connection
-	cfg = config.OnyxCliConfig{
+	cfg = config.AetherSearchCliConfig{
 		ServerURL:        serverURL,
 		APIKey:           apiKey,
 		DefaultAgentID: cfg.DefaultAgentID,
@@ -95,7 +95,7 @@ func Run(existing *config.OnyxCliConfig) *config.OnyxCliConfig {
 	if err := client.TestConnection(context.Background()); err != nil {
 		fmt.Println("  " + redStyle.Render("Connection failed.") + " " + err.Error())
 		fmt.Println()
-		fmt.Println("  " + dimStyle.Render("Run ") + boldStyle.Render("onyx-cli configure") + dimStyle.Render(" to try again."))
+		fmt.Println("  " + dimStyle.Render("Run ") + boldStyle.Render("aethersearch-cli configure") + dimStyle.Render(" to try again."))
 		return nil
 	}
 
@@ -150,7 +150,7 @@ func prompt(reader *bufio.Reader, label, defaultVal string) string {
 func printQuickStart() {
 	fmt.Println("  " + boldStyle.Render("Quick start"))
 	fmt.Println()
-	fmt.Println("  Just type to chat with your Onyx agent.")
+	fmt.Println("  Just type to chat with your AetherSearch agent.")
 	fmt.Println()
 
 	rows := [][2]string{

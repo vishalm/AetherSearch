@@ -5,49 +5,49 @@ from typing import Any
 import requests
 from typing_extensions import override
 
-from onyx.configs.app_configs import CONTINUE_ON_CONNECTOR_FAILURE
-from onyx.configs.app_configs import DRUPAL_WIKI_ATTACHMENT_SIZE_THRESHOLD
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import FileOrigin
-from onyx.connectors.cross_connector_utils.miscellaneous_utils import (
+from aethersearch.configs.app_configs import CONTINUE_ON_CONNECTOR_FAILURE
+from aethersearch.configs.app_configs import DRUPAL_WIKI_ATTACHMENT_SIZE_THRESHOLD
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.connectors.cross_connector_utils.miscellaneous_utils import (
     datetime_from_utc_timestamp,
 )
-from onyx.connectors.cross_connector_utils.rate_limit_wrapper import rate_limit_builder
-from onyx.connectors.cross_connector_utils.rate_limit_wrapper import rl_requests
-from onyx.connectors.cross_connector_utils.tabular_section_utils import is_tabular_file
-from onyx.connectors.cross_connector_utils.tabular_section_utils import (
+from aethersearch.connectors.cross_connector_utils.rate_limit_wrapper import rate_limit_builder
+from aethersearch.connectors.cross_connector_utils.rate_limit_wrapper import rl_requests
+from aethersearch.connectors.cross_connector_utils.tabular_section_utils import is_tabular_file
+from aethersearch.connectors.cross_connector_utils.tabular_section_utils import (
     tabular_file_to_sections,
 )
-from onyx.connectors.drupal_wiki.models import DrupalWikiCheckpoint
-from onyx.connectors.drupal_wiki.models import DrupalWikiPage
-from onyx.connectors.drupal_wiki.models import DrupalWikiPageResponse
-from onyx.connectors.drupal_wiki.models import DrupalWikiSpaceResponse
-from onyx.connectors.drupal_wiki.utils import build_drupal_wiki_document_id
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.connectors.interfaces import CheckpointedConnector
-from onyx.connectors.interfaces import CheckpointOutput
-from onyx.connectors.interfaces import ConnectorFailure
-from onyx.connectors.interfaces import GenerateSlimDocumentOutput
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.interfaces import SlimConnector
-from onyx.connectors.models import ConnectorMissingCredentialError
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentFailure
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import ImageSection
-from onyx.connectors.models import SlimDocument
-from onyx.connectors.models import TabularSection
-from onyx.connectors.models import TextSection
-from onyx.file_processing.extract_file_text import extract_text_and_images
-from onyx.file_processing.extract_file_text import get_file_ext
-from onyx.file_processing.file_types import OnyxFileExtensions
-from onyx.file_processing.html_utils import parse_html_page_basic
-from onyx.file_processing.image_utils import store_image_and_create_section
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.utils.b64 import get_image_type_from_bytes
-from onyx.utils.logger import setup_logger
-from onyx.utils.retry_wrapper import retry_builder
+from aethersearch.connectors.drupal_wiki.models import DrupalWikiCheckpoint
+from aethersearch.connectors.drupal_wiki.models import DrupalWikiPage
+from aethersearch.connectors.drupal_wiki.models import DrupalWikiPageResponse
+from aethersearch.connectors.drupal_wiki.models import DrupalWikiSpaceResponse
+from aethersearch.connectors.drupal_wiki.utils import build_drupal_wiki_document_id
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.connectors.interfaces import CheckpointedConnector
+from aethersearch.connectors.interfaces import CheckpointOutput
+from aethersearch.connectors.interfaces import ConnectorFailure
+from aethersearch.connectors.interfaces import GenerateSlimDocumentOutput
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.interfaces import SlimConnector
+from aethersearch.connectors.models import ConnectorMissingCredentialError
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentFailure
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import ImageSection
+from aethersearch.connectors.models import SlimDocument
+from aethersearch.connectors.models import TabularSection
+from aethersearch.connectors.models import TextSection
+from aethersearch.file_processing.extract_file_text import extract_text_and_images
+from aethersearch.file_processing.extract_file_text import get_file_ext
+from aethersearch.file_processing.file_types import AetherSearchFileExtensions
+from aethersearch.file_processing.html_utils import parse_html_page_basic
+from aethersearch.file_processing.image_utils import store_image_and_create_section
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.utils.b64 import get_image_type_from_bytes
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.retry_wrapper import retry_builder
 
 logger = setup_logger()
 
@@ -101,7 +101,7 @@ class DrupalWikiConnector(
             raise ConnectorValidationError(
                 f"Outdated Drupal Wiki connector configuration detected "
                 f"(found deprecated parameters: {', '.join(deprecated_found)}). "
-                f"Please delete and recreate this connector, or contact Onyx support "
+                f"Please delete and recreate this connector, or contact AetherSearch support "
                 f"for assistance with updating the configuration without deleting the connector."
             )
         # Reject any other unexpected parameters
@@ -194,7 +194,7 @@ class DrupalWikiConnector(
         # Get file extension
         file_extension = get_file_ext(file_name)
 
-        if file_extension in OnyxFileExtensions.ALL_ALLOWED_EXTENSIONS:
+        if file_extension in AetherSearchFileExtensions.ALL_ALLOWED_EXTENSIONS:
             return True
 
         logger.warning(f"Unsupported file type: {file_extension} for {file_name}")

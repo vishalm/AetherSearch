@@ -1,4 +1,4 @@
-"""Unit tests for `onyx.llm.utils` helpers, focused on the secret-scrubbing
+"""Unit tests for `aethersearch.llm.utils` helpers, focused on the secret-scrubbing
 behavior that protects `/admin/llm/test` (and `validate_existing_genai_api_key`)
 from echoing API keys back through error messages.
 """
@@ -6,12 +6,12 @@ from echoing API keys back through error messages.
 from collections.abc import Iterable
 from typing import Any
 
-from onyx.llm.interfaces import LLM
-from onyx.llm.interfaces import LLMConfig
-from onyx.llm.utils import collect_llm_credential_values
-from onyx.llm.utils import is_sensitive_custom_config_key
-from onyx.llm.utils import scrub_sensitive_values
-from onyx.llm.utils import (
+from aethersearch.llm.interfaces import LLM
+from aethersearch.llm.interfaces import LLMConfig
+from aethersearch.llm.utils import collect_llm_credential_values
+from aethersearch.llm.utils import is_sensitive_custom_config_key
+from aethersearch.llm.utils import scrub_sensitive_values
+from aethersearch.llm.utils import (
     test_llm as run_test_llm,
 )  # aliased to avoid pytest collection
 

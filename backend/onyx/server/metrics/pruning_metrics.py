@@ -10,7 +10,7 @@ are the most expensive to prune. cc_pair_id is intentionally excluded to avoid
 unbounded cardinality.
 
 Usage:
-    from onyx.server.metrics.pruning_metrics import (
+    from aethersearch.server.metrics.pruning_metrics import (
         observe_pruning_enumeration_duration,
         observe_pruning_diff_duration,
         inc_pruning_rate_limit_error,
@@ -20,26 +20,26 @@ Usage:
 from prometheus_client import Counter
 from prometheus_client import Histogram
 
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
 PRUNING_ENUMERATION_DURATION = Histogram(
-    "onyx_pruning_enumeration_duration_seconds",
+    "aethersearch_pruning_enumeration_duration_seconds",
     "Duration of document ID enumeration from the source connector during pruning",
     ["connector_type"],
     buckets=[5, 60, 600, 1800, 3600, 10800, 21600],
 )
 
 PRUNING_DIFF_DURATION = Histogram(
-    "onyx_pruning_diff_duration_seconds",
+    "aethersearch_pruning_diff_duration_seconds",
     "Duration of diff computation and subtask dispatch during pruning",
     ["connector_type"],
     buckets=[0.1, 0.25, 0.5, 1, 2, 5, 15, 30, 60],
 )
 
 PRUNING_RATE_LIMIT_ERRORS = Counter(
-    "onyx_pruning_rate_limit_errors_total",
+    "aethersearch_pruning_rate_limit_errors_total",
     "Total rate limit errors encountered during pruning document ID enumeration",
     ["connector_type"],
 )

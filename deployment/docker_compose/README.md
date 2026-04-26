@@ -13,7 +13,7 @@ This README focuses on the easiest guided deployment which is via install.sh.
 ## install.sh script
 
 ```
-curl -fsSL https://raw.githubusercontent.com/vishalm/ai-enterprise-search-chat-onyx/main/deployment/docker_compose/install.sh > install.sh && chmod +x install.sh && ./install.sh
+curl -fsSL https://raw.githubusercontent.com/vishalm/ai-enterprise-search-chat-aethersearch/main/deployment/docker_compose/install.sh > install.sh && chmod +x install.sh && ./install.sh
 ```
 
 This provides a guided installation of AetherSearch via Docker Compose. It will deploy the latest version of AetherSearch

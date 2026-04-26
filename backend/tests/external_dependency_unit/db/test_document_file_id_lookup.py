@@ -18,13 +18,13 @@ from uuid import uuid4
 import pytest
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import DocumentSource
-from onyx.context.search.models import InferenceChunk
-from onyx.context.search.models import InferenceSection
-from onyx.context.search.utils import populate_file_ids_on_sections
-from onyx.db.document import get_document_id_to_file_id_map
-from onyx.db.models import Document as DBDocument
-from onyx.kg.models import KGStage
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.context.search.models import InferenceSection
+from aethersearch.context.search.utils import populate_file_ids_on_sections
+from aethersearch.db.document import get_document_id_to_file_id_map
+from aethersearch.db.models import Document as DBDocument
+from aethersearch.kg.models import KGStage
 
 
 @pytest.fixture

@@ -7,9 +7,9 @@ from typing import TypeVar
 
 from sqlalchemy.orm import Session
 
-from onyx.chat.emitter import Emitter
-from onyx.server.query_and_chat.placement import Placement
-from onyx.tools.models import ToolResponse
+from aethersearch.chat.emitter import Emitter
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.tools.models import ToolResponse
 
 TOverride = TypeVar("TOverride")
 

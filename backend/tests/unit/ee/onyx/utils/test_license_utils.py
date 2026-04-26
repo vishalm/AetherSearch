@@ -12,12 +12,12 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.asymmetric import rsa
 
-from ee.onyx.server.license.models import LicensePayload
-from ee.onyx.server.license.models import PlanType
-from ee.onyx.utils.license import get_license_status
-from ee.onyx.utils.license import is_license_valid
-from ee.onyx.utils.license import verify_license_signature
-from onyx.server.settings.models import ApplicationStatus
+from ee.aethersearch.server.license.models import LicensePayload
+from ee.aethersearch.server.license.models import PlanType
+from ee.aethersearch.utils.license import get_license_status
+from ee.aethersearch.utils.license import is_license_valid
+from ee.aethersearch.utils.license import verify_license_signature
+from aethersearch.server.settings.models import ApplicationStatus
 
 
 def generate_test_key_pair() -> tuple[rsa.RSAPrivateKey, rsa.RSAPublicKey]:
@@ -72,7 +72,7 @@ class TestVerifyLicenseSignature:
         license_data = create_signed_license(private_key, payload)
 
         # Patch the _get_public_key function to return our test key
-        with patch("ee.onyx.utils.license._get_public_key", return_value=public_key):
+        with patch("ee.aethersearch.utils.license._get_public_key", return_value=public_key):
             result = verify_license_signature(license_data)
 
         assert result.tenant_id == "tenant_123"
@@ -97,7 +97,7 @@ class TestVerifyLicenseSignature:
 
         # Patch _get_public_key to return a different key (signature won't match)
         with patch(
-            "ee.onyx.utils.license._get_public_key",
+            "ee.aethersearch.utils.license._get_public_key",
             return_value=different_public_key,
         ):
             with pytest.raises(ValueError, match="Invalid license signature"):
@@ -139,7 +139,7 @@ class TestVerifyLicenseSignature:
         encoded_license = base64.b64encode(json.dumps(license_data).encode()).decode()
 
         # Patch _get_public_key to return our test key
-        with patch("ee.onyx.utils.license._get_public_key", return_value=public_key):
+        with patch("ee.aethersearch.utils.license._get_public_key", return_value=public_key):
             with pytest.raises(ValueError, match="Invalid license signature"):
                 verify_license_signature(encoded_license)
 

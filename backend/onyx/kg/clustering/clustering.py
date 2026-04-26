@@ -7,33 +7,33 @@ from redis.lock import Lock as RedisLock
 from sqlalchemy import func
 from sqlalchemy import text
 
-from onyx.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
-from onyx.configs.kg_configs import KG_CLUSTERING_RETRIEVE_THRESHOLD
-from onyx.configs.kg_configs import KG_CLUSTERING_THRESHOLD
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.entities import KGEntity
-from onyx.db.entities import KGEntityExtractionStaging
-from onyx.db.entities import merge_entities
-from onyx.db.entities import transfer_entity
-from onyx.db.kg_config import get_kg_config_settings
-from onyx.db.kg_config import validate_kg_settings
-from onyx.db.models import Document
-from onyx.db.models import KGEntityType
-from onyx.db.models import KGRelationshipExtractionStaging
-from onyx.db.models import KGRelationshipTypeExtractionStaging
-from onyx.db.relationships import transfer_relationship
-from onyx.db.relationships import transfer_relationship_type
-from onyx.db.relationships import upsert_relationship
-from onyx.db.relationships import upsert_relationship_type
-from onyx.document_index.vespa.kg_interactions import (
+from aethersearch.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
+from aethersearch.configs.kg_configs import KG_CLUSTERING_RETRIEVE_THRESHOLD
+from aethersearch.configs.kg_configs import KG_CLUSTERING_THRESHOLD
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.entities import KGEntity
+from aethersearch.db.entities import KGEntityExtractionStaging
+from aethersearch.db.entities import merge_entities
+from aethersearch.db.entities import transfer_entity
+from aethersearch.db.kg_config import get_kg_config_settings
+from aethersearch.db.kg_config import validate_kg_settings
+from aethersearch.db.models import Document
+from aethersearch.db.models import KGEntityType
+from aethersearch.db.models import KGRelationshipExtractionStaging
+from aethersearch.db.models import KGRelationshipTypeExtractionStaging
+from aethersearch.db.relationships import transfer_relationship
+from aethersearch.db.relationships import transfer_relationship_type
+from aethersearch.db.relationships import upsert_relationship
+from aethersearch.db.relationships import upsert_relationship_type
+from aethersearch.document_index.vespa.kg_interactions import (
     get_kg_vespa_info_update_requests_for_document,
 )
-from onyx.document_index.vespa.kg_interactions import update_kg_chunks_vespa_info
-from onyx.kg.models import KGGroundingType
-from onyx.kg.utils.formatting_utils import make_relationship_id
-from onyx.kg.utils.lock_utils import extend_lock
-from onyx.utils.logger import setup_logger
-from onyx.utils.threadpool_concurrency import run_functions_tuples_in_parallel
+from aethersearch.document_index.vespa.kg_interactions import update_kg_chunks_vespa_info
+from aethersearch.kg.models import KGGroundingType
+from aethersearch.kg.utils.formatting_utils import make_relationship_id
+from aethersearch.kg.utils.lock_utils import extend_lock
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.threadpool_concurrency import run_functions_tuples_in_parallel
 from shared_configs.configs import POSTGRES_DEFAULT_SCHEMA
 
 logger = setup_logger()

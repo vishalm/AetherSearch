@@ -19,16 +19,16 @@ export const Default: Story = {
 
 export const ExternalLink: Story = {
   render: () => (
-    <LinkButton href="https://onyx.app" target="_blank">
-      Onyx
+    <LinkButton href="https://aethersearch.app" target="_blank">
+      AetherSearch
     </LinkButton>
   ),
 };
 
 export const LongLabel: Story = {
   render: () => (
-    <LinkButton href="https://docs.onyx.app" target="_blank">
-      Go read the full Onyx documentation site
+    <LinkButton href="https://docs.aethersearch.app" target="_blank">
+      Go read the full AetherSearch documentation site
     </LinkButton>
   ),
 };
@@ -95,7 +95,7 @@ export const InlineInProse: Story = {
     <p style={{ maxWidth: "36rem", lineHeight: 1.7 }}>
       Modifying embedding settings requires a full re-index of all documents and
       may take hours or days depending on corpus size.{" "}
-      <LinkButton href="https://docs.onyx.app" target="_blank">
+      <LinkButton href="https://docs.aethersearch.app" target="_blank">
         Learn more
       </LinkButton>
       .

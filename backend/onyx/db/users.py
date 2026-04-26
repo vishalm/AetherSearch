@@ -14,22 +14,22 @@ from sqlalchemy.sql.elements import ColumnElement
 from sqlalchemy.sql.elements import KeyedColumnElement
 from sqlalchemy.sql.expression import or_
 
-from onyx.auth.invited_users import remove_user_from_invited_users
-from onyx.auth.schemas import UserRole
-from onyx.configs.constants import ANONYMOUS_USER_EMAIL
-from onyx.configs.constants import DANSWER_API_KEY_DUMMY_EMAIL_DOMAIN
-from onyx.configs.constants import NO_AUTH_PLACEHOLDER_USER_EMAIL
-from onyx.db.enums import AccountType
-from onyx.db.models import DocumentSet
-from onyx.db.models import DocumentSet__User
-from onyx.db.models import Persona
-from onyx.db.models import Persona__User
-from onyx.db.models import SamlAccount
-from onyx.db.models import User
-from onyx.db.models import User__UserGroup
-from onyx.db.models import UserGroup
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
+from aethersearch.auth.invited_users import remove_user_from_invited_users
+from aethersearch.auth.schemas import UserRole
+from aethersearch.configs.constants import ANONYMOUS_USER_EMAIL
+from aethersearch.configs.constants import DANSWER_API_KEY_DUMMY_EMAIL_DOMAIN
+from aethersearch.configs.constants import NO_AUTH_PLACEHOLDER_USER_EMAIL
+from aethersearch.db.enums import AccountType
+from aethersearch.db.models import DocumentSet
+from aethersearch.db.models import DocumentSet__User
+from aethersearch.db.models import Persona
+from aethersearch.db.models import Persona__User
+from aethersearch.db.models import SamlAccount
+from aethersearch.db.models import User
+from aethersearch.db.models import User__UserGroup
+from aethersearch.db.models import UserGroup
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import fetch_ee_implementation_or_noop
 
 logger = setup_logger()
 
@@ -74,13 +74,13 @@ def validate_user_role_update(
     if current_account_type == AccountType.BOT:
         raise HTTPException(
             status_code=400,
-            detail="To change a Slack User's role, they must first login to Onyx via the web app.",
+            detail="To change a Slack User's role, they must first login to AetherSearch via the web app.",
         )
 
     if current_account_type == AccountType.EXT_PERM_USER:
         raise HTTPException(
             status_code=400,
-            detail="To change an External Permissioned User's role, they must first login to Onyx via the web app.",
+            detail="To change an External Permissioned User's role, they must first login to AetherSearch via the web app.",
         )
 
     if current_account_type in (AccountType.ANONYMOUS, AccountType.SERVICE_ACCOUNT):
@@ -115,7 +115,7 @@ def validate_user_role_update(
             status_code=400,
             detail=(
                 "A user cannot be set to a Slack User role. "
-                "This role is automatically assigned to users who only use Onyx via Slack."
+                "This role is automatically assigned to users who only use AetherSearch via Slack."
             ),
         )
 
@@ -483,7 +483,7 @@ def assign_user_to_default_groups__no_commit(
         savepoint.rollback()
         return
 
-    from onyx.db.permissions import recompute_user_permissions__no_commit
+    from aethersearch.db.permissions import recompute_user_permissions__no_commit
 
     recompute_user_permissions__no_commit(user.id, db_session)
 
@@ -498,7 +498,7 @@ def delete_user_from_db(
         db_session.delete(oauth_account)
 
     fetch_ee_implementation_or_noop(
-        "onyx.db.external_perm",
+        "aethersearch.db.external_perm",
         "delete_user__ext_group_for_user__no_commit",
     )(
         db_session=db_session,

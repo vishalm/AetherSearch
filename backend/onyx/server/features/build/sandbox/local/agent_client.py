@@ -43,15 +43,15 @@ from acp.schema import ToolCallProgress
 from acp.schema import ToolCallStart
 from pydantic import ValidationError
 
-from onyx.server.features.build.api.packet_logger import get_packet_logger
+from aethersearch.server.features.build.api.packet_logger import get_packet_logger
 
 # ACP Protocol version
 ACP_PROTOCOL_VERSION = 1
 
 # Default client info
 DEFAULT_CLIENT_INFO = {
-    "name": "onyx-sandbox",
-    "title": "Onyx Sandbox Agent Client",
+    "name": "aethersearch-sandbox",
+    "title": "AetherSearch Sandbox Agent Client",
     "version": "1.0.0",
 }
 

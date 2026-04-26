@@ -23,11 +23,11 @@ from sqlalchemy import update  # noqa: E402
 from sqlalchemy.engine import CursorResult  # noqa: E402
 from sqlalchemy.exc import ProgrammingError  # noqa: E402
 
-from onyx.db.engine.sql_engine import get_session_with_tenant  # noqa: E402
-from onyx.db.engine.sql_engine import SqlEngine  # noqa: E402
-from onyx.db.engine.tenant_utils import get_all_tenant_ids  # noqa: E402
-from onyx.db.models import Connector  # noqa: E402
-from onyx.utils.variable_functionality import global_version  # noqa: E402
+from aethersearch.db.engine.sql_engine import get_session_with_tenant  # noqa: E402
+from aethersearch.db.engine.sql_engine import SqlEngine  # noqa: E402
+from aethersearch.db.engine.tenant_utils import get_all_tenant_ids  # noqa: E402
+from aethersearch.db.models import Connector  # noqa: E402
+from aethersearch.utils.variable_functionality import global_version  # noqa: E402
 
 _SECONDS_PER_DAY = 86400
 

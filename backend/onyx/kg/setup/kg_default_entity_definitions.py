@@ -2,17 +2,17 @@ from typing import cast
 
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import DocumentSource
-from onyx.db.entity_type import KGEntityType
-from onyx.db.kg_config import get_kg_config_settings
-from onyx.db.kg_config import validate_kg_settings
-from onyx.kg.models import KGAttributeEntityOption
-from onyx.kg.models import KGAttributeImplicationProperty
-from onyx.kg.models import KGAttributeProperty
-from onyx.kg.models import KGEntityTypeAttributes
-from onyx.kg.models import KGEntityTypeClassificationInfo
-from onyx.kg.models import KGEntityTypeDefinition
-from onyx.kg.models import KGGroundingType
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.db.entity_type import KGEntityType
+from aethersearch.db.kg_config import get_kg_config_settings
+from aethersearch.db.kg_config import validate_kg_settings
+from aethersearch.kg.models import KGAttributeEntityOption
+from aethersearch.kg.models import KGAttributeImplicationProperty
+from aethersearch.kg.models import KGAttributeProperty
+from aethersearch.kg.models import KGEntityTypeAttributes
+from aethersearch.kg.models import KGEntityTypeClassificationInfo
+from aethersearch.kg.models import KGEntityTypeDefinition
+from aethersearch.kg.models import KGGroundingType
 
 
 def get_default_entity_types(vendor_name: str) -> dict[str, KGEntityTypeDefinition]:

@@ -12,30 +12,30 @@ from fastapi import UploadFile
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.configs.app_configs import DISABLE_VECTOR_DB
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import PUBLIC_API_TAGS
-from onyx.configs.constants import USER_FILE_PROJECT_SYNC_MAX_QUEUE_DEPTH
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.enums import UserFileStatus
-from onyx.db.models import ChatSession
-from onyx.db.models import Project__UserFile
-from onyx.db.models import User
-from onyx.db.models import UserFile
-from onyx.db.models import UserProject
-from onyx.db.persona import get_personas_by_ids
-from onyx.db.projects import get_project_token_count
-from onyx.db.projects import upload_files_to_user_files_with_indexing
-from onyx.server.features.projects.models import CategorizedFilesSnapshot
-from onyx.server.features.projects.models import ChatSessionRequest
-from onyx.server.features.projects.models import TokenCountResponse
-from onyx.server.features.projects.models import UserFileSnapshot
-from onyx.server.features.projects.models import UserProjectSnapshot
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.permissions import require_permission
+from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import PUBLIC_API_TAGS
+from aethersearch.configs.constants import USER_FILE_PROJECT_SYNC_MAX_QUEUE_DEPTH
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.enums import UserFileStatus
+from aethersearch.db.models import ChatSession
+from aethersearch.db.models import Project__UserFile
+from aethersearch.db.models import User
+from aethersearch.db.models import UserFile
+from aethersearch.db.models import UserProject
+from aethersearch.db.persona import get_personas_by_ids
+from aethersearch.db.projects import get_project_token_count
+from aethersearch.db.projects import upload_files_to_user_files_with_indexing
+from aethersearch.server.features.projects.models import CategorizedFilesSnapshot
+from aethersearch.server.features.projects.models import ChatSessionRequest
+from aethersearch.server.features.projects.models import TokenCountResponse
+from aethersearch.server.features.projects.models import UserFileSnapshot
+from aethersearch.server.features.projects.models import UserProjectSnapshot
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()
@@ -56,20 +56,20 @@ def _trigger_user_file_project_sync(
     background_tasks: BackgroundTasks | None = None,
 ) -> None:
     if DISABLE_VECTOR_DB and background_tasks is not None:
-        from onyx.background.task_utils import drain_project_sync_loop
+        from aethersearch.background.task_utils import drain_project_sync_loop
 
         background_tasks.add_task(drain_project_sync_loop, tenant_id)
         logger.info(f"Queued in-process project sync for user_file_id={user_file_id}")
         return
 
-    from onyx.background.celery.tasks.user_file_processing.tasks import (
+    from aethersearch.background.celery.tasks.user_file_processing.tasks import (
         enqueue_user_file_project_sync_task,
     )
-    from onyx.background.celery.tasks.user_file_processing.tasks import (
+    from aethersearch.background.celery.tasks.user_file_processing.tasks import (
         get_user_file_project_sync_queue_depth,
     )
-    from onyx.background.celery.versioned_apps.client import app as client_app
-    from onyx.redis.redis_pool import get_redis_client
+    from aethersearch.background.celery.versioned_apps.client import app as client_app
+    from aethersearch.redis.redis_pool import get_redis_client
 
     queue_depth = get_user_file_project_sync_queue_depth(client_app)
     if queue_depth > USER_FILE_PROJECT_SYNC_MAX_QUEUE_DEPTH:
@@ -86,7 +86,7 @@ def _trigger_user_file_project_sync(
         redis_client=redis_client,
         user_file_id=user_file_id,
         tenant_id=tenant_id,
-        priority=OnyxCeleryPriority.HIGHEST,
+        priority=AetherSearchCeleryPriority.HIGHEST,
     )
     if not enqueued:
         logger.info(
@@ -477,18 +477,18 @@ def delete_user_file(
 
     tenant_id = get_current_tenant_id()
     if DISABLE_VECTOR_DB:
-        from onyx.background.task_utils import drain_delete_loop
+        from aethersearch.background.task_utils import drain_delete_loop
 
         bg_tasks.add_task(drain_delete_loop, tenant_id)
         logger.info(f"Queued in-process delete for user_file_id={user_file.id}")
     else:
-        from onyx.background.celery.versioned_apps.client import app as client_app
+        from aethersearch.background.celery.versioned_apps.client import app as client_app
 
         task = client_app.send_task(
-            OnyxCeleryTask.DELETE_SINGLE_USER_FILE,
+            AetherSearchCeleryTask.DELETE_SINGLE_USER_FILE,
             kwargs={"user_file_id": str(user_file.id), "tenant_id": tenant_id},
-            queue=OnyxCeleryQueues.USER_FILE_DELETE,
-            priority=OnyxCeleryPriority.HIGH,
+            queue=AetherSearchCeleryQueues.USER_FILE_DELETE,
+            priority=AetherSearchCeleryPriority.HIGH,
         )
         logger.info(
             f"Triggered delete for user_file_id={user_file.id} with task_id={task.id}"

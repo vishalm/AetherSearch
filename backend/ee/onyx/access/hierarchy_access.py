@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from ee.onyx.db.external_perm import fetch_external_groups_for_user
-from onyx.db.models import User
+from ee.aethersearch.db.external_perm import fetch_external_groups_for_user
+from aethersearch.db.models import User
 
 
 def _get_user_external_group_ids(db_session: Session, user: User) -> list[str]:

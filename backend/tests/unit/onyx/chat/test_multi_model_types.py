@@ -11,12 +11,12 @@ from datetime import datetime
 from datetime import timezone
 from uuid import uuid4
 
-from onyx.llm.override_models import LLMOverride
-from onyx.server.query_and_chat.models import ChatMessageDetail
-from onyx.server.query_and_chat.models import ModelResponseSlot
-from onyx.server.query_and_chat.models import MultiModelMessageResponseIDInfo
-from onyx.server.query_and_chat.models import SendMessageRequest
-from onyx.server.query_and_chat.placement import Placement
+from aethersearch.llm.override_models import LLMOverride
+from aethersearch.server.query_and_chat.models import ChatMessageDetail
+from aethersearch.server.query_and_chat.models import ModelResponseSlot
+from aethersearch.server.query_and_chat.models import MultiModelMessageResponseIDInfo
+from aethersearch.server.query_and_chat.models import SendMessageRequest
+from aethersearch.server.query_and_chat.placement import Placement
 
 
 class TestPlacementModelIndex:
@@ -103,7 +103,7 @@ class TestSendMessageRequestOverrides:
 
 class TestChatMessageDetailMultiModel:
     def test_defaults_none(self) -> None:
-        from onyx.configs.constants import MessageType
+        from aethersearch.configs.constants import MessageType
 
         detail = ChatMessageDetail(
             message_id=1,
@@ -116,7 +116,7 @@ class TestChatMessageDetailMultiModel:
         assert detail.model_display_name is None
 
     def test_set_values(self) -> None:
-        from onyx.configs.constants import MessageType
+        from aethersearch.configs.constants import MessageType
 
         detail = ChatMessageDetail(
             message_id=1,
@@ -131,7 +131,7 @@ class TestChatMessageDetailMultiModel:
         assert detail.model_display_name == "GPT-4"
 
     def test_serializes(self) -> None:
-        from onyx.configs.constants import MessageType
+        from aethersearch.configs.constants import MessageType
 
         detail = ChatMessageDetail(
             message_id=1,

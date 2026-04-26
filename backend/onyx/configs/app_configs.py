@@ -5,14 +5,14 @@ from datetime import datetime
 from datetime import timezone
 from typing import cast
 
-from onyx.auth.schemas import AuthBackend
-from onyx.cache.interface import CacheBackendType
-from onyx.configs.constants import AuthType
-from onyx.configs.constants import QueryHistoryType
-from onyx.file_processing.enums import HtmlBasedConnectorTransformLinksStrategy
-from onyx.prompts.image_analysis import DEFAULT_IMAGE_SUMMARIZATION_SYSTEM_PROMPT
-from onyx.prompts.image_analysis import DEFAULT_IMAGE_SUMMARIZATION_USER_PROMPT
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.schemas import AuthBackend
+from aethersearch.cache.interface import CacheBackendType
+from aethersearch.configs.constants import AuthType
+from aethersearch.configs.constants import QueryHistoryType
+from aethersearch.file_processing.enums import HtmlBasedConnectorTransformLinksStrategy
+from aethersearch.prompts.image_analysis import DEFAULT_IMAGE_SUMMARIZATION_SYSTEM_PROMPT
+from aethersearch.prompts.image_analysis import DEFAULT_IMAGE_SUMMARIZATION_USER_PROMPT
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -29,7 +29,7 @@ APP_API_PREFIX = os.environ.get("API_PREFIX", "")
 # Certain services need to make HTTP requests to the API server, such as the MCP server and Discord bot
 API_SERVER_PROTOCOL = os.environ.get("API_SERVER_PROTOCOL", "http")
 API_SERVER_HOST = os.environ.get("API_SERVER_HOST", "127.0.0.1")
-# This override allows self-hosting the MCP server with Onyx Cloud backend.
+# This override allows self-hosting the MCP server with AetherSearch Cloud backend.
 API_SERVER_URL_OVERRIDE_FOR_HTTP_REQUESTS = os.environ.get(
     "API_SERVER_URL_OVERRIDE_FOR_HTTP_REQUESTS"
 )
@@ -93,15 +93,15 @@ SHOW_EXTRA_CONNECTORS = os.environ.get("SHOW_EXTRA_CONNECTORS", "").lower() == "
 # 1. associated user emails
 # 2. anonymized user emails
 # 3. no queries
-ONYX_QUERY_HISTORY_TYPE = QueryHistoryType(
-    (os.environ.get("ONYX_QUERY_HISTORY_TYPE") or QueryHistoryType.NORMAL.value).lower()
+AETHERSEARCH_QUERY_HISTORY_TYPE = QueryHistoryType(
+    (os.environ.get("AETHERSEARCH_QUERY_HISTORY_TYPE") or QueryHistoryType.NORMAL.value).lower()
 )
 
 #####
 # Web Configs
 #####
 # WEB_DOMAIN is used to set the redirect_uri after login flows
-# NOTE: if you are having problems accessing the Onyx web UI locally (especially
+# NOTE: if you are having problems accessing the AetherSearch web UI locally (especially
 # on Windows, try  setting this to `http://127.0.0.1:3000` instead and see if that
 # fixes it)
 WEB_DOMAIN = os.environ.get("WEB_DOMAIN") or "http://localhost:3000"
@@ -135,7 +135,7 @@ PASSWORD_REQUIRE_SPECIAL_CHAR = (
 
 # Encryption key secret is used to encrypt connector credentials, api keys, and other sensitive
 # information. This provides an extra layer of security on top of Postgres access controls
-# and is available in Onyx EE
+# and is available in AetherSearch EE
 ENCRYPTION_KEY_SECRET = os.environ.get("ENCRYPTION_KEY_SECRET") or ""
 
 # Turn off mask if admin users should see full credentials for data connectors.
@@ -155,8 +155,8 @@ SESSION_EXPIRE_TIME_SECONDS = int(
 REQUEST_TIMEOUT_SECONDS = int(os.environ.get("REQUEST_TIMEOUT_SECONDS") or 60)
 
 # set `VALID_EMAIL_DOMAINS` to a comma seperated list of domains in order to
-# restrict access to Onyx to only users with emails from those domains.
-# E.g. `VALID_EMAIL_DOMAINS=example.com,example.org` will restrict Onyx
+# restrict access to AetherSearch to only users with emails from those domains.
+# E.g. `VALID_EMAIL_DOMAINS=example.com,example.org` will restrict AetherSearch
 # signups to users with either an @example.com or an @example.org email.
 # NOTE: maintaining `VALID_EMAIL_DOMAIN` to keep backwards compatibility
 _VALID_EMAIL_DOMAIN = os.environ.get("VALID_EMAIL_DOMAIN", "")
@@ -244,7 +244,7 @@ if _OIDC_SCOPE_OVERRIDE:
 OIDC_PKCE_ENABLED = os.environ.get("OIDC_PKCE_ENABLED", "").lower() == "true"
 
 # Applicable for SAML Auth
-SAML_CONF_DIR = os.environ.get("SAML_CONF_DIR") or "/app/onyx/configs/saml_config"
+SAML_CONF_DIR = os.environ.get("SAML_CONF_DIR") or "/app/aethersearch/configs/saml_config"
 
 # JWT Public Key URL for JWT token verification
 JWT_PUBLIC_KEY_URL: str | None = os.getenv("JWT_PUBLIC_KEY_URL", None)
@@ -276,7 +276,7 @@ EMAIL_FROM = os.environ.get("EMAIL_FROM") or SMTP_USER
 SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY") or ""
 EMAIL_CONFIGURED = all([SMTP_SERVER, SMTP_USER, SMTP_PASS]) or SENDGRID_API_KEY
 
-# If set, Onyx will listen to the `expires_at` returned by the identity
+# If set, AetherSearch will listen to the `expires_at` returned by the identity
 # provider (e.g. Okta, Google, etc.) and force the user to re-authenticate
 # after this time has elapsed. Disabled since by default many auth providers
 # have very short expiry times (e.g. 1 hour) which provide a poor user experience
@@ -339,10 +339,10 @@ OPENSEARCH_TEXT_ANALYZER = os.environ.get("OPENSEARCH_TEXT_ANALYZER") or "englis
 # This is the "base" config for now, the idea is that at least for our dev
 # environments we always want to be dual indexing into both OpenSearch and Vespa
 # to stress test the new codepaths. Only enable this if there is some instance
-# of OpenSearch running for the relevant Onyx instance.
+# of OpenSearch running for the relevant AetherSearch instance.
 # NOTE: Now enabled on by default, unless the env indicates otherwise.
-ENABLE_OPENSEARCH_INDEXING_FOR_ONYX = (
-    os.environ.get("ENABLE_OPENSEARCH_INDEXING_FOR_ONYX", "true").lower() == "true"
+ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH = (
+    os.environ.get("ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH", "true").lower() == "true"
 )
 # NOTE: This effectively does nothing anymore, admins can now toggle whether
 # retrieval is through OpenSearch. This value is only used as a final fallback
@@ -350,14 +350,14 @@ ENABLE_OPENSEARCH_INDEXING_FOR_ONYX = (
 # Given that the "base" config above is true, this enables whether we want to
 # retrieve from OpenSearch or Vespa. We want to be able to quickly toggle this
 # in the event we see issues with OpenSearch retrieval in our dev environments.
-ENABLE_OPENSEARCH_RETRIEVAL_FOR_ONYX = (
-    ENABLE_OPENSEARCH_INDEXING_FOR_ONYX
-    and os.environ.get("ENABLE_OPENSEARCH_RETRIEVAL_FOR_ONYX", "").lower() == "true"
+ENABLE_OPENSEARCH_RETRIEVAL_FOR_AETHERSEARCH = (
+    ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH
+    and os.environ.get("ENABLE_OPENSEARCH_RETRIEVAL_FOR_AETHERSEARCH", "").lower() == "true"
 )
 DISABLE_OPENSEARCH_MIGRATION_TASK = (
     os.environ.get("DISABLE_OPENSEARCH_MIGRATION_TASK", "").lower() == "true"
 )
-ONYX_DISABLE_VESPA = os.environ.get("ONYX_DISABLE_VESPA", "").lower() == "true"
+AETHERSEARCH_DISABLE_VESPA = os.environ.get("AETHERSEARCH_DISABLE_VESPA", "").lower() == "true"
 # Whether we should check for and create an index if necessary every time we
 # instantiate an OpenSearchDocumentIndex on multitenant cloud. Defaults to True.
 VERIFY_CREATE_OPENSEARCH_INDEX_ON_INIT_MT = (
@@ -378,8 +378,8 @@ OPENSEARCH_INDEX_NUM_REPLICAS: int | None = (
     if os.environ.get("OPENSEARCH_INDEX_NUM_REPLICAS", None) is not None
     else None
 )
-ONYX_SEARCH_UI_USES_OPENSEARCH_KEYWORD_SEARCH = (
-    os.environ.get("ONYX_SEARCH_UI_USES_OPENSEARCH_KEYWORD_SEARCH", "").lower()
+AETHERSEARCH_SEARCH_UI_USES_OPENSEARCH_KEYWORD_SEARCH = (
+    os.environ.get("AETHERSEARCH_SEARCH_UI_USES_OPENSEARCH_KEYWORD_SEARCH", "").lower()
     == "true"
 )
 
@@ -607,7 +607,7 @@ DB_YIELD_PER_DEFAULT = 64
 POLL_CONNECTOR_OFFSET = 30  # Minutes overlap between poll windows
 
 # View the list here:
-# https://github.com/onyx-dot-app/onyx/blob/main/backend/onyx/connectors/factory.py
+# https://github.com/aethersearch-dot-app/aethersearch/blob/main/backend/aethersearch/connectors/factory.py
 # If this is empty, all connectors are enabled, this is an option for security heavy orgs where
 # only very select connectors are enabled and admins cannot add other connector types
 ENABLED_CONNECTOR_TYPES = os.environ.get("ENABLED_CONNECTOR_TYPES") or ""
@@ -718,8 +718,8 @@ CONFLUENCE_TIMEZONE_OFFSET = float(
     os.environ.get("CONFLUENCE_TIMEZONE_OFFSET", get_current_tz_offset())
 )
 
-CONFLUENCE_USE_ONYX_USERS_FOR_GROUP_SYNC = (
-    os.environ.get("CONFLUENCE_USE_ONYX_USERS_FOR_GROUP_SYNC", "").lower() == "true"
+CONFLUENCE_USE_AETHERSEARCH_USERS_FOR_GROUP_SYNC = (
+    os.environ.get("CONFLUENCE_USE_AETHERSEARCH_USERS_FOR_GROUP_SYNC", "").lower() == "true"
 )
 
 GOOGLE_DRIVE_CONNECTOR_SIZE_THRESHOLD = int(
@@ -928,7 +928,7 @@ MAX_TOKENS_FOR_FULL_INCLUSION = 4096
 RECENCY_BIAS_MULTIPLIER = float(os.environ.get("RECENCY_BIAS_MULTIPLIER") or 1.0)
 
 # Should match the rerank-count value set in
-# backend/onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja.
+# backend/aethersearch/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja.
 RERANK_COUNT = int(os.environ.get("RERANK_COUNT") or 1000)
 
 
@@ -953,9 +953,9 @@ CODE_INTERPRETER_MAX_OUTPUT_LENGTH = int(
 # Miscellaneous
 #####
 JOB_TIMEOUT = 60 * 60 * 6  # 6 hours default
-# Logs Onyx only model interactions like prompts, responses, messages etc.
-LOG_ONYX_MODEL_INTERACTIONS = (
-    os.environ.get("LOG_ONYX_MODEL_INTERACTIONS", "").lower() == "true"
+# Logs AetherSearch only model interactions like prompts, responses, messages etc.
+LOG_AETHERSEARCH_MODEL_INTERACTIONS = (
+    os.environ.get("LOG_AETHERSEARCH_MODEL_INTERACTIONS", "").lower() == "true"
 )
 
 PROMPT_CACHE_CHAT_HISTORY = (
@@ -978,7 +978,7 @@ DISABLE_TELEMETRY = os.environ.get("DISABLE_TELEMETRY", "").lower() == "true"
 # Braintrust Configuration
 #####
 # Braintrust project name
-BRAINTRUST_PROJECT = os.environ.get("BRAINTRUST_PROJECT", "Onyx")
+BRAINTRUST_PROJECT = os.environ.get("BRAINTRUST_PROJECT", "AetherSearch")
 # Braintrust API key - if provided, Braintrust tracing will be enabled
 BRAINTRUST_API_KEY = os.environ.get("BRAINTRUST_API_KEY") or ""
 # Maximum concurrency for Braintrust evaluations
@@ -999,7 +999,7 @@ SCHEDULED_EVAL_DATASET_NAMES = [
 ]
 # Email address to use for search permissions during scheduled evals
 SCHEDULED_EVAL_PERMISSIONS_EMAIL = os.environ.get(
-    "SCHEDULED_EVAL_PERMISSIONS_EMAIL", "roshan@onyx.app"
+    "SCHEDULED_EVAL_PERMISSIONS_EMAIL", "roshan@aethersearch.app"
 )
 # Braintrust project name to use for scheduled evals
 SCHEDULED_EVAL_PROJECT = os.environ.get("SCHEDULED_EVAL_PROJECT", "st-dev")
@@ -1056,7 +1056,7 @@ except json.JSONDecodeError:
 # Auto LLM Configuration - fetches model configs from GitHub for providers in Auto mode
 AUTO_LLM_CONFIG_URL = os.environ.get(
     "AUTO_LLM_CONFIG_URL",
-    "https://raw.githubusercontent.com/onyx-dot-app/onyx/main/backend/onyx/llm/well_known_providers/recommended-models.json",
+    "https://raw.githubusercontent.com/aethersearch-dot-app/aethersearch/main/backend/aethersearch/llm/well_known_providers/recommended-models.json",
 )
 
 # How often to check for auto LLM model updates (in seconds)
@@ -1069,7 +1069,7 @@ AUTO_LLM_UPDATE_INTERVAL_SECONDS = int(
 #####
 # NOTE: this should only be enabled if you have purchased an enterprise license.
 # if you're interested in an enterprise license, please reach out to us at
-# founders@onyx.app OR message Chris Weaver or Yuhong Sun in the Onyx
+# founders@aethersearch.app OR message Chris Weaver or Yuhong Sun in the AetherSearch
 # Discord community https://discord.gg/4NA5SbzrWb
 ENTERPRISE_EDITION_ENABLED = (
     os.environ.get("ENABLE_PAID_ENTERPRISE_EDITION_FEATURES", "").lower() == "true"
@@ -1265,9 +1265,9 @@ DB_READONLY_PASSWORD: str = urllib.parse.quote_plus(
 FILE_STORE_BACKEND = os.environ.get("FILE_STORE_BACKEND", "s3")
 
 S3_FILE_STORE_BUCKET_NAME = (
-    os.environ.get("S3_FILE_STORE_BUCKET_NAME") or "onyx-file-store-bucket"
+    os.environ.get("S3_FILE_STORE_BUCKET_NAME") or "aethersearch-file-store-bucket"
 )
-S3_FILE_STORE_PREFIX = os.environ.get("S3_FILE_STORE_PREFIX") or "onyx-files"
+S3_FILE_STORE_PREFIX = os.environ.get("S3_FILE_STORE_PREFIX") or "aethersearch-files"
 # S3_ENDPOINT_URL is for MinIO and other S3-compatible storage. Leave blank for AWS S3.
 S3_ENDPOINT_URL = os.environ.get("S3_ENDPOINT_URL")
 S3_VERIFY_SSL = os.environ.get("S3_VERIFY_SSL", "").lower() == "true"
@@ -1288,7 +1288,7 @@ VESPA_LANGUAGE_OVERRIDE = os.environ.get("VESPA_LANGUAGE_OVERRIDE")
 
 #####
 # Default LLM API Keys (for cloud deployments)
-# These are Onyx-managed API keys provided to tenants by default
+# These are AetherSearch-managed API keys provided to tenants by default
 #####
 OPENAI_DEFAULT_API_KEY = os.environ.get("OPENAI_DEFAULT_API_KEY")
 ANTHROPIC_DEFAULT_API_KEY = os.environ.get("ANTHROPIC_DEFAULT_API_KEY")
@@ -1314,7 +1314,7 @@ DISCORD_BOT_INVOKE_CHAR = os.environ.get("DISCORD_BOT_INVOKE_CHAR", "!")
 # Publishable keys are safe to expose publicly - they can only initialize
 # Stripe.js and tokenize payment info, not make charges or access data.
 STRIPE_PUBLISHABLE_KEY_URL = (
-    "https://onyx-stripe-public.s3.amazonaws.com/publishable-key.txt"
+    "https://aethersearch-stripe-public.s3.amazonaws.com/publishable-key.txt"
 )
 # Override for local testing with Stripe test keys (pk_test_*)
 STRIPE_PUBLISHABLE_KEY_OVERRIDE = os.environ.get("STRIPE_PUBLISHABLE_KEY")

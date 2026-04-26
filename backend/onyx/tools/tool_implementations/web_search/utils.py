@@ -1,13 +1,13 @@
-from onyx.configs.constants import DocumentSource
-from onyx.context.search.models import InferenceChunk
-from onyx.context.search.models import InferenceSection
-from onyx.context.search.models import SearchDoc
-from onyx.tools.tool_implementations.open_url.models import WebContent
-from onyx.tools.tool_implementations.open_url.snippet_matcher import (
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.context.search.models import InferenceSection
+from aethersearch.context.search.models import SearchDoc
+from aethersearch.tools.tool_implementations.open_url.models import WebContent
+from aethersearch.tools.tool_implementations.open_url.snippet_matcher import (
     find_snippet_in_content,
 )
-from onyx.tools.tool_implementations.web_search.models import WEB_SEARCH_PREFIX
-from onyx.tools.tool_implementations.web_search.models import WebSearchResult
+from aethersearch.tools.tool_implementations.web_search.models import WEB_SEARCH_PREFIX
+from aethersearch.tools.tool_implementations.web_search.models import WebSearchResult
 
 TRUNCATED_CONTENT_SUFFIX = " [...truncated]"
 TRUNCATED_CONTENT_PREFIX = "[...truncated] "

@@ -1,6 +1,6 @@
-"""Unit tests for the OAuth reCAPTCHA cookie helpers in onyx.auth.captcha."""
+"""Unit tests for the OAuth reCAPTCHA cookie helpers in aethersearch.auth.captcha."""
 
-from onyx.auth import captcha as captcha_module
+from aethersearch.auth import captcha as captcha_module
 
 
 def test_issued_cookie_validates() -> None:

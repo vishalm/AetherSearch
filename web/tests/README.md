@@ -1,6 +1,6 @@
 # React Integration Testing Guide
 
-Comprehensive guide for writing integration tests in the Onyx web application using Jest and React Testing Library.
+Comprehensive guide for writing integration tests in the AetherSearch web application using Jest and React Testing Library.
 
 ## Table of Contents
 

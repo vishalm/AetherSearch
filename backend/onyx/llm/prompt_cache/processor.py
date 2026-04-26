@@ -3,13 +3,13 @@
 from datetime import datetime
 from datetime import timezone
 
-from onyx.configs.model_configs import ENABLE_PROMPT_CACHING
-from onyx.llm.interfaces import LLMConfig
-from onyx.llm.models import LanguageModelInput
-from onyx.llm.prompt_cache.cache_manager import generate_cache_key_hash
-from onyx.llm.prompt_cache.models import CacheMetadata
-from onyx.llm.prompt_cache.providers.factory import get_provider_adapter
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.model_configs import ENABLE_PROMPT_CACHING
+from aethersearch.llm.interfaces import LLMConfig
+from aethersearch.llm.models import LanguageModelInput
+from aethersearch.llm.prompt_cache.cache_manager import generate_cache_key_hash
+from aethersearch.llm.prompt_cache.models import CacheMetadata
+from aethersearch.llm.prompt_cache.providers.factory import get_provider_adapter
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()
@@ -46,7 +46,7 @@ def process_with_prompt_cache(
     if not ENABLE_PROMPT_CACHING:
         logger.debug("Prompt caching is disabled via configuration")
         # Fall back to no-op behavior
-        from onyx.llm.prompt_cache.providers.noop import NoOpPromptCacheProvider
+        from aethersearch.llm.prompt_cache.providers.noop import NoOpPromptCacheProvider
 
         noop_adapter = NoOpPromptCacheProvider()
         combined = noop_adapter.prepare_messages_for_caching(
@@ -71,7 +71,7 @@ def process_with_prompt_cache(
             f"Provider {llm_config.model_provider} does not support caching, combining messages without caching"
         )
         # Use no-op adapter to combine messages
-        from onyx.llm.prompt_cache.providers.noop import NoOpPromptCacheProvider
+        from aethersearch.llm.prompt_cache.providers.noop import NoOpPromptCacheProvider
 
         noop_adapter = NoOpPromptCacheProvider()
         combined = noop_adapter.prepare_messages_for_caching(
@@ -130,7 +130,7 @@ def process_with_prompt_cache(
             "Falling back to non-cached behavior."
         )
         # Fall back to no-op adapter
-        from onyx.llm.prompt_cache.providers.noop import NoOpPromptCacheProvider
+        from aethersearch.llm.prompt_cache.providers.noop import NoOpPromptCacheProvider
 
         noop_adapter = NoOpPromptCacheProvider()
         combined = noop_adapter.prepare_messages_for_caching(

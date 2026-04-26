@@ -13,30 +13,30 @@ from pydantic import BaseModel
 from pydantic import Field
 from sqlalchemy.orm import Session
 
-from ee.onyx.db.scim import ScimDAL
-from ee.onyx.server.enterprise_settings.models import AnalyticsScriptUpload
-from ee.onyx.server.enterprise_settings.models import EnterpriseSettings
-from ee.onyx.server.enterprise_settings.store import get_logo_filename
-from ee.onyx.server.enterprise_settings.store import get_logotype_filename
-from ee.onyx.server.enterprise_settings.store import load_analytics_script
-from ee.onyx.server.enterprise_settings.store import load_settings
-from ee.onyx.server.enterprise_settings.store import store_analytics_script
-from ee.onyx.server.enterprise_settings.store import store_settings
-from ee.onyx.server.enterprise_settings.store import upload_logo
-from ee.onyx.server.scim.auth import generate_scim_token
-from ee.onyx.server.scim.models import ScimTokenCreate
-from ee.onyx.server.scim.models import ScimTokenCreatedResponse
-from ee.onyx.server.scim.models import ScimTokenResponse
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import current_user_with_expired_token
-from onyx.auth.users import get_user_manager
-from onyx.auth.users import UserManager
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.file_store.file_store import get_default_file_store
-from onyx.server.utils import BasicAuthenticationError
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.db.scim import ScimDAL
+from ee.aethersearch.server.enterprise_settings.models import AnalyticsScriptUpload
+from ee.aethersearch.server.enterprise_settings.models import EnterpriseSettings
+from ee.aethersearch.server.enterprise_settings.store import get_logo_filename
+from ee.aethersearch.server.enterprise_settings.store import get_logotype_filename
+from ee.aethersearch.server.enterprise_settings.store import load_analytics_script
+from ee.aethersearch.server.enterprise_settings.store import load_settings
+from ee.aethersearch.server.enterprise_settings.store import store_analytics_script
+from ee.aethersearch.server.enterprise_settings.store import store_settings
+from ee.aethersearch.server.enterprise_settings.store import upload_logo
+from ee.aethersearch.server.scim.auth import generate_scim_token
+from ee.aethersearch.server.scim.models import ScimTokenCreate
+from ee.aethersearch.server.scim.models import ScimTokenCreatedResponse
+from ee.aethersearch.server.scim.models import ScimTokenResponse
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import current_user_with_expired_token
+from aethersearch.auth.users import get_user_manager
+from aethersearch.auth.users import UserManager
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.server.utils import BasicAuthenticationError
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.configs import POSTGRES_DEFAULT_SCHEMA
 from shared_configs.contextvars import get_current_tenant_id
@@ -149,9 +149,9 @@ def put_logo(
 def fetch_logo_helper(db_session: Session) -> Response:  # noqa: ARG001
     try:
         file_store = get_default_file_store()
-        onyx_file = file_store.get_file_with_mime_type(get_logo_filename())
-        if not onyx_file:
-            raise ValueError("get_onyx_file returned None!")
+        aethersearch_file = file_store.get_file_with_mime_type(get_logo_filename())
+        if not aethersearch_file:
+            raise ValueError("get_aethersearch_file returned None!")
     except Exception:
         logger.exception("Faield to fetch logo file")
         raise HTTPException(
@@ -160,8 +160,8 @@ def fetch_logo_helper(db_session: Session) -> Response:  # noqa: ARG001
         )
     else:
         return Response(
-            content=onyx_file.data,
-            media_type=onyx_file.mime_type,
+            content=aethersearch_file.data,
+            media_type=aethersearch_file.mime_type,
             headers={"Cache-Control": "no-cache"},
         )
 
@@ -169,16 +169,16 @@ def fetch_logo_helper(db_session: Session) -> Response:  # noqa: ARG001
 def fetch_logotype_helper(db_session: Session) -> Response:  # noqa: ARG001
     try:
         file_store = get_default_file_store()
-        onyx_file = file_store.get_file_with_mime_type(get_logotype_filename())
-        if not onyx_file:
-            raise ValueError("get_onyx_file returned None!")
+        aethersearch_file = file_store.get_file_with_mime_type(get_logotype_filename())
+        if not aethersearch_file:
+            raise ValueError("get_aethersearch_file returned None!")
     except Exception:
         raise HTTPException(
             status_code=404,
             detail="No logotype file found",
         )
     else:
-        return Response(content=onyx_file.data, media_type=onyx_file.mime_type)
+        return Response(content=aethersearch_file.data, media_type=aethersearch_file.mime_type)
 
 
 @basic_router.get("/logotype")

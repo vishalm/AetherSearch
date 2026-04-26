@@ -20,56 +20,56 @@ import requests
 from pydantic import BaseModel
 from retry import retry
 
-from onyx.configs.app_configs import BLURB_SIZE
-from onyx.configs.chat_configs import NUM_RETURNED_HITS
-from onyx.configs.chat_configs import TITLE_CONTENT_RATIO
-from onyx.configs.chat_configs import VESPA_SEARCHER_THREADS
-from onyx.configs.constants import KV_REINDEX_KEY
-from onyx.configs.constants import RETURN_SEPARATOR
-from onyx.context.search.enums import QueryType
-from onyx.context.search.models import IndexFilters
-from onyx.context.search.models import InferenceChunk
-from onyx.context.search.models import InferenceChunkUncleaned
-from onyx.context.search.models import QueryExpansionType
-from onyx.db.enums import EmbeddingPrecision
-from onyx.document_index.document_index_utils import get_uuid_from_chunk_info
-from onyx.document_index.interfaces import DocumentIndex
-from onyx.document_index.interfaces import (
+from aethersearch.configs.app_configs import BLURB_SIZE
+from aethersearch.configs.chat_configs import NUM_RETURNED_HITS
+from aethersearch.configs.chat_configs import TITLE_CONTENT_RATIO
+from aethersearch.configs.chat_configs import VESPA_SEARCHER_THREADS
+from aethersearch.configs.constants import KV_REINDEX_KEY
+from aethersearch.configs.constants import RETURN_SEPARATOR
+from aethersearch.context.search.enums import QueryType
+from aethersearch.context.search.models import IndexFilters
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.context.search.models import InferenceChunkUncleaned
+from aethersearch.context.search.models import QueryExpansionType
+from aethersearch.db.enums import EmbeddingPrecision
+from aethersearch.document_index.document_index_utils import get_uuid_from_chunk_info
+from aethersearch.document_index.interfaces import DocumentIndex
+from aethersearch.document_index.interfaces import (
     DocumentInsertionRecord as OldDocumentInsertionRecord,
 )
-from onyx.document_index.interfaces import EnrichedDocumentIndexingInfo
-from onyx.document_index.interfaces import IndexBatchParams
-from onyx.document_index.interfaces import MinimalDocumentIndexingInfo
-from onyx.document_index.interfaces import VespaChunkRequest
-from onyx.document_index.interfaces import VespaDocumentFields
-from onyx.document_index.interfaces import VespaDocumentUserFields
-from onyx.document_index.interfaces_new import DocumentSectionRequest
-from onyx.document_index.interfaces_new import IndexingMetadata
-from onyx.document_index.interfaces_new import MetadataUpdateRequest
-from onyx.document_index.vespa.chunk_retrieval import query_vespa
-from onyx.document_index.vespa.indexing_utils import BaseHTTPXClientContext
-from onyx.document_index.vespa.indexing_utils import check_for_final_chunk_existence
-from onyx.document_index.vespa.indexing_utils import GlobalHTTPXClientContext
-from onyx.document_index.vespa.indexing_utils import TemporaryHTTPXClientContext
-from onyx.document_index.vespa.shared_utils.utils import get_vespa_http_client
-from onyx.document_index.vespa.shared_utils.vespa_request_builders import (
+from aethersearch.document_index.interfaces import EnrichedDocumentIndexingInfo
+from aethersearch.document_index.interfaces import IndexBatchParams
+from aethersearch.document_index.interfaces import MinimalDocumentIndexingInfo
+from aethersearch.document_index.interfaces import VespaChunkRequest
+from aethersearch.document_index.interfaces import VespaDocumentFields
+from aethersearch.document_index.interfaces import VespaDocumentUserFields
+from aethersearch.document_index.interfaces_new import DocumentSectionRequest
+from aethersearch.document_index.interfaces_new import IndexingMetadata
+from aethersearch.document_index.interfaces_new import MetadataUpdateRequest
+from aethersearch.document_index.vespa.chunk_retrieval import query_vespa
+from aethersearch.document_index.vespa.indexing_utils import BaseHTTPXClientContext
+from aethersearch.document_index.vespa.indexing_utils import check_for_final_chunk_existence
+from aethersearch.document_index.vespa.indexing_utils import GlobalHTTPXClientContext
+from aethersearch.document_index.vespa.indexing_utils import TemporaryHTTPXClientContext
+from aethersearch.document_index.vespa.shared_utils.utils import get_vespa_http_client
+from aethersearch.document_index.vespa.shared_utils.vespa_request_builders import (
     build_vespa_filters,
 )
-from onyx.document_index.vespa.vespa_document_index import TenantState
-from onyx.document_index.vespa.vespa_document_index import VespaDocumentIndex
-from onyx.document_index.vespa_constants import BATCH_SIZE
-from onyx.document_index.vespa_constants import CONTENT_SUMMARY
-from onyx.document_index.vespa_constants import DOCUMENT_ID_ENDPOINT
-from onyx.document_index.vespa_constants import NUM_THREADS
-from onyx.document_index.vespa_constants import VESPA_APPLICATION_ENDPOINT
-from onyx.document_index.vespa_constants import VESPA_TIMEOUT
-from onyx.document_index.vespa_constants import YQL_BASE
-from onyx.indexing.models import DocMetadataAwareIndexChunk
-from onyx.key_value_store.factory import get_shared_kv_store
-from onyx.kg.utils.formatting_utils import split_relationship_id
-from onyx.utils.batching import batch_generator
-from onyx.utils.logger import setup_logger
-from onyx.utils.timing import log_function_time
+from aethersearch.document_index.vespa.vespa_document_index import TenantState
+from aethersearch.document_index.vespa.vespa_document_index import VespaDocumentIndex
+from aethersearch.document_index.vespa_constants import BATCH_SIZE
+from aethersearch.document_index.vespa_constants import CONTENT_SUMMARY
+from aethersearch.document_index.vespa_constants import DOCUMENT_ID_ENDPOINT
+from aethersearch.document_index.vespa_constants import NUM_THREADS
+from aethersearch.document_index.vespa_constants import VESPA_APPLICATION_ENDPOINT
+from aethersearch.document_index.vespa_constants import VESPA_TIMEOUT
+from aethersearch.document_index.vespa_constants import YQL_BASE
+from aethersearch.indexing.models import DocMetadataAwareIndexChunk
+from aethersearch.key_value_store.factory import get_shared_kv_store
+from aethersearch.kg.utils.formatting_utils import split_relationship_id
+from aethersearch.utils.batching import batch_generator
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.timing import log_function_time
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.contextvars import get_current_tenant_id
 from shared_configs.model_server_models import Embedding
@@ -277,7 +277,7 @@ class VespaIndex(DocumentIndex):
         logger.notice(f"Deploying Vespa application package to {deploy_url}")
 
         vespa_schema_path = os.path.join(
-            os.getcwd(), "onyx", "document_index", "vespa", "app_config"
+            os.getcwd(), "aethersearch", "document_index", "vespa", "app_config"
         )
         schema_jinja_file = os.path.join(
             vespa_schema_path, "schemas", VespaIndex.VESPA_SCHEMA_JINJA_FILENAME
@@ -359,10 +359,10 @@ class VespaIndex(DocumentIndex):
         response = requests.post(deploy_url, headers=headers, data=zip_file)
         if response.status_code != 200:
             logger.error(
-                f"Failed to prepare Vespa Onyx Index. Response: {response.text}"
+                f"Failed to prepare Vespa AetherSearch Index. Response: {response.text}"
             )
             raise RuntimeError(
-                f"Failed to prepare Vespa Onyx Index. Response: {response.text}"
+                f"Failed to prepare Vespa AetherSearch Index. Response: {response.text}"
             )
 
     @staticmethod
@@ -378,7 +378,7 @@ class VespaIndex(DocumentIndex):
         logger.info(f"Deploying Vespa application package to {deploy_url}")
 
         vespa_schema_path = os.path.join(
-            os.getcwd(), "onyx", "document_index", "vespa", "app_config"
+            os.getcwd(), "aethersearch", "document_index", "vespa", "app_config"
         )
         schema_jinja_file = os.path.join(
             vespa_schema_path, "schemas", VespaIndex.VESPA_SCHEMA_JINJA_FILENAME
@@ -457,7 +457,7 @@ class VespaIndex(DocumentIndex):
 
         if response.status_code != 200:
             raise RuntimeError(
-                f"Failed to prepare Vespa Onyx Indexes. Response: {response.text}"
+                f"Failed to prepare Vespa AetherSearch Indexes. Response: {response.text}"
             )
 
     def index(

@@ -12,9 +12,9 @@ from zipfile import ZipFile
 import pytest
 import requests
 
-from ee.onyx.db.usage_export import UsageReportMetadata
-from onyx.configs.constants import DEFAULT_PERSONA_ID
-from onyx.db.seeding.chat_history_seeding import seed_chat_history
+from ee.aethersearch.db.usage_export import UsageReportMetadata
+from aethersearch.configs.constants import DEFAULT_PERSONA_ID
+from aethersearch.db.seeding.chat_history_seeding import seed_chat_history
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.test_models import DATestUser
 

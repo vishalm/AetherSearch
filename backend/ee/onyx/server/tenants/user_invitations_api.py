@@ -2,18 +2,18 @@ from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
 
-from ee.onyx.server.tenants.models import ApproveUserRequest
-from ee.onyx.server.tenants.models import PendingUserSnapshot
-from ee.onyx.server.tenants.models import RequestInviteRequest
-from ee.onyx.server.tenants.user_mapping import accept_user_invite
-from ee.onyx.server.tenants.user_mapping import approve_user_invite
-from ee.onyx.server.tenants.user_mapping import deny_user_invite
-from ee.onyx.server.tenants.user_mapping import invite_self_to_tenant
-from onyx.auth.invited_users import get_pending_users
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import User
-from onyx.db.enums import Permission
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.server.tenants.models import ApproveUserRequest
+from ee.aethersearch.server.tenants.models import PendingUserSnapshot
+from ee.aethersearch.server.tenants.models import RequestInviteRequest
+from ee.aethersearch.server.tenants.user_mapping import accept_user_invite
+from ee.aethersearch.server.tenants.user_mapping import approve_user_invite
+from ee.aethersearch.server.tenants.user_mapping import deny_user_invite
+from ee.aethersearch.server.tenants.user_mapping import invite_self_to_tenant
+from aethersearch.auth.invited_users import get_pending_users
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import User
+from aethersearch.db.enums import Permission
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()

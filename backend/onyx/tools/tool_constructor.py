@@ -4,47 +4,47 @@ from uuid import UUID
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from onyx.auth.oauth_token_manager import OAuthTokenManager
-from onyx.chat.emitter import Emitter
-from onyx.configs.app_configs import DISABLE_VECTOR_DB
-from onyx.configs.model_configs import GEN_AI_TEMPERATURE
-from onyx.context.search.models import BaseFilters
-from onyx.context.search.models import PersonaSearchInfo
-from onyx.db.engine.sql_engine import get_session_with_current_tenant_if_none
-from onyx.db.enums import MCPAuthenticationPerformer
-from onyx.db.enums import MCPAuthenticationType
-from onyx.db.mcp import get_all_mcp_tools_for_server
-from onyx.db.mcp import get_mcp_server_by_id
-from onyx.db.mcp import get_user_connection_config
-from onyx.db.models import Persona
-from onyx.db.models import User
-from onyx.db.oauth_config import get_oauth_config
-from onyx.db.search_settings import get_current_search_settings
-from onyx.db.tools import get_builtin_tool
-from onyx.document_index.factory import get_default_document_index
-from onyx.image_gen.interfaces import ImageGenerationProviderCredentials
-from onyx.llm.interfaces import LLM
-from onyx.llm.interfaces import LLMConfig
-from onyx.onyxbot.slack.models import SlackContext
-from onyx.tools.built_in_tools import get_built_in_tool_by_id
-from onyx.tools.interface import Tool
-from onyx.tools.models import DynamicSchemaInfo
-from onyx.tools.models import SearchToolUsage
-from onyx.tools.tool_implementations.custom.custom_tool import (
+from aethersearch.auth.oauth_token_manager import OAuthTokenManager
+from aethersearch.chat.emitter import Emitter
+from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
+from aethersearch.configs.model_configs import GEN_AI_TEMPERATURE
+from aethersearch.context.search.models import BaseFilters
+from aethersearch.context.search.models import PersonaSearchInfo
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant_if_none
+from aethersearch.db.enums import MCPAuthenticationPerformer
+from aethersearch.db.enums import MCPAuthenticationType
+from aethersearch.db.mcp import get_all_mcp_tools_for_server
+from aethersearch.db.mcp import get_mcp_server_by_id
+from aethersearch.db.mcp import get_user_connection_config
+from aethersearch.db.models import Persona
+from aethersearch.db.models import User
+from aethersearch.db.oauth_config import get_oauth_config
+from aethersearch.db.search_settings import get_current_search_settings
+from aethersearch.db.tools import get_builtin_tool
+from aethersearch.document_index.factory import get_default_document_index
+from aethersearch.image_gen.interfaces import ImageGenerationProviderCredentials
+from aethersearch.llm.interfaces import LLM
+from aethersearch.llm.interfaces import LLMConfig
+from aethersearch.aethersearchbot.slack.models import SlackContext
+from aethersearch.tools.built_in_tools import get_built_in_tool_by_id
+from aethersearch.tools.interface import Tool
+from aethersearch.tools.models import DynamicSchemaInfo
+from aethersearch.tools.models import SearchToolUsage
+from aethersearch.tools.tool_implementations.custom.custom_tool import (
     build_custom_tools_from_openapi_schema_and_headers,
 )
-from onyx.tools.tool_implementations.file_reader.file_reader_tool import FileReaderTool
-from onyx.tools.tool_implementations.images.image_generation_tool import (
+from aethersearch.tools.tool_implementations.file_reader.file_reader_tool import FileReaderTool
+from aethersearch.tools.tool_implementations.images.image_generation_tool import (
     ImageGenerationTool,
 )
-from onyx.tools.tool_implementations.mcp.mcp_tool import MCPTool
-from onyx.tools.tool_implementations.memory.memory_tool import MemoryTool
-from onyx.tools.tool_implementations.open_url.open_url_tool import OpenURLTool
-from onyx.tools.tool_implementations.python.python_tool import PythonTool
-from onyx.tools.tool_implementations.search.search_tool import SearchTool
-from onyx.tools.tool_implementations.web_search.web_search_tool import WebSearchTool
-from onyx.utils.headers import header_dict_to_header_list
-from onyx.utils.logger import setup_logger
+from aethersearch.tools.tool_implementations.mcp.mcp_tool import MCPTool
+from aethersearch.tools.tool_implementations.memory.memory_tool import MemoryTool
+from aethersearch.tools.tool_implementations.open_url.open_url_tool import OpenURLTool
+from aethersearch.tools.tool_implementations.python.python_tool import PythonTool
+from aethersearch.tools.tool_implementations.search.search_tool import SearchTool
+from aethersearch.tools.tool_implementations.web_search.web_search_tool import WebSearchTool
+from aethersearch.utils.headers import header_dict_to_header_list
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -79,7 +79,7 @@ class CustomToolConfig(BaseModel):
 
 def _get_image_generation_config(llm: LLM, db_session: Session) -> LLMConfig:
     """Get image generation LLM config from the default image generation configuration."""
-    from onyx.db.image_generation import get_default_image_generation_config
+    from aethersearch.db.image_generation import get_default_image_generation_config
 
     default_config = get_default_image_generation_config(db_session)
     if (
@@ -266,7 +266,7 @@ def _construct_tools_impl(
                 except ValueError as e:
                     logger.error(f"Failed to initialize Internet Search Tool: {e}")
                     raise ValueError(
-                        "Internet search tool requires a search provider API key, please contact your Onyx admin to get it added!"
+                        "Internet search tool requires a search provider API key, please contact your AetherSearch admin to get it added!"
                     )
 
             # Handle Open URL Tool
@@ -283,7 +283,7 @@ def _construct_tools_impl(
                 except RuntimeError as e:
                     logger.error(f"Failed to initialize Open URL Tool: {e}")
                     raise ValueError(
-                        "Open URL tool requires a web content provider, please contact your Onyx admin to get it configured!"
+                        "Open URL tool requires a web content provider, please contact your AetherSearch admin to get it configured!"
                     )
 
             # Handle Python/Code Interpreter Tool

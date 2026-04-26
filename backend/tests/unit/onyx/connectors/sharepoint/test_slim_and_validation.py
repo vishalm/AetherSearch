@@ -8,8 +8,8 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.connectors.sharepoint.connector import SharepointConnector
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.connectors.sharepoint.connector import SharepointConnector
 
 SITE_URL = "https://tenant.sharepoint.com/sites/MySite"
 
@@ -28,13 +28,13 @@ def _make_connector() -> SharepointConnector:
 # ---------------------------------------------------------------------------
 
 
-@patch("onyx.connectors.sharepoint.connector._convert_sitepage_to_slim_document")
+@patch("aethersearch.connectors.sharepoint.connector._convert_sitepage_to_slim_document")
 @patch(
-    "onyx.connectors.sharepoint.connector.SharepointConnector._create_rest_client_context"
+    "aethersearch.connectors.sharepoint.connector.SharepointConnector._create_rest_client_context"
 )
-@patch("onyx.connectors.sharepoint.connector.SharepointConnector._fetch_site_pages")
-@patch("onyx.connectors.sharepoint.connector.SharepointConnector._fetch_driveitems")
-@patch("onyx.connectors.sharepoint.connector.SharepointConnector.fetch_sites")
+@patch("aethersearch.connectors.sharepoint.connector.SharepointConnector._fetch_site_pages")
+@patch("aethersearch.connectors.sharepoint.connector.SharepointConnector._fetch_driveitems")
+@patch("aethersearch.connectors.sharepoint.connector.SharepointConnector.fetch_sites")
 def test_site_page_error_does_not_crash(
     mock_fetch_sites: MagicMock,
     mock_fetch_driveitems: MagicMock,
@@ -43,7 +43,7 @@ def test_site_page_error_does_not_crash(
     mock_convert: MagicMock,
 ) -> None:
     """A 401 (or any exception) on a site page is caught; remaining pages are processed."""
-    from onyx.connectors.models import SlimDocument
+    from aethersearch.connectors.models import SlimDocument
 
     connector = _make_connector()
     connector.include_site_documents = False
@@ -83,13 +83,13 @@ def test_site_page_error_does_not_crash(
     assert not any(d.id == "2" for d in results)
 
 
-@patch("onyx.connectors.sharepoint.connector._convert_sitepage_to_slim_document")
+@patch("aethersearch.connectors.sharepoint.connector._convert_sitepage_to_slim_document")
 @patch(
-    "onyx.connectors.sharepoint.connector.SharepointConnector._create_rest_client_context"
+    "aethersearch.connectors.sharepoint.connector.SharepointConnector._create_rest_client_context"
 )
-@patch("onyx.connectors.sharepoint.connector.SharepointConnector._fetch_site_pages")
-@patch("onyx.connectors.sharepoint.connector.SharepointConnector._fetch_driveitems")
-@patch("onyx.connectors.sharepoint.connector.SharepointConnector.fetch_sites")
+@patch("aethersearch.connectors.sharepoint.connector.SharepointConnector._fetch_site_pages")
+@patch("aethersearch.connectors.sharepoint.connector.SharepointConnector._fetch_driveitems")
+@patch("aethersearch.connectors.sharepoint.connector.SharepointConnector.fetch_sites")
 def test_all_site_pages_fail_does_not_crash(
     mock_fetch_sites: MagicMock,
     mock_fetch_driveitems: MagicMock,
@@ -112,7 +112,7 @@ def test_all_site_pages_fail_does_not_crash(
     ]
     mock_convert.side_effect = RuntimeError("context error")
 
-    from onyx.connectors.models import SlimDocument
+    from aethersearch.connectors.models import SlimDocument
 
     # Should not raise; no SlimDocuments in output (only hierarchy nodes).
     slim_results = [
@@ -130,9 +130,9 @@ def test_all_site_pages_fail_does_not_crash(
 
 
 @pytest.mark.parametrize("status_code", [401, 403])
-@patch("onyx.connectors.sharepoint.connector.requests.get")
-@patch("onyx.connectors.sharepoint.connector.validate_outbound_http_url")
-@patch("onyx.connectors.sharepoint.connector.acquire_token_for_rest")
+@patch("aethersearch.connectors.sharepoint.connector.requests.get")
+@patch("aethersearch.connectors.sharepoint.connector.validate_outbound_http_url")
+@patch("aethersearch.connectors.sharepoint.connector.acquire_token_for_rest")
 def test_validate_raises_on_401_or_403(
     mock_acquire: MagicMock,
     _mock_validate_url: MagicMock,
@@ -149,9 +149,9 @@ def test_validate_raises_on_401_or_403(
         connector.validate_connector_settings()
 
 
-@patch("onyx.connectors.sharepoint.connector.requests.get")
-@patch("onyx.connectors.sharepoint.connector.validate_outbound_http_url")
-@patch("onyx.connectors.sharepoint.connector.acquire_token_for_rest")
+@patch("aethersearch.connectors.sharepoint.connector.requests.get")
+@patch("aethersearch.connectors.sharepoint.connector.validate_outbound_http_url")
+@patch("aethersearch.connectors.sharepoint.connector.acquire_token_for_rest")
 def test_validate_passes_on_200(
     mock_acquire: MagicMock,
     _mock_validate_url: MagicMock,
@@ -165,9 +165,9 @@ def test_validate_passes_on_200(
     connector.validate_connector_settings()  # should not raise
 
 
-@patch("onyx.connectors.sharepoint.connector.requests.get")
-@patch("onyx.connectors.sharepoint.connector.validate_outbound_http_url")
-@patch("onyx.connectors.sharepoint.connector.acquire_token_for_rest")
+@patch("aethersearch.connectors.sharepoint.connector.requests.get")
+@patch("aethersearch.connectors.sharepoint.connector.validate_outbound_http_url")
+@patch("aethersearch.connectors.sharepoint.connector.acquire_token_for_rest")
 def test_validate_passes_on_network_error(
     mock_acquire: MagicMock,
     _mock_validate_url: MagicMock,
@@ -181,8 +181,8 @@ def test_validate_passes_on_network_error(
     connector.validate_connector_settings()  # should not raise
 
 
-@patch("onyx.connectors.sharepoint.connector.validate_outbound_http_url")
-@patch("onyx.connectors.sharepoint.connector.acquire_token_for_rest")
+@patch("aethersearch.connectors.sharepoint.connector.validate_outbound_http_url")
+@patch("aethersearch.connectors.sharepoint.connector.acquire_token_for_rest")
 def test_validate_skips_probe_without_credentials(
     mock_acquire: MagicMock,
     _mock_validate_url: MagicMock,

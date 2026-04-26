@@ -6,73 +6,73 @@ import httpx
 from opensearchpy import NotFoundError
 from opensearchpy.helpers.errors import BulkIndexError
 
-from onyx.access.models import DocumentAccess
-from onyx.configs.app_configs import MAX_CHUNKS_PER_DOC_BATCH
-from onyx.configs.app_configs import VERIFY_CREATE_OPENSEARCH_INDEX_ON_INIT_MT
-from onyx.configs.chat_configs import NUM_RETURNED_HITS
-from onyx.configs.chat_configs import TITLE_CONTENT_RATIO
-from onyx.configs.constants import OnyxRedisLocks
-from onyx.configs.constants import PUBLIC_DOC_PAT
-from onyx.connectors.cross_connector_utils.miscellaneous_utils import (
+from aethersearch.access.models import DocumentAccess
+from aethersearch.configs.app_configs import MAX_CHUNKS_PER_DOC_BATCH
+from aethersearch.configs.app_configs import VERIFY_CREATE_OPENSEARCH_INDEX_ON_INIT_MT
+from aethersearch.configs.chat_configs import NUM_RETURNED_HITS
+from aethersearch.configs.chat_configs import TITLE_CONTENT_RATIO
+from aethersearch.configs.constants import AetherSearchRedisLocks
+from aethersearch.configs.constants import PUBLIC_DOC_PAT
+from aethersearch.connectors.cross_connector_utils.miscellaneous_utils import (
     get_experts_stores_representations,
 )
-from onyx.connectors.models import convert_metadata_list_of_strings_to_dict
-from onyx.context.search.enums import QueryType
-from onyx.context.search.models import IndexFilters
-from onyx.context.search.models import InferenceChunk
-from onyx.context.search.models import InferenceChunkUncleaned
-from onyx.context.search.models import QueryExpansionType
-from onyx.db.enums import EmbeddingPrecision
-from onyx.db.models import DocumentSource
-from onyx.document_index.chunk_content_enrichment import cleanup_content_for_chunks
-from onyx.document_index.chunk_content_enrichment import (
+from aethersearch.connectors.models import convert_metadata_list_of_strings_to_dict
+from aethersearch.context.search.enums import QueryType
+from aethersearch.context.search.models import IndexFilters
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.context.search.models import InferenceChunkUncleaned
+from aethersearch.context.search.models import QueryExpansionType
+from aethersearch.db.enums import EmbeddingPrecision
+from aethersearch.db.models import DocumentSource
+from aethersearch.document_index.chunk_content_enrichment import cleanup_content_for_chunks
+from aethersearch.document_index.chunk_content_enrichment import (
     generate_enriched_content_for_chunk_text,
 )
-from onyx.document_index.interfaces import DocumentIndex as OldDocumentIndex
-from onyx.document_index.interfaces import (
+from aethersearch.document_index.interfaces import DocumentIndex as OldDocumentIndex
+from aethersearch.document_index.interfaces import (
     DocumentInsertionRecord as OldDocumentInsertionRecord,
 )
-from onyx.document_index.interfaces import IndexBatchParams
-from onyx.document_index.interfaces import VespaChunkRequest
-from onyx.document_index.interfaces import VespaDocumentFields
-from onyx.document_index.interfaces import VespaDocumentUserFields
-from onyx.document_index.interfaces_new import DocumentIndex
-from onyx.document_index.interfaces_new import DocumentInsertionRecord
-from onyx.document_index.interfaces_new import DocumentSectionRequest
-from onyx.document_index.interfaces_new import IndexingMetadata
-from onyx.document_index.interfaces_new import MetadataUpdateRequest
-from onyx.document_index.interfaces_new import TenantState
-from onyx.document_index.opensearch.client import OpenSearchClient
-from onyx.document_index.opensearch.client import OpenSearchIndexClient
-from onyx.document_index.opensearch.client import SearchHit
-from onyx.document_index.opensearch.cluster_settings import OPENSEARCH_CLUSTER_SETTINGS
-from onyx.document_index.opensearch.constants import OpenSearchSearchType
-from onyx.document_index.opensearch.schema import ACCESS_CONTROL_LIST_FIELD_NAME
-from onyx.document_index.opensearch.schema import CONTENT_FIELD_NAME
-from onyx.document_index.opensearch.schema import DOCUMENT_SETS_FIELD_NAME
-from onyx.document_index.opensearch.schema import DocumentChunk
-from onyx.document_index.opensearch.schema import DocumentChunkWithoutVectors
-from onyx.document_index.opensearch.schema import DocumentSchema
-from onyx.document_index.opensearch.schema import get_opensearch_doc_chunk_id
-from onyx.document_index.opensearch.schema import GLOBAL_BOOST_FIELD_NAME
-from onyx.document_index.opensearch.schema import HIDDEN_FIELD_NAME
-from onyx.document_index.opensearch.schema import PERSONAS_FIELD_NAME
-from onyx.document_index.opensearch.schema import USER_PROJECTS_FIELD_NAME
-from onyx.document_index.opensearch.search import DocumentQuery
-from onyx.document_index.opensearch.search import (
+from aethersearch.document_index.interfaces import IndexBatchParams
+from aethersearch.document_index.interfaces import VespaChunkRequest
+from aethersearch.document_index.interfaces import VespaDocumentFields
+from aethersearch.document_index.interfaces import VespaDocumentUserFields
+from aethersearch.document_index.interfaces_new import DocumentIndex
+from aethersearch.document_index.interfaces_new import DocumentInsertionRecord
+from aethersearch.document_index.interfaces_new import DocumentSectionRequest
+from aethersearch.document_index.interfaces_new import IndexingMetadata
+from aethersearch.document_index.interfaces_new import MetadataUpdateRequest
+from aethersearch.document_index.interfaces_new import TenantState
+from aethersearch.document_index.opensearch.client import OpenSearchClient
+from aethersearch.document_index.opensearch.client import OpenSearchIndexClient
+from aethersearch.document_index.opensearch.client import SearchHit
+from aethersearch.document_index.opensearch.cluster_settings import OPENSEARCH_CLUSTER_SETTINGS
+from aethersearch.document_index.opensearch.constants import OpenSearchSearchType
+from aethersearch.document_index.opensearch.schema import ACCESS_CONTROL_LIST_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import CONTENT_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import DOCUMENT_SETS_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import DocumentChunk
+from aethersearch.document_index.opensearch.schema import DocumentChunkWithoutVectors
+from aethersearch.document_index.opensearch.schema import DocumentSchema
+from aethersearch.document_index.opensearch.schema import get_opensearch_doc_chunk_id
+from aethersearch.document_index.opensearch.schema import GLOBAL_BOOST_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import HIDDEN_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import PERSONAS_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import USER_PROJECTS_FIELD_NAME
+from aethersearch.document_index.opensearch.search import DocumentQuery
+from aethersearch.document_index.opensearch.search import (
     get_min_max_normalization_pipeline_name_and_config,
 )
-from onyx.document_index.opensearch.search import (
+from aethersearch.document_index.opensearch.search import (
     get_normalization_pipeline_name_and_config,
 )
-from onyx.document_index.opensearch.search import (
+from aethersearch.document_index.opensearch.search import (
     get_zscore_normalization_pipeline_name_and_config,
 )
-from onyx.indexing.models import DocMetadataAwareIndexChunk
-from onyx.indexing.models import Document
-from onyx.redis.lock_context import redis_shared_lock
-from onyx.utils.logger import setup_logger
-from onyx.utils.text_processing import remove_invalid_unicode_chars
+from aethersearch.indexing.models import DocMetadataAwareIndexChunk
+from aethersearch.indexing.models import Document
+from aethersearch.redis.lock_context import redis_shared_lock
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.text_processing import remove_invalid_unicode_chars
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.contextvars import get_current_tenant_id
 from shared_configs.model_server_models import Embedding
@@ -110,7 +110,7 @@ def set_cluster_state(client: OpenSearchClient) -> None:
             "Failed to put cluster settings. If the settings have never been set before, "
             "this may cause unexpected index creation when indexing documents into an "
             "index that does not exist, or may cause expected logs to not appear. If this "
-            "is not the first time running Onyx against this instance of OpenSearch, these "
+            "is not the first time running AetherSearch against this instance of OpenSearch, these "
             "settings have likely already been set. Not taking any further action..."
         )
     min_max_normalization_pipeline_name, min_max_normalization_pipeline_config = (
@@ -149,7 +149,7 @@ def _convert_retrieved_opensearch_chunk_to_inference_chunk_uncleaned(
             other thing").
 
     Returns:
-        An Onyx inference chunk representation.
+        An AetherSearch inference chunk representation.
     """
     return InferenceChunkUncleaned(
         chunk_id=chunk.chunk_index,
@@ -195,7 +195,7 @@ def _convert_retrieved_opensearch_chunk_to_inference_chunk_uncleaned(
     )
 
 
-def _convert_onyx_chunk_to_opensearch_document(
+def _convert_aethersearch_chunk_to_opensearch_document(
     chunk: DocMetadataAwareIndexChunk,
 ) -> DocumentChunk:
     filtered_blurb = remove_invalid_unicode_chars(chunk.blurb)
@@ -638,7 +638,7 @@ class OpenSearchDocumentIndex(DocumentIndex):
         )
 
         with redis_shared_lock(
-            lock_name=f"{OnyxRedisLocks.OPENSEARCH_VERIFY_INDEX_LOCK_PREFIX}:{self._index_name}",
+            lock_name=f"{AetherSearchRedisLocks.OPENSEARCH_VERIFY_INDEX_LOCK_PREFIX}:{self._index_name}",
             max_time_lock_held_s=VERIFY_INDEX_LOCK_TTL_S,
             wait_for_lock_s=VERIFY_INDEX_LOCK_BLOCKING_TIMEOUT_S,
             logger=logger,
@@ -721,10 +721,10 @@ class OpenSearchDocumentIndex(DocumentIndex):
             # can result in a state where chunks are deleted and not all the
             # new chunks have been indexed.
             chunk_batch: list[DocumentChunk] = [
-                _convert_onyx_chunk_to_opensearch_document(chunk)
+                _convert_aethersearch_chunk_to_opensearch_document(chunk)
                 for chunk in doc_chunks
             ]
-            onyx_document: Document = doc_chunks[0].source_document
+            aethersearch_document: Document = doc_chunks[0].source_document
             # First delete the doc's chunks from the index. This is so that
             # there are no dangling chunks in the index, in the event that the
             # new document's content contains fewer chunks than the previous
@@ -733,18 +733,18 @@ class OpenSearchDocumentIndex(DocumentIndex):
             # if the chunk count has actually decreased. This assumes that
             # overlapping chunks are perfectly overwritten. If we can't
             # guarantee that then we need the code as-is.
-            if onyx_document.id not in deleted_doc_ids:
+            if aethersearch_document.id not in deleted_doc_ids:
                 num_chunks_deleted = self.delete(
-                    onyx_document.id, onyx_document.chunk_count
+                    aethersearch_document.id, aethersearch_document.chunk_count
                 )
-                deleted_doc_ids.add(onyx_document.id)
+                deleted_doc_ids.add(aethersearch_document.id)
                 # If we see that chunks were deleted we assume the doc already
                 # existed. We record the result before bulk_index_documents
                 # runs. If indexing raises, this entire result list is discarded
                 # by the caller's retry logic, so early recording is safe.
                 document_indexing_results.append(
                     DocumentInsertionRecord(
-                        document_id=onyx_document.id,
+                        document_id=aethersearch_document.id,
                         already_existed=num_chunks_deleted > 0,
                     )
                 )
@@ -808,7 +808,7 @@ class OpenSearchDocumentIndex(DocumentIndex):
 
         Args:
             document_id: The unique identifier for the document as represented
-                in Onyx, not necessarily in the document index.
+                in AetherSearch, not necessarily in the document index.
             chunk_count: The number of chunks in OpenSearch for the document.
                 Defaults to None.
 

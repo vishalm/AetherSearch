@@ -1,11 +1,11 @@
 """Unified tracing setup for all providers (Braintrust, Langfuse, etc.)."""
 
-from onyx.configs.app_configs import BRAINTRUST_API_KEY
-from onyx.configs.app_configs import BRAINTRUST_PROJECT
-from onyx.configs.app_configs import LANGFUSE_HOST
-from onyx.configs.app_configs import LANGFUSE_PUBLIC_KEY
-from onyx.configs.app_configs import LANGFUSE_SECRET_KEY
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import BRAINTRUST_API_KEY
+from aethersearch.configs.app_configs import BRAINTRUST_PROJECT
+from aethersearch.configs.app_configs import LANGFUSE_HOST
+from aethersearch.configs.app_configs import LANGFUSE_PUBLIC_KEY
+from aethersearch.configs.app_configs import LANGFUSE_SECRET_KEY
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -65,9 +65,9 @@ def _setup_braintrust() -> None:
     """Initialize Braintrust tracing."""
     import braintrust
 
-    from onyx.tracing.braintrust_tracing_processor import BraintrustTracingProcessor
-    from onyx.tracing.framework import add_trace_processor
-    from onyx.tracing.masking import mask_sensitive_data
+    from aethersearch.tracing.braintrust_tracing_processor import BraintrustTracingProcessor
+    from aethersearch.tracing.framework import add_trace_processor
+    from aethersearch.tracing.masking import mask_sensitive_data
 
     braintrust_logger = braintrust.init_logger(
         project=BRAINTRUST_PROJECT,
@@ -83,8 +83,8 @@ def _setup_langfuse() -> None:
 
     from langfuse import Langfuse
 
-    from onyx.tracing.framework import add_trace_processor
-    from onyx.tracing.langfuse_tracing_processor import LangfuseTracingProcessor
+    from aethersearch.tracing.framework import add_trace_processor
+    from aethersearch.tracing.langfuse_tracing_processor import LangfuseTracingProcessor
 
     # Set LANGFUSE_HOST env var if configured (Langfuse SDK reads this automatically)
     if LANGFUSE_HOST:

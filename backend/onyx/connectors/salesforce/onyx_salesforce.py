@@ -5,14 +5,14 @@ from simple_salesforce import Salesforce
 from simple_salesforce import SFType
 from simple_salesforce.exceptions import SalesforceRefusedRequest
 
-from onyx.connectors.cross_connector_utils.rate_limit_wrapper import rate_limit_builder
-from onyx.connectors.salesforce.blacklist import SALESFORCE_BLACKLISTED_OBJECTS
-from onyx.connectors.salesforce.blacklist import SALESFORCE_BLACKLISTED_PREFIXES
-from onyx.connectors.salesforce.blacklist import SALESFORCE_BLACKLISTED_SUFFIXES
-from onyx.connectors.salesforce.salesforce_calls import get_object_by_id_query
-from onyx.connectors.salesforce.utils import ID_FIELD
-from onyx.utils.logger import setup_logger
-from onyx.utils.retry_wrapper import retry_builder
+from aethersearch.connectors.cross_connector_utils.rate_limit_wrapper import rate_limit_builder
+from aethersearch.connectors.salesforce.blacklist import SALESFORCE_BLACKLISTED_OBJECTS
+from aethersearch.connectors.salesforce.blacklist import SALESFORCE_BLACKLISTED_PREFIXES
+from aethersearch.connectors.salesforce.blacklist import SALESFORCE_BLACKLISTED_SUFFIXES
+from aethersearch.connectors.salesforce.salesforce_calls import get_object_by_id_query
+from aethersearch.connectors.salesforce.utils import ID_FIELD
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.retry_wrapper import retry_builder
 
 logger = setup_logger()
 
@@ -24,7 +24,7 @@ def is_salesforce_rate_limit_error(exception: Exception) -> bool:
     ) and "REQUEST_LIMIT_EXCEEDED" in str(exception)
 
 
-class OnyxSalesforce(Salesforce):
+class AetherSearchSalesforce(Salesforce):
     SOQL_MAX_SUBQUERIES = 20
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
@@ -186,7 +186,7 @@ class OnyxSalesforce(Salesforce):
             ):
                 break
 
-            if len(child_relationships_batch) >= OnyxSalesforce.SOQL_MAX_SUBQUERIES:
+            if len(child_relationships_batch) >= AetherSearchSalesforce.SOQL_MAX_SUBQUERIES:
                 process_batch = True
 
             if len(remaining_child_relationships) == 0:
@@ -196,7 +196,7 @@ class OnyxSalesforce(Salesforce):
                 if len(child_relationships_batch) == 0:
                     break
 
-                query = OnyxSalesforce._make_child_objects_by_id_query(
+                query = AetherSearchSalesforce._make_child_objects_by_id_query(
                     object_id,
                     sf_type,
                     child_relationships_batch,

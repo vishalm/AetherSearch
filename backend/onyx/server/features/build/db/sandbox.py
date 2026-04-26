@@ -9,10 +9,10 @@ from sqlalchemy import or_
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from onyx.db.enums import SandboxStatus
-from onyx.db.models import Sandbox
-from onyx.db.models import Snapshot
-from onyx.utils.logger import setup_logger
+from aethersearch.db.enums import SandboxStatus
+from aethersearch.db.models import Sandbox
+from aethersearch.db.models import Snapshot
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -57,7 +57,7 @@ def get_sandbox_by_session_id(db_session: Session, session_id: UUID) -> Sandbox 
     NOTE: This will be removed in a future phase when all callers are updated
     to use get_sandbox_by_user_id() directly.
     """
-    from onyx.db.models import BuildSession
+    from aethersearch.db.models import BuildSession
 
     stmt = select(BuildSession.user_id).where(BuildSession.id == session_id)
     result = db_session.execute(stmt).scalar_one_or_none()

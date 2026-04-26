@@ -25,7 +25,7 @@ from starlette.requests import Request as StarletteRequest
 from starlette.responses import Response
 
 _CLIENT_IP_CONTEXTVAR: ContextVar[str | None] = ContextVar(
-    "onyx_client_ip", default=None
+    "aethersearch_client_ip", default=None
 )
 
 

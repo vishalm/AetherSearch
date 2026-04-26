@@ -8,14 +8,14 @@ on every agent loop iteration.
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from onyx.tools.models import ChatFile
-from onyx.tools.models import PythonToolOverrideKwargs
-from onyx.tools.tool_implementations.python.code_interpreter_client import (
+from aethersearch.tools.models import ChatFile
+from aethersearch.tools.models import PythonToolOverrideKwargs
+from aethersearch.tools.tool_implementations.python.code_interpreter_client import (
     StreamResultEvent,
 )
-from onyx.tools.tool_implementations.python.python_tool import PythonTool
+from aethersearch.tools.tool_implementations.python.python_tool import PythonTool
 
-TOOL_MODULE = "onyx.tools.tool_implementations.python.python_tool"
+TOOL_MODULE = "aethersearch.tools.tool_implementations.python.python_tool"
 
 
 def _make_stream_result() -> StreamResultEvent:
@@ -38,7 +38,7 @@ def _make_override(files: list[ChatFile]) -> PythonToolOverrideKwargs:
 
 def _run_tool(tool: PythonTool, mock_client: MagicMock, files: list[ChatFile]) -> None:
     """Call tool.run() with a mocked CodeInterpreterClient context manager."""
-    from onyx.server.query_and_chat.placement import Placement
+    from aethersearch.server.query_and_chat.placement import Placement
 
     mock_client.execute_streaming.return_value = iter([_make_stream_result()])
 
@@ -90,7 +90,7 @@ def test_cached_file_id_is_staged_on_second_run() -> None:
     ctx.__enter__ = MagicMock(return_value=client)
     ctx.__exit__ = MagicMock(return_value=False)
 
-    from onyx.server.query_and_chat.placement import Placement
+    from aethersearch.server.query_and_chat.placement import Placement
 
     placement = Placement(turn_index=1, tab_index=0)
     with patch(f"{TOOL_MODULE}.CodeInterpreterClient", return_value=ctx):

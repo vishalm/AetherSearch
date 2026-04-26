@@ -8,20 +8,20 @@ import pytest
 from fastapi_users.password import PasswordHelper
 from sqlalchemy.orm import Session
 
-from onyx.db.enums import AccountType
-from onyx.db.llm import fetch_existing_llm_provider
-from onyx.db.llm import remove_llm_provider
-from onyx.db.llm import update_default_provider
-from onyx.db.llm import upsert_llm_provider
-from onyx.db.models import User
-from onyx.db.models import UserRole
-from onyx.llm.constants import LlmProviderNames
-from onyx.llm.override_models import LLMOverride
-from onyx.server.manage.llm.models import LLMProviderUpsertRequest
-from onyx.server.manage.llm.models import ModelConfigurationUpsertRequest
-from onyx.server.query_and_chat.chat_backend import create_new_chat_session
-from onyx.server.query_and_chat.models import ChatSessionCreationRequest
-from onyx.server.query_and_chat.models import MessageResponseIDInfo
+from aethersearch.db.enums import AccountType
+from aethersearch.db.llm import fetch_existing_llm_provider
+from aethersearch.db.llm import remove_llm_provider
+from aethersearch.db.llm import update_default_provider
+from aethersearch.db.llm import upsert_llm_provider
+from aethersearch.db.models import User
+from aethersearch.db.models import UserRole
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.llm.override_models import LLMOverride
+from aethersearch.server.manage.llm.models import LLMProviderUpsertRequest
+from aethersearch.server.manage.llm.models import ModelConfigurationUpsertRequest
+from aethersearch.server.query_and_chat.chat_backend import create_new_chat_session
+from aethersearch.server.query_and_chat.models import ChatSessionCreationRequest
+from aethersearch.server.query_and_chat.models import MessageResponseIDInfo
 from tests.external_dependency_unit.answer.stream_test_assertions import (
     assert_answer_stream_part_correct,
 )
@@ -103,11 +103,11 @@ def use_mock_llm() -> (
 
     with (
         patch(
-            "onyx.llm.factory.get_default_llm",
+            "aethersearch.llm.factory.get_default_llm",
             side_effect=mock_get_default_llm,
         ),
         patch(
-            "onyx.llm.factory.get_llm",
+            "aethersearch.llm.factory.get_llm",
             side_effect=mock_get_llm,
         ),
     ):

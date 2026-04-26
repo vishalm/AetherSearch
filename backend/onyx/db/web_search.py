@@ -4,9 +4,9 @@ from sqlalchemy import select
 from sqlalchemy import update
 from sqlalchemy.orm import Session
 
-from onyx.db.models import InternetContentProvider
-from onyx.db.models import InternetSearchProvider
-from onyx.tools.tool_implementations.web_search.models import WebContentProviderConfig
+from aethersearch.db.models import InternetContentProvider
+from aethersearch.db.models import InternetSearchProvider
+from aethersearch.tools.tool_implementations.web_search.models import WebContentProviderConfig
 from shared_configs.enums import WebContentProviderType
 from shared_configs.enums import WebSearchProviderType
 

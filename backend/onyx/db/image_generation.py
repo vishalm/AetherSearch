@@ -3,11 +3,11 @@ from sqlalchemy import update
 from sqlalchemy.orm import selectinload
 from sqlalchemy.orm import Session
 
-from onyx.db.models import ImageGenerationConfig
-from onyx.db.models import LLMProvider
-from onyx.db.models import ModelConfiguration
-from onyx.llm.utils import get_max_input_tokens
-from onyx.utils.logger import setup_logger
+from aethersearch.db.models import ImageGenerationConfig
+from aethersearch.db.models import LLMProvider
+from aethersearch.db.models import ModelConfiguration
+from aethersearch.llm.utils import get_max_input_tokens
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

@@ -5,22 +5,22 @@ import requests
 from fastapi import APIRouter
 from fastapi import HTTPException
 
-from onyx import __version__
-from onyx.auth.users import anonymous_user_enabled
-from onyx.auth.users import user_needs_to_be_verified
-from onyx.configs.app_configs import AUTH_TYPE
-from onyx.configs.app_configs import OAUTH_ENABLED
-from onyx.configs.app_configs import PASSWORD_MIN_LENGTH
-from onyx.configs.constants import AuthType
-from onyx.configs.constants import DEV_VERSION_PATTERN
-from onyx.configs.constants import PUBLIC_API_TAGS
-from onyx.configs.constants import STABLE_VERSION_PATTERN
-from onyx.db.auth import get_user_count
-from onyx.server.manage.models import AllVersions
-from onyx.server.manage.models import AuthTypeResponse
-from onyx.server.manage.models import ContainerVersions
-from onyx.server.manage.models import VersionResponse
-from onyx.server.models import StatusResponse
+from aethersearch import __version__
+from aethersearch.auth.users import anonymous_user_enabled
+from aethersearch.auth.users import user_needs_to_be_verified
+from aethersearch.configs.app_configs import AUTH_TYPE
+from aethersearch.configs.app_configs import OAUTH_ENABLED
+from aethersearch.configs.app_configs import PASSWORD_MIN_LENGTH
+from aethersearch.configs.constants import AuthType
+from aethersearch.configs.constants import DEV_VERSION_PATTERN
+from aethersearch.configs.constants import PUBLIC_API_TAGS
+from aethersearch.configs.constants import STABLE_VERSION_PATTERN
+from aethersearch.db.auth import get_user_count
+from aethersearch.server.manage.models import AllVersions
+from aethersearch.server.manage.models import AuthTypeResponse
+from aethersearch.server.manage.models import ContainerVersions
+from aethersearch.server.manage.models import VersionResponse
+from aethersearch.server.models import StatusResponse
 
 router = APIRouter()
 
@@ -58,15 +58,15 @@ def get_version() -> VersionResponse:
 @router.get("/versions", tags=PUBLIC_API_TAGS)
 def get_versions() -> AllVersions:
     """
-    Fetches the latest stable and beta versions of Onyx Docker images.
+    Fetches the latest stable and beta versions of AetherSearch Docker images.
     Since DockerHub does not explicitly flag stable and beta images,
     this endpoint can be used to programmatically check for new images.
     """
-    # Fetch the latest tags from DockerHub for each Onyx component
+    # Fetch the latest tags from DockerHub for each AetherSearch component
     dockerhub_repos = [
-        "onyxdotapp/onyx-model-server",
-        "onyxdotapp/onyx-backend",
-        "onyxdotapp/onyx-web-server",
+        "aethersearchdotapp/aethersearch-model-server",
+        "aethersearchdotapp/aethersearch-backend",
+        "aethersearchdotapp/aethersearch-web-server",
     ]
 
     # For good measure, we fetch 10 pages of tags
@@ -136,19 +136,19 @@ def get_versions() -> AllVersions:
 
     return AllVersions(
         stable=ContainerVersions(
-            onyx=latest_stable_version,
+            aethersearch=latest_stable_version,
             relational_db="postgres:15.2-alpine",
             index="vespaengine/vespa:8.277.17",
             nginx="nginx:1.25.5-alpine",
         ),
         dev=ContainerVersions(
-            onyx=latest_dev_version,
+            aethersearch=latest_dev_version,
             relational_db="postgres:15.2-alpine",
             index="vespaengine/vespa:8.277.17",
             nginx="nginx:1.25.5-alpine",
         ),
         migration=ContainerVersions(
-            onyx="airgapped-intfloat-nomic-migration",
+            aethersearch="airgapped-intfloat-nomic-migration",
             relational_db="postgres:15.2-alpine",
             index="vespaengine/vespa:8.277.17",
             nginx="nginx:1.25.5-alpine",

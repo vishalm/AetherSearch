@@ -5,7 +5,7 @@ This module provides lightweight sandbox management for CLI-based AI agent sessi
 Each sandbox is a directory on the local filesystem or a Kubernetes pod.
 
 Usage:
-    from onyx.server.features.build.sandbox import get_sandbox_manager
+    from aethersearch.server.features.build.sandbox import get_sandbox_manager
 
     # Get the appropriate sandbox manager based on SANDBOX_BACKEND config
     sandbox_manager = get_sandbox_manager()
@@ -21,14 +21,14 @@ Module structure:
     - internal/: Shared internal utilities (snapshot manager)
 """
 
-from onyx.server.features.build.sandbox.base import get_sandbox_manager
-from onyx.server.features.build.sandbox.base import SandboxManager
-from onyx.server.features.build.sandbox.local.local_sandbox_manager import (
+from aethersearch.server.features.build.sandbox.base import get_sandbox_manager
+from aethersearch.server.features.build.sandbox.base import SandboxManager
+from aethersearch.server.features.build.sandbox.local.local_sandbox_manager import (
     LocalSandboxManager,
 )
-from onyx.server.features.build.sandbox.models import FilesystemEntry
-from onyx.server.features.build.sandbox.models import SandboxInfo
-from onyx.server.features.build.sandbox.models import SnapshotInfo
+from aethersearch.server.features.build.sandbox.models import FilesystemEntry
+from aethersearch.server.features.build.sandbox.models import SandboxInfo
+from aethersearch.server.features.build.sandbox.models import SnapshotInfo
 
 __all__ = [
     # Factory function (preferred)

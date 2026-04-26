@@ -32,25 +32,25 @@ from uuid import uuid4
 
 from sqlalchemy.orm import Session
 
-from onyx.background.celery.tasks.user_file_processing.tasks import (
+from aethersearch.background.celery.tasks.user_file_processing.tasks import (
     _user_file_delete_lock_key,
 )
-from onyx.background.celery.tasks.user_file_processing.tasks import (
+from aethersearch.background.celery.tasks.user_file_processing.tasks import (
     _user_file_delete_queued_key,
 )
-from onyx.background.celery.tasks.user_file_processing.tasks import (
+from aethersearch.background.celery.tasks.user_file_processing.tasks import (
     check_for_user_file_delete,
 )
-from onyx.background.celery.tasks.user_file_processing.tasks import (
+from aethersearch.background.celery.tasks.user_file_processing.tasks import (
     process_single_user_file_delete,
 )
-from onyx.configs.constants import CELERY_USER_FILE_DELETE_TASK_EXPIRES
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import USER_FILE_DELETE_MAX_QUEUE_DEPTH
-from onyx.db.enums import UserFileStatus
-from onyx.db.models import UserFile
-from onyx.redis.redis_pool import get_redis_client
+from aethersearch.configs.constants import CELERY_USER_FILE_DELETE_TASK_EXPIRES
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import USER_FILE_DELETE_MAX_QUEUE_DEPTH
+from aethersearch.db.enums import UserFileStatus
+from aethersearch.db.models import UserFile
+from aethersearch.redis.redis_pool import get_redis_client
 from tests.external_dependency_unit.conftest import create_test_user
 from tests.external_dependency_unit.constants import TEST_TENANT_ID
 
@@ -59,7 +59,7 @@ from tests.external_dependency_unit.constants import TEST_TENANT_ID
 # ---------------------------------------------------------------------------
 
 _PATCH_QUEUE_LEN = (
-    "onyx.background.celery.tasks.user_file_processing.tasks.celery_get_queue_length"
+    "aethersearch.background.celery.tasks.user_file_processing.tasks.celery_get_queue_length"
 )
 
 
@@ -101,7 +101,7 @@ def _patch_task_app(task: Any, mock_app: MagicMock) -> Generator[None, None, Non
             return_value=mock_app,
         ),
         patch(
-            "onyx.background.celery.tasks.user_file_processing.tasks.celery_get_broker_client",
+            "aethersearch.background.celery.tasks.user_file_processing.tasks.celery_get_broker_client",
             return_value=MagicMock(),
         ),
     ):
@@ -235,8 +235,8 @@ class TestDeleteTaskExpiry:
 
             # Every submitted task must carry expires
             for call in mock_app.send_task.call_args_list:
-                assert call.args[0] == OnyxCeleryTask.DELETE_SINGLE_USER_FILE
-                assert call.kwargs.get("queue") == OnyxCeleryQueues.USER_FILE_DELETE
+                assert call.args[0] == AetherSearchCeleryTask.DELETE_SINGLE_USER_FILE
+                assert call.kwargs.get("queue") == AetherSearchCeleryQueues.USER_FILE_DELETE
                 assert (
                     call.kwargs.get("expires") == CELERY_USER_FILE_DELETE_TASK_EXPIRES
                 ), "Task must be submitted with the correct expires value to prevent stale task accumulation"

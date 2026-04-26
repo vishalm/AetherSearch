@@ -5,21 +5,21 @@ from sqlalchemy.dialects import postgresql
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm import Session
 
-import onyx.db.document as dbdocument
-from onyx.db.models import KGEntity
-from onyx.db.models import KGEntityExtractionStaging
-from onyx.db.models import KGRelationship
-from onyx.db.models import KGRelationshipExtractionStaging
-from onyx.db.models import KGRelationshipType
-from onyx.db.models import KGRelationshipTypeExtractionStaging
-from onyx.db.models import KGStage
-from onyx.kg.utils.formatting_utils import extract_relationship_type_id
-from onyx.kg.utils.formatting_utils import format_relationship_id
-from onyx.kg.utils.formatting_utils import get_entity_type
-from onyx.kg.utils.formatting_utils import make_relationship_id
-from onyx.kg.utils.formatting_utils import make_relationship_type_id
-from onyx.kg.utils.formatting_utils import split_relationship_id
-from onyx.utils.logger import setup_logger
+import aethersearch.db.document as dbdocument
+from aethersearch.db.models import KGEntity
+from aethersearch.db.models import KGEntityExtractionStaging
+from aethersearch.db.models import KGRelationship
+from aethersearch.db.models import KGRelationshipExtractionStaging
+from aethersearch.db.models import KGRelationshipType
+from aethersearch.db.models import KGRelationshipTypeExtractionStaging
+from aethersearch.db.models import KGStage
+from aethersearch.kg.utils.formatting_utils import extract_relationship_type_id
+from aethersearch.kg.utils.formatting_utils import format_relationship_id
+from aethersearch.kg.utils.formatting_utils import get_entity_type
+from aethersearch.kg.utils.formatting_utils import make_relationship_id
+from aethersearch.kg.utils.formatting_utils import make_relationship_type_id
+from aethersearch.kg.utils.formatting_utils import split_relationship_id
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

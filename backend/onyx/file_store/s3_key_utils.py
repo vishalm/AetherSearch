@@ -124,7 +124,7 @@ def generate_s3_key(
 
     Args:
         file_name: The original file name
-        prefix: S3 key prefix (e.g., 'onyx-files')
+        prefix: S3 key prefix (e.g., 'aethersearch-files')
         tenant_id: Tenant identifier
         max_key_length: Maximum allowed S3 key length (default: 1024)
 

@@ -4,59 +4,59 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from httpx_oauth.clients.google import GoogleOAuth2
 
-from ee.onyx.server.analytics.api import router as analytics_router
-from ee.onyx.server.auth_check import check_ee_router_auth
-from ee.onyx.server.billing.api import router as billing_router
-from ee.onyx.server.documents.cc_pair import router as ee_document_cc_pair_router
-from ee.onyx.server.enterprise_settings.api import (
+from ee.aethersearch.server.analytics.api import router as analytics_router
+from ee.aethersearch.server.auth_check import check_ee_router_auth
+from ee.aethersearch.server.billing.api import router as billing_router
+from ee.aethersearch.server.documents.cc_pair import router as ee_document_cc_pair_router
+from ee.aethersearch.server.enterprise_settings.api import (
     admin_router as enterprise_settings_admin_router,
 )
-from ee.onyx.server.enterprise_settings.api import (
+from ee.aethersearch.server.enterprise_settings.api import (
     basic_router as enterprise_settings_router,
 )
-from ee.onyx.server.evals.api import router as evals_router
-from ee.onyx.server.features.hooks.api import router as hook_router
-from ee.onyx.server.license.api import router as license_router
-from ee.onyx.server.manage.standard_answer import router as standard_answer_router
-from ee.onyx.server.middleware.license_enforcement import (
+from ee.aethersearch.server.evals.api import router as evals_router
+from ee.aethersearch.server.features.hooks.api import router as hook_router
+from ee.aethersearch.server.license.api import router as license_router
+from ee.aethersearch.server.manage.standard_answer import router as standard_answer_router
+from ee.aethersearch.server.middleware.license_enforcement import (
     add_license_enforcement_middleware,
 )
-from ee.onyx.server.middleware.tenant_tracking import (
+from ee.aethersearch.server.middleware.tenant_tracking import (
     add_api_server_tenant_id_middleware,
 )
-from ee.onyx.server.oauth.api import router as ee_oauth_router
-from ee.onyx.server.query_and_chat.query_backend import basic_router as ee_query_router
-from ee.onyx.server.query_and_chat.search_backend import router as search_router
-from ee.onyx.server.query_history.api import router as query_history_router
-from ee.onyx.server.reporting.usage_export_api import router as usage_export_router
-from ee.onyx.server.scim.api import register_scim_exception_handlers
-from ee.onyx.server.scim.api import scim_router
-from ee.onyx.server.seeding import seed_db
-from ee.onyx.server.tenants.api import router as tenants_router
-from ee.onyx.server.token_rate_limits.api import (
+from ee.aethersearch.server.oauth.api import router as ee_oauth_router
+from ee.aethersearch.server.query_and_chat.query_backend import basic_router as ee_query_router
+from ee.aethersearch.server.query_and_chat.search_backend import router as search_router
+from ee.aethersearch.server.query_history.api import router as query_history_router
+from ee.aethersearch.server.reporting.usage_export_api import router as usage_export_router
+from ee.aethersearch.server.scim.api import register_scim_exception_handlers
+from ee.aethersearch.server.scim.api import scim_router
+from ee.aethersearch.server.seeding import seed_db
+from ee.aethersearch.server.tenants.api import router as tenants_router
+from ee.aethersearch.server.token_rate_limits.api import (
     router as token_rate_limit_settings_router,
 )
-from ee.onyx.server.user_group.api import router as user_group_router
-from ee.onyx.utils.encryption import test_encryption
-from onyx.auth.users import auth_backend
-from onyx.auth.users import create_onyx_oauth_router
-from onyx.auth.users import fastapi_users
-from onyx.configs.app_configs import AUTH_TYPE
-from onyx.configs.app_configs import GOOGLE_LOGIN_BASE_SCOPES
-from onyx.configs.app_configs import GOOGLE_OAUTH_SCOPE_OVERRIDE
-from onyx.configs.app_configs import OAUTH_CLIENT_ID
-from onyx.configs.app_configs import OAUTH_CLIENT_SECRET
-from onyx.configs.app_configs import USER_AUTH_SECRET
-from onyx.configs.app_configs import WEB_DOMAIN
-from onyx.configs.constants import AuthType
-from onyx.main import get_application as get_application_base
-from onyx.main import include_auth_router_with_prefix
-from onyx.main import include_router_with_global_prefix_prepended
-from onyx.main import lifespan as lifespan_base
-from onyx.main import use_route_function_names_as_operation_ids
-from onyx.server.query_and_chat.query_backend import basic_router as query_router
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import global_version
+from ee.aethersearch.server.user_group.api import router as user_group_router
+from ee.aethersearch.utils.encryption import test_encryption
+from aethersearch.auth.users import auth_backend
+from aethersearch.auth.users import create_aethersearch_oauth_router
+from aethersearch.auth.users import fastapi_users
+from aethersearch.configs.app_configs import AUTH_TYPE
+from aethersearch.configs.app_configs import GOOGLE_LOGIN_BASE_SCOPES
+from aethersearch.configs.app_configs import GOOGLE_OAUTH_SCOPE_OVERRIDE
+from aethersearch.configs.app_configs import OAUTH_CLIENT_ID
+from aethersearch.configs.app_configs import OAUTH_CLIENT_SECRET
+from aethersearch.configs.app_configs import USER_AUTH_SECRET
+from aethersearch.configs.app_configs import WEB_DOMAIN
+from aethersearch.configs.constants import AuthType
+from aethersearch.main import get_application as get_application_base
+from aethersearch.main import include_auth_router_with_prefix
+from aethersearch.main import include_router_with_global_prefix_prepended
+from aethersearch.main import lifespan as lifespan_base
+from aethersearch.main import use_route_function_names_as_operation_ids
+from aethersearch.server.query_and_chat.query_backend import basic_router as query_router
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import global_version
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()
@@ -69,7 +69,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     steps after."""
 
     async with lifespan_base(app):
-        # seed the Onyx environment with LLMs, Assistants, etc. based on an optional
+        # seed the AetherSearch environment with LLMs, Assistants, etc. based on an optional
         # environment variable. Used to automate deployment for multiple environments.
         seed_db()
 
@@ -108,7 +108,7 @@ def get_application() -> FastAPI:
         )
         include_auth_router_with_prefix(
             application,
-            create_onyx_oauth_router(
+            create_aethersearch_oauth_router(
                 oauth_client,
                 auth_backend,
                 USER_AUTH_SECRET,
@@ -163,7 +163,7 @@ def get_application() -> FastAPI:
         # Tenant management
         include_router_with_global_prefix_prepended(application, tenants_router)
 
-    # SCIM 2.0 — protocol endpoints (unauthenticated by Onyx session auth;
+    # SCIM 2.0 — protocol endpoints (unauthenticated by AetherSearch session auth;
     # they use their own SCIM bearer token auth).
     # Not behind APP_API_PREFIX because IdPs expect /scim/v2/... directly.
     application.include_router(scim_router)

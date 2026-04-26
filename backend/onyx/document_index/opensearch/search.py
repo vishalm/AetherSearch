@@ -6,49 +6,49 @@ from typing import Any
 from typing import TypeAlias
 from typing import TypeVar
 
-from onyx.configs.app_configs import DEFAULT_OPENSEARCH_QUERY_TIMEOUT_S
-from onyx.configs.app_configs import OPENSEARCH_EXPLAIN_ENABLED
-from onyx.configs.app_configs import OPENSEARCH_MATCH_HIGHLIGHTS_DISABLED
-from onyx.configs.app_configs import OPENSEARCH_PROFILING_DISABLED
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import INDEX_SEPARATOR
-from onyx.context.search.models import IndexFilters
-from onyx.context.search.models import Tag
-from onyx.document_index.interfaces_new import TenantState
-from onyx.document_index.opensearch.constants import ASSUMED_DOCUMENT_AGE_DAYS
-from onyx.document_index.opensearch.constants import (
+from aethersearch.configs.app_configs import DEFAULT_OPENSEARCH_QUERY_TIMEOUT_S
+from aethersearch.configs.app_configs import OPENSEARCH_EXPLAIN_ENABLED
+from aethersearch.configs.app_configs import OPENSEARCH_MATCH_HIGHLIGHTS_DISABLED
+from aethersearch.configs.app_configs import OPENSEARCH_PROFILING_DISABLED
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import INDEX_SEPARATOR
+from aethersearch.context.search.models import IndexFilters
+from aethersearch.context.search.models import Tag
+from aethersearch.document_index.interfaces_new import TenantState
+from aethersearch.document_index.opensearch.constants import ASSUMED_DOCUMENT_AGE_DAYS
+from aethersearch.document_index.opensearch.constants import (
     DEFAULT_NUM_HYBRID_SUBQUERY_CANDIDATES,
 )
-from onyx.document_index.opensearch.constants import (
+from aethersearch.document_index.opensearch.constants import (
     DEFAULT_OPENSEARCH_MAX_RESULT_WINDOW,
 )
-from onyx.document_index.opensearch.constants import (
+from aethersearch.document_index.opensearch.constants import (
     HYBRID_SEARCH_NORMALIZATION_PIPELINE,
 )
-from onyx.document_index.opensearch.constants import (
+from aethersearch.document_index.opensearch.constants import (
     HYBRID_SEARCH_SUBQUERY_CONFIGURATION,
 )
-from onyx.document_index.opensearch.constants import HybridSearchNormalizationPipeline
-from onyx.document_index.opensearch.constants import HybridSearchSubqueryConfiguration
-from onyx.document_index.opensearch.schema import ACCESS_CONTROL_LIST_FIELD_NAME
-from onyx.document_index.opensearch.schema import ANCESTOR_HIERARCHY_NODE_IDS_FIELD_NAME
-from onyx.document_index.opensearch.schema import CHUNK_INDEX_FIELD_NAME
-from onyx.document_index.opensearch.schema import CONTENT_FIELD_NAME
-from onyx.document_index.opensearch.schema import CONTENT_VECTOR_FIELD_NAME
-from onyx.document_index.opensearch.schema import DOCUMENT_ID_FIELD_NAME
-from onyx.document_index.opensearch.schema import DOCUMENT_SETS_FIELD_NAME
-from onyx.document_index.opensearch.schema import HIDDEN_FIELD_NAME
-from onyx.document_index.opensearch.schema import LAST_UPDATED_FIELD_NAME
-from onyx.document_index.opensearch.schema import MAX_CHUNK_SIZE_FIELD_NAME
-from onyx.document_index.opensearch.schema import METADATA_LIST_FIELD_NAME
-from onyx.document_index.opensearch.schema import PERSONAS_FIELD_NAME
-from onyx.document_index.opensearch.schema import PUBLIC_FIELD_NAME
-from onyx.document_index.opensearch.schema import set_or_convert_timezone_to_utc
-from onyx.document_index.opensearch.schema import SOURCE_TYPE_FIELD_NAME
-from onyx.document_index.opensearch.schema import TENANT_ID_FIELD_NAME
-from onyx.document_index.opensearch.schema import TITLE_FIELD_NAME
-from onyx.document_index.opensearch.schema import TITLE_VECTOR_FIELD_NAME
-from onyx.document_index.opensearch.schema import USER_PROJECTS_FIELD_NAME
+from aethersearch.document_index.opensearch.constants import HybridSearchNormalizationPipeline
+from aethersearch.document_index.opensearch.constants import HybridSearchSubqueryConfiguration
+from aethersearch.document_index.opensearch.schema import ACCESS_CONTROL_LIST_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import ANCESTOR_HIERARCHY_NODE_IDS_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import CHUNK_INDEX_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import CONTENT_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import CONTENT_VECTOR_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import DOCUMENT_ID_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import DOCUMENT_SETS_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import HIDDEN_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import LAST_UPDATED_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import MAX_CHUNK_SIZE_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import METADATA_LIST_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import PERSONAS_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import PUBLIC_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import set_or_convert_timezone_to_utc
+from aethersearch.document_index.opensearch.schema import SOURCE_TYPE_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import TENANT_ID_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import TITLE_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import TITLE_VECTOR_FIELD_NAME
+from aethersearch.document_index.opensearch.schema import USER_PROJECTS_FIELD_NAME
 
 # See https://docs.opensearch.org/latest/query-dsl/term/terms/.
 MAX_NUM_TERMS_ALLOWED_IN_TERMS_QUERY = 65_536
@@ -200,8 +200,8 @@ class DocumentQuery:
         time for results so that we can return arbitrarily-many IDs.
 
         Args:
-            document_id: Onyx document ID. Notably not an OpenSearch document
-                ID, which points to what Onyx would refer to as a chunk.
+            document_id: AetherSearch document ID. Notably not an OpenSearch document
+                ID, which points to what AetherSearch would refer to as a chunk.
             tenant_state: Tenant state containing the tenant ID.
             index_filters: Filters for the document retrieval query.
             include_hidden: Whether to include hidden documents.
@@ -279,8 +279,8 @@ class DocumentQuery:
         implementing batching.
 
         Args:
-            document_id: Onyx document ID. Notably not an OpenSearch document
-                ID, which points to what Onyx would refer to as a chunk.
+            document_id: AetherSearch document ID. Notably not an OpenSearch document
+                ID, which points to what AetherSearch would refer to as a chunk.
             tenant_state: Tenant state containing the tenant ID.
 
         Returns:

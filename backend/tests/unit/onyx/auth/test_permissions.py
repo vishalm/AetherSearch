@@ -1,18 +1,18 @@
 """
-Unit tests for onyx.auth.permissions — pure logic and FastAPI dependency.
+Unit tests for aethersearch.auth.permissions — pure logic and FastAPI dependency.
 """
 
 from unittest.mock import MagicMock
 
 import pytest
 
-from onyx.auth.permissions import ALL_PERMISSIONS
-from onyx.auth.permissions import get_effective_permissions
-from onyx.auth.permissions import require_permission
-from onyx.auth.permissions import resolve_effective_permissions
-from onyx.db.enums import Permission
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
+from aethersearch.auth.permissions import ALL_PERMISSIONS
+from aethersearch.auth.permissions import get_effective_permissions
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.permissions import resolve_effective_permissions
+from aethersearch.db.enums import Permission
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
 
 # ---------------------------------------------------------------------------
 # resolve_effective_permissions
@@ -161,9 +161,9 @@ class TestRequirePermission:
         user.effective_permissions = ["basic"]
 
         dep = require_permission(Permission.MANAGE_CONNECTORS)
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             await dep(user=user)
-        assert exc_info.value.error_code == OnyxErrorCode.INSUFFICIENT_PERMISSIONS
+        assert exc_info.value.error_code == AetherSearchErrorCode.INSUFFICIENT_PERMISSIONS
 
     @pytest.mark.asyncio
     async def test_empty_permissions_fails(self) -> None:
@@ -171,5 +171,5 @@ class TestRequirePermission:
         user.effective_permissions = []
 
         dep = require_permission(Permission.BASIC_ACCESS)
-        with pytest.raises(OnyxError):
+        with pytest.raises(AetherSearchError):
             await dep(user=user)

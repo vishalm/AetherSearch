@@ -6,7 +6,7 @@ from typing import TypeVar
 
 from pydantic import BaseModel
 
-from onyx.connectors.interfaces import ConnectorCheckpoint
+from aethersearch.connectors.interfaces import ConnectorCheckpoint
 
 
 class SpaceAccessStatus(str, Enum):

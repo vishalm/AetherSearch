@@ -6,9 +6,9 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from onyx.auth.schemas import UserRole
-from onyx.db.enums import AccountType
-from onyx.db.models import User
+from aethersearch.auth.schemas import UserRole
+from aethersearch.db.enums import AccountType
+from aethersearch.db.models import User
 
 DataT = TypeVar("DataT")
 

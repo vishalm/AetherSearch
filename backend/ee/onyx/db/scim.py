@@ -1,7 +1,7 @@
 """SCIM Data Access Layer.
 
 All database operations for SCIM provisioning — token management, user
-mappings, and group mappings. Extends the base DAL (see ``onyx.db.dal``).
+mappings, and group mappings. Extends the base DAL (see ``aethersearch.db.dal``).
 
 Usage from FastAPI::
 
@@ -32,21 +32,21 @@ from sqlalchemy import select
 from sqlalchemy import SQLColumnExpression
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
-from ee.onyx.server.scim.filtering import ScimFilter
-from ee.onyx.server.scim.filtering import ScimFilterOperator
-from ee.onyx.server.scim.models import ScimMappingFields
-from onyx.db.dal import DAL
-from onyx.db.enums import AccountType
-from onyx.db.enums import GrantSource
-from onyx.db.enums import Permission
-from onyx.db.models import PermissionGrant
-from onyx.db.models import ScimGroupMapping
-from onyx.db.models import ScimToken
-from onyx.db.models import ScimUserMapping
-from onyx.db.models import User
-from onyx.db.models import User__UserGroup
-from onyx.db.models import UserGroup
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.server.scim.filtering import ScimFilter
+from ee.aethersearch.server.scim.filtering import ScimFilterOperator
+from ee.aethersearch.server.scim.models import ScimMappingFields
+from aethersearch.db.dal import DAL
+from aethersearch.db.enums import AccountType
+from aethersearch.db.enums import GrantSource
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import PermissionGrant
+from aethersearch.db.models import ScimGroupMapping
+from aethersearch.db.models import ScimToken
+from aethersearch.db.models import ScimUserMapping
+from aethersearch.db.models import User
+from aethersearch.db.models import User__UserGroup
+from aethersearch.db.models import UserGroup
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -163,7 +163,7 @@ class ScimDAL(DAL):
         )
 
     def get_user_mapping_by_user_id(self, user_id: UUID) -> ScimUserMapping | None:
-        """Look up a user mapping by the Onyx user ID."""
+        """Look up a user mapping by the AetherSearch user ID."""
         return self._session.scalar(
             select(ScimUserMapping).where(ScimUserMapping.user_id == user_id)
         )
@@ -451,7 +451,7 @@ class ScimDAL(DAL):
         external_id: str,
         user_group_id: int,
     ) -> ScimGroupMapping:
-        """Create a mapping between a SCIM externalId and an Onyx user group."""
+        """Create a mapping between a SCIM externalId and an AetherSearch user group."""
         mapping = ScimGroupMapping(external_id=external_id, user_group_id=user_group_id)
         self._session.add(mapping)
         self._session.flush()
@@ -468,7 +468,7 @@ class ScimDAL(DAL):
     def get_group_mapping_by_group_id(
         self, user_group_id: int
     ) -> ScimGroupMapping | None:
-        """Look up a group mapping by the Onyx user group ID."""
+        """Look up a group mapping by the AetherSearch user group ID."""
         return self._session.scalar(
             select(ScimGroupMapping).where(
                 ScimGroupMapping.user_group_id == user_group_id

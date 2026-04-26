@@ -9,16 +9,16 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from ee.onyx.db.usage_export import get_all_usage_reports
-from ee.onyx.db.usage_export import get_usage_report_data
-from ee.onyx.db.usage_export import UsageReportMetadata
-from onyx.auth.permissions import require_permission
-from onyx.background.celery.versioned_apps.client import app as client_app
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.file_store.constants import STANDARD_CHUNK_SIZE
+from ee.aethersearch.db.usage_export import get_all_usage_reports
+from ee.aethersearch.db.usage_export import get_usage_report_data
+from ee.aethersearch.db.usage_export import UsageReportMetadata
+from aethersearch.auth.permissions import require_permission
+from aethersearch.background.celery.versioned_apps.client import app as client_app
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.file_store.constants import STANDARD_CHUNK_SIZE
 from shared_configs.contextvars import get_current_tenant_id
 
 router = APIRouter()
@@ -44,7 +44,7 @@ def generate_report(
 
     tenant_id = get_current_tenant_id()
     client_app.send_task(
-        OnyxCeleryTask.GENERATE_USAGE_REPORT_TASK,
+        AetherSearchCeleryTask.GENERATE_USAGE_REPORT_TASK,
         kwargs={
             "tenant_id": tenant_id,
             "user_id": str(user.id) if user else None,

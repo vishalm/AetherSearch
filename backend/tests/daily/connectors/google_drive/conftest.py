@@ -5,18 +5,18 @@ from collections.abc import Callable
 
 import pytest
 
-from onyx.connectors.google_drive.connector import GoogleDriveConnector
-from onyx.connectors.google_utils.shared_constants import (
+from aethersearch.connectors.google_drive.connector import GoogleDriveConnector
+from aethersearch.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_AUTHENTICATION_METHOD,
 )
-from onyx.connectors.google_utils.shared_constants import (
+from aethersearch.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_DICT_SERVICE_ACCOUNT_KEY,
 )
-from onyx.connectors.google_utils.shared_constants import DB_CREDENTIALS_DICT_TOKEN_KEY
-from onyx.connectors.google_utils.shared_constants import (
+from aethersearch.connectors.google_utils.shared_constants import DB_CREDENTIALS_DICT_TOKEN_KEY
+from aethersearch.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_PRIMARY_ADMIN_KEY,
 )
-from onyx.connectors.google_utils.shared_constants import (
+from aethersearch.connectors.google_utils.shared_constants import (
     GoogleOAuthAuthenticationMethod,
 )
 from tests.load_env_vars import load_env_vars
@@ -26,12 +26,12 @@ load_env_vars()
 
 
 _USER_TO_OAUTH_CREDENTIALS_MAP = {
-    "admin@onyx-test.com": "GOOGLE_DRIVE_OAUTH_CREDENTIALS_JSON_STR",
-    "test_user_1@onyx-test.com": "GOOGLE_DRIVE_OAUTH_CREDENTIALS_JSON_STR_TEST_USER_1",
+    "admin@aethersearch-test.com": "GOOGLE_DRIVE_OAUTH_CREDENTIALS_JSON_STR",
+    "test_user_1@aethersearch-test.com": "GOOGLE_DRIVE_OAUTH_CREDENTIALS_JSON_STR_TEST_USER_1",
 }
 
 _USER_TO_SERVICE_ACCOUNT_CREDENTIALS_MAP = {
-    "admin@onyx-test.com": "GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON_STR",
+    "admin@aethersearch-test.com": "GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON_STR",
 }
 
 

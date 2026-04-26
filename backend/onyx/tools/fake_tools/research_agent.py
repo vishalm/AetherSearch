@@ -4,73 +4,73 @@ from collections.abc import Callable
 from typing import Any
 from typing import cast
 
-from onyx.chat.chat_state import ChatStateContainer
-from onyx.chat.chat_utils import create_tool_call_failure_messages
-from onyx.chat.citation_processor import CitationMapping
-from onyx.chat.citation_processor import CitationMode
-from onyx.chat.citation_processor import DynamicCitationProcessor
-from onyx.chat.citation_utils import collapse_citations
-from onyx.chat.citation_utils import update_citation_processor_from_tool_response
-from onyx.chat.emitter import Emitter
-from onyx.chat.llm_loop import construct_message_history
-from onyx.chat.llm_step import run_llm_step
-from onyx.chat.llm_step import run_llm_step_pkt_generator
-from onyx.chat.models import ChatMessageSimple
-from onyx.chat.models import LlmStepResult
-from onyx.chat.models import ToolCallSimple
-from onyx.configs.constants import MessageType
-from onyx.context.search.models import SearchDocsResponse
-from onyx.deep_research.dr_mock_tools import (
+from aethersearch.chat.chat_state import ChatStateContainer
+from aethersearch.chat.chat_utils import create_tool_call_failure_messages
+from aethersearch.chat.citation_processor import CitationMapping
+from aethersearch.chat.citation_processor import CitationMode
+from aethersearch.chat.citation_processor import DynamicCitationProcessor
+from aethersearch.chat.citation_utils import collapse_citations
+from aethersearch.chat.citation_utils import update_citation_processor_from_tool_response
+from aethersearch.chat.emitter import Emitter
+from aethersearch.chat.llm_loop import construct_message_history
+from aethersearch.chat.llm_step import run_llm_step
+from aethersearch.chat.llm_step import run_llm_step_pkt_generator
+from aethersearch.chat.models import ChatMessageSimple
+from aethersearch.chat.models import LlmStepResult
+from aethersearch.chat.models import ToolCallSimple
+from aethersearch.configs.constants import MessageType
+from aethersearch.context.search.models import SearchDocsResponse
+from aethersearch.deep_research.dr_mock_tools import (
     get_research_agent_additional_tool_definitions,
 )
-from onyx.deep_research.dr_mock_tools import RESEARCH_AGENT_TASK_KEY
-from onyx.deep_research.dr_mock_tools import THINK_TOOL_RESPONSE_MESSAGE
-from onyx.deep_research.dr_mock_tools import THINK_TOOL_RESPONSE_TOKEN_COUNT
-from onyx.deep_research.models import CombinedResearchAgentCallResult
-from onyx.deep_research.models import ResearchAgentCallResult
-from onyx.deep_research.utils import check_special_tool_calls
-from onyx.deep_research.utils import create_think_tool_token_processor
-from onyx.llm.interfaces import LLM
-from onyx.llm.interfaces import LLMUserIdentity
-from onyx.llm.models import ReasoningEffort
-from onyx.llm.models import ToolChoiceOptions
-from onyx.prompts.deep_research.dr_tool_prompts import OPEN_URLS_TOOL_DESCRIPTION
-from onyx.prompts.deep_research.dr_tool_prompts import (
+from aethersearch.deep_research.dr_mock_tools import RESEARCH_AGENT_TASK_KEY
+from aethersearch.deep_research.dr_mock_tools import THINK_TOOL_RESPONSE_MESSAGE
+from aethersearch.deep_research.dr_mock_tools import THINK_TOOL_RESPONSE_TOKEN_COUNT
+from aethersearch.deep_research.models import CombinedResearchAgentCallResult
+from aethersearch.deep_research.models import ResearchAgentCallResult
+from aethersearch.deep_research.utils import check_special_tool_calls
+from aethersearch.deep_research.utils import create_think_tool_token_processor
+from aethersearch.llm.interfaces import LLM
+from aethersearch.llm.interfaces import LLMUserIdentity
+from aethersearch.llm.models import ReasoningEffort
+from aethersearch.llm.models import ToolChoiceOptions
+from aethersearch.prompts.deep_research.dr_tool_prompts import OPEN_URLS_TOOL_DESCRIPTION
+from aethersearch.prompts.deep_research.dr_tool_prompts import (
     OPEN_URLS_TOOL_DESCRIPTION_REASONING,
 )
-from onyx.prompts.deep_research.dr_tool_prompts import WEB_SEARCH_TOOL_DESCRIPTION
-from onyx.prompts.deep_research.research_agent import MAX_RESEARCH_CYCLES
-from onyx.prompts.deep_research.research_agent import OPEN_URL_REMINDER_RESEARCH_AGENT
-from onyx.prompts.deep_research.research_agent import RESEARCH_AGENT_PROMPT
-from onyx.prompts.deep_research.research_agent import RESEARCH_AGENT_PROMPT_REASONING
-from onyx.prompts.deep_research.research_agent import RESEARCH_REPORT_PROMPT
-from onyx.prompts.deep_research.research_agent import USER_REPORT_QUERY
-from onyx.prompts.prompt_utils import get_current_llm_day_time
-from onyx.prompts.tool_prompts import INTERNAL_SEARCH_GUIDANCE
-from onyx.server.query_and_chat.placement import Placement
-from onyx.server.query_and_chat.streaming_models import AgentResponseDelta
-from onyx.server.query_and_chat.streaming_models import AgentResponseStart
-from onyx.server.query_and_chat.streaming_models import IntermediateReportCitedDocs
-from onyx.server.query_and_chat.streaming_models import IntermediateReportDelta
-from onyx.server.query_and_chat.streaming_models import IntermediateReportStart
-from onyx.server.query_and_chat.streaming_models import Packet
-from onyx.server.query_and_chat.streaming_models import PacketException
-from onyx.server.query_and_chat.streaming_models import ResearchAgentStart
-from onyx.server.query_and_chat.streaming_models import SectionEnd
-from onyx.server.query_and_chat.streaming_models import StreamingType
-from onyx.tools.interface import Tool
-from onyx.tools.models import ToolCallInfo
-from onyx.tools.models import ToolCallKickoff
-from onyx.tools.models import ToolResponse
-from onyx.tools.tool_implementations.open_url.open_url_tool import OpenURLTool
-from onyx.tools.tool_implementations.search.search_tool import SearchTool
-from onyx.tools.tool_implementations.web_search.utils import extract_url_snippet_map
-from onyx.tools.tool_implementations.web_search.web_search_tool import WebSearchTool
-from onyx.tools.tool_runner import run_tool_calls
-from onyx.tools.utils import generate_tools_description
-from onyx.tracing.framework.create import function_span
-from onyx.utils.logger import setup_logger
-from onyx.utils.threadpool_concurrency import run_functions_tuples_in_parallel
+from aethersearch.prompts.deep_research.dr_tool_prompts import WEB_SEARCH_TOOL_DESCRIPTION
+from aethersearch.prompts.deep_research.research_agent import MAX_RESEARCH_CYCLES
+from aethersearch.prompts.deep_research.research_agent import OPEN_URL_REMINDER_RESEARCH_AGENT
+from aethersearch.prompts.deep_research.research_agent import RESEARCH_AGENT_PROMPT
+from aethersearch.prompts.deep_research.research_agent import RESEARCH_AGENT_PROMPT_REASONING
+from aethersearch.prompts.deep_research.research_agent import RESEARCH_REPORT_PROMPT
+from aethersearch.prompts.deep_research.research_agent import USER_REPORT_QUERY
+from aethersearch.prompts.prompt_utils import get_current_llm_day_time
+from aethersearch.prompts.tool_prompts import INTERNAL_SEARCH_GUIDANCE
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.server.query_and_chat.streaming_models import AgentResponseDelta
+from aethersearch.server.query_and_chat.streaming_models import AgentResponseStart
+from aethersearch.server.query_and_chat.streaming_models import IntermediateReportCitedDocs
+from aethersearch.server.query_and_chat.streaming_models import IntermediateReportDelta
+from aethersearch.server.query_and_chat.streaming_models import IntermediateReportStart
+from aethersearch.server.query_and_chat.streaming_models import Packet
+from aethersearch.server.query_and_chat.streaming_models import PacketException
+from aethersearch.server.query_and_chat.streaming_models import ResearchAgentStart
+from aethersearch.server.query_and_chat.streaming_models import SectionEnd
+from aethersearch.server.query_and_chat.streaming_models import StreamingType
+from aethersearch.tools.interface import Tool
+from aethersearch.tools.models import ToolCallInfo
+from aethersearch.tools.models import ToolCallKickoff
+from aethersearch.tools.models import ToolResponse
+from aethersearch.tools.tool_implementations.open_url.open_url_tool import OpenURLTool
+from aethersearch.tools.tool_implementations.search.search_tool import SearchTool
+from aethersearch.tools.tool_implementations.web_search.utils import extract_url_snippet_map
+from aethersearch.tools.tool_implementations.web_search.web_search_tool import WebSearchTool
+from aethersearch.tools.tool_runner import run_tool_calls
+from aethersearch.tools.utils import generate_tools_description
+from aethersearch.tracing.framework.create import function_span
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.threadpool_concurrency import run_functions_tuples_in_parallel
 
 logger = setup_logger()
 
@@ -711,17 +711,17 @@ def run_research_agent_calls(
 if __name__ == "__main__":
     from uuid import uuid4
 
-    from onyx.chat.chat_state import ChatStateContainer
-    from onyx.db.engine.sql_engine import get_session_with_current_tenant
-    from onyx.db.engine.sql_engine import SqlEngine
-    from onyx.db.models import User
-    from onyx.db.persona import get_default_behavior_persona
-    from onyx.llm.factory import get_default_llm
-    from onyx.llm.factory import get_llm_token_counter
-    from onyx.llm.utils import model_is_reasoning_model
-    from onyx.server.query_and_chat.placement import Placement
-    from onyx.tools.models import ToolCallKickoff
-    from onyx.tools.tool_constructor import construct_tools
+    from aethersearch.chat.chat_state import ChatStateContainer
+    from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+    from aethersearch.db.engine.sql_engine import SqlEngine
+    from aethersearch.db.models import User
+    from aethersearch.db.persona import get_default_behavior_persona
+    from aethersearch.llm.factory import get_default_llm
+    from aethersearch.llm.factory import get_llm_token_counter
+    from aethersearch.llm.utils import model_is_reasoning_model
+    from aethersearch.server.query_and_chat.placement import Placement
+    from aethersearch.tools.models import ToolCallKickoff
+    from aethersearch.tools.tool_constructor import construct_tools
 
     # === CONFIGURE YOUR RESEARCH PROMPT HERE ===
     RESEARCH_PROMPT = "Your test research task."

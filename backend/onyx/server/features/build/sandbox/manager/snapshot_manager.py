@@ -5,9 +5,9 @@ import tempfile
 from pathlib import Path
 from uuid import uuid4
 
-from onyx.configs.constants import FileOrigin
-from onyx.file_store.file_store import FileStore
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.file_store.file_store import FileStore
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

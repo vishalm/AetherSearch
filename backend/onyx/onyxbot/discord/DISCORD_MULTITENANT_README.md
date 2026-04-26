@@ -4,17 +4,17 @@ This document analyzes how the Discord cache manager and API client coordinate t
 
 ## Overview
 
-The Discord bot uses a **single-client, multi-tenant** architecture where one `OnyxDiscordClient` instance serves multiple tenants (organizations) simultaneously. Tenant isolation is achieved through:
+The Discord bot uses a **single-client, multi-tenant** architecture where one `AetherSearchDiscordClient` instance serves multiple tenants (organizations) simultaneously. Tenant isolation is achieved through:
 
 - **Cache Manager**: Maps Discord guilds to tenants and stores per-tenant API keys
 - **API Client**: Stateless HTTP client that accepts dynamic API keys per request
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                      OnyxDiscordClient                              │
+│                      AetherSearchDiscordClient                              │
 │                                                                     │
 │  ┌─────────────────────────┐    ┌─────────────────────────────┐    │
-│  │   DiscordCacheManager   │    │      OnyxAPIClient          │    │
+│  │   DiscordCacheManager   │    │      AetherSearchAPIClient          │    │
 │  │                         │    │                             │    │
 │  │  guild_id → tenant_id   │───▶│  send_chat_message(         │    │
 │  │  tenant_id → api_key    │    │    message,                 │    │
@@ -29,7 +29,7 @@ The Discord bot uses a **single-client, multi-tenant** architecture where one `O
 
 ## Component Details
 
-### 1. Cache Manager (`backend/onyx/onyxbot/discord/cache.py`)
+### 1. Cache Manager (`backend/aethersearch/aethersearchbot/discord/cache.py`)
 
 The `DiscordCacheManager` maintains two critical in-memory mappings:
 
@@ -89,14 +89,14 @@ Read operations (`get_tenant`, `get_api_key`) are lock-free since Python dict lo
 
 ---
 
-### 2. API Client (`backend/onyx/onyxbot/discord/api_client.py`)
+### 2. API Client (`backend/aethersearch/aethersearchbot/discord/api_client.py`)
 
-The `OnyxAPIClient` is a **stateless async HTTP client** that communicates with Onyx API pods.
+The `AetherSearchAPIClient` is a **stateless async HTTP client** that communicates with AetherSearch API pods.
 
 #### Key Design: Per-Request API Key Injection
 
 ```python
-class OnyxAPIClient:
+class AetherSearchAPIClient:
     async def send_chat_message(
         self,
         message: str,
@@ -194,7 +194,7 @@ async def close(self) -> None:
 Each tenant has a dedicated service API key:
 
 ```python
-# backend/onyx/db/discord_bot.py
+# backend/aethersearch/db/discord_bot.py
 def get_or_create_discord_service_api_key(db_session: Session, tenant_id: str) -> str:
     existing = get_discord_service_api_key(db_session)
     if existing:
@@ -231,7 +231,7 @@ Gated tenants are filtered during cache refresh:
 
 ```python
 gated_tenants = fetch_ee_implementation_or_noop(
-    "onyx.server.tenants.product_gating",
+    "aethersearch.server.tenants.product_gating",
     "get_gated_tenants",
     set(),
 )()
@@ -261,7 +261,7 @@ for tenant_id in get_all_tenant_ids():
 
 ## Key Design Insights
 
-1. **Single Client, Multiple Tenants**: One `OnyxAPIClient` and one `DiscordCacheManager` instance serves all tenants via dynamic API key injection.
+1. **Single Client, Multiple Tenants**: One `AetherSearchAPIClient` and one `DiscordCacheManager` instance serves all tenants via dynamic API key injection.
 
 2. **Cache-First Architecture**: Guild lookups are O(1) in-memory; API keys are cached after first provisioning to avoid repeated DB calls.
 
@@ -279,9 +279,9 @@ for tenant_id in get_all_tenant_ids():
 
 | Component | Path |
 |-----------|------|
-| Cache Manager | `backend/onyx/onyxbot/discord/cache.py` |
-| API Client | `backend/onyx/onyxbot/discord/api_client.py` |
-| Discord Client | `backend/onyx/onyxbot/discord/client.py` |
-| API Key DB Operations | `backend/onyx/db/discord_bot.py` |
-| Cache Manager Tests | `backend/tests/unit/onyx/onyxbot/discord/test_cache_manager.py` |
-| API Client Tests | `backend/tests/unit/onyx/onyxbot/discord/test_api_client.py` |
+| Cache Manager | `backend/aethersearch/aethersearchbot/discord/cache.py` |
+| API Client | `backend/aethersearch/aethersearchbot/discord/api_client.py` |
+| Discord Client | `backend/aethersearch/aethersearchbot/discord/client.py` |
+| API Key DB Operations | `backend/aethersearch/db/discord_bot.py` |
+| Cache Manager Tests | `backend/tests/unit/aethersearch/aethersearchbot/discord/test_cache_manager.py` |
+| API Client Tests | `backend/tests/unit/aethersearch/aethersearchbot/discord/test_api_client.py` |

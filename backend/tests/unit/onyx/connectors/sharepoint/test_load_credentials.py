@@ -6,7 +6,7 @@ import base64
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from onyx.connectors.sharepoint.connector import SharepointConnector
+from aethersearch.connectors.sharepoint.connector import SharepointConnector
 
 SITE_URL = "https://mytenant.sharepoint.com/sites/MySite"
 EXPECTED_TENANT_DOMAIN = "mytenant"
@@ -33,8 +33,8 @@ def _make_mock_msal() -> MagicMock:
     return mock_app
 
 
-@patch("onyx.connectors.sharepoint.connector.msal.ConfidentialClientApplication")
-@patch("onyx.connectors.sharepoint.connector.GraphClient")
+@patch("aethersearch.connectors.sharepoint.connector.msal.ConfidentialClientApplication")
+@patch("aethersearch.connectors.sharepoint.connector.GraphClient")
 def test_client_secret_with_site_pages_sets_tenant_domain(
     _mock_graph_client: MagicMock,
     mock_msal_cls: MagicMock,
@@ -48,8 +48,8 @@ def test_client_secret_with_site_pages_sets_tenant_domain(
     assert connector.sp_tenant_domain == EXPECTED_TENANT_DOMAIN
 
 
-@patch("onyx.connectors.sharepoint.connector.msal.ConfidentialClientApplication")
-@patch("onyx.connectors.sharepoint.connector.GraphClient")
+@patch("aethersearch.connectors.sharepoint.connector.msal.ConfidentialClientApplication")
+@patch("aethersearch.connectors.sharepoint.connector.GraphClient")
 def test_client_secret_without_site_pages_still_sets_tenant_domain(
     _mock_graph_client: MagicMock,
     mock_msal_cls: MagicMock,
@@ -64,9 +64,9 @@ def test_client_secret_without_site_pages_still_sets_tenant_domain(
     assert connector.sp_tenant_domain == EXPECTED_TENANT_DOMAIN
 
 
-@patch("onyx.connectors.sharepoint.connector.load_certificate_from_pfx")
-@patch("onyx.connectors.sharepoint.connector.msal.ConfidentialClientApplication")
-@patch("onyx.connectors.sharepoint.connector.GraphClient")
+@patch("aethersearch.connectors.sharepoint.connector.load_certificate_from_pfx")
+@patch("aethersearch.connectors.sharepoint.connector.msal.ConfidentialClientApplication")
+@patch("aethersearch.connectors.sharepoint.connector.GraphClient")
 def test_certificate_with_site_pages_sets_tenant_domain(
     _mock_graph_client: MagicMock,
     mock_msal_cls: MagicMock,
@@ -82,9 +82,9 @@ def test_certificate_with_site_pages_sets_tenant_domain(
     assert connector.sp_tenant_domain == EXPECTED_TENANT_DOMAIN
 
 
-@patch("onyx.connectors.sharepoint.connector.load_certificate_from_pfx")
-@patch("onyx.connectors.sharepoint.connector.msal.ConfidentialClientApplication")
-@patch("onyx.connectors.sharepoint.connector.GraphClient")
+@patch("aethersearch.connectors.sharepoint.connector.load_certificate_from_pfx")
+@patch("aethersearch.connectors.sharepoint.connector.msal.ConfidentialClientApplication")
+@patch("aethersearch.connectors.sharepoint.connector.GraphClient")
 def test_certificate_without_site_pages_sets_tenant_domain(
     _mock_graph_client: MagicMock,
     mock_msal_cls: MagicMock,

@@ -1,6 +1,6 @@
 import re
 
-from onyx.prompts.prompt_utils import replace_current_datetime_tag
+from aethersearch.prompts.prompt_utils import replace_current_datetime_tag
 
 
 class PromptTemplate:

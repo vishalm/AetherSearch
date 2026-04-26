@@ -6,7 +6,7 @@ from logging import LoggerAdapter
 
 from redis.lock import Lock
 
-from onyx.redis.redis_pool import get_shared_redis_client
+from aethersearch.redis.redis_pool import get_shared_redis_client
 
 
 class RedisSharedLockAcquisitionError(Exception):

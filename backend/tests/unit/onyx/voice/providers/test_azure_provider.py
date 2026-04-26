@@ -1,6 +1,6 @@
 import pytest
 
-from onyx.voice.providers.azure import AzureVoiceProvider
+from aethersearch.voice.providers.azure import AzureVoiceProvider
 
 
 def test_azure_provider_extracts_region_from_target_uri() -> None:

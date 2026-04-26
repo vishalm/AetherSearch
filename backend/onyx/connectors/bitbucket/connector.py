@@ -10,30 +10,30 @@ from typing import TYPE_CHECKING
 
 from typing_extensions import override
 
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.app_configs import REQUEST_TIMEOUT_SECONDS
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.bitbucket.utils import build_auth_client
-from onyx.connectors.bitbucket.utils import list_repositories
-from onyx.connectors.bitbucket.utils import map_pr_to_document
-from onyx.connectors.bitbucket.utils import paginate
-from onyx.connectors.bitbucket.utils import PR_LIST_RESPONSE_FIELDS
-from onyx.connectors.bitbucket.utils import SLIM_PR_LIST_RESPONSE_FIELDS
-from onyx.connectors.exceptions import CredentialExpiredError
-from onyx.connectors.exceptions import InsufficientPermissionsError
-from onyx.connectors.exceptions import UnexpectedValidationError
-from onyx.connectors.interfaces import CheckpointedConnector
-from onyx.connectors.interfaces import CheckpointOutput
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.interfaces import SlimConnectorWithPermSync
-from onyx.connectors.models import ConnectorCheckpoint
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import ConnectorMissingCredentialError
-from onyx.connectors.models import DocumentFailure
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import SlimDocument
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.app_configs import REQUEST_TIMEOUT_SECONDS
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.bitbucket.utils import build_auth_client
+from aethersearch.connectors.bitbucket.utils import list_repositories
+from aethersearch.connectors.bitbucket.utils import map_pr_to_document
+from aethersearch.connectors.bitbucket.utils import paginate
+from aethersearch.connectors.bitbucket.utils import PR_LIST_RESPONSE_FIELDS
+from aethersearch.connectors.bitbucket.utils import SLIM_PR_LIST_RESPONSE_FIELDS
+from aethersearch.connectors.exceptions import CredentialExpiredError
+from aethersearch.connectors.exceptions import InsufficientPermissionsError
+from aethersearch.connectors.exceptions import UnexpectedValidationError
+from aethersearch.connectors.interfaces import CheckpointedConnector
+from aethersearch.connectors.interfaces import CheckpointOutput
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.interfaces import SlimConnectorWithPermSync
+from aethersearch.connectors.models import ConnectorCheckpoint
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import ConnectorMissingCredentialError
+from aethersearch.connectors.models import DocumentFailure
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import SlimDocument
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.utils.logger import setup_logger
 
 if TYPE_CHECKING:
     import httpx

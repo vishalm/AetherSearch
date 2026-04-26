@@ -21,7 +21,7 @@ classifiers = [
 dynamic = ["version"]
 
 [project.urls]
-Repository = "https://github.com/vishalm/ai-enterprise-search-chat-onyx"
+Repository = "https://github.com/vishalm/ai-enterprise-search-chat-aethersearch"
 
 [tool.hatch.build]
 include = ["go.mod", "go.sum", "main.go", "**/*.go", "**/*.py", "README.md"]

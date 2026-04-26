@@ -1,7 +1,7 @@
 from types import SimpleNamespace
 from typing import Any
 
-from onyx.background.celery.tasks.vespa import tasks as vespa_tasks
+from aethersearch.background.celery.tasks.vespa import tasks as vespa_tasks
 
 
 class _StubRedisDocumentSet:

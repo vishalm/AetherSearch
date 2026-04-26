@@ -88,13 +88,13 @@ const BackgroundThumbnail = ({
 export const SettingsPanel = ({
   settingsOpen,
   toggleSettings,
-  handleUseOnyxToggle,
+  handleUseAetherSearchToggle,
 }: {
   settingsOpen: boolean;
   toggleSettings: () => void;
-  handleUseOnyxToggle: (checked: boolean) => void;
+  handleUseAetherSearchToggle: (checked: boolean) => void;
 }) => {
-  const { useOnyxAsNewTab } = useNRFPreferences();
+  const { useAetherSearchAsNewTab } = useNRFPreferences();
   const { theme, setTheme } = useTheme();
   const { user, updateUserChatBackground, updateUserThemePreference } =
     useUser();
@@ -180,10 +180,10 @@ export const SettingsPanel = ({
               General
             </Text>
             <div className="flex flex-col gap-1 bg-background-tint-01 rounded-2xl px-4">
-              <SettingRow label="Use Onyx as new tab page">
+              <SettingRow label="Use AetherSearch as new tab page">
                 <Switch
-                  checked={useOnyxAsNewTab}
-                  onCheckedChange={handleUseOnyxToggle}
+                  checked={useAetherSearchAsNewTab}
+                  onCheckedChange={handleUseAetherSearchToggle}
                 />
               </SettingRow>
             </div>

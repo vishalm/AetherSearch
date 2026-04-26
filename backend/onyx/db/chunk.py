@@ -4,8 +4,8 @@ from datetime import timezone
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
 
-from onyx.db.models import ChunkStats
-from onyx.indexing.models import UpdatableChunkData
+from aethersearch.db.models import ChunkStats
+from aethersearch.indexing.models import UpdatableChunkData
 
 
 def update_chunk_boost_components__no_commit(

@@ -19,40 +19,40 @@ from botocore.exceptions import PartialCredentialsError
 from botocore.session import get_session
 from mypy_boto3_s3 import S3Client
 
-from onyx.configs.app_configs import BLOB_STORAGE_SIZE_THRESHOLD
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.constants import BlobType
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import FileOrigin
-from onyx.connectors.cross_connector_utils.miscellaneous_utils import (
-    process_onyx_metadata,
+from aethersearch.configs.app_configs import BLOB_STORAGE_SIZE_THRESHOLD
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.constants import BlobType
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.connectors.cross_connector_utils.miscellaneous_utils import (
+    process_aethersearch_metadata,
 )
-from onyx.connectors.cross_connector_utils.tabular_section_utils import (
+from aethersearch.connectors.cross_connector_utils.tabular_section_utils import (
     extract_and_stage_tabular_file,
 )
-from onyx.connectors.cross_connector_utils.tabular_section_utils import is_tabular_file
-from onyx.connectors.cross_connector_utils.tabular_section_utils import (
+from aethersearch.connectors.cross_connector_utils.tabular_section_utils import is_tabular_file
+from aethersearch.connectors.cross_connector_utils.tabular_section_utils import (
     tabular_file_to_sections,
 )
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.connectors.exceptions import CredentialExpiredError
-from onyx.connectors.exceptions import InsufficientPermissionsError
-from onyx.connectors.exceptions import UnexpectedValidationError
-from onyx.connectors.interfaces import GenerateDocumentsOutput
-from onyx.connectors.interfaces import LoadConnector
-from onyx.connectors.interfaces import PollConnector
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.models import ConnectorMissingCredentialError
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import ImageSection
-from onyx.connectors.models import TabularSection
-from onyx.connectors.models import TextSection
-from onyx.file_processing.extract_file_text import extract_text_and_images
-from onyx.file_processing.extract_file_text import get_file_ext
-from onyx.file_processing.file_types import OnyxFileExtensions
-from onyx.file_processing.image_utils import store_image_and_create_section
-from onyx.utils.logger import setup_logger
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.connectors.exceptions import CredentialExpiredError
+from aethersearch.connectors.exceptions import InsufficientPermissionsError
+from aethersearch.connectors.exceptions import UnexpectedValidationError
+from aethersearch.connectors.interfaces import GenerateDocumentsOutput
+from aethersearch.connectors.interfaces import LoadConnector
+from aethersearch.connectors.interfaces import PollConnector
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.models import ConnectorMissingCredentialError
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import ImageSection
+from aethersearch.connectors.models import TabularSection
+from aethersearch.connectors.models import TextSection
+from aethersearch.file_processing.extract_file_text import extract_text_and_images
+from aethersearch.file_processing.extract_file_text import get_file_ext
+from aethersearch.file_processing.file_types import AetherSearchFileExtensions
+from aethersearch.file_processing.image_utils import store_image_and_create_section
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -185,7 +185,7 @@ class BlobStorageConnector(LoadConnector, PollConnector):
                     sts_client = boto3.client("sts")
                     assumed_role_object = sts_client.assume_role(
                         RoleArn=role_arn,
-                        RoleSessionName=f"onyx_blob_storage_{int(time.time())}",
+                        RoleSessionName=f"aethersearch_blob_storage_{int(time.time())}",
                     )
                     creds = assumed_role_object["Credentials"]
                     return {
@@ -423,7 +423,7 @@ class BlobStorageConnector(LoadConnector, PollConnector):
                     continue
 
                 # Handle image files
-                if file_ext in OnyxFileExtensions.IMAGE_EXTENSIONS:
+                if file_ext in AetherSearchFileExtensions.IMAGE_EXTENSIONS:
                     if not self._allow_images:
                         logger.debug(
                             f"Skipping image file: {key} (image processing not enabled)"
@@ -522,15 +522,15 @@ class BlobStorageConnector(LoadConnector, PollConnector):
                         BytesIO(downloaded_file), file_name=file_name
                     )
 
-                    onyx_metadata, custom_tags = process_onyx_metadata(
+                    aethersearch_metadata, custom_tags = process_aethersearch_metadata(
                         extraction_result.metadata
                     )
-                    file_display_name = onyx_metadata.file_display_name or file_name
-                    time_updated = onyx_metadata.doc_updated_at or last_modified
-                    link = onyx_metadata.link or link
-                    primary_owners = onyx_metadata.primary_owners
-                    secondary_owners = onyx_metadata.secondary_owners
-                    source_type = onyx_metadata.source_type or DocumentSource(
+                    file_display_name = aethersearch_metadata.file_display_name or file_name
+                    time_updated = aethersearch_metadata.doc_updated_at or last_modified
+                    link = aethersearch_metadata.link or link
+                    primary_owners = aethersearch_metadata.primary_owners
+                    secondary_owners = aethersearch_metadata.secondary_owners
+                    source_type = aethersearch_metadata.source_type or DocumentSource(
                         self.bucket_type.value
                     )
 

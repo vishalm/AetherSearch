@@ -2,30 +2,30 @@ import time
 
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import DISABLE_VECTOR_DB
-from onyx.configs.app_configs import VESPA_NUM_ATTEMPTS_ON_STARTUP
-from onyx.configs.constants import KV_REINDEX_KEY
-from onyx.db.connector_credential_pair import get_connector_credential_pairs
-from onyx.db.connector_credential_pair import resync_cc_pair
-from onyx.db.document import delete_all_documents_for_connector_credential_pair
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import IndexModelStatus
-from onyx.db.enums import SwitchoverType
-from onyx.db.index_attempt import cancel_indexing_attempts_for_search_settings
-from onyx.db.index_attempt import (
+from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
+from aethersearch.configs.app_configs import VESPA_NUM_ATTEMPTS_ON_STARTUP
+from aethersearch.configs.constants import KV_REINDEX_KEY
+from aethersearch.db.connector_credential_pair import get_connector_credential_pairs
+from aethersearch.db.connector_credential_pair import resync_cc_pair
+from aethersearch.db.document import delete_all_documents_for_connector_credential_pair
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import IndexModelStatus
+from aethersearch.db.enums import SwitchoverType
+from aethersearch.db.index_attempt import cancel_indexing_attempts_for_search_settings
+from aethersearch.db.index_attempt import (
     count_unique_active_cc_pairs_with_successful_index_attempts,
 )
-from onyx.db.index_attempt import count_unique_cc_pairs_with_successful_index_attempts
-from onyx.db.llm import update_default_contextual_model
-from onyx.db.llm import update_no_default_contextual_rag_provider
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import SearchSettings
-from onyx.db.search_settings import get_current_search_settings
-from onyx.db.search_settings import get_secondary_search_settings
-from onyx.db.search_settings import update_search_settings_status
-from onyx.document_index.factory import get_all_document_indices
-from onyx.key_value_store.factory import get_kv_store
-from onyx.utils.logger import setup_logger
+from aethersearch.db.index_attempt import count_unique_cc_pairs_with_successful_index_attempts
+from aethersearch.db.llm import update_default_contextual_model
+from aethersearch.db.llm import update_no_default_contextual_rag_provider
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import SearchSettings
+from aethersearch.db.search_settings import get_current_search_settings
+from aethersearch.db.search_settings import get_secondary_search_settings
+from aethersearch.db.search_settings import update_search_settings_status
+from aethersearch.document_index.factory import get_all_document_indices
+from aethersearch.key_value_store.factory import get_kv_store
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

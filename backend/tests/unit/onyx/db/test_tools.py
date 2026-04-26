@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock
 from uuid import uuid4
 
-from onyx.db import tools as tools_mod
+from aethersearch.db import tools as tools_mod
 
 
 def test_create_tool_call_no_commit_sanitizes_fields() -> None:

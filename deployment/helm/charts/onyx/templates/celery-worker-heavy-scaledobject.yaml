@@ -1,15 +1,15 @@
-{{- if and .Values.vectorDB.enabled (.Values.celery_worker_heavy.autoscaling.enabled) (eq (include "onyx.autoscaling.engine" .) "keda") }}
+{{- if and .Values.vectorDB.enabled (.Values.celery_worker_heavy.autoscaling.enabled) (eq (include "aethersearch.autoscaling.engine" .) "keda") }}
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
-  name: {{ include "onyx.fullname" . }}-celery-worker-heavy
+  name: {{ include "aethersearch.fullname" . }}-celery-worker-heavy
   labels:
-    {{- include "onyx.labels" . | nindent 4 }}
+    {{- include "aethersearch.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "onyx.fullname" . }}-celery-worker-heavy
+    name: {{ include "aethersearch.fullname" . }}-celery-worker-heavy
   minReplicaCount: {{ .Values.celery_worker_heavy.autoscaling.minReplicas | default 1 }}
   maxReplicaCount: {{ .Values.celery_worker_heavy.autoscaling.maxReplicas | default 10 }}
   pollingInterval: {{ .Values.celery_worker_heavy.autoscaling.pollingInterval | default 30 }}

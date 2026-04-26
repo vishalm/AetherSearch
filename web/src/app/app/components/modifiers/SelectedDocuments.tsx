@@ -1,11 +1,11 @@
 import { BasicClickable } from "@/components/BasicClickable";
-import { OnyxDocument } from "@/lib/search/interfaces";
+import { AetherSearchDocument } from "@/lib/search/interfaces";
 import { FiBook } from "react-icons/fi";
 
 export function SelectedDocuments({
   selectedDocuments,
 }: {
-  selectedDocuments: OnyxDocument[];
+  selectedDocuments: AetherSearchDocument[];
 }) {
   if (selectedDocuments.length === 0) {
     return null;

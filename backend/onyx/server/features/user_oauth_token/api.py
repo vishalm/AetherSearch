@@ -5,12 +5,12 @@ from fastapi import Depends
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from onyx.auth.oauth_token_manager import OAuthTokenManager
-from onyx.auth.permissions import require_permission
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.db.oauth_config import get_all_user_oauth_tokens
+from aethersearch.auth.oauth_token_manager import OAuthTokenManager
+from aethersearch.auth.permissions import require_permission
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.db.oauth_config import get_all_user_oauth_tokens
 
 router = APIRouter(prefix="/user-oauth-token")
 

@@ -1,9 +1,9 @@
 from pydantic import BaseModel
 from pydantic import Field
 
-from onyx.db.enums import HookFailStrategy
-from onyx.db.enums import HookPoint
-from onyx.hooks.points.base import HookPointSpec
+from aethersearch.db.enums import HookFailStrategy
+from aethersearch.db.enums import HookPoint
+from aethersearch.hooks.points.base import HookPointSpec
 
 
 class DocumentIngestionSection(BaseModel):
@@ -54,7 +54,7 @@ class DocumentIngestionPayload(BaseModel):
         description=(
             "Connector source type (e.g. confluence, slack, google_drive). "
             "Read-only — changes are ignored. "
-            "Full list of values: https://github.com/onyx-dot-app/onyx/blob/main/backend/onyx/configs/constants.py#L195"
+            "Full list of values: https://github.com/aethersearch-dot-app/aethersearch/blob/main/backend/aethersearch/configs/constants.py#L195"
         )
     )
     sections: list[DocumentIngestionSection] = Field(
@@ -88,7 +88,7 @@ class DocumentIngestionResponse(BaseModel):
 class DocumentIngestionSpec(HookPointSpec):
     """Hook point that runs on every document before it enters the indexing pipeline.
 
-    Call site: immediately after Onyx's internal validation and before the
+    Call site: immediately after AetherSearch's internal validation and before the
     indexing pipeline begins — no partial writes have occurred yet.
 
     If a Document Ingestion hook is configured, it takes precedence —
@@ -108,7 +108,7 @@ class DocumentIngestionSpec(HookPointSpec):
     default_timeout_seconds = 30.0
     fail_hard_description = "The document will not be indexed."
     default_fail_strategy = HookFailStrategy.HARD
-    docs_url = "https://docs.onyx.app/admins/advanced_configs/hook_extensions#document-ingestion"
+    docs_url = "https://docs.aethersearch.app/admins/advanced_configs/hook_extensions#document-ingestion"
 
     payload_model = DocumentIngestionPayload
     response_model = DocumentIngestionResponse

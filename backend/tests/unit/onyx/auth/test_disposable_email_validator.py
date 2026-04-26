@@ -2,8 +2,8 @@
 Tests for disposable email validation.
 """
 
-from onyx.auth.disposable_email_validator import DisposableEmailValidator
-from onyx.auth.disposable_email_validator import is_disposable_email
+from aethersearch.auth.disposable_email_validator import DisposableEmailValidator
+from aethersearch.auth.disposable_email_validator import is_disposable_email
 
 
 class TestDisposableEmailValidator:
@@ -54,7 +54,7 @@ class TestDisposableEmailValidator:
         legitimate_emails = [
             "user@gmail.com",
             "employee@company.com",
-            "admin@onyx.app",
+            "admin@aethersearch.app",
             "test@outlook.com",
             "person@yahoo.com",
             "contact@protonmail.com",

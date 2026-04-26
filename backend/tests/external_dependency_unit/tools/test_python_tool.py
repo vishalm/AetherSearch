@@ -22,21 +22,21 @@
 # from pydantic import TypeAdapter
 # from sqlalchemy.orm import Session
 
-# from onyx.chat.turn.models import ChatTurnContext
-# from onyx.configs.app_configs import CODE_INTERPRETER_BASE_URL
-# from onyx.file_store.models import ChatFileType
-# from onyx.file_store.models import InMemoryChatFile
-# from onyx.file_store.utils import get_default_file_store
-# from onyx.server.query_and_chat.streaming_models import Packet
-# from onyx.server.query_and_chat.streaming_models import PythonToolDelta
-# from onyx.server.query_and_chat.streaming_models import PythonToolStart
-# from onyx.tools.tool_implementations.python.python_tool import PythonTool
-# from onyx.tools.tool_implementations_v2.code_interpreter_client import (
+# from aethersearch.chat.turn.models import ChatTurnContext
+# from aethersearch.configs.app_configs import CODE_INTERPRETER_BASE_URL
+# from aethersearch.file_store.models import ChatFileType
+# from aethersearch.file_store.models import InMemoryChatFile
+# from aethersearch.file_store.utils import get_default_file_store
+# from aethersearch.server.query_and_chat.streaming_models import Packet
+# from aethersearch.server.query_and_chat.streaming_models import PythonToolDelta
+# from aethersearch.server.query_and_chat.streaming_models import PythonToolStart
+# from aethersearch.tools.tool_implementations.python.python_tool import PythonTool
+# from aethersearch.tools.tool_implementations_v2.code_interpreter_client import (
 #     CodeInterpreterClient,
 # )
-# from onyx.tools.tool_implementations_v2.python import _python_execution_core
-# from onyx.tools.tool_implementations_v2.python import python
-# from onyx.tools.tool_implementations_v2.tool_result_models import (
+# from aethersearch.tools.tool_implementations_v2.python import _python_execution_core
+# from aethersearch.tools.tool_implementations_v2.python import python
+# from aethersearch.tools.tool_implementations_v2.tool_result_models import (
 #     LlmPythonExecutionResult,
 # )
 
@@ -89,7 +89,7 @@
 
 #     # Mock get_tool_by_name
 #     with patch(
-#         "onyx.tools.tool_implementations_v2.python.get_tool_by_name"
+#         "aethersearch.tools.tool_implementations_v2.python.get_tool_by_name"
 #     ) as mock_get_tool:
 #         mock_tool = Mock()
 #         mock_tool.id = 1
@@ -150,7 +150,7 @@
 
 #     # Mock get_tool_by_name
 #     with patch(
-#         "onyx.tools.tool_implementations_v2.python.get_tool_by_name"
+#         "aethersearch.tools.tool_implementations_v2.python.get_tool_by_name"
 #     ) as mock_get_tool:
 #         mock_tool = Mock()
 #         mock_tool.id = 1
@@ -184,7 +184,7 @@
 
 #     # Mock get_tool_by_name
 #     with patch(
-#         "onyx.tools.tool_implementations_v2.python.get_tool_by_name"
+#         "aethersearch.tools.tool_implementations_v2.python.get_tool_by_name"
 #     ) as mock_get_tool:
 #         mock_tool = Mock()
 #         mock_tool.id = 1
@@ -219,7 +219,7 @@
 
 #     # Mock get_tool_by_name
 #     with patch(
-#         "onyx.tools.tool_implementations_v2.python.get_tool_by_name"
+#         "aethersearch.tools.tool_implementations_v2.python.get_tool_by_name"
 #     ) as mock_get_tool:
 #         mock_tool = Mock()
 #         mock_tool.id = 1
@@ -227,7 +227,7 @@
 
 #         # Mock the config to use a short timeout
 #         with patch(
-#             "onyx.tools.tool_implementations_v2.python.CODE_INTERPRETER_DEFAULT_TIMEOUT_MS",
+#             "aethersearch.tools.tool_implementations_v2.python.CODE_INTERPRETER_DEFAULT_TIMEOUT_MS",
 #             1000,
 #         ):
 #             # Execute code
@@ -259,7 +259,7 @@
 
 #     # Mock only get_tool_by_name (database lookup)
 #     with patch(
-#         "onyx.tools.tool_implementations_v2.python.get_tool_by_name"
+#         "aethersearch.tools.tool_implementations_v2.python.get_tool_by_name"
 #     ) as mock_get_tool:
 #         mock_tool = Mock()
 #         mock_tool.id = 1
@@ -330,7 +330,7 @@
 
 #     # Mock only get_tool_by_name (database lookup)
 #     with patch(
-#         "onyx.tools.tool_implementations_v2.python.get_tool_by_name"
+#         "aethersearch.tools.tool_implementations_v2.python.get_tool_by_name"
 #     ) as mock_get_tool:
 #         mock_tool = Mock()
 #         mock_tool.id = 1
@@ -373,7 +373,7 @@
 
 #     # Mock get_tool_by_name
 #     with patch(
-#         "onyx.tools.tool_implementations_v2.python.get_tool_by_name"
+#         "aethersearch.tools.tool_implementations_v2.python.get_tool_by_name"
 #     ) as mock_get_tool:
 #         mock_tool = Mock()
 #         mock_tool.id = 42
@@ -418,7 +418,7 @@
 # def test_python_tool_availability_with_url_set(db_session: Session) -> None:
 #     """Test PythonTool.is_available() returns True when URL is configured."""
 #     with patch(
-#         "onyx.tools.tool_implementations.python.python_tool.CODE_INTERPRETER_BASE_URL",
+#         "aethersearch.tools.tool_implementations.python.python_tool.CODE_INTERPRETER_BASE_URL",
 #         "http://localhost:8000",
 #     ):
 #         assert PythonTool.is_available(db_session) is True
@@ -427,13 +427,13 @@
 # def test_python_tool_availability_without_url(db_session: Session) -> None:
 #     """Test PythonTool.is_available() returns False when URL is not configured."""
 #     with patch(
-#         "onyx.tools.tool_implementations.python.python_tool.CODE_INTERPRETER_BASE_URL",
+#         "aethersearch.tools.tool_implementations.python.python_tool.CODE_INTERPRETER_BASE_URL",
 #         None,
 #     ):
 #         assert PythonTool.is_available(db_session) is False
 
 #     with patch(
-#         "onyx.tools.tool_implementations.python.python_tool.CODE_INTERPRETER_BASE_URL",
+#         "aethersearch.tools.tool_implementations.python.python_tool.CODE_INTERPRETER_BASE_URL",
 #         "",
 #     ):
 #         assert PythonTool.is_available(db_session) is False
@@ -448,10 +448,10 @@
 
 #     # Mock get_tool_by_name and patch CodeInterpreterClient to use our fixture
 #     with patch(
-#         "onyx.tools.tool_implementations_v2.python.get_tool_by_name"
+#         "aethersearch.tools.tool_implementations_v2.python.get_tool_by_name"
 #     ) as mock_get_tool:
 #         with patch(
-#             "onyx.tools.tool_implementations_v2.python.CodeInterpreterClient"
+#             "aethersearch.tools.tool_implementations_v2.python.CodeInterpreterClient"
 #         ) as mock_client_class:
 #             mock_tool = Mock()
 #             mock_tool.id = 1
@@ -487,11 +487,11 @@
 
 #     # Mock get_tool_by_name
 #     with patch(
-#         "onyx.tools.tool_implementations_v2.python.get_tool_by_name"
+#         "aethersearch.tools.tool_implementations_v2.python.get_tool_by_name"
 #     ) as mock_get_tool:
 #         # Set a small truncation limit for testing
 #         with patch(
-#             "onyx.tools.tool_implementations_v2.python.CODE_INTERPRETER_MAX_OUTPUT_LENGTH",
+#             "aethersearch.tools.tool_implementations_v2.python.CODE_INTERPRETER_MAX_OUTPUT_LENGTH",
 #             5000,
 #         ):
 #             mock_tool = Mock()
@@ -531,7 +531,7 @@
 
 #     # Mock only get_tool_by_name (database lookup)
 #     with patch(
-#         "onyx.tools.tool_implementations_v2.python.get_tool_by_name"
+#         "aethersearch.tools.tool_implementations_v2.python.get_tool_by_name"
 #     ) as mock_get_tool:
 #         mock_tool = Mock()
 #         mock_tool.id = 1
@@ -650,7 +650,7 @@
 
 #     # Mock only get_tool_by_name (database lookup)
 #     with patch(
-#         "onyx.tools.tool_implementations_v2.python.get_tool_by_name"
+#         "aethersearch.tools.tool_implementations_v2.python.get_tool_by_name"
 #     ) as mock_get_tool:
 #         mock_tool = Mock()
 #         mock_tool.id = 1
@@ -845,7 +845,7 @@
 
 #     # Mock only get_tool_by_name (database lookup)
 #     with patch(
-#         "onyx.tools.tool_implementations_v2.python.get_tool_by_name"
+#         "aethersearch.tools.tool_implementations_v2.python.get_tool_by_name"
 #     ) as mock_get_tool:
 #         mock_tool = Mock()
 #         mock_tool.id = 1
@@ -937,21 +937,21 @@ from fastapi.background import BackgroundTasks
 from sqlalchemy.orm import Session
 from starlette.datastructures import Headers
 
-import onyx.tools.tool_implementations.python.code_interpreter_client as ci_mod
-from onyx.chat.process_message import handle_stream_message_objects
-from onyx.db.models import Persona
-from onyx.db.tools import get_builtin_tool
-from onyx.file_store.models import ChatFileType
-from onyx.file_store.models import FileDescriptor
-from onyx.server.features.projects.api import upload_user_files
-from onyx.server.query_and_chat.chat_backend import get_chat_session
-from onyx.server.query_and_chat.models import SendMessageRequest
-from onyx.server.query_and_chat.streaming_models import Packet
-from onyx.server.query_and_chat.streaming_models import PythonToolDelta
-from onyx.server.query_and_chat.streaming_models import PythonToolStart
-from onyx.server.query_and_chat.streaming_models import SectionEnd
-from onyx.server.query_and_chat.streaming_models import ToolCallArgumentDelta
-from onyx.tools.tool_implementations.python.python_tool import PythonTool
+import aethersearch.tools.tool_implementations.python.code_interpreter_client as ci_mod
+from aethersearch.chat.process_message import handle_stream_message_objects
+from aethersearch.db.models import Persona
+from aethersearch.db.tools import get_builtin_tool
+from aethersearch.file_store.models import ChatFileType
+from aethersearch.file_store.models import FileDescriptor
+from aethersearch.server.features.projects.api import upload_user_files
+from aethersearch.server.query_and_chat.chat_backend import get_chat_session
+from aethersearch.server.query_and_chat.models import SendMessageRequest
+from aethersearch.server.query_and_chat.streaming_models import Packet
+from aethersearch.server.query_and_chat.streaming_models import PythonToolDelta
+from aethersearch.server.query_and_chat.streaming_models import PythonToolStart
+from aethersearch.server.query_and_chat.streaming_models import SectionEnd
+from aethersearch.server.query_and_chat.streaming_models import ToolCallArgumentDelta
+from aethersearch.tools.tool_implementations.python.python_tool import PythonTool
 from tests.external_dependency_unit.answer.stream_test_builder import StreamTestBuilder
 from tests.external_dependency_unit.answer.stream_test_utils import create_chat_session
 from tests.external_dependency_unit.answer.stream_test_utils import create_placement
@@ -1117,7 +1117,7 @@ def mock_ci_server() -> Generator[MockCodeInterpreterServer, None, None]:
 @pytest.fixture(autouse=True)
 def _clear_health_cache() -> None:
     """Reset the health check cache before every test."""
-    import onyx.tools.tool_implementations.python.code_interpreter_client as mod
+    import aethersearch.tools.tool_implementations.python.code_interpreter_client as mod
 
     mod._health_cache = {}
 
@@ -1191,11 +1191,11 @@ def test_code_interpreter_receives_chat_files(
     with (
         use_mock_llm() as mock_llm,
         patch(
-            "onyx.tools.tool_implementations.python.python_tool.CODE_INTERPRETER_BASE_URL",
+            "aethersearch.tools.tool_implementations.python.python_tool.CODE_INTERPRETER_BASE_URL",
             mock_url,
         ),
         patch(
-            "onyx.tools.tool_implementations.python.code_interpreter_client.CODE_INTERPRETER_BASE_URL",
+            "aethersearch.tools.tool_implementations.python.code_interpreter_client.CODE_INTERPRETER_BASE_URL",
             mock_url,
         ),
     ):
@@ -1265,11 +1265,11 @@ def test_code_interpreter_replay_packets_include_code_and_output(
     with (
         use_mock_llm() as mock_llm,
         patch(
-            "onyx.tools.tool_implementations.python.python_tool.CODE_INTERPRETER_BASE_URL",
+            "aethersearch.tools.tool_implementations.python.python_tool.CODE_INTERPRETER_BASE_URL",
             mock_url,
         ),
         patch(
-            "onyx.tools.tool_implementations.python.code_interpreter_client.CODE_INTERPRETER_BASE_URL",
+            "aethersearch.tools.tool_implementations.python.code_interpreter_client.CODE_INTERPRETER_BASE_URL",
             mock_url,
         ),
     ):
@@ -1405,11 +1405,11 @@ def test_code_interpreter_streaming_fallback_to_batch(
     with (
         use_mock_llm() as mock_llm,
         patch(
-            "onyx.tools.tool_implementations.python.python_tool.CODE_INTERPRETER_BASE_URL",
+            "aethersearch.tools.tool_implementations.python.python_tool.CODE_INTERPRETER_BASE_URL",
             mock_url,
         ),
         patch(
-            "onyx.tools.tool_implementations.python.code_interpreter_client.CODE_INTERPRETER_BASE_URL",
+            "aethersearch.tools.tool_implementations.python.code_interpreter_client.CODE_INTERPRETER_BASE_URL",
             mock_url,
         ),
     ):

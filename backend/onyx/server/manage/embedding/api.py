@@ -2,23 +2,23 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.llm import fetch_existing_embedding_providers
-from onyx.db.llm import remove_embedding_provider
-from onyx.db.llm import upsert_cloud_embedding_provider
-from onyx.db.models import User
-from onyx.db.search_settings import get_all_search_settings
-from onyx.db.search_settings import get_current_db_embedding_provider
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.indexing.models import EmbeddingModelDetail
-from onyx.natural_language_processing.search_nlp_models import EmbeddingModel
-from onyx.server.manage.embedding.models import CloudEmbeddingProvider
-from onyx.server.manage.embedding.models import CloudEmbeddingProviderCreationRequest
-from onyx.server.manage.embedding.models import TestEmbeddingRequest
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.permissions import require_permission
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.llm import fetch_existing_embedding_providers
+from aethersearch.db.llm import remove_embedding_provider
+from aethersearch.db.llm import upsert_cloud_embedding_provider
+from aethersearch.db.models import User
+from aethersearch.db.search_settings import get_all_search_settings
+from aethersearch.db.search_settings import get_current_db_embedding_provider
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.indexing.models import EmbeddingModelDetail
+from aethersearch.natural_language_processing.search_nlp_models import EmbeddingModel
+from aethersearch.server.manage.embedding.models import CloudEmbeddingProvider
+from aethersearch.server.manage.embedding.models import CloudEmbeddingProviderCreationRequest
+from aethersearch.server.manage.embedding.models import TestEmbeddingRequest
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MODEL_SERVER_HOST
 from shared_configs.configs import MODEL_SERVER_PORT
 from shared_configs.enums import EmbeddingProvider
@@ -60,7 +60,7 @@ def test_embedding_configuration(
     except Exception as e:
         error_msg = "An error occurred while testing your embedding model. Please check your configuration."
         logger.error(f"{error_msg} Error message: {e}", exc_info=True)
-        raise OnyxError(OnyxErrorCode.VALIDATION_ERROR, error_msg)
+        raise AetherSearchError(AetherSearchErrorCode.VALIDATION_ERROR, error_msg)
 
 
 @admin_router.get("", response_model=list[EmbeddingModelDetail])
@@ -94,8 +94,8 @@ def delete_embedding_provider(
         embedding_provider is not None
         and provider_type == embedding_provider.provider_type
     ):
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "You can't delete a currently active model",
         )
 

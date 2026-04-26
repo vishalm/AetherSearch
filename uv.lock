@@ -4341,7 +4341,7 @@ wheels = [
 ]
 
 [[package]]
-name = "onyx"
+name = "aethersearch"
 version = "0.0.0"
 source = { editable = "." }
 dependencies = [
@@ -4471,7 +4471,7 @@ dev = [
     { name = "ipykernel" },
     { name = "manygo" },
     { name = "matplotlib" },
-    { name = "onyx-devtools" },
+    { name = "aethersearch-devtools" },
     { name = "openapi-generator-cli" },
     { name = "pandas-stubs" },
     { name = "pre-commit" },
@@ -4643,7 +4643,7 @@ dev = [
     { name = "ipykernel", specifier = "==6.29.5" },
     { name = "manygo", specifier = "==0.2.0" },
     { name = "matplotlib", specifier = "==3.10.8" },
-    { name = "onyx-devtools", specifier = "==0.7.6" },
+    { name = "aethersearch-devtools", specifier = "==0.7.6" },
     { name = "openapi-generator-cli", specifier = "==7.17.0" },
     { name = "pandas-stubs", specifier = "~=2.3.3" },
     { name = "pre-commit", specifier = "==3.2.2" },
@@ -4686,7 +4686,7 @@ model-server = [
 ]
 
 [[package]]
-name = "onyx-devtools"
+name = "aethersearch-devtools"
 version = "0.7.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
@@ -4694,12 +4694,12 @@ dependencies = [
     { name = "openapi-generator-cli" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2b/e5/cbb5fb2a4c0211180b6378bb37e3e59acfa1714b51a610d3f2897c3ab996/onyx_devtools-0.7.6-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:8d51f7471592ccaf3a593366f18b10cb7d9ce903106f1ff1f0a5af62c5dae4b1", size = 4254929, upload-time = "2026-04-24T02:31:58.409Z" },
-    { url = "https://files.pythonhosted.org/packages/22/e4/6b7b09729fa8b65aa027b61bb1bcbde723cfdeb3fbe8f05a24cb71682cc2/onyx_devtools-0.7.6-py3-none-macosx_11_0_arm64.whl", hash = "sha256:289d126f5e0d42cea8c164a0b8be4ca7948fe3b6a5afd72e2b4868da4ed6a7f7", size = 3925618, upload-time = "2026-04-24T02:32:02.608Z" },
-    { url = "https://files.pythonhosted.org/packages/dd/7b/fd0d4f7f57c4d8e2c87283c37a1a222ae82a76db1638c1dc59f908339175/onyx_devtools-0.7.6-py3-none-manylinux_2_17_aarch64.whl", hash = "sha256:1aca8681a00bce984f7b9639be00e6b2a90718d5872d3e3781922423940cc915", size = 3791309, upload-time = "2026-04-24T02:31:55.484Z" },
-    { url = "https://files.pythonhosted.org/packages/1b/5c/b47887f90eff14666f888e1993bc03fae7eaac5becd6ec6b6a84b0b9853b/onyx_devtools-0.7.6-py3-none-manylinux_2_17_x86_64.whl", hash = "sha256:2f4cc8d1cbaa116f54c7556206cfd2c029ed7faeb16c02fcfdee12f525cf5aab", size = 4215980, upload-time = "2026-04-24T02:31:57.629Z" },
-    { url = "https://files.pythonhosted.org/packages/80/6c/96ee0a26673b09d0c254e8af25e69c19e45887216ca508fc3b9dd8a6214c/onyx_devtools-0.7.6-py3-none-win_amd64.whl", hash = "sha256:2f82951d5470e4c05f64760282e59ef086a0640c4f5584e517f94a8c5d3a60d4", size = 4333866, upload-time = "2026-04-24T02:31:57.973Z" },
-    { url = "https://files.pythonhosted.org/packages/8f/b9/ce77376bc57bdfa08acbc4088904d6d737538e277a3bb8a0bd35a67e17fe/onyx_devtools-0.7.6-py3-none-win_arm64.whl", hash = "sha256:821b1aee102b8f3f2874a2cb774e59c31513d6c471c9c84f85b408d5a9c4524a", size = 3872019, upload-time = "2026-04-24T02:31:57.356Z" },
+    { url = "https://files.pythonhosted.org/packages/2b/e5/cbb5fb2a4c0211180b6378bb37e3e59acfa1714b51a610d3f2897c3ab996/aethersearch_devtools-0.7.6-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:8d51f7471592ccaf3a593366f18b10cb7d9ce903106f1ff1f0a5af62c5dae4b1", size = 4254929, upload-time = "2026-04-24T02:31:58.409Z" },
+    { url = "https://files.pythonhosted.org/packages/22/e4/6b7b09729fa8b65aa027b61bb1bcbde723cfdeb3fbe8f05a24cb71682cc2/aethersearch_devtools-0.7.6-py3-none-macosx_11_0_arm64.whl", hash = "sha256:289d126f5e0d42cea8c164a0b8be4ca7948fe3b6a5afd72e2b4868da4ed6a7f7", size = 3925618, upload-time = "2026-04-24T02:32:02.608Z" },
+    { url = "https://files.pythonhosted.org/packages/dd/7b/fd0d4f7f57c4d8e2c87283c37a1a222ae82a76db1638c1dc59f908339175/aethersearch_devtools-0.7.6-py3-none-manylinux_2_17_aarch64.whl", hash = "sha256:1aca8681a00bce984f7b9639be00e6b2a90718d5872d3e3781922423940cc915", size = 3791309, upload-time = "2026-04-24T02:31:55.484Z" },
+    { url = "https://files.pythonhosted.org/packages/1b/5c/b47887f90eff14666f888e1993bc03fae7eaac5becd6ec6b6a84b0b9853b/aethersearch_devtools-0.7.6-py3-none-manylinux_2_17_x86_64.whl", hash = "sha256:2f4cc8d1cbaa116f54c7556206cfd2c029ed7faeb16c02fcfdee12f525cf5aab", size = 4215980, upload-time = "2026-04-24T02:31:57.629Z" },
+    { url = "https://files.pythonhosted.org/packages/80/6c/96ee0a26673b09d0c254e8af25e69c19e45887216ca508fc3b9dd8a6214c/aethersearch_devtools-0.7.6-py3-none-win_amd64.whl", hash = "sha256:2f82951d5470e4c05f64760282e59ef086a0640c4f5584e517f94a8c5d3a60d4", size = 4333866, upload-time = "2026-04-24T02:31:57.973Z" },
+    { url = "https://files.pythonhosted.org/packages/8f/b9/ce77376bc57bdfa08acbc4088904d6d737538e277a3bb8a0bd35a67e17fe/aethersearch_devtools-0.7.6-py3-none-win_arm64.whl", hash = "sha256:821b1aee102b8f3f2874a2cb774e59c31513d6c471c9c84f85b408d5a9c4524a", size = 3872019, upload-time = "2026-04-24T02:31:57.356Z" },
 ]
 
 [[package]]

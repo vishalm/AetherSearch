@@ -1,15 +1,15 @@
-{{- if and (.Values.api.autoscaling.enabled) (eq (include "onyx.autoscaling.engine" .) "keda") }}
+{{- if and (.Values.api.autoscaling.enabled) (eq (include "aethersearch.autoscaling.engine" .) "keda") }}
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
-  name: {{ include "onyx.fullname" . }}-api
+  name: {{ include "aethersearch.fullname" . }}-api
   labels:
-    {{- include "onyx.labels" . | nindent 4 }}
+    {{- include "aethersearch.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "onyx.fullname" . }}-api-server
+    name: {{ include "aethersearch.fullname" . }}-api-server
   minReplicaCount: {{ .Values.api.autoscaling.minReplicas | default 1 }}
   maxReplicaCount: {{ .Values.api.autoscaling.maxReplicas | default 10 }}
   pollingInterval: {{ .Values.api.autoscaling.pollingInterval | default 30 }}

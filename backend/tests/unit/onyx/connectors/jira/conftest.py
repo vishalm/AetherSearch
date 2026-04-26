@@ -5,7 +5,7 @@ from unittest.mock import patch
 import pytest
 from jira import JIRA
 
-from onyx.connectors.jira.connector import JiraConnector
+from aethersearch.connectors.jira.connector import JiraConnector
 
 
 @pytest.fixture
@@ -53,5 +53,5 @@ def jira_connector(
     )
     connector._jira_client = mock_jira_client
     connector._jira_client.client_info.return_value = jira_base_url
-    with patch("onyx.connectors.jira.connector._JIRA_FULL_PAGE_SIZE", 2):
+    with patch("aethersearch.connectors.jira.connector._JIRA_FULL_PAGE_SIZE", 2):
         yield connector

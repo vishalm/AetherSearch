@@ -2,11 +2,11 @@ import uuid
 from datetime import datetime
 from datetime import timezone
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentFailure
-from onyx.connectors.models import TextSection
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentFailure
+from aethersearch.connectors.models import TextSection
 
 
 def create_test_document(

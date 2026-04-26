@@ -12,18 +12,18 @@ from pydantic import BaseModel
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.configs.app_configs import WEB_DOMAIN
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.interfaces import OAuthConnector
-from onyx.db.credentials import create_credential
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.redis.redis_pool import get_redis_client
-from onyx.server.documents.models import CredentialBase
-from onyx.utils.logger import setup_logger
-from onyx.utils.subclasses import find_all_subclasses_in_package
+from aethersearch.auth.permissions import require_permission
+from aethersearch.configs.app_configs import WEB_DOMAIN
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.interfaces import OAuthConnector
+from aethersearch.db.credentials import create_credential
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.server.documents.models import CredentialBase
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.subclasses import find_all_subclasses_in_package
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()
@@ -47,7 +47,7 @@ def _discover_oauth_connectors() -> dict[DocumentSource, type[OAuthConnector]]:
 
     # Import submodules using package-based discovery to avoid sys.path mutations
     oauth_connectors = find_all_subclasses_in_package(
-        cast(type[OAuthConnector], OAuthConnector), "onyx.connectors"
+        cast(type[OAuthConnector], OAuthConnector), "aethersearch.connectors"
     )
 
     _OAUTH_CONNECTORS = {cls.oauth_id(): cls for cls in oauth_connectors}

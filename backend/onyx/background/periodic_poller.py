@@ -18,7 +18,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from dataclasses import field
 
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -45,13 +45,13 @@ class _PeriodicTaskDef:
 
 
 def _run_auto_llm_update() -> None:
-    from onyx.configs.app_configs import AUTO_LLM_CONFIG_URL
+    from aethersearch.configs.app_configs import AUTO_LLM_CONFIG_URL
 
     if not AUTO_LLM_CONFIG_URL:
         return
 
-    from onyx.db.engine.sql_engine import get_session_with_current_tenant
-    from onyx.llm.well_known_providers.auto_update_service import (
+    from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+    from aethersearch.llm.well_known_providers.auto_update_service import (
         sync_llm_models_from_github,
     )
 
@@ -60,16 +60,16 @@ def _run_auto_llm_update() -> None:
 
 
 def _run_cache_cleanup() -> None:
-    from onyx.cache.postgres_backend import cleanup_expired_cache_entries
+    from aethersearch.cache.postgres_backend import cleanup_expired_cache_entries
 
     cleanup_expired_cache_entries()
 
 
 def _run_scheduled_eval() -> None:
-    from onyx.configs.app_configs import BRAINTRUST_API_KEY
-    from onyx.configs.app_configs import SCHEDULED_EVAL_DATASET_NAMES
-    from onyx.configs.app_configs import SCHEDULED_EVAL_PERMISSIONS_EMAIL
-    from onyx.configs.app_configs import SCHEDULED_EVAL_PROJECT
+    from aethersearch.configs.app_configs import BRAINTRUST_API_KEY
+    from aethersearch.configs.app_configs import SCHEDULED_EVAL_DATASET_NAMES
+    from aethersearch.configs.app_configs import SCHEDULED_EVAL_PERMISSIONS_EMAIL
+    from aethersearch.configs.app_configs import SCHEDULED_EVAL_PROJECT
 
     if not all(
         [
@@ -84,8 +84,8 @@ def _run_scheduled_eval() -> None:
     from datetime import datetime
     from datetime import timezone
 
-    from onyx.evals.eval import run_eval
-    from onyx.evals.models import EvalConfigurationOptions
+    from aethersearch.evals.eval import run_eval
+    from aethersearch.evals.models import EvalConfigurationOptions
 
     run_timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     for dataset_name in SCHEDULED_EVAL_DATASET_NAMES:
@@ -110,11 +110,11 @@ _CACHE_CLEANUP_INTERVAL_SECONDS = 300
 
 
 def _build_periodic_tasks() -> list[_PeriodicTaskDef]:
-    from onyx.cache.interface import CacheBackendType
-    from onyx.configs.app_configs import AUTO_LLM_CONFIG_URL
-    from onyx.configs.app_configs import AUTO_LLM_UPDATE_INTERVAL_SECONDS
-    from onyx.configs.app_configs import CACHE_BACKEND
-    from onyx.configs.app_configs import SCHEDULED_EVAL_DATASET_NAMES
+    from aethersearch.cache.interface import CacheBackendType
+    from aethersearch.configs.app_configs import AUTO_LLM_CONFIG_URL
+    from aethersearch.configs.app_configs import AUTO_LLM_UPDATE_INTERVAL_SECONDS
+    from aethersearch.configs.app_configs import CACHE_BACKEND
+    from aethersearch.configs.app_configs import SCHEDULED_EVAL_DATASET_NAMES
 
     tasks: list[_PeriodicTaskDef] = []
     if CACHE_BACKEND == CacheBackendType.POSTGRES:
@@ -164,8 +164,8 @@ def _try_claim_task(task_def: _PeriodicTaskDef) -> bool:
 
     from sqlalchemy import text
 
-    from onyx.db.engine.sql_engine import get_session_with_current_tenant
-    from onyx.db.models import KVStore
+    from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+    from aethersearch.db.models import KVStore
 
     kv_key = PERIODIC_TASK_KV_PREFIX + task_def.name
 
@@ -218,9 +218,9 @@ def _try_run_periodic_task(task_def: _PeriodicTaskDef) -> None:
 
 
 def _run_drain_loops(tenant_id: str) -> None:
-    from onyx.background.task_utils import drain_delete_loop
-    from onyx.background.task_utils import drain_processing_loop
-    from onyx.background.task_utils import drain_project_sync_loop
+    from aethersearch.background.task_utils import drain_delete_loop
+    from aethersearch.background.task_utils import drain_processing_loop
+    from aethersearch.background.task_utils import drain_project_sync_loop
 
     drain_processing_loop(tenant_id)
     drain_delete_loop(tenant_id)

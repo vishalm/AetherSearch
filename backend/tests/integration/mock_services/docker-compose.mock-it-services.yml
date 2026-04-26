@@ -13,8 +13,8 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - onyx_default
+      - aethersearch_default
 networks:
-  onyx_default:
-    name: onyx_default
+  aethersearch_default:
+    name: aethersearch_default
     external: true

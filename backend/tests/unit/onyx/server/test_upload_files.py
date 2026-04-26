@@ -8,8 +8,8 @@ import pytest
 from fastapi import UploadFile
 from starlette.datastructures import Headers
 
-from onyx.configs.constants import FileOrigin
-from onyx.server.documents.connector import upload_files
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.server.documents.connector import upload_files
 
 
 def _create_test_zip() -> bytes:
@@ -29,7 +29,7 @@ def _make_upload_file(content: bytes, filename: str, content_type: str) -> Uploa
     )
 
 
-@patch("onyx.server.documents.connector.get_default_file_store")
+@patch("aethersearch.server.documents.connector.get_default_file_store")
 def test_upload_zip_with_unzip_true_extracts_files(
     mock_get_store: MagicMock,
 ) -> None:
@@ -51,7 +51,7 @@ def test_upload_zip_with_unzip_true_extracts_files(
     assert "file2.txt" in result.file_names
 
 
-@patch("onyx.server.documents.connector.get_default_file_store")
+@patch("aethersearch.server.documents.connector.get_default_file_store")
 def test_upload_zip_with_unzip_false_stores_zip_as_is(
     mock_get_store: MagicMock,
 ) -> None:
@@ -79,7 +79,7 @@ def test_upload_zip_with_unzip_false_stores_zip_as_is(
         assert set(zf.namelist()) == {"file1.txt", "file2.txt"}
 
 
-@patch("onyx.server.documents.connector.get_default_file_store")
+@patch("aethersearch.server.documents.connector.get_default_file_store")
 def test_upload_invalid_zip_with_unzip_false_raises(
     mock_get_store: MagicMock,
 ) -> None:
@@ -92,7 +92,7 @@ def test_upload_invalid_zip_with_unzip_false_raises(
         upload_files([bad_zip], FileOrigin.CONNECTOR, unzip=False)
 
 
-@patch("onyx.server.documents.connector.get_default_file_store")
+@patch("aethersearch.server.documents.connector.get_default_file_store")
 def test_upload_multiple_zips_rejected_when_unzip_false(
     mock_get_store: MagicMock,
 ) -> None:

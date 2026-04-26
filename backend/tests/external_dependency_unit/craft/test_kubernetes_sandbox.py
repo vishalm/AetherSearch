@@ -3,7 +3,7 @@
 This test requires:
 - A running Kubernetes cluster (kind, minikube, or real cluster)
 - The SANDBOX_BACKEND=kubernetes environment variable
-- The sandbox namespace to exist (default: onyx-sandboxes)
+- The sandbox namespace to exist (default: aethersearch-sandboxes)
 - Service accounts for sandbox (sandbox-runner, sandbox-file-sync)
 
 Run with:
@@ -21,18 +21,18 @@ from kubernetes import config
 from kubernetes.client.rest import ApiException
 from kubernetes.stream import stream as k8s_stream
 
-from onyx.db.engine.sql_engine import SqlEngine
-from onyx.db.enums import SandboxStatus
-from onyx.server.features.build.configs import SANDBOX_BACKEND
-from onyx.server.features.build.configs import SANDBOX_NAMESPACE
-from onyx.server.features.build.configs import SANDBOX_NEXTJS_PORT_START
-from onyx.server.features.build.configs import SandboxBackend
-from onyx.server.features.build.sandbox.base import ACPEvent
-from onyx.server.features.build.sandbox.kubernetes.kubernetes_sandbox_manager import (
+from aethersearch.db.engine.sql_engine import SqlEngine
+from aethersearch.db.enums import SandboxStatus
+from aethersearch.server.features.build.configs import SANDBOX_BACKEND
+from aethersearch.server.features.build.configs import SANDBOX_NAMESPACE
+from aethersearch.server.features.build.configs import SANDBOX_NEXTJS_PORT_START
+from aethersearch.server.features.build.configs import SandboxBackend
+from aethersearch.server.features.build.sandbox.base import ACPEvent
+from aethersearch.server.features.build.sandbox.kubernetes.kubernetes_sandbox_manager import (
     KubernetesSandboxManager,
 )
-from onyx.server.features.build.sandbox.models import LLMProviderConfig
-from onyx.utils.logger import setup_logger
+from aethersearch.server.features.build.sandbox.models import LLMProviderConfig
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import CURRENT_TENANT_ID_CONTEXTVAR
 
 logger = setup_logger()

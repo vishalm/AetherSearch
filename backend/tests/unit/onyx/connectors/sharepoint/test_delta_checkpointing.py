@@ -19,14 +19,14 @@ from typing import Any
 
 import pytest
 
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentSource
-from onyx.connectors.models import TextSection
-from onyx.connectors.sharepoint.connector import DriveItemData
-from onyx.connectors.sharepoint.connector import SharepointConnector
-from onyx.connectors.sharepoint.connector import SharepointConnectorCheckpoint
-from onyx.connectors.sharepoint.connector import SiteDescriptor
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentSource
+from aethersearch.connectors.models import TextSection
+from aethersearch.connectors.sharepoint.connector import DriveItemData
+from aethersearch.connectors.sharepoint.connector import SharepointConnector
+from aethersearch.connectors.sharepoint.connector import SharepointConnectorCheckpoint
+from aethersearch.connectors.sharepoint.connector import SiteDescriptor
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -151,7 +151,7 @@ def _mock_convert(monkeypatch: pytest.MonkeyPatch) -> None:
         return _make_document(driveitem)
 
     monkeypatch.setattr(
-        "onyx.connectors.sharepoint.connector._convert_driveitem_to_document_with_permissions",
+        "aethersearch.connectors.sharepoint.connector._convert_driveitem_to_document_with_permissions",
         fake_convert,
     )
 

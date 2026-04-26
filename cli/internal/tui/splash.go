@@ -6,20 +6,20 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-const onyxLogo = `   ██████╗ ███╗   ██╗██╗   ██╗██╗  ██╗
+const aethersearchLogo = `   ██████╗ ███╗   ██╗██╗   ██╗██╗  ██╗
   ██╔═══██╗████╗  ██║╚██╗ ██╔╝╚██╗██╔╝
   ██║   ██║██╔██╗ ██║ ╚████╔╝  ╚███╔╝
   ██║   ██║██║╚██╗██║  ╚██╔╝   ██╔██╗
   ╚██████╔╝██║ ╚████║   ██║   ██╔╝ ██╗
    ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝`
 
-const tagline = "Your terminal interface for Onyx"
+const tagline = "Your terminal interface for AetherSearch"
 const splashHint = "Type a message to begin  ·  /help for commands"
 
 // renderSplash renders the splash screen centered for the given dimensions.
 func renderSplash(width, height int) string {
 	// Render the logo as a single block (don't center individual lines)
-	logo := splashStyle.Render(onyxLogo)
+	logo := splashStyle.Render(aethersearchLogo)
 
 	// Center tagline and hint relative to the logo block width
 	logoWidth := lipgloss.Width(logo)
@@ -38,7 +38,7 @@ func renderSplash(width, height int) string {
 // RenderSplashOnboarding renders splash for the terminal onboarding screen.
 func RenderSplashOnboarding(width, height int) string {
 	// Render the logo as a styled block, then center it as a unit
-	styledLogo := splashStyle.Render(onyxLogo)
+	styledLogo := splashStyle.Render(aethersearchLogo)
 	logoWidth := lipgloss.Width(styledLogo)
 	logoLines := strings.Split(styledLogo, "\n")
 

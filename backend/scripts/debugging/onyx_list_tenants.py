@@ -9,13 +9,13 @@ Usage:
 
 ```
 # List one tenant per line (default)
-PYTHONPATH=. python scripts/debugging/onyx_list_tenants.py
+PYTHONPATH=. python scripts/debugging/aethersearch_list_tenants.py
 
 # Output as CSV (all on one line)
-PYTHONPATH=. python scripts/debugging/onyx_list_tenants.py --csv
+PYTHONPATH=. python scripts/debugging/aethersearch_list_tenants.py --csv
 
 # Output as CSV batched into groups of 5
-PYTHONPATH=. python scripts/debugging/onyx_list_tenants.py --csv -n 5
+PYTHONPATH=. python scripts/debugging/aethersearch_list_tenants.py --csv -n 5
 ```
 
 """
@@ -23,8 +23,8 @@ PYTHONPATH=. python scripts/debugging/onyx_list_tenants.py --csv -n 5
 import argparse
 import sys
 
-from onyx.db.engine.sql_engine import SqlEngine
-from onyx.db.engine.tenant_utils import get_all_tenant_ids
+from aethersearch.db.engine.sql_engine import SqlEngine
+from aethersearch.db.engine.tenant_utils import get_all_tenant_ids
 from shared_configs.configs import TENANT_ID_PREFIX
 
 

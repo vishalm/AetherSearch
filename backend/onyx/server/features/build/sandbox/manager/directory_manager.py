@@ -9,21 +9,21 @@ import json
 import shutil
 from pathlib import Path
 
-from onyx.server.features.build.sandbox.util.agent_instructions import (
+from aethersearch.server.features.build.sandbox.util.agent_instructions import (
     generate_agent_instructions,
 )
-from onyx.server.features.build.sandbox.util.opencode_config import (
+from aethersearch.server.features.build.sandbox.util.opencode_config import (
     build_opencode_config,
 )
-from onyx.server.features.build.sandbox.util.persona_mapping import (
+from aethersearch.server.features.build.sandbox.util.persona_mapping import (
     generate_user_identity_content,
 )
-from onyx.server.features.build.sandbox.util.persona_mapping import get_persona_info
-from onyx.server.features.build.sandbox.util.persona_mapping import ORG_INFO_AGENTS_MD
-from onyx.server.features.build.sandbox.util.persona_mapping import (
+from aethersearch.server.features.build.sandbox.util.persona_mapping import get_persona_info
+from aethersearch.server.features.build.sandbox.util.persona_mapping import ORG_INFO_AGENTS_MD
+from aethersearch.server.features.build.sandbox.util.persona_mapping import (
     ORGANIZATION_STRUCTURE,
 )
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -378,7 +378,7 @@ class DirectoryManager:
         """Create opencode.json configuration file for the agent.
 
         Configures the opencode CLI agent with the LLM provider settings
-        from Onyx's configured LLM provider.
+        from AetherSearch's configured LLM provider.
 
         Args:
             sandbox_path: Path to the sandbox directory

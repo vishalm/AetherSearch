@@ -7,7 +7,7 @@ import Attachment from "@/refresh-components/Attachment";
 import { InMessageImage } from "@/app/app/components/files/images/InMessageImage";
 import CsvContent from "@/components/tools/CSVContent";
 import PreviewModal from "@/sections/modals/PreviewModal";
-import { MinimalOnyxDocument } from "@/lib/search/interfaces";
+import { MinimalAetherSearchDocument } from "@/lib/search/interfaces";
 import ExpandableContentWrapper from "@/components/tools/ExpandableContentWrapper";
 
 interface FileContainerProps {
@@ -49,7 +49,7 @@ export default function FileDisplay({ files }: FileDisplayProps) {
     (file) => file.type === ChatFileType.TABULAR
   );
 
-  const presentingDocument: MinimalOnyxDocument = {
+  const presentingDocument: MinimalAetherSearchDocument = {
     document_id: previewingFile?.id ?? "",
     semantic_identifier: previewingFile?.name ?? "",
   };
@@ -64,7 +64,7 @@ export default function FileDisplay({ files }: FileDisplayProps) {
       )}
 
       {textFiles.length > 0 && (
-        <FileContainer id="onyx-file">
+        <FileContainer id="aethersearch-file">
           {textFiles.map((file) => (
             <Attachment
               key={file.id}
@@ -76,7 +76,7 @@ export default function FileDisplay({ files }: FileDisplayProps) {
       )}
 
       {imageFiles.length > 0 && (
-        <FileContainer id="onyx-image">
+        <FileContainer id="aethersearch-image">
           {imageFiles.map((file) => (
             <InMessageImage key={file.id} fileId={file.id} />
           ))}

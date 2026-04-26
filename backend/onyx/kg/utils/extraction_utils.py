@@ -1,43 +1,43 @@
 import json
 
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import OnyxCallTypes
-from onyx.configs.kg_configs import KG_METADATA_TRACKING_THRESHOLD
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.entities import get_kg_entity_by_document
-from onyx.db.entity_type import get_entity_types
-from onyx.db.kg_config import KGConfigSettings
-from onyx.db.models import Document
-from onyx.db.models import KGEntityType
-from onyx.db.models import KGRelationshipType
-from onyx.db.tag import get_structured_tags_for_document
-from onyx.kg.models import KGAttributeEntityOption
-from onyx.kg.models import KGAttributeTrackInfo
-from onyx.kg.models import KGAttributeTrackType
-from onyx.kg.models import KGChunkFormat
-from onyx.kg.models import KGClassificationInstructions
-from onyx.kg.models import KGClassificationResult
-from onyx.kg.models import KGDocumentDeepExtractionResults
-from onyx.kg.models import KGEnhancedDocumentMetadata
-from onyx.kg.models import KGImpliedExtractionResults
-from onyx.kg.models import KGMetadataContent
-from onyx.kg.utils.formatting_utils import extract_email
-from onyx.kg.utils.formatting_utils import get_entity_type
-from onyx.kg.utils.formatting_utils import kg_email_processing
-from onyx.kg.utils.formatting_utils import make_entity_id
-from onyx.kg.utils.formatting_utils import make_relationship_id
-from onyx.kg.utils.formatting_utils import make_relationship_type_id
-from onyx.kg.vespa.vespa_interactions import get_document_vespa_contents
-from onyx.llm.factory import get_default_llm
-from onyx.llm.models import UserMessage
-from onyx.llm.utils import llm_response_to_string
-from onyx.prompts.kg_prompts import CALL_CHUNK_PREPROCESSING_PROMPT
-from onyx.prompts.kg_prompts import CALL_DOCUMENT_CLASSIFICATION_PROMPT
-from onyx.prompts.kg_prompts import GENERAL_CHUNK_PREPROCESSING_PROMPT
-from onyx.prompts.kg_prompts import MASTER_EXTRACTION_PROMPT
-from onyx.tracing.llm_utils import llm_generation_span
-from onyx.tracing.llm_utils import record_llm_response
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import AetherSearchCallTypes
+from aethersearch.configs.kg_configs import KG_METADATA_TRACKING_THRESHOLD
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.entities import get_kg_entity_by_document
+from aethersearch.db.entity_type import get_entity_types
+from aethersearch.db.kg_config import KGConfigSettings
+from aethersearch.db.models import Document
+from aethersearch.db.models import KGEntityType
+from aethersearch.db.models import KGRelationshipType
+from aethersearch.db.tag import get_structured_tags_for_document
+from aethersearch.kg.models import KGAttributeEntityOption
+from aethersearch.kg.models import KGAttributeTrackInfo
+from aethersearch.kg.models import KGAttributeTrackType
+from aethersearch.kg.models import KGChunkFormat
+from aethersearch.kg.models import KGClassificationInstructions
+from aethersearch.kg.models import KGClassificationResult
+from aethersearch.kg.models import KGDocumentDeepExtractionResults
+from aethersearch.kg.models import KGEnhancedDocumentMetadata
+from aethersearch.kg.models import KGImpliedExtractionResults
+from aethersearch.kg.models import KGMetadataContent
+from aethersearch.kg.utils.formatting_utils import extract_email
+from aethersearch.kg.utils.formatting_utils import get_entity_type
+from aethersearch.kg.utils.formatting_utils import kg_email_processing
+from aethersearch.kg.utils.formatting_utils import make_entity_id
+from aethersearch.kg.utils.formatting_utils import make_relationship_id
+from aethersearch.kg.utils.formatting_utils import make_relationship_type_id
+from aethersearch.kg.vespa.vespa_interactions import get_document_vespa_contents
+from aethersearch.llm.factory import get_default_llm
+from aethersearch.llm.models import UserMessage
+from aethersearch.llm.utils import llm_response_to_string
+from aethersearch.prompts.kg_prompts import CALL_CHUNK_PREPROCESSING_PROMPT
+from aethersearch.prompts.kg_prompts import CALL_DOCUMENT_CLASSIFICATION_PROMPT
+from aethersearch.prompts.kg_prompts import GENERAL_CHUNK_PREPROCESSING_PROMPT
+from aethersearch.prompts.kg_prompts import MASTER_EXTRACTION_PROMPT
+from aethersearch.tracing.llm_utils import llm_generation_span
+from aethersearch.tracing.llm_utils import record_llm_response
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -197,7 +197,7 @@ def kg_implied_extraction(
     # Chunk treatment variables
 
     document_is_from_call = document_entity_type.lower() in (
-        call_type.value.lower() for call_type in OnyxCallTypes
+        call_type.value.lower() for call_type in AetherSearchCallTypes
     )
 
     # Get core entity
@@ -391,7 +391,7 @@ def kg_classify_document(
     # currently, classification is only done for calls
     # TODO: add support (or use same prompt and format) for non-call documents
     entity_type = get_entity_type(document_entity)
-    if entity_type not in (call_type.value for call_type in OnyxCallTypes):
+    if entity_type not in (call_type.value for call_type in AetherSearchCallTypes):
         return None
 
     # prepare prompt
@@ -458,7 +458,7 @@ def kg_deep_extract_chunks(
     # currently, calls are treated differently
     # TODO: either treat some other documents differently too, or ideally all the same way
     entity_type = get_entity_type(document_entity)
-    is_call = entity_type in (call_type.value for call_type in OnyxCallTypes)
+    is_call = entity_type in (call_type.value for call_type in AetherSearchCallTypes)
 
     content = "\n".join(chunk.content for chunk in chunk_batch)
 

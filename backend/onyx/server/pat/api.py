@@ -5,17 +5,17 @@ from fastapi import Depends
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.db.pat import create_pat
-from onyx.db.pat import list_user_pats
-from onyx.db.pat import revoke_pat
-from onyx.server.pat.models import CreatedTokenResponse
-from onyx.server.pat.models import CreateTokenRequest
-from onyx.server.pat.models import TokenResponse
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.permissions import require_permission
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.db.pat import create_pat
+from aethersearch.db.pat import list_user_pats
+from aethersearch.db.pat import revoke_pat
+from aethersearch.server.pat.models import CreatedTokenResponse
+from aethersearch.server.pat.models import CreateTokenRequest
+from aethersearch.server.pat.models import TokenResponse
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

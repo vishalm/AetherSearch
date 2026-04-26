@@ -2,17 +2,17 @@ from typing import Any
 
 import pytest
 
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import KV_GOOGLE_DRIVE_CRED_KEY
-from onyx.configs.constants import KV_GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY
-from onyx.connectors.google_utils.google_kv import get_auth_url
-from onyx.connectors.google_utils.google_kv import get_google_app_cred
-from onyx.connectors.google_utils.google_kv import get_service_account_key
-from onyx.connectors.google_utils.google_kv import upsert_google_app_cred
-from onyx.connectors.google_utils.google_kv import upsert_service_account_key
-from onyx.server.documents.models import GoogleAppCredentials
-from onyx.server.documents.models import GoogleAppWebCredentials
-from onyx.server.documents.models import GoogleServiceAccountKey
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import KV_GOOGLE_DRIVE_CRED_KEY
+from aethersearch.configs.constants import KV_GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY
+from aethersearch.connectors.google_utils.google_kv import get_auth_url
+from aethersearch.connectors.google_utils.google_kv import get_google_app_cred
+from aethersearch.connectors.google_utils.google_kv import get_service_account_key
+from aethersearch.connectors.google_utils.google_kv import upsert_google_app_cred
+from aethersearch.connectors.google_utils.google_kv import upsert_service_account_key
+from aethersearch.server.documents.models import GoogleAppCredentials
+from aethersearch.server.documents.models import GoogleAppWebCredentials
+from aethersearch.server.documents.models import GoogleServiceAccountKey
 
 
 def _make_app_creds() -> GoogleAppCredentials:
@@ -56,7 +56,7 @@ def test_upsert_google_app_cred_stores_dict(monkeypatch: Any) -> None:
             stored["encrypt"] = encrypt
 
     monkeypatch.setattr(
-        "onyx.connectors.google_utils.google_kv.get_kv_store", lambda: _StubKvStore()
+        "aethersearch.connectors.google_utils.google_kv.get_kv_store", lambda: _StubKvStore()
     )
 
     upsert_google_app_cred(_make_app_creds(), DocumentSource.GOOGLE_DRIVE)
@@ -77,7 +77,7 @@ def test_upsert_service_account_key_stores_dict(monkeypatch: Any) -> None:
             stored["encrypt"] = encrypt
 
     monkeypatch.setattr(
-        "onyx.connectors.google_utils.google_kv.get_kv_store", lambda: _StubKvStore()
+        "aethersearch.connectors.google_utils.google_kv.get_kv_store", lambda: _StubKvStore()
     )
 
     upsert_service_account_key(_make_service_account_key(), DocumentSource.GOOGLE_DRIVE)
@@ -103,7 +103,7 @@ def test_get_google_app_cred_accepts_dict_and_legacy_string(
             return stored_value
 
     monkeypatch.setattr(
-        "onyx.connectors.google_utils.google_kv.get_kv_store", lambda: _StubKvStore()
+        "aethersearch.connectors.google_utils.google_kv.get_kv_store", lambda: _StubKvStore()
     )
 
     creds = get_google_app_cred(DocumentSource.GOOGLE_DRIVE)
@@ -127,7 +127,7 @@ def test_get_service_account_key_accepts_dict_and_legacy_string(
             return stored_value
 
     monkeypatch.setattr(
-        "onyx.connectors.google_utils.google_kv.get_kv_store", lambda: _StubKvStore()
+        "aethersearch.connectors.google_utils.google_kv.get_kv_store", lambda: _StubKvStore()
     )
 
     key = get_service_account_key(DocumentSource.GOOGLE_DRIVE)
@@ -161,7 +161,7 @@ def test_get_auth_url_accepts_dict_and_legacy_string(
             return "https://accounts.google.com/o/oauth2/auth?state=test-state", None
 
     monkeypatch.setattr(
-        "onyx.connectors.google_utils.google_kv.get_kv_store", lambda: _StubKvStore()
+        "aethersearch.connectors.google_utils.google_kv.get_kv_store", lambda: _StubKvStore()
     )
 
     def _from_client_config(
@@ -171,7 +171,7 @@ def test_get_auth_url_accepts_dict_and_legacy_string(
         return _StubFlow()
 
     monkeypatch.setattr(
-        "onyx.connectors.google_utils.google_kv.InstalledAppFlow.from_client_config",
+        "aethersearch.connectors.google_utils.google_kv.InstalledAppFlow.from_client_config",
         _from_client_config,
     )
 

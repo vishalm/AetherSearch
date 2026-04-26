@@ -15,7 +15,7 @@ Connectors never change source type, and names change rarely, so the
 cache is safe to hold for the worker's lifetime.
 
 Usage in a worker app module:
-    from onyx.server.metrics.indexing_task_metrics import (
+    from aethersearch.server.metrics.indexing_task_metrics import (
         on_indexing_task_prerun,
         on_indexing_task_postrun,
     )
@@ -29,9 +29,9 @@ from celery import Task
 from prometheus_client import Counter
 from prometheus_client import Histogram
 
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.server.metrics.celery_task_metrics import _MAX_START_TIME_AGE_SECONDS
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.server.metrics.celery_task_metrics import _MAX_START_TIME_AGE_SECONDS
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import CURRENT_TENANT_ID_CONTEXTVAR
 
 logger = setup_logger()
@@ -59,20 +59,20 @@ _connector_cache_lock = threading.Lock()
 # Only enrich these task types with per-connector labels
 _INDEXING_TASK_NAMES: frozenset[str] = frozenset(
     {
-        OnyxCeleryTask.CONNECTOR_DOC_FETCHING_TASK,
-        OnyxCeleryTask.DOCPROCESSING_TASK,
+        AetherSearchCeleryTask.CONNECTOR_DOC_FETCHING_TASK,
+        AetherSearchCeleryTask.DOCPROCESSING_TASK,
     }
 )
 
 # connector_name is intentionally excluded — see module docstring.
 INDEXING_TASK_STARTED = Counter(
-    "onyx_indexing_task_started_total",
+    "aethersearch_indexing_task_started_total",
     "Indexing tasks started per connector",
     ["task_name", "source", "tenant_id", "cc_pair_id"],
 )
 
 INDEXING_TASK_COMPLETED = Counter(
-    "onyx_indexing_task_completed_total",
+    "aethersearch_indexing_task_completed_total",
     "Indexing tasks completed per connector",
     [
         "task_name",
@@ -84,7 +84,7 @@ INDEXING_TASK_COMPLETED = Counter(
 )
 
 INDEXING_TASK_DURATION = Histogram(
-    "onyx_indexing_task_duration_seconds",
+    "aethersearch_indexing_task_duration_seconds",
     "Indexing task duration by connector type",
     ["task_name", "source", "tenant_id"],
     buckets=[1, 5, 15, 30, 60, 120, 300, 600, 1800, 3600],
@@ -135,10 +135,10 @@ def _resolve_connector(cc_pair_id: int) -> ConnectorInfo:
             return cached
 
     try:
-        from onyx.db.connector_credential_pair import (
+        from aethersearch.db.connector_credential_pair import (
             get_connector_credential_pair_from_id,
         )
-        from onyx.db.engine.sql_engine import get_session_with_current_tenant
+        from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
 
         with get_session_with_current_tenant() as db_session:
             cc_pair = get_connector_credential_pair_from_id(

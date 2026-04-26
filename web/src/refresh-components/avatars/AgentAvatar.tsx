@@ -2,7 +2,7 @@
 
 import { MinimalPersonaSnapshot } from "@/app/admin/agents/interfaces";
 import { buildImgUrl } from "@/app/app/components/files/images/utils";
-import { SvgOnyxLogo } from "@opal/logos";
+import { SvgAetherSearchLogo } from "@opal/logos";
 import { useSettingsContext } from "@/providers/SettingsProvider";
 import { DEFAULT_AVATAR_SIZE_PX, DEFAULT_AGENT_ID } from "@/lib/constants";
 import CustomAgentAvatar from "@/refresh-components/avatars/CustomAgentAvatar";
@@ -35,7 +35,7 @@ export default function AgentAvatar({
         />
       </div>
     ) : (
-      <SvgOnyxLogo size={size} className="shrink-0" />
+      <SvgAetherSearchLogo size={size} className="shrink-0" />
     );
   }
 

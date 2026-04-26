@@ -9,15 +9,15 @@ from typing import TypeVar
 
 from pydantic import BaseModel
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.models import ConnectorCheckpoint
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import SlimDocument
-from onyx.file_store.staging import RawFileCallback
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.models import ConnectorCheckpoint
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import SlimDocument
+from aethersearch.file_store.staging import RawFileCallback
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.utils.variable_functionality import fetch_ee_implementation_or_noop
 
 SecondsSinceUnixEpoch = float
 
@@ -82,7 +82,7 @@ class BaseConnector(abc.ABC, Generic[CT]):
         to do permission sync validation
         """
         validate_connector_settings_fn = fetch_ee_implementation_or_noop(
-            "onyx.connectors.perm_sync_valid",
+            "aethersearch.connectors.perm_sync_valid",
             "validate_perm_sync",
             noop_return_value=None,
         )

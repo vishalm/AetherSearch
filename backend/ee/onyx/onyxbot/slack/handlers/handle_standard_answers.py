@@ -5,26 +5,26 @@ from slack_sdk.models.blocks import ButtonElement
 from slack_sdk.models.blocks import SectionBlock
 from sqlalchemy.orm import Session
 
-from ee.onyx.db.standard_answer import fetch_standard_answer_categories_by_names
-from ee.onyx.db.standard_answer import find_matching_standard_answers
-from onyx.configs.constants import MessageType
-from onyx.configs.onyxbot_configs import ONYX_BOT_REACT_EMOJI
-from onyx.db.chat import create_chat_session
-from onyx.db.chat import create_new_chat_message
-from onyx.db.chat import get_chat_messages_by_sessions
-from onyx.db.chat import get_chat_sessions_by_slack_thread_id
-from onyx.db.chat import get_or_create_root_message
-from onyx.db.models import SlackChannelConfig
-from onyx.db.models import StandardAnswer as StandardAnswerModel
-from onyx.onyxbot.slack.blocks import get_restate_blocks
-from onyx.onyxbot.slack.constants import GENERATE_ANSWER_BUTTON_ACTION_ID
-from onyx.onyxbot.slack.handlers.utils import send_team_member_message
-from onyx.onyxbot.slack.models import SlackMessageInfo
-from onyx.onyxbot.slack.utils import respond_in_thread_or_channel
-from onyx.onyxbot.slack.utils import update_emote_react
-from onyx.server.manage.models import StandardAnswer as PydanticStandardAnswer
-from onyx.utils.logger import OnyxLoggingAdapter
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.db.standard_answer import fetch_standard_answer_categories_by_names
+from ee.aethersearch.db.standard_answer import find_matching_standard_answers
+from aethersearch.configs.constants import MessageType
+from aethersearch.configs.aethersearchbot_configs import AETHERSEARCH_BOT_REACT_EMOJI
+from aethersearch.db.chat import create_chat_session
+from aethersearch.db.chat import create_new_chat_message
+from aethersearch.db.chat import get_chat_messages_by_sessions
+from aethersearch.db.chat import get_chat_sessions_by_slack_thread_id
+from aethersearch.db.chat import get_or_create_root_message
+from aethersearch.db.models import SlackChannelConfig
+from aethersearch.db.models import StandardAnswer as StandardAnswerModel
+from aethersearch.aethersearchbot.slack.blocks import get_restate_blocks
+from aethersearch.aethersearchbot.slack.constants import GENERATE_ANSWER_BUTTON_ACTION_ID
+from aethersearch.aethersearchbot.slack.handlers.utils import send_team_member_message
+from aethersearch.aethersearchbot.slack.models import SlackMessageInfo
+from aethersearch.aethersearchbot.slack.utils import respond_in_thread_or_channel
+from aethersearch.aethersearchbot.slack.utils import update_emote_react
+from aethersearch.server.manage.models import StandardAnswer as PydanticStandardAnswer
+from aethersearch.utils.logger import AetherSearchLoggingAdapter
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -80,7 +80,7 @@ def _handle_standard_answers(
     message_info: SlackMessageInfo,
     receiver_ids: list[str] | None,
     slack_channel_config: SlackChannelConfig,
-    logger: OnyxLoggingAdapter,
+    logger: AetherSearchLoggingAdapter,
     client: WebClient,
     db_session: Session,
 ) -> bool:
@@ -148,7 +148,7 @@ def _handle_standard_answers(
             persona_id=(
                 slack_channel_config.persona.id if slack_channel_config.persona else 0
             ),
-            onyxbot_flow=True,
+            aethersearchbot_flow=True,
             slack_thread_id=slack_thread_id,
         )
 
@@ -193,7 +193,7 @@ def _handle_standard_answers(
         db_session.commit()
 
         update_emote_react(
-            emoji=ONYX_BOT_REACT_EMOJI,
+            emoji=AETHERSEARCH_BOT_REACT_EMOJI,
             channel=message_info.channel_to_respond,
             message_ts=message_info.msg_to_respond,
             remove=True,
@@ -216,7 +216,7 @@ def _handle_standard_answers(
                 client=client,
                 channel=message_info.channel_to_respond,
                 receiver_ids=receiver_ids,
-                text="Hello! Onyx has some results for you!",
+                text="Hello! AetherSearch has some results for you!",
                 blocks=all_blocks,
                 thread_ts=message_info.msg_to_respond,
                 unfurl=False,

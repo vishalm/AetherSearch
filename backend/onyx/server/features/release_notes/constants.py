@@ -2,12 +2,12 @@
 
 # GitHub source
 GITHUB_RAW_BASE_URL = (
-    "https://raw.githubusercontent.com/onyx-dot-app/documentation/main"
+    "https://raw.githubusercontent.com/aethersearch-dot-app/documentation/main"
 )
 GITHUB_CHANGELOG_RAW_URL = f"{GITHUB_RAW_BASE_URL}/changelog.mdx"
 
 # Base URL for changelog documentation (used for notification links)
-DOCS_CHANGELOG_BASE_URL = "https://docs.onyx.app/changelog"
+DOCS_CHANGELOG_BASE_URL = "https://docs.aethersearch.app/changelog"
 
 FETCH_TIMEOUT = 60.0
 

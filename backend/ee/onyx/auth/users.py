@@ -8,15 +8,15 @@ from fastapi import HTTPException
 from fastapi import Request
 from fastapi import status
 
-from ee.onyx.configs.app_configs import SUPER_CLOUD_API_KEY
-from ee.onyx.configs.app_configs import SUPER_USERS
-from ee.onyx.server.seeding import get_seed_config
-from onyx.auth.permissions import require_permission
-from onyx.configs.app_configs import AUTH_TYPE
-from onyx.configs.app_configs import USER_AUTH_SECRET
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.configs.app_configs import SUPER_CLOUD_API_KEY
+from ee.aethersearch.configs.app_configs import SUPER_USERS
+from ee.aethersearch.server.seeding import get_seed_config
+from aethersearch.auth.permissions import require_permission
+from aethersearch.configs.app_configs import AUTH_TYPE
+from aethersearch.configs.app_configs import USER_AUTH_SECRET
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

@@ -9,13 +9,13 @@ import requests
 from alembic import command
 from alembic.config import Config
 
-from onyx.configs.app_configs import POSTGRES_DB
-from onyx.configs.app_configs import POSTGRES_HOST
-from onyx.configs.app_configs import POSTGRES_PASSWORD
-from onyx.configs.app_configs import POSTGRES_PORT
-from onyx.configs.app_configs import POSTGRES_USER
-from onyx.document_index.vespa.index import DOCUMENT_ID_ENDPOINT
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import POSTGRES_DB
+from aethersearch.configs.app_configs import POSTGRES_HOST
+from aethersearch.configs.app_configs import POSTGRES_PASSWORD
+from aethersearch.configs.app_configs import POSTGRES_PORT
+from aethersearch.configs.app_configs import POSTGRES_USER
+from aethersearch.document_index.vespa.index import DOCUMENT_ID_ENDPOINT
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -94,23 +94,23 @@ def load_vespa(filename: str) -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Onyx checkpoint saving and loading.")
+    parser = argparse.ArgumentParser(description="AetherSearch checkpoint saving and loading.")
     parser.add_argument(
-        "--save", action="store_true", help="Save Onyx state to directory."
+        "--save", action="store_true", help="Save AetherSearch state to directory."
     )
     parser.add_argument(
-        "--load", action="store_true", help="Load Onyx state from save directory."
+        "--load", action="store_true", help="Load AetherSearch state from save directory."
     )
     parser.add_argument(
         "--postgres_container_name",
         type=str,
-        default="onyx-relational_db-1",
+        default="aethersearch-relational_db-1",
         help="Name of the postgres container to dump",
     )
     parser.add_argument(
         "--checkpoint_dir",
         type=str,
-        default=os.path.join("..", "onyx_checkpoint"),
+        default=os.path.join("..", "aethersearch_checkpoint"),
         help="A directory to store temporary files to.",
     )
 

@@ -3,27 +3,27 @@ group "default" {
 }
 
 variable "BACKEND_REPOSITORY" {
-  default = "onyxdotapp/onyx-backend"
+  default = "aethersearchdotapp/aethersearch-backend"
 }
 
 variable "WEB_SERVER_REPOSITORY" {
-  default = "onyxdotapp/onyx-web-server"
+  default = "aethersearchdotapp/aethersearch-web-server"
 }
 
 variable "MODEL_SERVER_REPOSITORY" {
-  default = "onyxdotapp/onyx-model-server"
+  default = "aethersearchdotapp/aethersearch-model-server"
 }
 
 variable "INTEGRATION_REPOSITORY" {
-  default = "onyxdotapp/onyx-integration"
+  default = "aethersearchdotapp/aethersearch-integration"
 }
 
 variable "CLI_REPOSITORY" {
-  default = "onyxdotapp/onyx-cli"
+  default = "aethersearchdotapp/aethersearch-cli"
 }
 
 variable "DEVCONTAINER_REPOSITORY" {
-  default = "onyxdotapp/onyx-devcontainer"
+  default = "aethersearchdotapp/aethersearch-devcontainer"
 }
 
 variable "TAG" {

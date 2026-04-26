@@ -6,14 +6,14 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.models import Document
-from onyx.connectors.salesforce.connector import _convert_to_metadata_value
-from onyx.connectors.salesforce.connector import SalesforceConnector
-from onyx.connectors.salesforce.utils import ID_FIELD
-from onyx.connectors.salesforce.utils import MODIFIED_FIELD
-from onyx.connectors.salesforce.utils import NAME_FIELD
-from onyx.connectors.salesforce.utils import SalesforceObject
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.salesforce.connector import _convert_to_metadata_value
+from aethersearch.connectors.salesforce.connector import SalesforceConnector
+from aethersearch.connectors.salesforce.utils import ID_FIELD
+from aethersearch.connectors.salesforce.utils import MODIFIED_FIELD
+from aethersearch.connectors.salesforce.utils import NAME_FIELD
+from aethersearch.connectors.salesforce.utils import SalesforceObject
 
 
 class TestConvertToMetadataValue:
@@ -77,7 +77,7 @@ class TestYieldDocBatches:
 
     @pytest.fixture
     def mock_sf_db(self) -> MagicMock:
-        """Create a mock OnyxSalesforceSQLite object."""
+        """Create a mock AetherSearchSalesforceSQLite object."""
         return MagicMock()
 
     def _create_salesforce_object(
@@ -93,7 +93,7 @@ class TestYieldDocBatches:
         data.setdefault(NAME_FIELD, f"Test {object_type}")
         return SalesforceObject(id=object_id, type=object_type, data=data)
 
-    @patch("onyx.connectors.salesforce.connector.convert_sf_object_to_doc")
+    @patch("aethersearch.connectors.salesforce.connector.convert_sf_object_to_doc")
     def test_metadata_type_conversion_for_opportunity(
         self,
         mock_convert: MagicMock,
@@ -191,7 +191,7 @@ class TestYieldDocBatches:
         assert parents_changed == 1
         assert type_to_processed[parent_type] == 1
 
-    @patch("onyx.connectors.salesforce.connector.convert_sf_object_to_doc")
+    @patch("aethersearch.connectors.salesforce.connector.convert_sf_object_to_doc")
     def test_missing_optional_metadata_fields(
         self,
         mock_convert: MagicMock,
@@ -259,7 +259,7 @@ class TestYieldDocBatches:
         assert "fiscal_year" not in doc.metadata
         assert "is_closed" not in doc.metadata
 
-    @patch("onyx.connectors.salesforce.connector.convert_sf_object_to_doc")
+    @patch("aethersearch.connectors.salesforce.connector.convert_sf_object_to_doc")
     def test_contact_metadata_fields(
         self,
         mock_convert: MagicMock,
@@ -319,7 +319,7 @@ class TestYieldDocBatches:
         assert doc.metadata["created_date"] == "2024-01-01T00:00:00.000Z"
         assert doc.metadata["last_modified_date"] == "2024-02-20T14:00:00.000Z"
 
-    @patch("onyx.connectors.salesforce.connector.convert_sf_object_to_doc")
+    @patch("aethersearch.connectors.salesforce.connector.convert_sf_object_to_doc")
     def test_no_default_attributes_for_unknown_type(
         self,
         mock_convert: MagicMock,
@@ -379,7 +379,7 @@ class TestYieldDocBatches:
         assert "CustomField__c" not in doc.metadata
         assert "NumberField__c" not in doc.metadata
 
-    @patch("onyx.connectors.salesforce.connector.convert_sf_object_to_doc")
+    @patch("aethersearch.connectors.salesforce.connector.convert_sf_object_to_doc")
     def test_skips_missing_parent_objects(
         self,
         mock_convert: MagicMock,
@@ -427,7 +427,7 @@ class TestYieldDocBatches:
         # Parents changed should still be 0
         assert parents_changed == 0
 
-    @patch("onyx.connectors.salesforce.connector.convert_sf_object_to_doc")
+    @patch("aethersearch.connectors.salesforce.connector.convert_sf_object_to_doc")
     def test_multiple_documents_batching(
         self,
         mock_convert: MagicMock,

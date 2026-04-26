@@ -20,7 +20,7 @@ User lifecycle tests live in test_scim_users.py.
 import pytest
 import requests
 
-from onyx.auth.schemas import UserRole
+from aethersearch.auth.schemas import UserRole
 from tests.integration.common_utils.constants import ADMIN_USER_NAME
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.constants import GENERAL_HEADERS

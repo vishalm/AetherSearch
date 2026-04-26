@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { MinimalOnyxDocument } from "@/lib/search/interfaces";
+import { MinimalAetherSearchDocument } from "@/lib/search/interfaces";
 import Modal from "@/refresh-components/Modal";
 import Text from "@/refresh-components/texts/Text";
 import SimpleLoader from "@/refresh-components/loaders/SimpleLoader";
@@ -18,7 +18,7 @@ import { PreviewContext } from "@/sections/modals/PreviewModal/interfaces";
 import { resolveVariant } from "@/sections/modals/PreviewModal/variants";
 
 interface PreviewModalProps {
-  presentingDocument: MinimalOnyxDocument;
+  presentingDocument: MinimalAetherSearchDocument;
   onClose: () => void;
 }
 

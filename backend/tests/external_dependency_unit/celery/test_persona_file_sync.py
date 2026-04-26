@@ -27,23 +27,23 @@ from uuid import uuid4
 
 from sqlalchemy.orm import Session
 
-from onyx.background.celery.tasks.user_file_processing.tasks import (
+from aethersearch.background.celery.tasks.user_file_processing.tasks import (
     check_for_user_file_project_sync,
 )
-from onyx.background.celery.tasks.user_file_processing.tasks import (
+from aethersearch.background.celery.tasks.user_file_processing.tasks import (
     process_single_user_file_project_sync,
 )
-from onyx.background.celery.tasks.user_file_processing.tasks import (
+from aethersearch.background.celery.tasks.user_file_processing.tasks import (
     user_file_project_sync_lock_key,
 )
-from onyx.db.enums import UserFileStatus
-from onyx.db.models import Persona
-from onyx.db.models import Persona__UserFile
-from onyx.db.models import User
-from onyx.db.models import UserFile
-from onyx.db.persona import upsert_persona
-from onyx.document_index.interfaces import VespaDocumentUserFields
-from onyx.redis.redis_pool import get_redis_client
+from aethersearch.db.enums import UserFileStatus
+from aethersearch.db.models import Persona
+from aethersearch.db.models import Persona__UserFile
+from aethersearch.db.models import User
+from aethersearch.db.models import UserFile
+from aethersearch.db.persona import upsert_persona
+from aethersearch.document_index.interfaces import VespaDocumentUserFields
+from aethersearch.redis.redis_pool import get_redis_client
 from tests.external_dependency_unit.conftest import create_test_user
 from tests.external_dependency_unit.constants import TEST_TENANT_ID
 
@@ -114,7 +114,7 @@ def _link_file_to_persona(
     db_session.commit()
 
 
-_PATCH_QUEUE_DEPTH = "onyx.background.celery.tasks.user_file_processing.tasks.get_user_file_project_sync_queue_depth"
+_PATCH_QUEUE_DEPTH = "aethersearch.background.celery.tasks.user_file_processing.tasks.get_user_file_project_sync_queue_depth"
 
 
 @contextmanager
@@ -130,7 +130,7 @@ def _patch_task_app(task: Any, mock_app: MagicMock) -> Generator[None, None, Non
         ),
         patch(_PATCH_QUEUE_DEPTH, return_value=0),
         patch(
-            "onyx.background.celery.tasks.user_file_processing.tasks.celery_get_broker_client",
+            "aethersearch.background.celery.tasks.user_file_processing.tasks.celery_get_broker_client",
             return_value=MagicMock(),
         ),
     ):
@@ -214,16 +214,16 @@ class TestCheckSweepIncludesPersonaSync:
 # ---------------------------------------------------------------------------
 
 _PATCH_GET_SETTINGS = (
-    "onyx.background.celery.tasks.user_file_processing.tasks.get_active_search_settings"
+    "aethersearch.background.celery.tasks.user_file_processing.tasks.get_active_search_settings"
 )
 _PATCH_GET_INDICES = (
-    "onyx.background.celery.tasks.user_file_processing.tasks.get_all_document_indices"
+    "aethersearch.background.celery.tasks.user_file_processing.tasks.get_all_document_indices"
 )
 _PATCH_HTTPX_INIT = (
-    "onyx.background.celery.tasks.user_file_processing.tasks.httpx_init_vespa_pool"
+    "aethersearch.background.celery.tasks.user_file_processing.tasks.httpx_init_vespa_pool"
 )
 _PATCH_DISABLE_VDB = (
-    "onyx.background.celery.tasks.user_file_processing.tasks.DISABLE_VECTOR_DB"
+    "aethersearch.background.celery.tasks.user_file_processing.tasks.DISABLE_VECTOR_DB"
 )
 
 
@@ -294,8 +294,8 @@ class TestSyncTaskWritesPersonaIds:
         tenant_context: None,  # noqa: ARG002
     ) -> None:
         """A file linked to both a project and a persona gets both IDs."""
-        from onyx.db.models import Project__UserFile
-        from onyx.db.models import UserProject
+        from aethersearch.db.models import Project__UserFile
+        from aethersearch.db.models import UserProject
 
         user = create_test_user(db_session, "sync_both")
         uf = _create_completed_user_file(

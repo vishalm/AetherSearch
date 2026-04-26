@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/onyx-dot-app/onyx/cli/internal/api"
-	"github.com/onyx-dot-app/onyx/cli/internal/config"
-	"github.com/onyx-dot-app/onyx/cli/internal/exitcodes"
-	"github.com/onyx-dot-app/onyx/cli/internal/version"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/api"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/config"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/exitcodes"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/version"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )

@@ -9,35 +9,35 @@ from celery import Celery
 from celery import shared_task
 from celery import Task
 
-from onyx import __version__
-from onyx.background.celery.apps.app_base import task_logger
-from onyx.background.celery.memory_monitoring import emit_process_memory
-from onyx.background.celery.tasks.docprocessing.heartbeat import start_heartbeat
-from onyx.background.celery.tasks.docprocessing.heartbeat import stop_heartbeat
-from onyx.background.celery.tasks.docprocessing.tasks import ConnectorIndexingLogBuilder
-from onyx.background.celery.tasks.docprocessing.utils import IndexingCallback
-from onyx.background.celery.tasks.models import DocProcessingContext
-from onyx.background.celery.tasks.models import IndexingWatchdogTerminalStatus
-from onyx.background.celery.tasks.models import SimpleJobResult
-from onyx.background.indexing.job_client import SimpleJob
-from onyx.background.indexing.job_client import SimpleJobClient
-from onyx.background.indexing.job_client import SimpleJobException
-from onyx.background.indexing.run_docfetching import run_docfetching_entrypoint
-from onyx.configs.constants import CELERY_INDEXING_WATCHDOG_CONNECTOR_TIMEOUT
-from onyx.configs.constants import CELERY_INDEXING_WATCHDOG_SIGTERM_GRACE_SECONDS
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.db.connector_credential_pair import get_connector_credential_pair_from_id
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import IndexingStatus
-from onyx.db.index_attempt import get_index_attempt
-from onyx.db.index_attempt import mark_attempt_canceled
-from onyx.db.index_attempt import mark_attempt_failed
-from onyx.db.indexing_coordination import IndexingCoordination
-from onyx.redis.redis_connector import RedisConnector
-from onyx.server.metrics.connector_health_metrics import on_index_attempt_status_change
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import global_version
+from aethersearch import __version__
+from aethersearch.background.celery.apps.app_base import task_logger
+from aethersearch.background.celery.memory_monitoring import emit_process_memory
+from aethersearch.background.celery.tasks.docprocessing.heartbeat import start_heartbeat
+from aethersearch.background.celery.tasks.docprocessing.heartbeat import stop_heartbeat
+from aethersearch.background.celery.tasks.docprocessing.tasks import ConnectorIndexingLogBuilder
+from aethersearch.background.celery.tasks.docprocessing.utils import IndexingCallback
+from aethersearch.background.celery.tasks.models import DocProcessingContext
+from aethersearch.background.celery.tasks.models import IndexingWatchdogTerminalStatus
+from aethersearch.background.celery.tasks.models import SimpleJobResult
+from aethersearch.background.indexing.job_client import SimpleJob
+from aethersearch.background.indexing.job_client import SimpleJobClient
+from aethersearch.background.indexing.job_client import SimpleJobException
+from aethersearch.background.indexing.run_docfetching import run_docfetching_entrypoint
+from aethersearch.configs.constants import CELERY_INDEXING_WATCHDOG_CONNECTOR_TIMEOUT
+from aethersearch.configs.constants import CELERY_INDEXING_WATCHDOG_SIGTERM_GRACE_SECONDS
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.db.connector_credential_pair import get_connector_credential_pair_from_id
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import IndexingStatus
+from aethersearch.db.index_attempt import get_index_attempt
+from aethersearch.db.index_attempt import mark_attempt_canceled
+from aethersearch.db.index_attempt import mark_attempt_failed
+from aethersearch.db.indexing_coordination import IndexingCoordination
+from aethersearch.redis.redis_connector import RedisConnector
+from aethersearch.server.metrics.connector_health_metrics import on_index_attempt_status_change
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import global_version
 from shared_configs.configs import SENTRY_CELERY_TRACES_SAMPLE_RATE
 from shared_configs.configs import SENTRY_DSN
 
@@ -138,7 +138,7 @@ def _docfetching_task(
     # Since connector_indexing_proxy_task spawns a new process using this function as
     # the entrypoint, we init Sentry here.
     if SENTRY_DSN:
-        from onyx.configs.sentry import _add_instance_tags
+        from aethersearch.configs.sentry import _add_instance_tags
 
         sentry_sdk.init(
             dsn=SENTRY_DSN,
@@ -304,7 +304,7 @@ def process_job_result(
 
 
 @shared_task(
-    name=OnyxCeleryTask.CONNECTOR_DOC_FETCHING_TASK,
+    name=AetherSearchCeleryTask.CONNECTOR_DOC_FETCHING_TASK,
     bind=True,
     acks_late=False,
     track_started=True,
@@ -326,8 +326,8 @@ def docfetching_proxy_task(
 
     1)  determines parameters of the indexing attempt (which connector indexing function to run,
         start and end time, from prev checkpoint or not), then run that connector. Specifically,
-        connectors are responsible for reading data from an outside source and converting it to Onyx documents.
-        At the moment these two steps (reading external data and converting to an Onyx document)
+        connectors are responsible for reading data from an outside source and converting it to AetherSearch documents.
+        At the moment these two steps (reading external data and converting to an AetherSearch document)
         are not parallelized in most connectors; that's a subject for future work.
 
     Each document batch produced by step 1 is stored in the file store, and a docprocessing task is spawned

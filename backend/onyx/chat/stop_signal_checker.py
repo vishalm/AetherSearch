@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from onyx.cache.interface import CacheBackend
+from aethersearch.cache.interface import CacheBackend
 
 PREFIX = "chatsessionstop"
 FENCE_PREFIX = f"{PREFIX}_fence"

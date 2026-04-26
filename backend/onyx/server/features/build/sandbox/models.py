@@ -5,7 +5,7 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from onyx.db.enums import SandboxStatus
+from aethersearch.db.enums import SandboxStatus
 
 
 class LLMProviderConfig(BaseModel):

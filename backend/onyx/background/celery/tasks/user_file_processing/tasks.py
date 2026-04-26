@@ -14,52 +14,52 @@ from retry import retry
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from onyx.access.access import build_access_for_user_files
-from onyx.background.celery.apps.app_base import task_logger
-from onyx.background.celery.celery_redis import celery_get_broker_client
-from onyx.background.celery.celery_redis import celery_get_queue_length
-from onyx.background.celery.celery_utils import httpx_init_vespa_pool
-from onyx.background.celery.tasks.shared.RetryDocumentIndex import RetryDocumentIndex
-from onyx.configs.app_configs import DISABLE_VECTOR_DB
-from onyx.configs.app_configs import MANAGED_VESPA
-from onyx.configs.app_configs import VESPA_CLOUD_CERT_PATH
-from onyx.configs.app_configs import VESPA_CLOUD_KEY_PATH
-from onyx.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
-from onyx.configs.constants import CELERY_USER_FILE_DELETE_TASK_EXPIRES
-from onyx.configs.constants import CELERY_USER_FILE_PROCESSING_LOCK_TIMEOUT
-from onyx.configs.constants import CELERY_USER_FILE_PROCESSING_TASK_EXPIRES
-from onyx.configs.constants import CELERY_USER_FILE_PROJECT_SYNC_LOCK_TIMEOUT
-from onyx.configs.constants import CELERY_USER_FILE_PROJECT_SYNC_TASK_EXPIRES
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import OnyxRedisLocks
-from onyx.configs.constants import USER_FILE_DELETE_MAX_QUEUE_DEPTH
-from onyx.configs.constants import USER_FILE_PROCESSING_MAX_QUEUE_DEPTH
-from onyx.configs.constants import USER_FILE_PROJECT_SYNC_MAX_QUEUE_DEPTH
-from onyx.connectors.file.connector import LocalFileConnector
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import UserFileStatus
-from onyx.db.models import UserFile
-from onyx.db.search_settings import get_active_search_settings
-from onyx.db.search_settings import get_active_search_settings_list
-from onyx.db.user_file import fetch_user_files_with_access_relationships
-from onyx.document_index.factory import get_all_document_indices
-from onyx.document_index.interfaces import VespaDocumentFields
-from onyx.document_index.interfaces import VespaDocumentUserFields
-from onyx.document_index.vespa_constants import DOCUMENT_ID_ENDPOINT
-from onyx.file_store.file_store import get_default_file_store
-from onyx.file_store.utils import store_user_file_plaintext
-from onyx.file_store.utils import user_file_id_to_plaintext_file_name
-from onyx.httpx.httpx_pool import HttpxPool
-from onyx.indexing.adapters.user_file_indexing_adapter import UserFileIndexingAdapter
-from onyx.indexing.embedder import DefaultIndexingEmbedder
-from onyx.indexing.indexing_pipeline import run_indexing_pipeline
-from onyx.redis.redis_pool import get_redis_client
-from onyx.utils.variable_functionality import global_version
+from aethersearch.access.access import build_access_for_user_files
+from aethersearch.background.celery.apps.app_base import task_logger
+from aethersearch.background.celery.celery_redis import celery_get_broker_client
+from aethersearch.background.celery.celery_redis import celery_get_queue_length
+from aethersearch.background.celery.celery_utils import httpx_init_vespa_pool
+from aethersearch.background.celery.tasks.shared.RetryDocumentIndex import RetryDocumentIndex
+from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
+from aethersearch.configs.app_configs import MANAGED_VESPA
+from aethersearch.configs.app_configs import VESPA_CLOUD_CERT_PATH
+from aethersearch.configs.app_configs import VESPA_CLOUD_KEY_PATH
+from aethersearch.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
+from aethersearch.configs.constants import CELERY_USER_FILE_DELETE_TASK_EXPIRES
+from aethersearch.configs.constants import CELERY_USER_FILE_PROCESSING_LOCK_TIMEOUT
+from aethersearch.configs.constants import CELERY_USER_FILE_PROCESSING_TASK_EXPIRES
+from aethersearch.configs.constants import CELERY_USER_FILE_PROJECT_SYNC_LOCK_TIMEOUT
+from aethersearch.configs.constants import CELERY_USER_FILE_PROJECT_SYNC_TASK_EXPIRES
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import AetherSearchRedisLocks
+from aethersearch.configs.constants import USER_FILE_DELETE_MAX_QUEUE_DEPTH
+from aethersearch.configs.constants import USER_FILE_PROCESSING_MAX_QUEUE_DEPTH
+from aethersearch.configs.constants import USER_FILE_PROJECT_SYNC_MAX_QUEUE_DEPTH
+from aethersearch.connectors.file.connector import LocalFileConnector
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import UserFileStatus
+from aethersearch.db.models import UserFile
+from aethersearch.db.search_settings import get_active_search_settings
+from aethersearch.db.search_settings import get_active_search_settings_list
+from aethersearch.db.user_file import fetch_user_files_with_access_relationships
+from aethersearch.document_index.factory import get_all_document_indices
+from aethersearch.document_index.interfaces import VespaDocumentFields
+from aethersearch.document_index.interfaces import VespaDocumentUserFields
+from aethersearch.document_index.vespa_constants import DOCUMENT_ID_ENDPOINT
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.file_store.utils import store_user_file_plaintext
+from aethersearch.file_store.utils import user_file_id_to_plaintext_file_name
+from aethersearch.httpx.httpx_pool import HttpxPool
+from aethersearch.indexing.adapters.user_file_indexing_adapter import UserFileIndexingAdapter
+from aethersearch.indexing.embedder import DefaultIndexingEmbedder
+from aethersearch.indexing.indexing_pipeline import run_indexing_pipeline
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.utils.variable_functionality import global_version
 
 
 def _as_uuid(value: str | UUID) -> UUID:
@@ -68,7 +68,7 @@ def _as_uuid(value: str | UUID) -> UUID:
 
 
 def _user_file_lock_key(user_file_id: str | UUID) -> str:
-    return f"{OnyxRedisLocks.USER_FILE_PROCESSING_LOCK_PREFIX}:{user_file_id}"
+    return f"{AetherSearchRedisLocks.USER_FILE_PROCESSING_LOCK_PREFIX}:{user_file_id}"
 
 
 def _user_file_queued_key(user_file_id: str | UUID) -> str:
@@ -79,19 +79,19 @@ def _user_file_queued_key(user_file_id: str | UUID) -> str:
     the beat from adding duplicate tasks for files that already have a live task
     in flight.
     """
-    return f"{OnyxRedisLocks.USER_FILE_QUEUED_PREFIX}:{user_file_id}"
+    return f"{AetherSearchRedisLocks.USER_FILE_QUEUED_PREFIX}:{user_file_id}"
 
 
 def user_file_project_sync_lock_key(user_file_id: str | UUID) -> str:
-    return f"{OnyxRedisLocks.USER_FILE_PROJECT_SYNC_LOCK_PREFIX}:{user_file_id}"
+    return f"{AetherSearchRedisLocks.USER_FILE_PROJECT_SYNC_LOCK_PREFIX}:{user_file_id}"
 
 
 def _user_file_project_sync_queued_key(user_file_id: str | UUID) -> str:
-    return f"{OnyxRedisLocks.USER_FILE_PROJECT_SYNC_QUEUED_PREFIX}:{user_file_id}"
+    return f"{AetherSearchRedisLocks.USER_FILE_PROJECT_SYNC_QUEUED_PREFIX}:{user_file_id}"
 
 
 def _user_file_delete_lock_key(user_file_id: str | UUID) -> str:
-    return f"{OnyxRedisLocks.USER_FILE_DELETE_LOCK_PREFIX}:{user_file_id}"
+    return f"{AetherSearchRedisLocks.USER_FILE_DELETE_LOCK_PREFIX}:{user_file_id}"
 
 
 def _user_file_delete_queued_key(user_file_id: str | UUID) -> str:
@@ -102,13 +102,13 @@ def _user_file_delete_queued_key(user_file_id: str | UUID) -> str:
     the beat from adding duplicate tasks for files that already have a live task
     in flight.
     """
-    return f"{OnyxRedisLocks.USER_FILE_DELETE_QUEUED_PREFIX}:{user_file_id}"
+    return f"{AetherSearchRedisLocks.USER_FILE_DELETE_QUEUED_PREFIX}:{user_file_id}"
 
 
 def get_user_file_project_sync_queue_depth(celery_app: Celery) -> int:
     redis_celery = celery_get_broker_client(celery_app)
     return celery_get_queue_length(
-        OnyxCeleryQueues.USER_FILE_PROJECT_SYNC, redis_celery
+        AetherSearchCeleryQueues.USER_FILE_PROJECT_SYNC, redis_celery
     )
 
 
@@ -118,7 +118,7 @@ def enqueue_user_file_project_sync_task(
     redis_client: Redis,
     user_file_id: str | UUID,
     tenant_id: str,
-    priority: OnyxCeleryPriority = OnyxCeleryPriority.HIGH,
+    priority: AetherSearchCeleryPriority = AetherSearchCeleryPriority.HIGH,
 ) -> bool:
     """Enqueue a project-sync task if no matching queued task already exists."""
     queued_key = _user_file_project_sync_queued_key(user_file_id)
@@ -135,9 +135,9 @@ def enqueue_user_file_project_sync_task(
 
     try:
         celery_app.send_task(
-            OnyxCeleryTask.PROCESS_SINGLE_USER_FILE_PROJECT_SYNC,
+            AetherSearchCeleryTask.PROCESS_SINGLE_USER_FILE_PROJECT_SYNC,
             kwargs={"user_file_id": str(user_file_id), "tenant_id": tenant_id},
-            queue=OnyxCeleryQueues.USER_FILE_PROJECT_SYNC,
+            queue=AetherSearchCeleryQueues.USER_FILE_PROJECT_SYNC,
             priority=priority,
             expires=CELERY_USER_FILE_PROJECT_SYNC_TASK_EXPIRES,
         )
@@ -196,7 +196,7 @@ def _get_document_chunk_count(
 
 
 @shared_task(
-    name=OnyxCeleryTask.CHECK_FOR_USER_FILE_PROCESSING,
+    name=AetherSearchCeleryTask.CHECK_FOR_USER_FILE_PROCESSING,
     soft_time_limit=300,
     bind=True,
     ignore_result=True,
@@ -227,7 +227,7 @@ def check_user_file_processing(self: Task, *, tenant_id: str) -> None:
 
     redis_client = get_redis_client(tenant_id=tenant_id)
     lock: RedisLock = redis_client.lock(
-        OnyxRedisLocks.USER_FILE_PROCESSING_BEAT_LOCK,
+        AetherSearchRedisLocks.USER_FILE_PROCESSING_BEAT_LOCK,
         timeout=CELERY_GENERIC_BEAT_LOCK_TIMEOUT,
     )
 
@@ -241,7 +241,7 @@ def check_user_file_processing(self: Task, *, tenant_id: str) -> None:
         # --- Protection 1: queue depth backpressure ---
         r_celery = celery_get_broker_client(self.app)
         queue_len = celery_get_queue_length(
-            OnyxCeleryQueues.USER_FILE_PROCESSING, r_celery
+            AetherSearchCeleryQueues.USER_FILE_PROCESSING, r_celery
         )
         if queue_len > USER_FILE_PROCESSING_MAX_QUEUE_DEPTH:
             task_logger.warning(
@@ -280,13 +280,13 @@ def check_user_file_processing(self: Task, *, tenant_id: str) -> None:
                 # next beat cycle can retry enqueuing this file.
                 try:
                     self.app.send_task(
-                        OnyxCeleryTask.PROCESS_SINGLE_USER_FILE,
+                        AetherSearchCeleryTask.PROCESS_SINGLE_USER_FILE,
                         kwargs={
                             "user_file_id": str(user_file_id),
                             "tenant_id": tenant_id,
                         },
-                        queue=OnyxCeleryQueues.USER_FILE_PROCESSING,
-                        priority=OnyxCeleryPriority.HIGH,
+                        queue=AetherSearchCeleryQueues.USER_FILE_PROCESSING,
+                        priority=AetherSearchCeleryPriority.HIGH,
                         expires=CELERY_USER_FILE_PROCESSING_TASK_EXPIRES,
                     )
                 except Exception:
@@ -315,8 +315,8 @@ def _process_user_file_without_vector_db(
     the file store, and marks the file as COMPLETED.  Skips embedding and
     the indexing pipeline entirely.
     """
-    from onyx.llm.factory import get_default_llm
-    from onyx.llm.factory import get_llm_tokenizer_encode_func
+    from aethersearch.llm.factory import get_default_llm
+    from aethersearch.llm.factory import get_llm_tokenizer_encode_func
 
     # Combine section text from all document sections
     combined_text = " ".join(
@@ -538,7 +538,7 @@ def process_user_file_impl(
 
 
 @shared_task(
-    name=OnyxCeleryTask.PROCESS_SINGLE_USER_FILE,
+    name=AetherSearchCeleryTask.PROCESS_SINGLE_USER_FILE,
     bind=True,
     ignore_result=True,
 )
@@ -554,7 +554,7 @@ def process_single_user_file(
 
 
 @shared_task(
-    name=OnyxCeleryTask.CHECK_FOR_USER_FILE_DELETE,
+    name=AetherSearchCeleryTask.CHECK_FOR_USER_FILE_DELETE,
     soft_time_limit=300,
     bind=True,
     ignore_result=True,
@@ -580,7 +580,7 @@ def check_for_user_file_delete(self: Task, *, tenant_id: str) -> None:
     task_logger.info("check_for_user_file_delete - Starting")
     redis_client = get_redis_client(tenant_id=tenant_id)
     lock: RedisLock = redis_client.lock(
-        OnyxRedisLocks.USER_FILE_DELETE_BEAT_LOCK,
+        AetherSearchRedisLocks.USER_FILE_DELETE_BEAT_LOCK,
         timeout=CELERY_GENERIC_BEAT_LOCK_TIMEOUT,
     )
     if not lock.acquire(blocking=False):
@@ -593,7 +593,7 @@ def check_for_user_file_delete(self: Task, *, tenant_id: str) -> None:
         # NOTE: must use the broker's Redis client (not redis_client) because
         # Celery queues live on a separate Redis DB with CELERY_SEPARATOR keys.
         r_celery = celery_get_broker_client(self.app)
-        queue_len = celery_get_queue_length(OnyxCeleryQueues.USER_FILE_DELETE, r_celery)
+        queue_len = celery_get_queue_length(AetherSearchCeleryQueues.USER_FILE_DELETE, r_celery)
         if queue_len > USER_FILE_DELETE_MAX_QUEUE_DEPTH:
             task_logger.warning(
                 f"check_for_user_file_delete - Queue depth {queue_len} exceeds "
@@ -628,13 +628,13 @@ def check_for_user_file_delete(self: Task, *, tenant_id: str) -> None:
                 # --- Protection 3: task expiry ---
                 try:
                     self.app.send_task(
-                        OnyxCeleryTask.DELETE_SINGLE_USER_FILE,
+                        AetherSearchCeleryTask.DELETE_SINGLE_USER_FILE,
                         kwargs={
                             "user_file_id": str(user_file_id),
                             "tenant_id": tenant_id,
                         },
-                        queue=OnyxCeleryQueues.USER_FILE_DELETE,
-                        priority=OnyxCeleryPriority.HIGH,
+                        queue=AetherSearchCeleryQueues.USER_FILE_DELETE,
+                        priority=AetherSearchCeleryPriority.HIGH,
                         expires=CELERY_USER_FILE_DELETE_TASK_EXPIRES,
                     )
                 except Exception:
@@ -748,7 +748,7 @@ def delete_user_file_impl(
 
 
 @shared_task(
-    name=OnyxCeleryTask.DELETE_SINGLE_USER_FILE,
+    name=AetherSearchCeleryTask.DELETE_SINGLE_USER_FILE,
     bind=True,
     ignore_result=True,
 )
@@ -764,7 +764,7 @@ def process_single_user_file_delete(
 
 
 @shared_task(
-    name=OnyxCeleryTask.CHECK_FOR_USER_FILE_PROJECT_SYNC,
+    name=AetherSearchCeleryTask.CHECK_FOR_USER_FILE_PROJECT_SYNC,
     soft_time_limit=300,
     bind=True,
     ignore_result=True,
@@ -775,7 +775,7 @@ def check_for_user_file_project_sync(self: Task, *, tenant_id: str) -> None:
 
     redis_client = get_redis_client(tenant_id=tenant_id)
     lock: RedisLock = redis_client.lock(
-        OnyxRedisLocks.USER_FILE_PROJECT_SYNC_BEAT_LOCK,
+        AetherSearchRedisLocks.USER_FILE_PROJECT_SYNC_BEAT_LOCK,
         timeout=CELERY_GENERIC_BEAT_LOCK_TIMEOUT,
     )
 
@@ -816,7 +816,7 @@ def check_for_user_file_project_sync(self: Task, *, tenant_id: str) -> None:
                     redis_client=redis_client,
                     user_file_id=user_file_id,
                     tenant_id=tenant_id,
-                    priority=OnyxCeleryPriority.HIGH,
+                    priority=AetherSearchCeleryPriority.HIGH,
                 ):
                     skipped_guard += 1
                     continue
@@ -935,7 +935,7 @@ def project_sync_user_file_impl(
 
 
 @shared_task(
-    name=OnyxCeleryTask.PROCESS_SINGLE_USER_FILE_PROJECT_SYNC,
+    name=AetherSearchCeleryTask.PROCESS_SINGLE_USER_FILE_PROJECT_SYNC,
     bind=True,
     ignore_result=True,
 )

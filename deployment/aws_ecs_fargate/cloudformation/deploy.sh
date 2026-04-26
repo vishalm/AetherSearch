@@ -36,22 +36,22 @@ else
 fi
 
 INFRA_ORDER=(
-  "onyx_efs_template.yaml"
-  "onyx_cluster_template.yaml"
-  "onyx_acm_template.yaml"
+  "aethersearch_efs_template.yaml"
+  "aethersearch_cluster_template.yaml"
+  "aethersearch_acm_template.yaml"
 )
 
 # Deployment order for services
 SERVICE_ORDER=(
-  "onyx_postgres_service_template.yaml"
-  "onyx_redis_service_template.yaml"
-  "onyx_vespaengine_service_template.yaml"
-  "onyx_model_server_indexing_service_template.yaml"
-  "onyx_model_server_inference_service_template.yaml"
-  "onyx_backend_api_server_service_template.yaml"
-  "onyx_backend_background_server_service_template.yaml"
-  "onyx_web_server_service_template.yaml"
-  "onyx_nginx_service_template.yaml"
+  "aethersearch_postgres_service_template.yaml"
+  "aethersearch_redis_service_template.yaml"
+  "aethersearch_vespaengine_service_template.yaml"
+  "aethersearch_model_server_indexing_service_template.yaml"
+  "aethersearch_model_server_inference_service_template.yaml"
+  "aethersearch_backend_api_server_service_template.yaml"
+  "aethersearch_backend_background_server_service_template.yaml"
+  "aethersearch_web_server_service_template.yaml"
+  "aethersearch_nginx_service_template.yaml"
 )
 
 # Function to validate a CloudFormation template
@@ -150,7 +150,7 @@ convert_underscores_to_hyphens() {
 deploy_infra_stacks() {
     for template_name in "${INFRA_ORDER[@]}"; do
       # Skip ACM template if HostedZoneId is not set
-      if [[ "$template_name" == "onyx_acm_template.yaml" ]]; then
+      if [[ "$template_name" == "aethersearch_acm_template.yaml" ]]; then
         HOSTED_ZONE_ID=$(remove_comments "$CONFIG_FILE" | jq -r '.HostedZoneId')
         if [ -z "$HOSTED_ZONE_ID" ] || [ "$HOSTED_ZONE_ID" == "" ] || [ "$HOSTED_ZONE_ID" == "null" ]; then
           echo "Skipping ACM template deployment because HostedZoneId is not set in $CONFIG_FILE"

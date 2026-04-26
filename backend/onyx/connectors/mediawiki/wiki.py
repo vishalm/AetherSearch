@@ -13,18 +13,18 @@ import pywikibot.time
 from pywikibot import pagegenerators
 from pywikibot import textlib
 
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.interfaces import GenerateDocumentsOutput
-from onyx.connectors.interfaces import LoadConnector
-from onyx.connectors.interfaces import PollConnector
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.mediawiki.family import family_class_dispatch
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import ImageSection
-from onyx.connectors.models import TextSection
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.interfaces import GenerateDocumentsOutput
+from aethersearch.connectors.interfaces import LoadConnector
+from aethersearch.connectors.interfaces import PollConnector
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.mediawiki.family import family_class_dispatch
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import ImageSection
+from aethersearch.connectors.models import TextSection
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -50,7 +50,7 @@ def get_doc_from_page(
     site: pywikibot.Site | None,  # ty: ignore[invalid-type-form]
     source_type: DocumentSource,
 ) -> Document:
-    """Generate Onyx Document from a MediaWiki page object.
+    """Generate AetherSearch Document from a MediaWiki page object.
 
     Args:
         page: Page from a MediaWiki site.

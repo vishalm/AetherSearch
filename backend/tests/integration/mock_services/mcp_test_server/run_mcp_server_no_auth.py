@@ -29,7 +29,7 @@ if __name__ == "__main__":
     # Streamable HTTP transport (recommended)
     make_many_tools()
     host = os.getenv("MCP_SERVER_BIND_HOST", "0.0.0.0")
-    # Use MOCK_MCP_SERVER_PORT to avoid conflicts with the real Onyx MCP server port (8090)
+    # Use MOCK_MCP_SERVER_PORT to avoid conflicts with the real AetherSearch MCP server port (8090)
     # Priority: command-line arg > MOCK_MCP_SERVER_PORT > MCP_SERVER_PORT > default 8000
     if port_from_arg is not None:
         port = port_from_arg

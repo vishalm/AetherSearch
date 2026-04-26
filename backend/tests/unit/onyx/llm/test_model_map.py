@@ -2,10 +2,10 @@ from unittest.mock import patch
 
 import litellm
 
-from onyx.configs.model_configs import GEN_AI_MODEL_FALLBACK_MAX_TOKENS
-from onyx.llm.constants import LlmProviderNames
-from onyx.llm.utils import find_model_obj
-from onyx.llm.utils import get_model_map
+from aethersearch.configs.model_configs import GEN_AI_MODEL_FALLBACK_MAX_TOKENS
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.llm.utils import find_model_obj
+from aethersearch.llm.utils import get_model_map
 
 
 def test_partial_match_in_model_map() -> None:
@@ -62,7 +62,7 @@ def test_partial_match_in_model_map() -> None:
 
 def test_no_overwrite_in_model_map() -> None:
     """Make sure we use the original entry if it exists."""
-    # Create a mock model_cost dict with multiple entries for "onyx-llm"
+    # Create a mock model_cost dict with multiple entries for "aethersearch-llm"
     mock_original_model_cost = {
         "gpt-4o": {
             "is_correct": True,

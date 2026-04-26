@@ -21,11 +21,11 @@ from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.elements import ColumnElement
 
-from onyx.db.enums import AccessType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import Document
-from onyx.db.models import DocumentByConnectorCredentialPair
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import Document
+from aethersearch.db.models import DocumentByConnectorCredentialPair
 
 
 def apply_document_access_filter(

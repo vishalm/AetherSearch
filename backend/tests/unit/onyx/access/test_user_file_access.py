@@ -4,10 +4,10 @@ from unittest.mock import MagicMock
 from unittest.mock import patch
 from uuid import uuid4
 
-from onyx.access.access import collect_user_file_access
-from onyx.access.access import get_access_for_user_files_impl
-from onyx.access.utils import prefix_user_email
-from onyx.configs.constants import PUBLIC_DOC_PAT
+from aethersearch.access.access import collect_user_file_access
+from aethersearch.access.access import get_access_for_user_files_impl
+from aethersearch.access.utils import prefix_user_email
+from aethersearch.configs.constants import PUBLIC_DOC_PAT
 
 
 def _make_user(email: str) -> MagicMock:
@@ -134,7 +134,7 @@ class TestGetAccessForUserFiles:
 
         db_session = MagicMock()
         with patch(
-            "onyx.access.access.fetch_user_files_with_access_relationships",
+            "aethersearch.access.access.fetch_user_files_with_access_relationships",
             return_value=[uf],
         ):
             result = get_access_for_user_files_impl([str(uf.id)], db_session)
@@ -152,7 +152,7 @@ class TestGetAccessForUserFiles:
 
         db_session = MagicMock()
         with patch(
-            "onyx.access.access.fetch_user_files_with_access_relationships",
+            "aethersearch.access.access.fetch_user_files_with_access_relationships",
             return_value=[uf],
         ):
             result = get_access_for_user_files_impl([str(uf.id)], db_session)

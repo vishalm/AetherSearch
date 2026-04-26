@@ -10,10 +10,10 @@ Verifies that:
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from onyx.tools.tool_implementations.file_reader.file_reader_tool import FileReaderTool
+from aethersearch.tools.tool_implementations.file_reader.file_reader_tool import FileReaderTool
 
-APP_CONFIGS_MODULE = "onyx.configs.app_configs"
-FILE_READER_MODULE = "onyx.tools.tool_implementations.file_reader.file_reader_tool"
+APP_CONFIGS_MODULE = "aethersearch.configs.app_configs"
+FILE_READER_MODULE = "aethersearch.tools.tool_implementations.file_reader.file_reader_tool"
 
 
 # ------------------------------------------------------------------
@@ -24,17 +24,17 @@ FILE_READER_MODULE = "onyx.tools.tool_implementations.file_reader.file_reader_to
 class TestSearchToolAvailability:
     @patch(f"{APP_CONFIGS_MODULE}.DISABLE_VECTOR_DB", True)
     def test_unavailable_when_vector_db_disabled(self) -> None:
-        from onyx.tools.tool_implementations.search.search_tool import SearchTool
+        from aethersearch.tools.tool_implementations.search.search_tool import SearchTool
 
         assert SearchTool.is_available(MagicMock()) is False
 
-    @patch("onyx.db.connector.check_user_files_exist", return_value=True)
+    @patch("aethersearch.db.connector.check_user_files_exist", return_value=True)
     @patch(
-        "onyx.tools.tool_implementations.search.search_tool.check_federated_connectors_exist",
+        "aethersearch.tools.tool_implementations.search.search_tool.check_federated_connectors_exist",
         return_value=False,
     )
     @patch(
-        "onyx.tools.tool_implementations.search.search_tool.check_connectors_exist",
+        "aethersearch.tools.tool_implementations.search.search_tool.check_connectors_exist",
         return_value=False,
     )
     @patch(f"{APP_CONFIGS_MODULE}.DISABLE_VECTOR_DB", False)
@@ -44,7 +44,7 @@ class TestSearchToolAvailability:
         mock_federated: MagicMock,  # noqa: ARG002
         mock_user_files: MagicMock,  # noqa: ARG002
     ) -> None:
-        from onyx.tools.tool_implementations.search.search_tool import SearchTool
+        from aethersearch.tools.tool_implementations.search.search_tool import SearchTool
 
         assert SearchTool.is_available(MagicMock()) is True
 
@@ -57,13 +57,13 @@ class TestSearchToolAvailability:
 class TestOpenURLToolAvailability:
     @patch(f"{APP_CONFIGS_MODULE}.DISABLE_VECTOR_DB", True)
     def test_unavailable_when_vector_db_disabled(self) -> None:
-        from onyx.tools.tool_implementations.open_url.open_url_tool import OpenURLTool
+        from aethersearch.tools.tool_implementations.open_url.open_url_tool import OpenURLTool
 
         assert OpenURLTool.is_available(MagicMock()) is False
 
     @patch(f"{APP_CONFIGS_MODULE}.DISABLE_VECTOR_DB", False)
     def test_available_when_vector_db_enabled(self) -> None:
-        from onyx.tools.tool_implementations.open_url.open_url_tool import OpenURLTool
+        from aethersearch.tools.tool_implementations.open_url.open_url_tool import OpenURLTool
 
         assert OpenURLTool.is_available(MagicMock()) is True
 
@@ -95,7 +95,7 @@ class TestForceAddSearchToolGuard:
         without a vector DB."""
         import inspect
 
-        from onyx.tools.tool_constructor import _construct_tools_impl
+        from aethersearch.tools.tool_constructor import _construct_tools_impl
 
         source = inspect.getsource(_construct_tools_impl)
         assert (
@@ -110,13 +110,13 @@ class TestForceAddSearchToolGuard:
 
 class TestValidateVectorDbKnowledge:
     @patch(
-        "onyx.server.features.persona.api.DISABLE_VECTOR_DB",
+        "aethersearch.server.features.persona.api.DISABLE_VECTOR_DB",
         True,
     )
     def test_rejects_document_set_ids(self) -> None:
         from fastapi import HTTPException
 
-        from onyx.server.features.persona.api import _validate_vector_db_knowledge
+        from aethersearch.server.features.persona.api import _validate_vector_db_knowledge
 
         request = MagicMock()
         request.document_set_ids = [1]
@@ -129,13 +129,13 @@ class TestValidateVectorDbKnowledge:
         assert "document sets" in exc_info.value.detail
 
     @patch(
-        "onyx.server.features.persona.api.DISABLE_VECTOR_DB",
+        "aethersearch.server.features.persona.api.DISABLE_VECTOR_DB",
         True,
     )
     def test_rejects_hierarchy_node_ids(self) -> None:
         from fastapi import HTTPException
 
-        from onyx.server.features.persona.api import _validate_vector_db_knowledge
+        from aethersearch.server.features.persona.api import _validate_vector_db_knowledge
 
         request = MagicMock()
         request.document_set_ids = []
@@ -148,13 +148,13 @@ class TestValidateVectorDbKnowledge:
         assert "hierarchy nodes" in exc_info.value.detail
 
     @patch(
-        "onyx.server.features.persona.api.DISABLE_VECTOR_DB",
+        "aethersearch.server.features.persona.api.DISABLE_VECTOR_DB",
         True,
     )
     def test_rejects_document_ids(self) -> None:
         from fastapi import HTTPException
 
-        from onyx.server.features.persona.api import _validate_vector_db_knowledge
+        from aethersearch.server.features.persona.api import _validate_vector_db_knowledge
 
         request = MagicMock()
         request.document_set_ids = []
@@ -167,11 +167,11 @@ class TestValidateVectorDbKnowledge:
         assert "documents" in exc_info.value.detail
 
     @patch(
-        "onyx.server.features.persona.api.DISABLE_VECTOR_DB",
+        "aethersearch.server.features.persona.api.DISABLE_VECTOR_DB",
         True,
     )
     def test_allows_user_files_only(self) -> None:
-        from onyx.server.features.persona.api import _validate_vector_db_knowledge
+        from aethersearch.server.features.persona.api import _validate_vector_db_knowledge
 
         request = MagicMock()
         request.document_set_ids = []
@@ -181,11 +181,11 @@ class TestValidateVectorDbKnowledge:
         _validate_vector_db_knowledge(request)
 
     @patch(
-        "onyx.server.features.persona.api.DISABLE_VECTOR_DB",
+        "aethersearch.server.features.persona.api.DISABLE_VECTOR_DB",
         False,
     )
     def test_allows_everything_when_vector_db_enabled(self) -> None:
-        from onyx.server.features.persona.api import _validate_vector_db_knowledge
+        from aethersearch.server.features.persona.api import _validate_vector_db_knowledge
 
         request = MagicMock()
         request.document_set_ids = [1, 2]

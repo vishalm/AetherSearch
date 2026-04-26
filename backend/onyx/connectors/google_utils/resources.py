@@ -7,7 +7,7 @@ from google.oauth2.service_account import Credentials as ServiceAccountCredentia
 from googleapiclient.discovery import build
 from googleapiclient.discovery import Resource
 
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

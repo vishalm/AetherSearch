@@ -1,9 +1,9 @@
-from onyx.configs.app_configs import BLURB_SIZE
-from onyx.configs.constants import RETURN_SEPARATOR
-from onyx.context.search.models import InferenceChunk
-from onyx.context.search.models import InferenceChunkUncleaned
-from onyx.indexing.models import DocAwareChunk
-from onyx.indexing.models import DocMetadataAwareIndexChunk
+from aethersearch.configs.app_configs import BLURB_SIZE
+from aethersearch.configs.constants import RETURN_SEPARATOR
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.context.search.models import InferenceChunkUncleaned
+from aethersearch.indexing.models import DocAwareChunk
+from aethersearch.indexing.models import DocMetadataAwareIndexChunk
 
 
 def generate_enriched_content_for_chunk_text(chunk: DocMetadataAwareIndexChunk) -> str:
@@ -53,16 +53,16 @@ def cleanup_content_for_chunks(
 
     def _remove_title(chunk: InferenceChunkUncleaned) -> str:
         # TODO(andrei): This was ported over from
-        # backend/onyx/document_index/vespa/vespa_document_index.py but I don't
+        # backend/aethersearch/document_index/vespa/vespa_document_index.py but I don't
         # think this logic is correct. In Vespa at least we set the title field
         # from the output of get_title_for_document_index, which is not
         # necessarily the same data that is prepended to the content; that comes
         # from title_prefix.
         # This was added in
-        # https://github.com/onyx-dot-app/onyx/commit/e90c66c1b61c5b7da949652d703f7c906863e6e4#diff-2a2a29d5929de75cdaea77867a397934d9f8b785ce40a861c0d704033e3663ab,
+        # https://github.com/aethersearch-dot-app/aethersearch/commit/e90c66c1b61c5b7da949652d703f7c906863e6e4#diff-2a2a29d5929de75cdaea77867a397934d9f8b785ce40a861c0d704033e3663ab,
         # see postprocessing.py. At that time the content enrichment logic was
         # also added in that commit, see
-        # https://github.com/onyx-dot-app/onyx/commit/e90c66c1b61c5b7da949652d703f7c906863e6e4#diff-d807718aa263a15c1d991a4ab063c360c8419eaad210b4ba70e1e9f47d2aa6d2R77
+        # https://github.com/aethersearch-dot-app/aethersearch/commit/e90c66c1b61c5b7da949652d703f7c906863e6e4#diff-d807718aa263a15c1d991a4ab063c360c8419eaad210b4ba70e1e9f47d2aa6d2R77
         # chunker.py.
         if not chunk.title or not chunk.content:
             return chunk.content

@@ -1,18 +1,18 @@
 import httpx
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import DISABLE_VECTOR_DB
-from onyx.configs.app_configs import ENABLE_OPENSEARCH_INDEXING_FOR_ONYX
-from onyx.configs.app_configs import ONYX_DISABLE_VESPA
-from onyx.db.models import SearchSettings
-from onyx.db.opensearch_migration import get_opensearch_retrieval_state
-from onyx.document_index.disabled import DisabledDocumentIndex
-from onyx.document_index.interfaces import DocumentIndex
-from onyx.document_index.opensearch.opensearch_document_index import (
+from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
+from aethersearch.configs.app_configs import ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH
+from aethersearch.configs.app_configs import AETHERSEARCH_DISABLE_VESPA
+from aethersearch.db.models import SearchSettings
+from aethersearch.db.opensearch_migration import get_opensearch_retrieval_state
+from aethersearch.document_index.disabled import DisabledDocumentIndex
+from aethersearch.document_index.interfaces import DocumentIndex
+from aethersearch.document_index.opensearch.opensearch_document_index import (
     OpenSearchOldDocumentIndex,
 )
-from onyx.document_index.vespa.index import VespaIndex
-from onyx.indexing.models import IndexingSetting
+from aethersearch.document_index.vespa.index import VespaIndex
+from aethersearch.indexing.models import IndexingSetting
 from shared_configs.configs import MULTI_TENANT
 
 
@@ -49,10 +49,10 @@ def get_default_document_index(
         secondary_large_chunks_enabled = secondary_search_settings.large_chunks_enabled
 
     opensearch_retrieval_enabled = get_opensearch_retrieval_state(db_session)
-    if ONYX_DISABLE_VESPA:
+    if AETHERSEARCH_DISABLE_VESPA:
         if not opensearch_retrieval_enabled:
             raise ValueError(
-                "BUG: ONYX_DISABLE_VESPA is set but opensearch_retrieval_enabled is not set."
+                "BUG: AETHERSEARCH_DISABLE_VESPA is set but opensearch_retrieval_enabled is not set."
             )
     if opensearch_retrieval_enabled:
         indexing_setting = IndexingSetting.from_db_model(search_settings)
@@ -100,7 +100,7 @@ def get_all_document_indices(
     """Gets all document indices.
 
     NOTE: Will only return an OpenSearch index interface if
-    ENABLE_OPENSEARCH_INDEXING_FOR_ONYX is True. This is so we don't break flows
+    ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH is True. This is so we don't break flows
     where we know it won't be enabled.
 
     Used for indexing only. Until Vespa is deprecated we will index into both
@@ -127,10 +127,10 @@ def get_all_document_indices(
 
     result: list[DocumentIndex] = []
 
-    if ONYX_DISABLE_VESPA:
-        if not ENABLE_OPENSEARCH_INDEXING_FOR_ONYX:
+    if AETHERSEARCH_DISABLE_VESPA:
+        if not ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH:
             raise ValueError(
-                "ONYX_DISABLE_VESPA is set but ENABLE_OPENSEARCH_INDEXING_FOR_ONYX is not set."
+                "AETHERSEARCH_DISABLE_VESPA is set but ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH is not set."
             )
     else:
         vespa_document_index = VespaIndex(
@@ -151,7 +151,7 @@ def get_all_document_indices(
         )
         result.append(vespa_document_index)
 
-    if ENABLE_OPENSEARCH_INDEXING_FOR_ONYX:
+    if ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH:
         indexing_setting = IndexingSetting.from_db_model(search_settings)
         secondary_indexing_setting = (
             IndexingSetting.from_db_model(secondary_search_settings)

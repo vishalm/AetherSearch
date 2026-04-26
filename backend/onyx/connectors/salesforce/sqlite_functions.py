@@ -8,15 +8,15 @@ from pathlib import Path
 from typing import Any
 from typing import cast
 
-from onyx.connectors.models import BasicExpertInfo
-from onyx.connectors.salesforce.utils import ACCOUNT_OBJECT_TYPE
-from onyx.connectors.salesforce.utils import ID_FIELD
-from onyx.connectors.salesforce.utils import NAME_FIELD
-from onyx.connectors.salesforce.utils import remove_sqlite_db_files
-from onyx.connectors.salesforce.utils import SalesforceObject
-from onyx.connectors.salesforce.utils import USER_OBJECT_TYPE
-from onyx.connectors.salesforce.utils import validate_salesforce_id
-from onyx.utils.logger import setup_logger
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.connectors.salesforce.utils import ACCOUNT_OBJECT_TYPE
+from aethersearch.connectors.salesforce.utils import ID_FIELD
+from aethersearch.connectors.salesforce.utils import NAME_FIELD
+from aethersearch.connectors.salesforce.utils import remove_sqlite_db_files
+from aethersearch.connectors.salesforce.utils import SalesforceObject
+from aethersearch.connectors.salesforce.utils import USER_OBJECT_TYPE
+from aethersearch.connectors.salesforce.utils import validate_salesforce_id
+from aethersearch.utils.logger import setup_logger
 from shared_configs.utils import batch_list
 
 logger = setup_logger()
@@ -25,7 +25,7 @@ logger = setup_logger()
 SQLITE_DISK_IO_ERROR = "disk I/O error"
 
 
-class OnyxSalesforceSQLite:
+class AetherSearchSalesforceSQLite:
     """Notes on context management using 'with self.conn':
 
     Does autocommit / rollback on exit.
@@ -269,7 +269,7 @@ class OnyxSalesforceSQLite:
 
             start = time.monotonic()
             if cursor.fetchone()[0] == 0:
-                OnyxSalesforceSQLite._update_user_email_map(cursor)
+                AetherSearchSalesforceSQLite._update_user_email_map(cursor)
             elapsed = time.monotonic() - start
             logger.info(f"init_db - update_user_email_map: elapsed={elapsed:.2f}")
 
@@ -580,7 +580,7 @@ class OnyxSalesforceSQLite:
                     row_id = row[ID_FIELD]
 
                     normalized_record, parent_ids = (
-                        OnyxSalesforceSQLite.normalize_record(row, remove_ids)
+                        AetherSearchSalesforceSQLite.normalize_record(row, remove_ids)
                     )
                     normalized_record_json_str = json.dumps(normalized_record)
 
@@ -595,7 +595,7 @@ class OnyxSalesforceSQLite:
                     )
 
                     # Update relationships using the same connection
-                    OnyxSalesforceSQLite._update_relationship_tables(
+                    AetherSearchSalesforceSQLite._update_relationship_tables(
                         cursor, row_id, parent_ids
                     )
                     updated_ids.append(row_id)
@@ -608,7 +608,7 @@ class OnyxSalesforceSQLite:
 
             # If we're updating User objects, update the email map
             if object_type == USER_OBJECT_TYPE:
-                OnyxSalesforceSQLite._update_user_email_map(cursor)
+                AetherSearchSalesforceSQLite._update_user_email_map(cursor)
 
         return updated_ids
 

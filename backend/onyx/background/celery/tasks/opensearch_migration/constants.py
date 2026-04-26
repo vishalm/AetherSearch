@@ -11,7 +11,7 @@
 # lock after its cleanup which happens at most after its soft timeout.
 
 # Constants corresponding to migrate_documents_from_vespa_to_opensearch_task.
-from onyx.configs.app_configs import OPENSEARCH_MIGRATION_GET_VESPA_CHUNKS_PAGE_SIZE
+from aethersearch.configs.app_configs import OPENSEARCH_MIGRATION_GET_VESPA_CHUNKS_PAGE_SIZE
 
 MIGRATION_TASK_SOFT_TIME_LIMIT_S = 60 * 5  # 5 minutes.
 MIGRATION_TASK_TIME_LIMIT_S = 60 * 6  # 6 minutes.

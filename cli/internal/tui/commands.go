@@ -7,10 +7,10 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/onyx-dot-app/onyx/cli/internal/api"
-	"github.com/onyx-dot-app/onyx/cli/internal/config"
-	"github.com/onyx-dot-app/onyx/cli/internal/models"
-	"github.com/onyx-dot-app/onyx/cli/internal/util"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/api"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/config"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/models"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/util"
 )
 
 // handleSlashCommand dispatches slash commands and returns updated model + cmd.
@@ -43,7 +43,7 @@ func handleSlashCommand(m Model, text string) (Model, tea.Cmd) {
 		return cmdSessions(m)
 
 	case "/configure":
-		m.viewport.addInfo("Run 'onyx-cli configure' to change connection settings.")
+		m.viewport.addInfo("Run 'aethersearch-cli configure' to change connection settings.")
 		return m, nil
 
 	case "/clear", "/new":

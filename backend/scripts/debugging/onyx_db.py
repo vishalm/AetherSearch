@@ -1,4 +1,4 @@
-"""Onyx Database tool"""
+"""AetherSearch Database tool"""
 
 import os
 
@@ -13,15 +13,15 @@ if True:  # noqa: E402
     from pydantic import BaseModel
     from sqlalchemy import func
 
-    from onyx.db.engine.sql_engine import build_connection_string
-    from onyx.db.engine.sql_engine import get_session_with_tenant
-    from onyx.db.engine.sql_engine import SqlEngine
-    from onyx.db.engine.sql_engine import SYNC_DB_API
-    from onyx.db.engine.sql_engine import USE_IAM_AUTH
-    from onyx.db.engine.tenant_utils import get_all_tenant_ids
-    from onyx.db.models import Document
-    from onyx.db.models import User
-    from onyx.utils.logger import setup_logger
+    from aethersearch.db.engine.sql_engine import build_connection_string
+    from aethersearch.db.engine.sql_engine import get_session_with_tenant
+    from aethersearch.db.engine.sql_engine import SqlEngine
+    from aethersearch.db.engine.sql_engine import SYNC_DB_API
+    from aethersearch.db.engine.sql_engine import USE_IAM_AUTH
+    from aethersearch.db.engine.tenant_utils import get_all_tenant_ids
+    from aethersearch.db.models import Document
+    from aethersearch.db.models import User
+    from aethersearch.utils.logger import setup_logger
     from shared_configs.contextvars import CURRENT_TENANT_ID_CONTEXTVAR
 
     logger = setup_logger()
@@ -154,7 +154,7 @@ def main() -> None:
 
     connection_string = build_connection_string(
         db_api=SYNC_DB_API,
-        app_name="onyx_db_sync",
+        app_name="aethersearch_db_sync",
         use_iam_auth=USE_IAM_AUTH,
         user=args.username,
         password=args.password,

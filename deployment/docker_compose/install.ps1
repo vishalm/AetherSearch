@@ -1,9 +1,9 @@
 # AetherSearch Installer for Windows
 # Usage: .\install.ps1 [OPTIONS]
 # Remote (with params):
-#   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/vishalm/ai-enterprise-search-chat-onyx/main/deployment/docker_compose/install.ps1))) -Lite -NoPrompt
+#   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/vishalm/ai-enterprise-search-chat-aethersearch/main/deployment/docker_compose/install.ps1))) -Lite -NoPrompt
 # Remote (defaults only, configure via interaction during script):
-#   irm https://raw.githubusercontent.com/vishalm/ai-enterprise-search-chat-onyx/main/deployment/docker_compose/install.ps1 | iex
+#   irm https://raw.githubusercontent.com/vishalm/ai-enterprise-search-chat-aethersearch/main/deployment/docker_compose/install.ps1 | iex
 
 param(
     [switch]$Shutdown,
@@ -34,8 +34,8 @@ $script:ExpectedDockerRamGB = 10
 $script:ExpectedDiskGB = 32
 $script:InstallRoot = if ($env:INSTALL_PREFIX) { $env:INSTALL_PREFIX } else { "aethersearch_data" }
 $script:LiteComposeFile = "docker-compose.aethersearch-lite.yml"
-$script:GitHubRawUrl = "https://raw.githubusercontent.com/vishalm/ai-enterprise-search-chat-onyx/main/deployment/docker_compose"
-$script:NginxBaseUrl = "https://raw.githubusercontent.com/vishalm/ai-enterprise-search-chat-onyx/main/deployment/data/nginx"
+$script:GitHubRawUrl = "https://raw.githubusercontent.com/vishalm/ai-enterprise-search-chat-aethersearch/main/deployment/docker_compose"
+$script:NginxBaseUrl = "https://raw.githubusercontent.com/vishalm/ai-enterprise-search-chat-aethersearch/main/deployment/data/nginx"
 $script:CurrentStep = 0
 $script:TotalSteps = 10
 $script:ComposeCmdType = $null
@@ -1040,7 +1040,7 @@ function Main {
     # For pinned version tags, re-download config files from that tag so the
     # compose file matches the images being pulled (the initial download used main).
     if (-not $useLatest -and -not $Local) {
-        $pinnedBase = "https://raw.githubusercontent.com/vishalm/ai-enterprise-search-chat-onyx/$currentImageTag/deployment"
+        $pinnedBase = "https://raw.githubusercontent.com/vishalm/ai-enterprise-search-chat-aethersearch/$currentImageTag/deployment"
         Print-Info "Fetching config files matching tag $currentImageTag..."
         try {
             Download-AetherSearchFile "$pinnedBase/docker_compose/docker-compose.yml" $composeDest

@@ -33,13 +33,13 @@ function GroupsPage() {
           <MessageCard
             variant="info"
             title="Upcoming changes to permissions"
-            description="Onyx is transitioning to group-based permissions, enabling more flexible access control through configurable permissions per group. We recommend reviewing your group structure to prepare for this update."
+            description="AetherSearch is transitioning to group-based permissions, enabling more flexible access control through configurable permissions per group. We recommend reviewing your group structure to prepare for this update."
             rightChildren={
               <Button
                 icon={SvgExternalLink}
                 onClick={() =>
                   window.open(
-                    "https://docs.onyx.app/admins/permissions/whats_changing",
+                    "https://docs.aethersearch.app/admins/permissions/whats_changing",
                     "_blank",
                     "noopener,noreferrer"
                   )

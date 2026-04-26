@@ -23,9 +23,9 @@ from mcp.types import TextResourceContents
 from mcp.types import Tool as MCPLibTool
 from pydantic import BaseModel
 
-from onyx.db.enums import MCPTransport
-from onyx.utils.logger import setup_logger
-from onyx.utils.threadpool_concurrency import run_async_sync_no_cancel
+from aethersearch.db.enums import MCPTransport
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.threadpool_concurrency import run_async_sync_no_cancel
 
 logger = setup_logger()
 

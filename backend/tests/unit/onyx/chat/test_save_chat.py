@@ -7,11 +7,11 @@ from unittest.mock import MagicMock
 
 from pytest import MonkeyPatch
 
-from onyx.chat import save_chat
-from onyx.chat.save_chat import _extract_referenced_file_descriptors
-from onyx.file_store.models import ChatFileType
-from onyx.tools.models import PythonExecutionFile
-from onyx.tools.models import ToolCallInfo
+from aethersearch.chat import save_chat
+from aethersearch.chat.save_chat import _extract_referenced_file_descriptors
+from aethersearch.file_store.models import ChatFileType
+from aethersearch.tools.models import PythonExecutionFile
+from aethersearch.tools.models import ToolCallInfo
 
 
 def _make_tool_call_info(

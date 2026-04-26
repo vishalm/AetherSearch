@@ -1,8 +1,8 @@
 import pytest
 from pydantic import BaseModel
 
-from onyx.db.enums import HookPoint
-from onyx.hooks.points.base import HookPointSpec
+from aethersearch.db.enums import HookPoint
+from aethersearch.hooks.points.base import HookPointSpec
 
 
 def test_init_subclass_raises_for_missing_attrs() -> None:

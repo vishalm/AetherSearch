@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from onyx.db.models import TokenRateLimit
+from aethersearch.db.models import TokenRateLimit
 
 
 class TokenRateLimitArgs(BaseModel):

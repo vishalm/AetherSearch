@@ -3,7 +3,7 @@ from uuid import uuid4
 
 import requests
 
-from ee.onyx.server.user_group.models import UserGroup
+from ee.aethersearch.server.user_group.models import UserGroup
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.constants import MAX_DELAY
 from tests.integration.common_utils.test_models import DATestUser

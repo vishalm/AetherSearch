@@ -2,15 +2,15 @@ import json
 
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import AZURE_IMAGE_API_KEY
-from onyx.db.connector import check_connectors_exist
-from onyx.db.document import check_docs_exist
-from onyx.db.models import LLMProvider
-from onyx.llm.constants import LlmProviderNames
-from onyx.llm.utils import find_model_obj
-from onyx.llm.utils import get_model_map
-from onyx.natural_language_processing.utils import BaseTokenizer
-from onyx.tools.interface import Tool
+from aethersearch.configs.app_configs import AZURE_IMAGE_API_KEY
+from aethersearch.db.connector import check_connectors_exist
+from aethersearch.db.document import check_docs_exist
+from aethersearch.db.models import LLMProvider
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.llm.utils import find_model_obj
+from aethersearch.llm.utils import get_model_map
+from aethersearch.natural_language_processing.utils import BaseTokenizer
+from aethersearch.tools.interface import Tool
 
 
 def explicit_tool_calling_supported(model_provider: str, model_name: str) -> bool:

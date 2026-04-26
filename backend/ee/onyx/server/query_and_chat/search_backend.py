@@ -6,30 +6,30 @@ from fastapi import HTTPException
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
-from ee.onyx.db.search import fetch_search_queries_for_user
-from ee.onyx.search.process_search_query import gather_search_stream
-from ee.onyx.search.process_search_query import stream_search_query
-from ee.onyx.secondary_llm_flows.search_flow_classification import (
+from ee.aethersearch.db.search import fetch_search_queries_for_user
+from ee.aethersearch.search.process_search_query import gather_search_stream
+from ee.aethersearch.search.process_search_query import stream_search_query
+from ee.aethersearch.secondary_llm_flows.search_flow_classification import (
     classify_is_search_flow,
 )
-from ee.onyx.server.query_and_chat.models import SearchFlowClassificationRequest
-from ee.onyx.server.query_and_chat.models import SearchFlowClassificationResponse
-from ee.onyx.server.query_and_chat.models import SearchFullResponse
-from ee.onyx.server.query_and_chat.models import SearchHistoryResponse
-from ee.onyx.server.query_and_chat.models import SearchQueryResponse
-from ee.onyx.server.query_and_chat.models import SendSearchQueryRequest
-from ee.onyx.server.query_and_chat.streaming_models import SearchErrorPacket
-from onyx.auth.permissions import require_permission
-from onyx.configs.app_configs import ONYX_SEARCH_UI_USES_OPENSEARCH_KEYWORD_SEARCH
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.llm.factory import get_default_llm
-from onyx.server.usage_limits import check_llm_cost_limit_for_provider
-from onyx.server.utils import get_json_line
-from onyx.server.utils_vector_db import require_vector_db
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.server.query_and_chat.models import SearchFlowClassificationRequest
+from ee.aethersearch.server.query_and_chat.models import SearchFlowClassificationResponse
+from ee.aethersearch.server.query_and_chat.models import SearchFullResponse
+from ee.aethersearch.server.query_and_chat.models import SearchHistoryResponse
+from ee.aethersearch.server.query_and_chat.models import SearchQueryResponse
+from ee.aethersearch.server.query_and_chat.models import SendSearchQueryRequest
+from ee.aethersearch.server.query_and_chat.streaming_models import SearchErrorPacket
+from aethersearch.auth.permissions import require_permission
+from aethersearch.configs.app_configs import AETHERSEARCH_SEARCH_UI_USES_OPENSEARCH_KEYWORD_SEARCH
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.llm.factory import get_default_llm
+from aethersearch.server.usage_limits import check_llm_cost_limit_for_provider
+from aethersearch.server.utils import get_json_line
+from aethersearch.server.utils_vector_db import require_vector_db
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()
@@ -69,7 +69,7 @@ def search_flow_classification(
     return SearchFlowClassificationResponse(is_search_flow=is_search_flow)
 
 
-# NOTE: This endpoint is used for the core flow of the Onyx application, any
+# NOTE: This endpoint is used for the core flow of the AetherSearch application, any
 # changes to it should be reviewed and approved by an experienced team member.
 # It is very important to 1. avoid bloat and 2. that this remains backwards
 # compatible across versions.
@@ -86,7 +86,7 @@ def handle_send_search_message(
     """
     Executes a search query with optional streaming.
 
-    If hybrid_alpha is unset and ONYX_SEARCH_UI_USES_OPENSEARCH_KEYWORD_SEARCH
+    If hybrid_alpha is unset and AETHERSEARCH_SEARCH_UI_USES_OPENSEARCH_KEYWORD_SEARCH
     is True, executes pure keyword search.
 
     Returns:
@@ -94,7 +94,7 @@ def handle_send_search_message(
     """
     logger.debug(f"Received search query: {request.search_query}")
 
-    if request.hybrid_alpha is None and ONYX_SEARCH_UI_USES_OPENSEARCH_KEYWORD_SEARCH:
+    if request.hybrid_alpha is None and AETHERSEARCH_SEARCH_UI_USES_OPENSEARCH_KEYWORD_SEARCH:
         request.hybrid_alpha = 0.0
 
     # Non-streaming path

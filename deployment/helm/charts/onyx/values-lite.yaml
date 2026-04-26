@@ -7,12 +7,12 @@
 # Agent knowledge) still works.
 #
 # Usage:
-#   helm install aethersearch ./deployment/helm/charts/onyx \
-#     -f ./deployment/helm/charts/onyx/values-lite.yaml
+#   helm install aethersearch ./deployment/helm/charts/aethersearch \
+#     -f ./deployment/helm/charts/aethersearch/values-lite.yaml
 #
 # Or merged with your own overrides:
-#   helm install aethersearch ./deployment/helm/charts/onyx \
-#     -f ./deployment/helm/charts/onyx/values-lite.yaml \
+#   helm install aethersearch ./deployment/helm/charts/aethersearch \
+#     -f ./deployment/helm/charts/aethersearch/values-lite.yaml \
 #     -f my-overrides.yaml
 # =============================================================================
 

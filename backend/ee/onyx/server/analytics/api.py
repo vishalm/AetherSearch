@@ -8,20 +8,20 @@ from fastapi import HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from ee.onyx.db.analytics import fetch_assistant_message_analytics
-from ee.onyx.db.analytics import fetch_assistant_unique_users
-from ee.onyx.db.analytics import fetch_assistant_unique_users_total
-from ee.onyx.db.analytics import fetch_onyxbot_analytics
-from ee.onyx.db.analytics import fetch_per_user_query_analytics
-from ee.onyx.db.analytics import fetch_persona_message_analytics
-from ee.onyx.db.analytics import fetch_persona_unique_users
-from ee.onyx.db.analytics import fetch_query_analytics
-from ee.onyx.db.analytics import user_can_view_assistant_stats
-from onyx.auth.permissions import require_permission
-from onyx.configs.constants import PUBLIC_API_TAGS
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import User
+from ee.aethersearch.db.analytics import fetch_assistant_message_analytics
+from ee.aethersearch.db.analytics import fetch_assistant_unique_users
+from ee.aethersearch.db.analytics import fetch_assistant_unique_users_total
+from ee.aethersearch.db.analytics import fetch_aethersearchbot_analytics
+from ee.aethersearch.db.analytics import fetch_per_user_query_analytics
+from ee.aethersearch.db.analytics import fetch_persona_message_analytics
+from ee.aethersearch.db.analytics import fetch_persona_unique_users
+from ee.aethersearch.db.analytics import fetch_query_analytics
+from ee.aethersearch.db.analytics import user_can_view_assistant_stats
+from aethersearch.auth.permissions import require_permission
+from aethersearch.configs.constants import PUBLIC_API_TAGS
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
 
 router = APIRouter(prefix="/analytics", tags=PUBLIC_API_TAGS)
 
@@ -97,20 +97,20 @@ def get_user_analytics(
     ]
 
 
-class OnyxbotAnalyticsResponse(BaseModel):
+class AetherSearchbotAnalyticsResponse(BaseModel):
     total_queries: int
     auto_resolved: int
     date: datetime.date
 
 
-@router.get("/admin/onyxbot")
-def get_onyxbot_analytics(
+@router.get("/admin/aethersearchbot")
+def get_aethersearchbot_analytics(
     start: datetime.datetime | None = None,
     end: datetime.datetime | None = None,
     _: User = Depends(require_permission(Permission.FULL_ADMIN_PANEL_ACCESS)),
     db_session: Session = Depends(get_session),
-) -> list[OnyxbotAnalyticsResponse]:
-    daily_onyxbot_info = fetch_onyxbot_analytics(
+) -> list[AetherSearchbotAnalyticsResponse]:
+    daily_aethersearchbot_info = fetch_aethersearchbot_analytics(
         start=start
         or (
             datetime.datetime.now(tz=datetime.timezone.utc)
@@ -121,13 +121,13 @@ def get_onyxbot_analytics(
     )
 
     resolution_results = [
-        OnyxbotAnalyticsResponse(
+        AetherSearchbotAnalyticsResponse(
             total_queries=total_queries,
             # If it hits negatives, something has gone wrong...
             auto_resolved=max(0, total_queries - total_negatives),
             date=date,
         )
-        for total_queries, total_negatives, date in daily_onyxbot_info
+        for total_queries, total_negatives, date in daily_aethersearchbot_info
     ]
 
     return resolution_results

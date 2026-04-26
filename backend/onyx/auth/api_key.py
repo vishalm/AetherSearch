@@ -7,12 +7,12 @@ from fastapi import Request
 from passlib.hash import sha256_crypt
 from pydantic import BaseModel
 
-from onyx.auth.constants import API_KEY_LENGTH
-from onyx.auth.constants import API_KEY_PREFIX
-from onyx.auth.constants import DEPRECATED_API_KEY_PREFIX
-from onyx.auth.schemas import UserRole
-from onyx.auth.utils import get_hashed_bearer_token_from_request
-from onyx.configs.app_configs import API_KEY_HASH_ROUNDS
+from aethersearch.auth.constants import API_KEY_LENGTH
+from aethersearch.auth.constants import API_KEY_PREFIX
+from aethersearch.auth.constants import DEPRECATED_API_KEY_PREFIX
+from aethersearch.auth.schemas import UserRole
+from aethersearch.auth.utils import get_hashed_bearer_token_from_request
+from aethersearch.configs.app_configs import API_KEY_HASH_ROUNDS
 from shared_configs.configs import MULTI_TENANT
 
 

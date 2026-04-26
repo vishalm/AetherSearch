@@ -10,11 +10,11 @@ from simple_salesforce.bulk2 import SFBulk2Handler
 from simple_salesforce.bulk2 import SFBulk2Type
 from simple_salesforce.exceptions import SalesforceRefusedRequest
 
-from onyx.connectors.cross_connector_utils.rate_limit_wrapper import rate_limit_builder
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.salesforce.utils import MODIFIED_FIELD
-from onyx.utils.logger import setup_logger
-from onyx.utils.retry_wrapper import retry_builder
+from aethersearch.connectors.cross_connector_utils.rate_limit_wrapper import rate_limit_builder
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.salesforce.utils import MODIFIED_FIELD
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.retry_wrapper import retry_builder
 
 logger = setup_logger()
 

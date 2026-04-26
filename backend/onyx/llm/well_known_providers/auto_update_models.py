@@ -6,7 +6,7 @@ from typing import Any
 from pydantic import BaseModel
 from pydantic import field_validator
 
-from onyx.llm.well_known_providers.models import SimpleKnownModel
+from aethersearch.llm.well_known_providers.models import SimpleKnownModel
 
 
 class LLMProviderRecommendation(BaseModel):

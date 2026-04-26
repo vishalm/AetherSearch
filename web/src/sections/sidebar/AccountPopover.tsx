@@ -33,7 +33,7 @@ import {
 } from "@/providers/SettingsProvider";
 import UserAvatar from "@/refresh-components/avatars/UserAvatar";
 import useNotifications from "@/hooks/useNotifications";
-import { SvgOnyxLogo } from "@opal/logos";
+import { SvgAetherSearchLogo } from "@opal/logos";
 import { markdown } from "@opal/utils";
 
 interface SettingsPopoverProps {
@@ -160,7 +160,7 @@ function SettingsPopover({
             variant="body"
             prominence="muted"
             orientation="reverse"
-            icon={SvgOnyxLogo}
+            icon={SvgAetherSearchLogo}
             title={markdown(
               `[AetherSearch ${
                 settings?.webVersion ?? "dev"
@@ -209,7 +209,7 @@ export default function AccountPopover({
   return (
     <Popover open={!!popupState} onOpenChange={handlePopoverOpen}>
       <Popover.Trigger asChild>
-        <div id="onyx-user-dropdown">
+        <div id="aethersearch-user-dropdown">
           <SidebarTab
             icon={(props) => (
               <div className="w-[16px] flex flex-col justify-center items-center">

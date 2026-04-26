@@ -1,18 +1,18 @@
-"""Authentication helpers for the Onyx MCP server."""
+"""Authentication helpers for the AetherSearch MCP server."""
 
 from typing import Optional
 
 from fastmcp.server.auth.auth import AccessToken
 from fastmcp.server.auth.auth import TokenVerifier
 
-from onyx.mcp_server.utils import get_http_client
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import build_api_server_url_for_http_requests
+from aethersearch.mcp_server.utils import get_http_client
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import build_api_server_url_for_http_requests
 
 logger = setup_logger()
 
 
-class OnyxTokenVerifier(TokenVerifier):
+class AetherSearchTokenVerifier(TokenVerifier):
     """Validates bearer tokens by delegating to the API server."""
 
     async def verify_token(self, token: str) -> Optional[AccessToken]:

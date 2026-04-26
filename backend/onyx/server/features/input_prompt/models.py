@@ -2,8 +2,8 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from onyx.db.models import InputPrompt
-from onyx.utils.logger import setup_logger
+from aethersearch.db.models import InputPrompt
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

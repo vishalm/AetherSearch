@@ -8,10 +8,10 @@ Tests for:
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from onyx.onyxbot.discord.utils import get_bot_token
-from onyx.server.manage.discord_bot.utils import generate_discord_registration_key
-from onyx.server.manage.discord_bot.utils import parse_discord_registration_key
-from onyx.server.manage.discord_bot.utils import REGISTRATION_KEY_PREFIX
+from aethersearch.aethersearchbot.discord.utils import get_bot_token
+from aethersearch.server.manage.discord_bot.utils import generate_discord_registration_key
+from aethersearch.server.manage.discord_bot.utils import parse_discord_registration_key
+from aethersearch.server.manage.discord_bot.utils import REGISTRATION_KEY_PREFIX
 
 
 class TestGetBotToken:
@@ -19,7 +19,7 @@ class TestGetBotToken:
 
     def test_get_token_from_env(self) -> None:
         """When env var is set, returns env var."""
-        with patch("onyx.onyxbot.discord.utils.DISCORD_BOT_TOKEN", "env_token_123"):
+        with patch("aethersearch.aethersearchbot.discord.utils.DISCORD_BOT_TOKEN", "env_token_123"):
             result = get_bot_token()
             assert result == "env_token_123"
 
@@ -29,11 +29,11 @@ class TestGetBotToken:
         mock_config.bot_token = "db_token_456"
 
         with (
-            patch("onyx.onyxbot.discord.utils.DISCORD_BOT_TOKEN", None),
-            patch("onyx.onyxbot.discord.utils.AUTH_TYPE", "basic"),  # Not CLOUD
-            patch("onyx.onyxbot.discord.utils.get_session_with_tenant") as mock_session,
+            patch("aethersearch.aethersearchbot.discord.utils.DISCORD_BOT_TOKEN", None),
+            patch("aethersearch.aethersearchbot.discord.utils.AUTH_TYPE", "basic"),  # Not CLOUD
+            patch("aethersearch.aethersearchbot.discord.utils.get_session_with_tenant") as mock_session,
             patch(
-                "onyx.onyxbot.discord.utils.get_discord_bot_config",
+                "aethersearch.aethersearchbot.discord.utils.get_discord_bot_config",
                 return_value=mock_config,
             ),
         ):
@@ -45,11 +45,11 @@ class TestGetBotToken:
     def test_get_token_none(self) -> None:
         """When no env var and no DB config, returns None."""
         with (
-            patch("onyx.onyxbot.discord.utils.DISCORD_BOT_TOKEN", None),
-            patch("onyx.onyxbot.discord.utils.AUTH_TYPE", "basic"),  # Not CLOUD
-            patch("onyx.onyxbot.discord.utils.get_session_with_tenant") as mock_session,
+            patch("aethersearch.aethersearchbot.discord.utils.DISCORD_BOT_TOKEN", None),
+            patch("aethersearch.aethersearchbot.discord.utils.AUTH_TYPE", "basic"),  # Not CLOUD
+            patch("aethersearch.aethersearchbot.discord.utils.get_session_with_tenant") as mock_session,
             patch(
-                "onyx.onyxbot.discord.utils.get_discord_bot_config",
+                "aethersearch.aethersearchbot.discord.utils.get_discord_bot_config",
                 return_value=None,
             ),
         ):
@@ -64,9 +64,9 @@ class TestGetBotToken:
         mock_config.bot_token = "db_token_456"
 
         with (
-            patch("onyx.onyxbot.discord.utils.DISCORD_BOT_TOKEN", "env_token_123"),
+            patch("aethersearch.aethersearchbot.discord.utils.DISCORD_BOT_TOKEN", "env_token_123"),
             patch(
-                "onyx.onyxbot.discord.utils.get_discord_bot_config",
+                "aethersearch.aethersearchbot.discord.utils.get_discord_bot_config",
                 return_value=mock_config,
             ),
         ):

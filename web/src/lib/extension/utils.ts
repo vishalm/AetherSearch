@@ -54,7 +54,7 @@ export const useSendAuthRequiredMessage = () => {
 export const sendMessageToParent = () => {
   if (typeof window !== "undefined" && window.parent !== window) {
     window.parent.postMessage(
-      { type: CHROME_MESSAGE.ONYX_APP_LOADED },
+      { type: CHROME_MESSAGE.AETHERSEARCH_APP_LOADED },
       getPanelOrigin()
     );
   }

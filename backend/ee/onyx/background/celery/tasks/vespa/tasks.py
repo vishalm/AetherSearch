@@ -3,16 +3,16 @@ from typing import cast
 from redis import Redis
 from sqlalchemy.orm import Session
 
-from ee.onyx.db.user_group import delete_user_group
-from ee.onyx.db.user_group import fetch_user_group
-from ee.onyx.db.user_group import mark_user_group_as_synced
-from ee.onyx.db.user_group import prepare_user_group_for_deletion
-from onyx.background.celery.apps.app_base import task_logger
-from onyx.db.enums import SyncStatus
-from onyx.db.enums import SyncType
-from onyx.db.sync_record import update_sync_record_status
-from onyx.redis.redis_usergroup import RedisUserGroup
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.db.user_group import delete_user_group
+from ee.aethersearch.db.user_group import fetch_user_group
+from ee.aethersearch.db.user_group import mark_user_group_as_synced
+from ee.aethersearch.db.user_group import prepare_user_group_for_deletion
+from aethersearch.background.celery.apps.app_base import task_logger
+from aethersearch.db.enums import SyncStatus
+from aethersearch.db.enums import SyncType
+from aethersearch.db.sync_record import update_sync_record_status
+from aethersearch.redis.redis_usergroup import RedisUserGroup
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

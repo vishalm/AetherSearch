@@ -4,15 +4,15 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
-from onyx.access.models import DocumentAccess
-from onyx.access.models import ExternalAccess
-from onyx.configs.chat_configs import NUM_RETURNED_HITS
-from onyx.configs.chat_configs import TITLE_CONTENT_RATIO
-from onyx.context.search.models import IndexFilters
-from onyx.context.search.models import InferenceChunk
-from onyx.context.search.models import QueryExpansionType
-from onyx.db.enums import EmbeddingPrecision
-from onyx.indexing.models import DocMetadataAwareIndexChunk
+from aethersearch.access.models import DocumentAccess
+from aethersearch.access.models import ExternalAccess
+from aethersearch.configs.chat_configs import NUM_RETURNED_HITS
+from aethersearch.configs.chat_configs import TITLE_CONTENT_RATIO
+from aethersearch.context.search.models import IndexFilters
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.context.search.models import QueryExpansionType
+from aethersearch.db.enums import EmbeddingPrecision
+from aethersearch.indexing.models import DocMetadataAwareIndexChunk
 from shared_configs.model_server_models import Embedding
 
 
@@ -87,7 +87,7 @@ class DocumentMetadata:
     first_link: str
     doc_updated_at: datetime | None = None
     # Emails, not necessarily attached to users
-    # Users may not be in Onyx
+    # Users may not be in AetherSearch
     primary_owners: list[str] | None = None
     secondary_owners: list[str] | None = None
     from_ingestion_api: bool = False
@@ -456,7 +456,7 @@ class BaseIndex(
 
 class DocumentIndex(HybridCapable, BaseIndex, abc.ABC):
     """
-    A valid document index that can plug into all Onyx flows must implement all of these
+    A valid document index that can plug into all AetherSearch flows must implement all of these
     functionalities, though "technically" it does not need to be keyword or vector capable as
     currently all default search flows use Hybrid Search.
     """

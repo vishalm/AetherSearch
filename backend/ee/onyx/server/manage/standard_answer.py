@@ -3,23 +3,23 @@ from fastapi import Depends
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from ee.onyx.db.standard_answer import fetch_standard_answer
-from ee.onyx.db.standard_answer import fetch_standard_answer_categories
-from ee.onyx.db.standard_answer import fetch_standard_answer_category
-from ee.onyx.db.standard_answer import fetch_standard_answers
-from ee.onyx.db.standard_answer import insert_standard_answer
-from ee.onyx.db.standard_answer import insert_standard_answer_category
-from ee.onyx.db.standard_answer import remove_standard_answer
-from ee.onyx.db.standard_answer import update_standard_answer
-from ee.onyx.db.standard_answer import update_standard_answer_category
-from onyx.auth.permissions import require_permission
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.server.manage.models import StandardAnswer
-from onyx.server.manage.models import StandardAnswerCategory
-from onyx.server.manage.models import StandardAnswerCategoryCreationRequest
-from onyx.server.manage.models import StandardAnswerCreationRequest
+from ee.aethersearch.db.standard_answer import fetch_standard_answer
+from ee.aethersearch.db.standard_answer import fetch_standard_answer_categories
+from ee.aethersearch.db.standard_answer import fetch_standard_answer_category
+from ee.aethersearch.db.standard_answer import fetch_standard_answers
+from ee.aethersearch.db.standard_answer import insert_standard_answer
+from ee.aethersearch.db.standard_answer import insert_standard_answer_category
+from ee.aethersearch.db.standard_answer import remove_standard_answer
+from ee.aethersearch.db.standard_answer import update_standard_answer
+from ee.aethersearch.db.standard_answer import update_standard_answer_category
+from aethersearch.auth.permissions import require_permission
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.server.manage.models import StandardAnswer
+from aethersearch.server.manage.models import StandardAnswerCategory
+from aethersearch.server.manage.models import StandardAnswerCategoryCreationRequest
+from aethersearch.server.manage.models import StandardAnswerCreationRequest
 
 router = APIRouter(prefix="/manage")
 

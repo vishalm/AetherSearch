@@ -155,7 +155,7 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: /ecs/OnyxVespaEngineTaskDefinition
+              awslogs-group: /ecs/AetherSearchVespaEngineTaskDefinition
               mode: non-blocking
               awslogs-create-group: "true"
               max-buffer-size: "25m"

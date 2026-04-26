@@ -3,7 +3,7 @@
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from onyx.context.search.federated.slack_search import _build_thread_text
+from aethersearch.context.search.federated.slack_search import _build_thread_text
 
 
 def _make_msg(user: str, text: str, ts: str) -> dict[str, str]:
@@ -13,7 +13,7 @@ def _make_msg(user: str, text: str, ts: str) -> dict[str, str]:
 class TestBuildThreadText:
     """Verify _build_thread_text includes full thread replies up to cap."""
 
-    @patch("onyx.context.search.federated.slack_search.batch_get_user_profiles")
+    @patch("aethersearch.context.search.federated.slack_search.batch_get_user_profiles")
     def test_includes_all_replies(self, mock_profiles: MagicMock) -> None:
         """All replies within cap are included in output."""
         mock_profiles.return_value = {}
@@ -30,7 +30,7 @@ class TestBuildThreadText:
         assert "reply 3" in result
         assert "..." not in result
 
-    @patch("onyx.context.search.federated.slack_search.batch_get_user_profiles")
+    @patch("aethersearch.context.search.federated.slack_search.batch_get_user_profiles")
     def test_non_thread_returns_parent_only(self, mock_profiles: MagicMock) -> None:
         """Single message (no replies) returns just the parent text."""
         mock_profiles.return_value = {}
@@ -39,7 +39,7 @@ class TestBuildThreadText:
         assert "just a message" in result
         assert "Replies:" not in result
 
-    @patch("onyx.context.search.federated.slack_search.batch_get_user_profiles")
+    @patch("aethersearch.context.search.federated.slack_search.batch_get_user_profiles")
     def test_parent_always_first(self, mock_profiles: MagicMock) -> None:
         """Thread parent message is always the first line of output."""
         mock_profiles.return_value = {}
@@ -52,7 +52,7 @@ class TestBuildThreadText:
         reply_pos = result.index("I am a reply")
         assert parent_pos < reply_pos
 
-    @patch("onyx.context.search.federated.slack_search.batch_get_user_profiles")
+    @patch("aethersearch.context.search.federated.slack_search.batch_get_user_profiles")
     def test_user_profiles_resolved(self, mock_profiles: MagicMock) -> None:
         """User IDs in thread text are replaced with display names."""
         mock_profiles.return_value = {"U1": "Alice", "U2": "Bob"}

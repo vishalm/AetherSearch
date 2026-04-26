@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import type { Page, Browser, Locator } from "@playwright/test";
 import { loginAs, loginAsWorkerUser, apiLogin } from "@tests/e2e/utils/auth";
-import { OnyxApiClient } from "@tests/e2e/utils/onyxApiClient";
+import { AetherSearchApiClient } from "@tests/e2e/utils/aethersearchApiClient";
 import {
   startMcpOauthServer,
   McpServerProcess,
@@ -1378,7 +1378,7 @@ async function ensureServerVisibleInActions(
 }
 
 async function waitForUserRecord(
-  client: OnyxApiClient,
+  client: AetherSearchApiClient,
   email: string,
   timeoutMs: number = 10_000
 ) {
@@ -1394,7 +1394,7 @@ async function waitForUserRecord(
 }
 
 async function waitForAssistantByName(
-  client: OnyxApiClient,
+  client: AetherSearchApiClient,
   agentName: string,
   timeoutMs: number = 20_000
 ) {
@@ -1412,7 +1412,7 @@ async function waitForAssistantByName(
 }
 
 async function waitForAssistantTools(
-  client: OnyxApiClient,
+  client: AetherSearchApiClient,
   agentName: string,
   requiredToolNames: string[],
   timeoutMs: number = 30_000
@@ -1615,7 +1615,7 @@ async function openAssistantEditor(
 async function createAgentAndWaitForTool(
   page: Page,
   options: {
-    apiClient: OnyxApiClient;
+    apiClient: AetherSearchApiClient;
     agentName: string;
     instructions: string;
     description: string;
@@ -1705,7 +1705,7 @@ test.describe("MCP OAuth flows", () => {
       storageState: "admin_auth.json",
     });
     const adminPage = await adminContext.newPage();
-    const adminClient = new OnyxApiClient(adminPage.request);
+    const adminClient = new AetherSearchApiClient(adminPage.request);
     try {
       const existingServers = await adminClient.listMcpServers();
       for (const server of existingServers) {
@@ -1777,7 +1777,7 @@ test.describe("MCP OAuth flows", () => {
       storageState: "admin_auth.json",
     });
     const adminPage = await adminContext.newPage();
-    const adminClient = new OnyxApiClient(adminPage.request);
+    const adminClient = new AetherSearchApiClient(adminPage.request);
 
     if (adminArtifacts?.agentId) {
       await adminClient.deleteAgent(adminArtifacts.agentId);
@@ -1824,7 +1824,7 @@ test.describe("MCP OAuth flows", () => {
       { email: TEST_ADMIN_CREDENTIALS.email, role: "admin" },
       "AdminFlow primary login"
     );
-    const adminApiClient = new OnyxApiClient(page.request);
+    const adminApiClient = new AetherSearchApiClient(page.request);
     logStep("Logged in as admin");
 
     const serverName = `PW MCP Admin ${Date.now()}`;
@@ -1949,7 +1949,7 @@ test.describe("MCP OAuth flows", () => {
       "CuratorFlow primary login"
     );
     logStep("Logged in as curator");
-    const curatorApiClient = new OnyxApiClient(page.request);
+    const curatorApiClient = new AetherSearchApiClient(page.request);
 
     const serverName = `PW MCP Curator ${Date.now()}`;
     const agentName = `PW Curator Assistant ${Date.now()}`;

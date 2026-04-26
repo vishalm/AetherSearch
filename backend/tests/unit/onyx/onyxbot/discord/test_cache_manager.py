@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.onyxbot.discord.cache import DiscordCacheManager
+from aethersearch.aethersearchbot.discord.cache import DiscordCacheManager
 
 
 class TestCacheInitialization:
@@ -37,20 +37,20 @@ class TestCacheInitialization:
 
         with (
             patch(
-                "onyx.onyxbot.discord.cache.get_all_tenant_ids",
+                "aethersearch.aethersearchbot.discord.cache.get_all_tenant_ids",
                 return_value=["tenant1"],
             ),
             patch(
-                "onyx.onyxbot.discord.cache.fetch_ee_implementation_or_noop",
+                "aethersearch.aethersearchbot.discord.cache.fetch_ee_implementation_or_noop",
                 return_value=lambda: set(),
             ),
-            patch("onyx.onyxbot.discord.cache.get_session_with_tenant") as mock_session,
+            patch("aethersearch.aethersearchbot.discord.cache.get_session_with_tenant") as mock_session,
             patch(
-                "onyx.onyxbot.discord.cache.get_guild_configs",
+                "aethersearch.aethersearchbot.discord.cache.get_guild_configs",
                 return_value=[mock_config1, mock_config2],
             ),
             patch(
-                "onyx.onyxbot.discord.cache.get_or_create_discord_service_api_key",
+                "aethersearch.aethersearchbot.discord.cache.get_or_create_discord_service_api_key",
                 return_value="test_api_key",
             ),
         ):
@@ -77,20 +77,20 @@ class TestCacheInitialization:
 
         with (
             patch(
-                "onyx.onyxbot.discord.cache.get_all_tenant_ids",
+                "aethersearch.aethersearchbot.discord.cache.get_all_tenant_ids",
                 return_value=["tenant1"],
             ),
             patch(
-                "onyx.onyxbot.discord.cache.fetch_ee_implementation_or_noop",
+                "aethersearch.aethersearchbot.discord.cache.fetch_ee_implementation_or_noop",
                 return_value=lambda: set(),
             ),
-            patch("onyx.onyxbot.discord.cache.get_session_with_tenant") as mock_session,
+            patch("aethersearch.aethersearchbot.discord.cache.get_session_with_tenant") as mock_session,
             patch(
-                "onyx.onyxbot.discord.cache.get_guild_configs",
+                "aethersearch.aethersearchbot.discord.cache.get_guild_configs",
                 return_value=[mock_config],
             ),
             patch(
-                "onyx.onyxbot.discord.cache.get_or_create_discord_service_api_key",
+                "aethersearch.aethersearchbot.discord.cache.get_or_create_discord_service_api_key",
                 return_value="new_api_key",
             ) as mock_provision,
         ):
@@ -159,13 +159,13 @@ class TestCacheUpdates:
         mock_config.enabled = True
 
         with (
-            patch("onyx.onyxbot.discord.cache.get_session_with_tenant") as mock_session,
+            patch("aethersearch.aethersearchbot.discord.cache.get_session_with_tenant") as mock_session,
             patch(
-                "onyx.onyxbot.discord.cache.get_guild_configs",
+                "aethersearch.aethersearchbot.discord.cache.get_guild_configs",
                 return_value=[mock_config],
             ),
             patch(
-                "onyx.onyxbot.discord.cache.get_or_create_discord_service_api_key",
+                "aethersearch.aethersearchbot.discord.cache.get_or_create_discord_service_api_key",
                 return_value="api_key",
             ),
         ):
@@ -187,9 +187,9 @@ class TestCacheUpdates:
         mock_config.enabled = False  # Disabled!
 
         with (
-            patch("onyx.onyxbot.discord.cache.get_session_with_tenant") as mock_session,
+            patch("aethersearch.aethersearchbot.discord.cache.get_session_with_tenant") as mock_session,
             patch(
-                "onyx.onyxbot.discord.cache.get_guild_configs",
+                "aethersearch.aethersearchbot.discord.cache.get_guild_configs",
                 return_value=[mock_config],
             ),
         ):
@@ -248,11 +248,11 @@ class TestThreadSafety:
 
         with (
             patch(
-                "onyx.onyxbot.discord.cache.get_all_tenant_ids",
+                "aethersearch.aethersearchbot.discord.cache.get_all_tenant_ids",
                 return_value=["tenant1"],
             ),
             patch(
-                "onyx.onyxbot.discord.cache.fetch_ee_implementation_or_noop",
+                "aethersearch.aethersearchbot.discord.cache.fetch_ee_implementation_or_noop",
                 return_value=lambda: set(),
             ),
             patch.object(cache, "_load_tenant_data", side_effect=slow_refresh),
@@ -301,20 +301,20 @@ class TestAPIKeyProvisioning:
 
         with (
             patch(
-                "onyx.onyxbot.discord.cache.get_all_tenant_ids",
+                "aethersearch.aethersearchbot.discord.cache.get_all_tenant_ids",
                 return_value=["tenant1"],
             ),
             patch(
-                "onyx.onyxbot.discord.cache.fetch_ee_implementation_or_noop",
+                "aethersearch.aethersearchbot.discord.cache.fetch_ee_implementation_or_noop",
                 return_value=lambda: set(),
             ),
-            patch("onyx.onyxbot.discord.cache.get_session_with_tenant") as mock_session,
+            patch("aethersearch.aethersearchbot.discord.cache.get_session_with_tenant") as mock_session,
             patch(
-                "onyx.onyxbot.discord.cache.get_guild_configs",
+                "aethersearch.aethersearchbot.discord.cache.get_guild_configs",
                 return_value=[mock_config],
             ),
             patch(
-                "onyx.onyxbot.discord.cache.get_or_create_discord_service_api_key",
+                "aethersearch.aethersearchbot.discord.cache.get_or_create_discord_service_api_key",
                 return_value="new_api_key_123",
             ) as mock_create,
         ):
@@ -339,20 +339,20 @@ class TestAPIKeyProvisioning:
 
         with (
             patch(
-                "onyx.onyxbot.discord.cache.get_all_tenant_ids",
+                "aethersearch.aethersearchbot.discord.cache.get_all_tenant_ids",
                 return_value=["tenant1"],
             ),
             patch(
-                "onyx.onyxbot.discord.cache.fetch_ee_implementation_or_noop",
+                "aethersearch.aethersearchbot.discord.cache.fetch_ee_implementation_or_noop",
                 return_value=lambda: set(),
             ),
-            patch("onyx.onyxbot.discord.cache.get_session_with_tenant") as mock_session,
+            patch("aethersearch.aethersearchbot.discord.cache.get_session_with_tenant") as mock_session,
             patch(
-                "onyx.onyxbot.discord.cache.get_guild_configs",
+                "aethersearch.aethersearchbot.discord.cache.get_guild_configs",
                 return_value=[mock_config],
             ),
             patch(
-                "onyx.onyxbot.discord.cache.get_or_create_discord_service_api_key",
+                "aethersearch.aethersearchbot.discord.cache.get_or_create_discord_service_api_key",
             ) as mock_create,
         ):
             mock_db = MagicMock()
@@ -392,20 +392,20 @@ class TestGatedTenantHandling:
 
         with (
             patch(
-                "onyx.onyxbot.discord.cache.get_all_tenant_ids",
+                "aethersearch.aethersearchbot.discord.cache.get_all_tenant_ids",
                 return_value=["tenant1", "tenant2"],
             ),
             patch(
-                "onyx.onyxbot.discord.cache.fetch_ee_implementation_or_noop",
+                "aethersearch.aethersearchbot.discord.cache.fetch_ee_implementation_or_noop",
                 return_value=lambda: gated_tenants,
             ),
-            patch("onyx.onyxbot.discord.cache.get_session_with_tenant") as mock_session,
+            patch("aethersearch.aethersearchbot.discord.cache.get_session_with_tenant") as mock_session,
             patch(
-                "onyx.onyxbot.discord.cache.get_guild_configs",
+                "aethersearch.aethersearchbot.discord.cache.get_guild_configs",
                 side_effect=mock_get_configs,
             ),
             patch(
-                "onyx.onyxbot.discord.cache.get_or_create_discord_service_api_key",
+                "aethersearch.aethersearchbot.discord.cache.get_or_create_discord_service_api_key",
                 return_value="api_key",
             ),
         ):
@@ -427,16 +427,16 @@ class TestGatedTenantHandling:
 
         with (
             patch(
-                "onyx.onyxbot.discord.cache.get_all_tenant_ids",
+                "aethersearch.aethersearchbot.discord.cache.get_all_tenant_ids",
                 return_value=["tenant1"],
             ),
             patch(
-                "onyx.onyxbot.discord.cache.fetch_ee_implementation_or_noop",
+                "aethersearch.aethersearchbot.discord.cache.fetch_ee_implementation_or_noop",
                 return_value=lambda: set(),
             ) as mock_ee,
-            patch("onyx.onyxbot.discord.cache.get_session_with_tenant") as mock_session,
+            patch("aethersearch.aethersearchbot.discord.cache.get_session_with_tenant") as mock_session,
             patch(
-                "onyx.onyxbot.discord.cache.get_guild_configs",
+                "aethersearch.aethersearchbot.discord.cache.get_guild_configs",
                 return_value=[],
             ),
         ):
@@ -459,20 +459,20 @@ class TestGatedTenantHandling:
 
         with (
             patch(
-                "onyx.onyxbot.discord.cache.get_all_tenant_ids",
+                "aethersearch.aethersearchbot.discord.cache.get_all_tenant_ids",
                 return_value=["tenant1"],
             ),
             patch(
-                "onyx.onyxbot.discord.cache.fetch_ee_implementation_or_noop",
+                "aethersearch.aethersearchbot.discord.cache.fetch_ee_implementation_or_noop",
                 return_value=lambda: set(),  # No gated tenants
             ),
-            patch("onyx.onyxbot.discord.cache.get_session_with_tenant") as mock_session,
+            patch("aethersearch.aethersearchbot.discord.cache.get_session_with_tenant") as mock_session,
             patch(
-                "onyx.onyxbot.discord.cache.get_guild_configs",
+                "aethersearch.aethersearchbot.discord.cache.get_guild_configs",
                 return_value=[mock_config],
             ),
             patch(
-                "onyx.onyxbot.discord.cache.get_or_create_discord_service_api_key",
+                "aethersearch.aethersearchbot.discord.cache.get_or_create_discord_service_api_key",
                 return_value="api_key",
             ),
         ):
@@ -504,11 +504,11 @@ class TestCacheErrorHandling:
 
         with (
             patch(
-                "onyx.onyxbot.discord.cache.get_all_tenant_ids",
+                "aethersearch.aethersearchbot.discord.cache.get_all_tenant_ids",
                 return_value=["tenant1", "tenant2"],
             ),
             patch(
-                "onyx.onyxbot.discord.cache.fetch_ee_implementation_or_noop",
+                "aethersearch.aethersearchbot.discord.cache.fetch_ee_implementation_or_noop",
                 return_value=lambda: set(),
             ),
             patch.object(cache, "_load_tenant_data", side_effect=mock_load),

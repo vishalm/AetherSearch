@@ -1,9 +1,9 @@
 import struct
 
-from onyx.voice.providers.elevenlabs import _http_to_ws_url
-from onyx.voice.providers.elevenlabs import DEFAULT_ELEVENLABS_API_BASE
-from onyx.voice.providers.elevenlabs import ElevenLabsSTTMessageType
-from onyx.voice.providers.elevenlabs import ElevenLabsVoiceProvider
+from aethersearch.voice.providers.elevenlabs import _http_to_ws_url
+from aethersearch.voice.providers.elevenlabs import DEFAULT_ELEVENLABS_API_BASE
+from aethersearch.voice.providers.elevenlabs import ElevenLabsSTTMessageType
+from aethersearch.voice.providers.elevenlabs import ElevenLabsVoiceProvider
 
 # --- _http_to_ws_url ---
 
@@ -40,7 +40,7 @@ def test_stt_message_type_compares_as_string() -> None:
 
 
 def test_resample_pcm16_passthrough_when_same_rate() -> None:
-    from onyx.voice.providers.elevenlabs import ElevenLabsStreamingTranscriber
+    from aethersearch.voice.providers.elevenlabs import ElevenLabsStreamingTranscriber
 
     t = ElevenLabsStreamingTranscriber.__new__(ElevenLabsStreamingTranscriber)
     t.input_sample_rate = 16000
@@ -52,7 +52,7 @@ def test_resample_pcm16_passthrough_when_same_rate() -> None:
 
 def test_resample_pcm16_downsamples() -> None:
     """24kHz -> 16kHz should produce fewer samples (ratio 3:2)."""
-    from onyx.voice.providers.elevenlabs import ElevenLabsStreamingTranscriber
+    from aethersearch.voice.providers.elevenlabs import ElevenLabsStreamingTranscriber
 
     t = ElevenLabsStreamingTranscriber.__new__(ElevenLabsStreamingTranscriber)
     t.input_sample_rate = 24000
@@ -68,7 +68,7 @@ def test_resample_pcm16_downsamples() -> None:
 
 
 def test_resample_pcm16_clamps_to_int16_range() -> None:
-    from onyx.voice.providers.elevenlabs import ElevenLabsStreamingTranscriber
+    from aethersearch.voice.providers.elevenlabs import ElevenLabsStreamingTranscriber
 
     t = ElevenLabsStreamingTranscriber.__new__(ElevenLabsStreamingTranscriber)
     t.input_sample_rate = 24000

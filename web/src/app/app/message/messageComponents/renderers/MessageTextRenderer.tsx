@@ -401,7 +401,7 @@ export const MessageTextRenderer: MessageRenderer<
         ) : displayedContent.length > 0 ? (
           <div dir="auto">
             <ReactMarkdown
-              className="prose prose-onyx font-main-content-body max-w-full"
+              className="prose prose-aethersearch font-main-content-body max-w-full"
               components={markdownComponents}
               remarkPlugins={
                 streamFullyDisplayed

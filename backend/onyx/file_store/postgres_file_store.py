@@ -15,24 +15,24 @@ import puremagic
 from psycopg2.extensions import connection as Psycopg2Connection
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import FileOrigin
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.engine.sql_engine import get_session_with_current_tenant_if_none
-from onyx.db.file_content import delete_file_content_by_file_id
-from onyx.db.file_content import get_file_content_by_file_id
-from onyx.db.file_content import get_file_content_by_file_id_optional
-from onyx.db.file_content import transfer_file_content_file_id
-from onyx.db.file_content import upsert_file_content
-from onyx.db.file_record import delete_filerecord_by_file_id
-from onyx.db.file_record import get_filerecord_by_file_id
-from onyx.db.file_record import get_filerecord_by_file_id_optional
-from onyx.db.file_record import get_filerecord_by_prefix
-from onyx.db.file_record import upsert_filerecord
-from onyx.db.models import FileRecord
-from onyx.db.models import FileRecord as FileStoreModel
-from onyx.file_store.file_store import FileStore
-from onyx.utils.file import FileWithMimeType
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant_if_none
+from aethersearch.db.file_content import delete_file_content_by_file_id
+from aethersearch.db.file_content import get_file_content_by_file_id
+from aethersearch.db.file_content import get_file_content_by_file_id_optional
+from aethersearch.db.file_content import transfer_file_content_file_id
+from aethersearch.db.file_content import upsert_file_content
+from aethersearch.db.file_record import delete_filerecord_by_file_id
+from aethersearch.db.file_record import get_filerecord_by_file_id
+from aethersearch.db.file_record import get_filerecord_by_file_id_optional
+from aethersearch.db.file_record import get_filerecord_by_prefix
+from aethersearch.db.file_record import upsert_filerecord
+from aethersearch.db.models import FileRecord
+from aethersearch.db.models import FileRecord as FileStoreModel
+from aethersearch.file_store.file_store import FileStore
+from aethersearch.utils.file import FileWithMimeType
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

@@ -1,11 +1,11 @@
 FROM node:24-alpine@sha256:d1b3b4da11eefd5941e7f0b9cf17783fc99d9c6fc34884a665f40a06dbdfc94f AS base
 
-LABEL com.onyx.maintainer="founders@onyx.app"
-LABEL com.onyx.description="This image is the web/frontend container of Onyx which \
-contains code for both the Community and Enterprise editions of Onyx. If you do not \
+LABEL com.aethersearch.maintainer="founders@aethersearch.app"
+LABEL com.aethersearch.description="This image is the web/frontend container of AetherSearch which \
+contains code for both the Community and Enterprise editions of AetherSearch. If you do not \
 have a contract or agreement with DanswerAI, you are not permitted to use the Enterprise \
 Edition features outside of personal development or testing purposes. Please reach out to \
-founders@onyx.app for more information. Please visit https://github.com/onyx-dot-app/onyx"
+founders@aethersearch.app for more information. Please visit https://github.com/aethersearch-dot-app/aethersearch"
 
 # Step 1. Install dependencies + rebuild the source code only when needed
 FROM base AS builder
@@ -162,9 +162,9 @@ ENV NEXT_PUBLIC_RECAPTCHA_SITE_KEY=${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
 ARG SENTRY_RELEASE
 ENV SENTRY_RELEASE=${SENTRY_RELEASE}
 
-# Default ONYX_VERSION, typically overridden during builds by GitHub Actions.
-ARG ONYX_VERSION=0.0.0-dev
-ENV ONYX_VERSION=${ONYX_VERSION}
+# Default AETHERSEARCH_VERSION, typically overridden during builds by GitHub Actions.
+ARG AETHERSEARCH_VERSION=0.0.0-dev
+ENV AETHERSEARCH_VERSION=${AETHERSEARCH_VERSION}
 
 # Note: Don't expose ports here, Compose will handle that for us if necessary.
 # If you want to run this without compose, specify the ports to

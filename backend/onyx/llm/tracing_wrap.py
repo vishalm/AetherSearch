@@ -1,14 +1,14 @@
 """Auto-tracing wrapper applied to every concrete `LLM` subclass.
 
-Every concrete subclass of `onyx.llm.interfaces.LLM` has its `invoke` and
+Every concrete subclass of `aethersearch.llm.interfaces.LLM` has its `invoke` and
 `stream` methods auto-wrapped via `LLM.__init_subclass__` so that every LLM
 call lands in Braintrust without per-callsite instrumentation. The wrap is a
 no-op when an outer `generation_span` is already active — callers that
 explicitly wrap their calls (via `llm_generation_span`) continue to work and
 are not double-counted.
 
-Imports from `onyx.tracing.llm_utils` stay lazy (inside the wrappers) because
-it imports `onyx.llm.interfaces`, which imports this module — loading it at
+Imports from `aethersearch.tracing.llm_utils` stay lazy (inside the wrappers) because
+it imports `aethersearch.llm.interfaces`, which imports this module — loading it at
 module level would deadlock the import graph. Everything else is imported
 at the top of the file.
 """
@@ -22,20 +22,20 @@ from collections.abc import Iterator
 from typing import Any
 from typing import TYPE_CHECKING
 
-from onyx.llm.model_response import ChatCompletionDeltaToolCall
-from onyx.llm.model_response import FunctionCall as DeltaFunctionCall
-from onyx.llm.model_response import Usage
-from onyx.tracing.framework.create import get_current_span
-from onyx.tracing.framework.span_data import GenerationSpanData
+from aethersearch.llm.model_response import ChatCompletionDeltaToolCall
+from aethersearch.llm.model_response import FunctionCall as DeltaFunctionCall
+from aethersearch.llm.model_response import Usage
+from aethersearch.tracing.framework.create import get_current_span
+from aethersearch.tracing.framework.span_data import GenerationSpanData
 
 if TYPE_CHECKING:
-    from onyx.llm.interfaces import LLM
-    from onyx.llm.model_response import ModelResponse
-    from onyx.llm.model_response import ModelResponseStream
-    from onyx.llm.models import ToolCall
+    from aethersearch.llm.interfaces import LLM
+    from aethersearch.llm.model_response import ModelResponse
+    from aethersearch.llm.model_response import ModelResponseStream
+    from aethersearch.llm.models import ToolCall
 
 
-_ALREADY_WRAPPED_ATTR = "_onyx_tracing_wrapped"
+_ALREADY_WRAPPED_ATTR = "_aethersearch_tracing_wrapped"
 _PROMPT_PARAM_NAME = "prompt"
 
 
@@ -136,8 +136,8 @@ def wrap_invoke(
         if _outer_generation_span_active():
             return invoke_fn(self, *args, **kwargs)
 
-        from onyx.tracing.llm_utils import llm_generation_span
-        from onyx.tracing.llm_utils import record_llm_response
+        from aethersearch.tracing.llm_utils import llm_generation_span
+        from aethersearch.tracing.llm_utils import record_llm_response
 
         prompt = _extract_prompt(sig, self, args, kwargs)
         with llm_generation_span(
@@ -187,8 +187,8 @@ def wrap_stream(
             yield from stream_fn(self, *args, **kwargs)
             return
 
-        from onyx.tracing.llm_utils import llm_generation_span
-        from onyx.tracing.llm_utils import record_llm_span_output
+        from aethersearch.tracing.llm_utils import llm_generation_span
+        from aethersearch.tracing.llm_utils import record_llm_span_output
 
         prompt = _extract_prompt(sig, self, args, kwargs)
         with llm_generation_span(
@@ -300,8 +300,8 @@ def _finalize_tool_calls(
     if not buffer:
         return None
 
-    from onyx.llm.models import FunctionCall as ModelFunctionCall
-    from onyx.llm.models import ToolCall
+    from aethersearch.llm.models import FunctionCall as ModelFunctionCall
+    from aethersearch.llm.models import ToolCall
 
     finalized: list[ToolCall] = []
     for idx in sorted(buffer.keys()):

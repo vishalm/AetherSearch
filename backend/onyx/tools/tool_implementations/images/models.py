@@ -2,7 +2,7 @@ from enum import Enum
 
 from pydantic import BaseModel
 
-from onyx.server.query_and_chat.streaming_models import GeneratedImage
+from aethersearch.server.query_and_chat.streaming_models import GeneratedImage
 
 
 class ImageGenerationResponse(BaseModel):

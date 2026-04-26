@@ -5,16 +5,16 @@ https://confluence.atlassian.com/conf85/check-who-can-view-a-page-1283360557.htm
 
 from collections.abc import Generator
 
-from ee.onyx.external_permissions.perm_sync_types import FetchAllDocumentsFunction
-from ee.onyx.external_permissions.perm_sync_types import FetchAllDocumentsIdsFunction
-from ee.onyx.external_permissions.utils import generic_doc_sync
-from onyx.access.models import ElementExternalAccess
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.confluence.connector import ConfluenceConnector
-from onyx.connectors.credentials_provider import OnyxDBCredentialsProvider
-from onyx.db.models import ConnectorCredentialPair
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.external_permissions.perm_sync_types import FetchAllDocumentsFunction
+from ee.aethersearch.external_permissions.perm_sync_types import FetchAllDocumentsIdsFunction
+from ee.aethersearch.external_permissions.utils import generic_doc_sync
+from aethersearch.access.models import ElementExternalAccess
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.confluence.connector import ConfluenceConnector
+from aethersearch.connectors.credentials_provider import AetherSearchDBCredentialsProvider
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()
@@ -38,7 +38,7 @@ def confluence_doc_sync(
         **cc_pair.connector.connector_specific_config
     )
 
-    provider = OnyxDBCredentialsProvider(
+    provider = AetherSearchDBCredentialsProvider(
         get_current_tenant_id(), "confluence", cc_pair.credential_id
     )
     confluence_connector.set_credentials_provider(provider)

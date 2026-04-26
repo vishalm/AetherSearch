@@ -10,48 +10,48 @@ from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
 from pydantic import BaseModel
 
-from onyx.access.models import ExternalAccess
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import FileOrigin
-from onyx.connectors.cross_connector_utils.tabular_section_utils import (
+from aethersearch.access.models import ExternalAccess
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.connectors.cross_connector_utils.tabular_section_utils import (
     extract_and_stage_tabular_file,
 )
-from onyx.connectors.cross_connector_utils.tabular_section_utils import is_tabular_file
-from onyx.connectors.cross_connector_utils.tabular_section_utils import (
+from aethersearch.connectors.cross_connector_utils.tabular_section_utils import is_tabular_file
+from aethersearch.connectors.cross_connector_utils.tabular_section_utils import (
     tabular_file_to_sections,
 )
-from onyx.connectors.google_drive.constants import DRIVE_FOLDER_TYPE
-from onyx.connectors.google_drive.constants import DRIVE_SHORTCUT_TYPE
-from onyx.connectors.google_drive.models import GDriveMimeType
-from onyx.connectors.google_drive.models import GoogleDriveFileType
-from onyx.connectors.google_drive.section_extraction import get_document_sections
-from onyx.connectors.google_drive.section_extraction import HEADING_DELIMITER
-from onyx.connectors.google_utils.resources import get_drive_service
-from onyx.connectors.google_utils.resources import get_google_docs_service
-from onyx.connectors.google_utils.resources import GoogleDocsService
-from onyx.connectors.google_utils.resources import GoogleDriveService
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentFailure
-from onyx.connectors.models import ImageSection
-from onyx.connectors.models import SlimDocument
-from onyx.connectors.models import TabularSection
-from onyx.connectors.models import TextSection
-from onyx.file_processing.extract_file_text import extract_file_text
-from onyx.file_processing.extract_file_text import get_file_ext
-from onyx.file_processing.extract_file_text import pptx_to_text
-from onyx.file_processing.extract_file_text import read_docx_file
-from onyx.file_processing.extract_file_text import read_pdf_file
-from onyx.file_processing.file_types import OnyxFileExtensions
-from onyx.file_processing.file_types import OnyxMimeTypes
-from onyx.file_processing.file_types import SPREADSHEET_MIME_TYPE
-from onyx.file_processing.image_utils import store_image_and_create_section
-from onyx.file_store.staging import RawFileCallback
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import (
+from aethersearch.connectors.google_drive.constants import DRIVE_FOLDER_TYPE
+from aethersearch.connectors.google_drive.constants import DRIVE_SHORTCUT_TYPE
+from aethersearch.connectors.google_drive.models import GDriveMimeType
+from aethersearch.connectors.google_drive.models import GoogleDriveFileType
+from aethersearch.connectors.google_drive.section_extraction import get_document_sections
+from aethersearch.connectors.google_drive.section_extraction import HEADING_DELIMITER
+from aethersearch.connectors.google_utils.resources import get_drive_service
+from aethersearch.connectors.google_utils.resources import get_google_docs_service
+from aethersearch.connectors.google_utils.resources import GoogleDocsService
+from aethersearch.connectors.google_utils.resources import GoogleDriveService
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentFailure
+from aethersearch.connectors.models import ImageSection
+from aethersearch.connectors.models import SlimDocument
+from aethersearch.connectors.models import TabularSection
+from aethersearch.connectors.models import TextSection
+from aethersearch.file_processing.extract_file_text import extract_file_text
+from aethersearch.file_processing.extract_file_text import get_file_ext
+from aethersearch.file_processing.extract_file_text import pptx_to_text
+from aethersearch.file_processing.extract_file_text import read_docx_file
+from aethersearch.file_processing.extract_file_text import read_pdf_file
+from aethersearch.file_processing.file_types import AetherSearchFileExtensions
+from aethersearch.file_processing.file_types import AetherSearchMimeTypes
+from aethersearch.file_processing.file_types import SPREADSHEET_MIME_TYPE
+from aethersearch.file_processing.image_utils import store_image_and_create_section
+from aethersearch.file_store.staging import RawFileCallback
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import (
     fetch_versioned_implementation_with_fallback,
 )
-from onyx.utils.variable_functionality import noop_fallback
+from aethersearch.utils.variable_functionality import noop_fallback
 
 logger = setup_logger()
 
@@ -235,7 +235,7 @@ class PermissionSyncContext(BaseModel):
     google_domain: str
 
 
-def onyx_document_id_from_drive_file(file: GoogleDriveFileType) -> str:
+def aethersearch_document_id_from_drive_file(file: GoogleDriveFileType) -> str:
     link = file.get(WEB_VIEW_LINK_KEY)
     if not link:
         file_id = file.get("id")
@@ -349,7 +349,7 @@ def _download_and_extract_sections_basic(
         )
         return FileExtractionResult(sections=sections, staged_file_id=staged_file_id)
 
-    if mime_type in OnyxMimeTypes.IMAGE_MIME_TYPES:
+    if mime_type in AetherSearchMimeTypes.IMAGE_MIME_TYPES:
         # Skip images if not explicitly enabled
         if not allow_images:
             return FileExtractionResult(sections=[])
@@ -381,7 +381,7 @@ def _download_and_extract_sections_basic(
             logger.warning(f"Failed to export {file_name} as {export_mime_type}")
             return FileExtractionResult(sections=[])
 
-        if export_mime_type in OnyxMimeTypes.TABULAR_MIME_TYPES:
+        if export_mime_type in AetherSearchMimeTypes.TABULAR_MIME_TYPES:
             # Synthesize an extension on the filename
             ext = ".xlsx" if export_mime_type == SPREADSHEET_MIME_TYPE else ".csv"
             return _extract_tabular(
@@ -458,7 +458,7 @@ def _download_and_extract_sections_basic(
 
     # Final attempt at extracting text
     file_ext = get_file_ext(file.get("name", ""))
-    if file_ext not in OnyxFileExtensions.ALL_ALLOWED_EXTENSIONS:
+    if file_ext not in AetherSearchFileExtensions.ALL_ALLOWED_EXTENSIONS:
         logger.warning(f"Skipping file {file.get('name')} due to extension.")
         return FileExtractionResult(sections=[])
 
@@ -572,7 +572,7 @@ def _get_external_access_for_raw_gdrive_file(
             ExternalAccess,
         ],
         fetch_versioned_implementation_with_fallback(
-            "onyx.external_permissions.google_drive.doc_sync",
+            "aethersearch.external_permissions.google_drive.doc_sync",
             "get_external_access_for_raw_gdrive_file",
             fallback=noop_fallback,
         ),
@@ -755,7 +755,7 @@ def _convert_drive_item_to_document(
             logger.warning(f"No content extracted from {file.get('name')}. Skipping.")
             return None
 
-        doc_id = onyx_document_id_from_drive_file(file)
+        doc_id = aethersearch_document_id_from_drive_file(file)
         external_access = (
             _get_external_access_for_raw_gdrive_file(
                 file=file,
@@ -814,7 +814,7 @@ def _convert_drive_item_to_document(
     except Exception as e:
         doc_id = "unknown"
         try:
-            doc_id = onyx_document_id_from_drive_file(file)
+            doc_id = aethersearch_document_id_from_drive_file(file)
         except Exception as e2:
             logger.warning(f"Error getting document id from file: {e2}")
 
@@ -877,7 +877,7 @@ def build_slim_document(
         else None
     )
     return SlimDocument(
-        id=onyx_document_id_from_drive_file(file),
+        id=aethersearch_document_id_from_drive_file(file),
         external_access=external_access,
         parent_hierarchy_raw_node_id=(file.get("parents") or [None])[0],
     )

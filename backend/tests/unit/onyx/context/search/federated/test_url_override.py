@@ -3,9 +3,9 @@
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from onyx.context.search.federated.models import DirectThreadFetch
-from onyx.context.search.federated.slack_search import _fetch_thread_from_url
-from onyx.context.search.federated.slack_search_utils import extract_slack_message_urls
+from aethersearch.context.search.federated.models import DirectThreadFetch
+from aethersearch.context.search.federated.slack_search import _fetch_thread_from_url
+from aethersearch.context.search.federated.slack_search_utils import extract_slack_message_urls
 
 
 class TestExtractSlackMessageUrls:
@@ -51,8 +51,8 @@ class TestExtractSlackMessageUrls:
 class TestFetchThreadFromUrl:
     """Verify _fetch_thread_from_url calls conversations.replies and returns SlackMessage."""
 
-    @patch("onyx.context.search.federated.slack_search._build_thread_text")
-    @patch("onyx.context.search.federated.slack_search.WebClient")
+    @patch("aethersearch.context.search.federated.slack_search._build_thread_text")
+    @patch("aethersearch.context.search.federated.slack_search.WebClient")
     def test_successful_fetch(
         self, mock_webclient_cls: MagicMock, mock_build_thread: MagicMock
     ) -> None:
@@ -92,7 +92,7 @@ class TestFetchThreadFromUrl:
             channel="C097NBWMY8Y", ts="1775491616.524769"
         )
 
-    @patch("onyx.context.search.federated.slack_search.WebClient")
+    @patch("aethersearch.context.search.federated.slack_search.WebClient")
     def test_api_error_returns_empty(self, mock_webclient_cls: MagicMock) -> None:
         from slack_sdk.errors import SlackApiError
 

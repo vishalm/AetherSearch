@@ -5,7 +5,7 @@ from typing import Dict
 
 import asana
 
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

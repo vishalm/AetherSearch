@@ -1,7 +1,7 @@
 import pytest
 
-from onyx.indexing.embedder import DefaultIndexingEmbedder
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.indexing.embedder import DefaultIndexingEmbedder
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
 
 
 class MockHeartbeat(IndexingHeartbeatInterface):

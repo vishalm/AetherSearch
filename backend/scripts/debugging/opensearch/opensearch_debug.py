@@ -16,7 +16,7 @@ Environment Variables:
 
 Dependencies:
     backend/shared_configs/configs.py
-    backend/onyx/document_index/opensearch/client.py
+    backend/aethersearch/document_index/opensearch/client.py
 """
 import argparse
 import json
@@ -24,8 +24,8 @@ import os
 import sys
 from typing import Any
 
-from onyx.document_index.opensearch.client import OpenSearchClient
-from onyx.document_index.opensearch.client import OpenSearchIndexClient
+from aethersearch.document_index.opensearch.client import OpenSearchClient
+from aethersearch.document_index.opensearch.client import OpenSearchIndexClient
 from shared_configs.configs import MULTI_TENANT
 
 

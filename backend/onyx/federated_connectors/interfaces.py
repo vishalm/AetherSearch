@@ -3,12 +3,12 @@ from abc import abstractmethod
 from typing import Any
 from typing import Dict
 
-from onyx.context.search.models import ChunkIndexRequest
-from onyx.context.search.models import InferenceChunk
-from onyx.federated_connectors.models import CredentialField
-from onyx.federated_connectors.models import EntityField
-from onyx.federated_connectors.models import OAuthResult
-from onyx.onyxbot.slack.models import SlackContext
+from aethersearch.context.search.models import ChunkIndexRequest
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.federated_connectors.models import CredentialField
+from aethersearch.federated_connectors.models import EntityField
+from aethersearch.federated_connectors.models import OAuthResult
+from aethersearch.aethersearchbot.slack.models import SlackContext
 
 
 class FederatedConnector(ABC):

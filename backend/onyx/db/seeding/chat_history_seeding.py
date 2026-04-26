@@ -5,12 +5,12 @@ from datetime import timezone
 from logging import getLogger
 from uuid import UUID
 
-from onyx.configs.constants import MessageType
-from onyx.db.chat import create_chat_session
-from onyx.db.chat import create_new_chat_message
-from onyx.db.chat import get_or_create_root_message
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.models import ChatSession
+from aethersearch.configs.constants import MessageType
+from aethersearch.db.chat import create_chat_session
+from aethersearch.db.chat import create_new_chat_message
+from aethersearch.db.chat import get_or_create_root_message
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.models import ChatSession
 
 logger = getLogger(__name__)
 

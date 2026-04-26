@@ -8,21 +8,21 @@ from typing import Any
 
 from pydantic import ValidationError
 
-from onyx.configs.app_configs import MAX_SLACK_QUERY_EXPANSIONS
-from onyx.context.search.federated.models import ChannelMetadata
-from onyx.context.search.federated.models import DirectThreadFetch
-from onyx.context.search.models import ChunkIndexRequest
-from onyx.federated_connectors.slack.models import SlackEntities
-from onyx.llm.interfaces import LLM
-from onyx.llm.models import UserMessage
-from onyx.llm.utils import llm_response_to_string
-from onyx.natural_language_processing.english_stopwords import ENGLISH_STOPWORDS_SET
-from onyx.onyxbot.slack.models import ChannelType
-from onyx.prompts.federated_search import SLACK_DATE_EXTRACTION_PROMPT
-from onyx.prompts.federated_search import SLACK_QUERY_EXPANSION_PROMPT
-from onyx.tracing.llm_utils import llm_generation_span
-from onyx.tracing.llm_utils import record_llm_response
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import MAX_SLACK_QUERY_EXPANSIONS
+from aethersearch.context.search.federated.models import ChannelMetadata
+from aethersearch.context.search.federated.models import DirectThreadFetch
+from aethersearch.context.search.models import ChunkIndexRequest
+from aethersearch.federated_connectors.slack.models import SlackEntities
+from aethersearch.llm.interfaces import LLM
+from aethersearch.llm.models import UserMessage
+from aethersearch.llm.utils import llm_response_to_string
+from aethersearch.natural_language_processing.english_stopwords import ENGLISH_STOPWORDS_SET
+from aethersearch.aethersearchbot.slack.models import ChannelType
+from aethersearch.prompts.federated_search import SLACK_DATE_EXTRACTION_PROMPT
+from aethersearch.prompts.federated_search import SLACK_QUERY_EXPANSION_PROMPT
+from aethersearch.tracing.llm_utils import llm_generation_span
+from aethersearch.tracing.llm_utils import record_llm_response
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -650,7 +650,7 @@ def extract_slack_message_urls(
     """Extract Slack message URLs from query text.
 
     Parses URLs like:
-      https://onyx-company.slack.com/archives/C097NBWMY8Y/p1775491616524769
+      https://aethersearch-company.slack.com/archives/C097NBWMY8Y/p1775491616524769
 
     Returns list of (channel_id, thread_ts) tuples.
     The 16-digit timestamp is converted to Slack ts format (with dot).

@@ -11,20 +11,20 @@ from litellm.types.utils import ChatCompletionDeltaToolCall
 from litellm.types.utils import Delta
 from litellm.types.utils import Function as LiteLLMFunction
 
-import onyx.llm.models
-from onyx.configs.app_configs import MOCK_LLM_RESPONSE
-from onyx.llm.constants import LlmProviderNames
-from onyx.llm.interfaces import LLMUserIdentity
-from onyx.llm.model_response import ModelResponse
-from onyx.llm.model_response import ModelResponseStream
-from onyx.llm.models import AssistantMessage
-from onyx.llm.models import FunctionCall
-from onyx.llm.models import LanguageModelInput
-from onyx.llm.models import ReasoningEffort
-from onyx.llm.models import ToolCall
-from onyx.llm.models import UserMessage
-from onyx.llm.multi_llm import LitellmLLM
-from onyx.llm.utils import get_max_input_tokens
+import aethersearch.llm.models
+from aethersearch.configs.app_configs import MOCK_LLM_RESPONSE
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.llm.interfaces import LLMUserIdentity
+from aethersearch.llm.model_response import ModelResponse
+from aethersearch.llm.model_response import ModelResponseStream
+from aethersearch.llm.models import AssistantMessage
+from aethersearch.llm.models import FunctionCall
+from aethersearch.llm.models import LanguageModelInput
+from aethersearch.llm.models import ReasoningEffort
+from aethersearch.llm.models import ToolCall
+from aethersearch.llm.models import UserMessage
+from aethersearch.llm.multi_llm import LitellmLLM
+from aethersearch.llm.utils import get_max_input_tokens
 
 VERTEX_OPUS_MODELS_REJECTING_OUTPUT_CONFIG = [
     "claude-opus-4-5@20251101",
@@ -462,8 +462,8 @@ def test_openai_auto_reasoning_effort_maps_to_medium() -> None:
 
     with (
         patch("litellm.completion") as mock_completion,
-        patch("onyx.llm.multi_llm.model_is_reasoning_model", return_value=True),
-        patch("onyx.llm.multi_llm.is_true_openai_model", return_value=True),
+        patch("aethersearch.llm.multi_llm.model_is_reasoning_model", return_value=True),
+        patch("aethersearch.llm.multi_llm.is_true_openai_model", return_value=True),
     ):
         mock_completion.return_value = []
 
@@ -489,7 +489,7 @@ def test_vertex_opus_omits_reasoning_effort(model_name: str) -> None:
 
     with (
         patch("litellm.completion") as mock_completion,
-        patch("onyx.llm.multi_llm.model_is_reasoning_model", return_value=True),
+        patch("aethersearch.llm.multi_llm.model_is_reasoning_model", return_value=True),
     ):
         mock_completion.return_value = []
 
@@ -515,10 +515,10 @@ def test_openai_chat_omits_reasoning_params() -> None:
     with (
         patch("litellm.completion") as mock_completion,
         patch(
-            "onyx.llm.multi_llm.model_is_reasoning_model", return_value=True
+            "aethersearch.llm.multi_llm.model_is_reasoning_model", return_value=True
         ) as mock_is_reasoning,
         patch(
-            "onyx.llm.multi_llm.is_true_openai_model", return_value=True
+            "aethersearch.llm.multi_llm.is_true_openai_model", return_value=True
         ) as mock_is_openai,
     ):
         mock_stream_chunks = [
@@ -550,7 +550,7 @@ def test_openai_chat_omits_reasoning_params() -> None:
 def test_user_identity_metadata_enabled(default_multi_llm: LitellmLLM) -> None:
     with (
         patch("litellm.completion") as mock_completion,
-        patch("onyx.llm.utils.SEND_USER_METADATA_TO_LLM_PROVIDER", True),
+        patch("aethersearch.llm.utils.SEND_USER_METADATA_TO_LLM_PROVIDER", True),
     ):
         mock_stream_chunks = [
             litellm.ModelResponse(
@@ -583,7 +583,7 @@ def test_user_identity_user_id_truncated_to_64_chars(
 ) -> None:
     with (
         patch("litellm.completion") as mock_completion,
-        patch("onyx.llm.utils.SEND_USER_METADATA_TO_LLM_PROVIDER", True),
+        patch("aethersearch.llm.utils.SEND_USER_METADATA_TO_LLM_PROVIDER", True),
     ):
         mock_stream_chunks = [
             litellm.ModelResponse(
@@ -616,7 +616,7 @@ def test_user_identity_metadata_disabled_omits_identity(
 ) -> None:
     with (
         patch("litellm.completion") as mock_completion,
-        patch("onyx.llm.utils.SEND_USER_METADATA_TO_LLM_PROVIDER", False),
+        patch("aethersearch.llm.utils.SEND_USER_METADATA_TO_LLM_PROVIDER", False),
     ):
         mock_stream_chunks = [
             litellm.ModelResponse(
@@ -662,7 +662,7 @@ def test_existing_metadata_pass_through_when_identity_disabled() -> None:
 
     with (
         patch("litellm.completion") as mock_completion,
-        patch("onyx.llm.utils.SEND_USER_METADATA_TO_LLM_PROVIDER", False),
+        patch("aethersearch.llm.utils.SEND_USER_METADATA_TO_LLM_PROVIDER", False),
     ):
         mock_stream_chunks = [
             litellm.ModelResponse(
@@ -908,7 +908,7 @@ def test_temporary_env_cleanup(monkeypatch: pytest.MonkeyPatch) -> None:
 
     with (
         patch("litellm.completion") as mock_completion,
-        patch("onyx.llm.utils.SEND_USER_METADATA_TO_LLM_PROVIDER", False),
+        patch("aethersearch.llm.utils.SEND_USER_METADATA_TO_LLM_PROVIDER", False),
     ):
         mock_completion.side_effect = on_litellm_completion
 
@@ -979,7 +979,7 @@ def test_temporary_env_cleanup_on_exception(monkeypatch: pytest.MonkeyPatch) -> 
 
     with (
         patch("litellm.completion") as mock_completion,
-        patch("onyx.llm.utils.SEND_USER_METADATA_TO_LLM_PROVIDER", False),
+        patch("aethersearch.llm.utils.SEND_USER_METADATA_TO_LLM_PROVIDER", False),
     ):
         mock_completion.side_effect = on_litellm_completion_raises
 
@@ -1134,7 +1134,7 @@ def test_multithreaded_invoke_without_custom_config_skips_env_lock() -> None:
     Both should run with stream=False, never touch the env lock, and complete
     without blocking each other.
     """
-    from onyx.llm import multi_llm as multi_llm_module
+    from aethersearch.llm import multi_llm as multi_llm_module
 
     model_provider = LlmProviderNames.OPENAI
     model_name = "gpt-3.5-turbo"
@@ -1222,7 +1222,7 @@ def test_multithreaded_invoke_without_custom_config_skips_env_lock() -> None:
 
 
 def test_messages_contain_tool_content_with_tool_role() -> None:
-    from onyx.llm.multi_llm import _messages_contain_tool_content
+    from aethersearch.llm.multi_llm import _messages_contain_tool_content
 
     messages: list[dict[str, Any]] = [
         {"role": "user", "content": "Hello"},
@@ -1233,7 +1233,7 @@ def test_messages_contain_tool_content_with_tool_role() -> None:
 
 
 def test_messages_contain_tool_content_with_tool_calls() -> None:
-    from onyx.llm.multi_llm import _messages_contain_tool_content
+    from aethersearch.llm.multi_llm import _messages_contain_tool_content
 
     messages: list[dict[str, Any]] = [
         {"role": "user", "content": "Hello"},
@@ -1253,7 +1253,7 @@ def test_messages_contain_tool_content_with_tool_calls() -> None:
 
 
 def test_messages_contain_tool_content_without_tools() -> None:
-    from onyx.llm.multi_llm import _messages_contain_tool_content
+    from aethersearch.llm.multi_llm import _messages_contain_tool_content
 
     messages: list[dict[str, Any]] = [
         {"role": "user", "content": "Hello"},
@@ -1263,7 +1263,7 @@ def test_messages_contain_tool_content_without_tools() -> None:
 
 
 def test_strip_tool_content_converts_assistant_tool_calls_to_text() -> None:
-    from onyx.llm.multi_llm import _strip_tool_content_from_messages
+    from aethersearch.llm.multi_llm import _strip_tool_content_from_messages
 
     messages: list[dict[str, Any]] = [
         {"role": "user", "content": "Search for cats"},
@@ -1315,7 +1315,7 @@ def test_strip_tool_content_converts_assistant_tool_calls_to_text() -> None:
 
 
 def test_strip_tool_content_handles_assistant_with_no_text_content() -> None:
-    from onyx.llm.multi_llm import _strip_tool_content_from_messages
+    from aethersearch.llm.multi_llm import _strip_tool_content_from_messages
 
     messages: list[dict[str, Any]] = [
         {
@@ -1338,7 +1338,7 @@ def test_strip_tool_content_handles_assistant_with_no_text_content() -> None:
 
 
 def test_strip_tool_content_passes_through_non_tool_messages() -> None:
-    from onyx.llm.multi_llm import _strip_tool_content_from_messages
+    from aethersearch.llm.multi_llm import _strip_tool_content_from_messages
 
     messages: list[dict[str, Any]] = [
         {"role": "system", "content": "You are helpful."},
@@ -1351,7 +1351,7 @@ def test_strip_tool_content_passes_through_non_tool_messages() -> None:
 
 
 def test_strip_tool_content_handles_list_content_blocks() -> None:
-    from onyx.llm.multi_llm import _strip_tool_content_from_messages
+    from aethersearch.llm.multi_llm import _strip_tool_content_from_messages
 
     messages: list[dict[str, Any]] = [
         {
@@ -1393,7 +1393,7 @@ def test_strip_tool_content_handles_list_content_blocks() -> None:
 def test_strip_tool_content_merges_consecutive_tool_results() -> None:
     """Bedrock requires strict user/assistant alternation. Multiple parallel
     tool results must be merged into a single user message."""
-    from onyx.llm.multi_llm import _strip_tool_content_from_messages
+    from aethersearch.llm.multi_llm import _strip_tool_content_from_messages
 
     messages: list[dict[str, Any]] = [
         {"role": "user", "content": "weather and news?"},
@@ -1482,7 +1482,7 @@ def test_bifrost_normalizes_api_base_in_model_kwargs() -> None:
 
 
 def test_prompt_contains_tool_call_history_true() -> None:
-    from onyx.llm.multi_llm import _prompt_contains_tool_call_history
+    from aethersearch.llm.multi_llm import _prompt_contains_tool_call_history
 
     messages: LanguageModelInput = [
         UserMessage(content="What's the weather?"),
@@ -1500,7 +1500,7 @@ def test_prompt_contains_tool_call_history_true() -> None:
 
 
 def test_prompt_contains_tool_call_history_false_no_tools() -> None:
-    from onyx.llm.multi_llm import _prompt_contains_tool_call_history
+    from aethersearch.llm.multi_llm import _prompt_contains_tool_call_history
 
     messages: LanguageModelInput = [
         UserMessage(content="Hello"),
@@ -1510,7 +1510,7 @@ def test_prompt_contains_tool_call_history_false_no_tools() -> None:
 
 
 def test_prompt_contains_tool_call_history_false_user_only() -> None:
-    from onyx.llm.multi_llm import _prompt_contains_tool_call_history
+    from aethersearch.llm.multi_llm import _prompt_contains_tool_call_history
 
     messages: LanguageModelInput = [UserMessage(content="Hello")]
     assert _prompt_contains_tool_call_history(messages) is False
@@ -1542,7 +1542,7 @@ def test_bedrock_claude_drops_thinking_when_thinking_blocks_missing() -> None:
                 )
             ],
         ),
-        onyx.llm.models.ToolMessage(
+        aethersearch.llm.models.ToolMessage(
             content="22°C sunny",
             tool_call_id="tc_1",
         ),
@@ -1564,7 +1564,7 @@ def test_bedrock_claude_drops_thinking_when_thinking_blocks_missing() -> None:
 
     with (
         patch("litellm.completion") as mock_completion,
-        patch("onyx.llm.multi_llm.model_is_reasoning_model", return_value=True),
+        patch("aethersearch.llm.multi_llm.model_is_reasoning_model", return_value=True),
     ):
         mock_completion.return_value = []
 
@@ -1608,7 +1608,7 @@ def test_bedrock_claude_keeps_thinking_when_no_tool_history() -> None:
 
     with (
         patch("litellm.completion") as mock_completion,
-        patch("onyx.llm.multi_llm.model_is_reasoning_model", return_value=True),
+        patch("aethersearch.llm.multi_llm.model_is_reasoning_model", return_value=True),
     ):
         mock_completion.return_value = []
 

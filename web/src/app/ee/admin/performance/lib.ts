@@ -1,6 +1,6 @@
 import { errorHandlingFetcher } from "@/lib/fetcher";
 import useSWR, { mutate } from "swr";
-import { OnyxBotAnalytics, QueryAnalytics, UserAnalytics } from "./usage/types";
+import { AetherSearchBotAnalytics, QueryAnalytics, UserAnalytics } from "./usage/types";
 import { useState } from "react";
 import { buildApiPath } from "@/lib/urlBuilder";
 
@@ -46,16 +46,16 @@ export const useUserAnalytics = (timeRange: DateRangePickerValue) => {
   };
 };
 
-export const useOnyxBotAnalytics = (timeRange: DateRangePickerValue) => {
-  const url = buildApiPath("/api/analytics/admin/onyxbot", {
+export const useAetherSearchBotAnalytics = (timeRange: DateRangePickerValue) => {
+  const url = buildApiPath("/api/analytics/admin/aethersearchbot", {
     start: convertDateToStartOfDay(timeRange.from)?.toISOString(),
     end: convertDateToEndOfDay(timeRange.to)?.toISOString(),
   });
-  const swrResponse = useSWR<OnyxBotAnalytics[]>(url, errorHandlingFetcher); // TODO
+  const swrResponse = useSWR<AetherSearchBotAnalytics[]>(url, errorHandlingFetcher); // TODO
 
   return {
     ...swrResponse,
-    refreshOnyxBotAnalytics: () => mutate(url),
+    refreshAetherSearchBotAnalytics: () => mutate(url),
   };
 };
 

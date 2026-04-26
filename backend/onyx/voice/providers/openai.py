@@ -21,10 +21,10 @@ from typing import TYPE_CHECKING
 
 import aiohttp
 
-from onyx.voice.interface import StreamingSynthesizerProtocol
-from onyx.voice.interface import StreamingTranscriberProtocol
-from onyx.voice.interface import TranscriptResult
-from onyx.voice.interface import VoiceProviderInterface
+from aethersearch.voice.interface import StreamingSynthesizerProtocol
+from aethersearch.voice.interface import StreamingTranscriberProtocol
+from aethersearch.voice.interface import TranscriptResult
+from aethersearch.voice.interface import VoiceProviderInterface
 
 if TYPE_CHECKING:
     from openai import AsyncOpenAI
@@ -66,7 +66,7 @@ class OpenAIStreamingTranscriber(StreamingTranscriberProtocol):
         api_base: str | None = None,
     ):
         # Import logger first
-        from onyx.utils.logger import setup_logger
+        from aethersearch.utils.logger import setup_logger
 
         self._logger = setup_logger()
 
@@ -287,7 +287,7 @@ OPENAI_VOICES = [
     {"id": "alloy", "name": "Alloy"},
     {"id": "echo", "name": "Echo"},
     {"id": "fable", "name": "Fable"},
-    {"id": "onyx", "name": "Onyx"},
+    {"id": "aethersearch", "name": "AetherSearch"},
     {"id": "nova", "name": "Nova"},
     {"id": "shimmer", "name": "Shimmer"},
 ]
@@ -349,7 +349,7 @@ class OpenAIStreamingSynthesizer(StreamingSynthesizerProtocol):
         speed: float = 1.0,
         api_base: str | None = None,
     ):
-        from onyx.utils.logger import setup_logger
+        from aethersearch.utils.logger import setup_logger
 
         self._logger = setup_logger()
         self.api_key = api_key

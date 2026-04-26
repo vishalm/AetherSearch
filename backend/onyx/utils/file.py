@@ -3,7 +3,7 @@ from typing import cast
 import puremagic
 from pydantic import BaseModel
 
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -13,7 +13,7 @@ class FileWithMimeType(BaseModel):
     mime_type: str
 
 
-class OnyxStaticFileManager:
+class AetherSearchStaticFileManager:
     """Retrieve static resources with this class. Currently, these should all be located
     in the static directory ... e.g. static/images/logo.png"""
 

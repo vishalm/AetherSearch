@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/onyx-dot-app/onyx/tools/ods/internal/paths"
+	"github.com/aethersearch-dot-app/aethersearch/tools/ods/internal/paths"
 )
 
 // DeployEdgeConfig holds the persisted settings for `ods deploy edge`.
@@ -15,7 +15,7 @@ type DeployEdgeConfig struct {
 	TargetWorkflow string `json:"target_workflow,omitempty"`
 }
 
-// Config is the top-level on-disk schema for ~/.config/onyx-dev/config.json.
+// Config is the top-level on-disk schema for ~/.config/aethersearch-dev/config.json.
 // New per-command sections should be added as additional fields.
 type Config struct {
 	DeployEdge DeployEdgeConfig `json:"deploy_edge,omitempty"`

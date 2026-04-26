@@ -28,7 +28,7 @@ Code changes must consider both multi-tenant and single-tenant deployments. In m
 
 Whenever a new backend route is added that does NOT start with `/api`, it must also be explicitly added to ALL nginx configs:
 
-- `deployment/helm/charts/onyx/templates/nginx-conf.yaml` (Helm/k8s)
+- `deployment/helm/charts/aethersearch/templates/nginx-conf.yaml` (Helm/k8s)
 - `deployment/data/nginx/app.conf.template` (docker-compose dev)
 - `deployment/data/nginx/app.conf.template.prod` (docker-compose prod)
 - `deployment/data/nginx/app.conf.template.no-letsencrypt` (docker-compose no-letsencrypt)
@@ -37,7 +37,7 @@ Routes not starting with `/api` are not caught by the existing `^/(api|openapi\.
 
 ## Full vs Lite Deployments
 
-Code changes must consider both regular Onyx deployments and Onyx lite deployments. Lite deployments disable the vector DB, Redis, model servers, and background workers by default, use PostgreSQL-backed cache/auth/file storage, and rely on the API server to handle background work. Do not assume those services are available unless the code path is explicitly limited to full deployments.
+Code changes must consider both regular AetherSearch deployments and AetherSearch lite deployments. Lite deployments disable the vector DB, Redis, model servers, and background workers by default, use PostgreSQL-backed cache/auth/file storage, and rely on the API server to handle background work. Do not assume those services are available unless the code path is explicitly limited to full deployments.
 
 ## SWR Cache Keys — Always Use SWR_KEYS Registry
 

@@ -13,24 +13,24 @@ from typing import NamedTuple
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from onyx.configs.chat_configs import COMPRESSION_TRIGGER_RATIO
-from onyx.configs.constants import MessageType
-from onyx.db.models import ChatMessage
-from onyx.llm.interfaces import LLM
-from onyx.llm.models import AssistantMessage
-from onyx.llm.models import ChatCompletionMessage
-from onyx.llm.models import SystemMessage
-from onyx.llm.models import UserMessage
-from onyx.natural_language_processing.utils import get_tokenizer
-from onyx.prompts.compression_prompts import PROGRESSIVE_SUMMARY_SYSTEM_PROMPT_BLOCK
-from onyx.prompts.compression_prompts import PROGRESSIVE_USER_REMINDER
-from onyx.prompts.compression_prompts import SUMMARIZATION_CUTOFF_MARKER
-from onyx.prompts.compression_prompts import SUMMARIZATION_PROMPT
-from onyx.prompts.compression_prompts import USER_REMINDER
-from onyx.tracing.framework.create import ensure_trace
-from onyx.tracing.llm_utils import llm_generation_span
-from onyx.tracing.llm_utils import record_llm_response
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.chat_configs import COMPRESSION_TRIGGER_RATIO
+from aethersearch.configs.constants import MessageType
+from aethersearch.db.models import ChatMessage
+from aethersearch.llm.interfaces import LLM
+from aethersearch.llm.models import AssistantMessage
+from aethersearch.llm.models import ChatCompletionMessage
+from aethersearch.llm.models import SystemMessage
+from aethersearch.llm.models import UserMessage
+from aethersearch.natural_language_processing.utils import get_tokenizer
+from aethersearch.prompts.compression_prompts import PROGRESSIVE_SUMMARY_SYSTEM_PROMPT_BLOCK
+from aethersearch.prompts.compression_prompts import PROGRESSIVE_USER_REMINDER
+from aethersearch.prompts.compression_prompts import SUMMARIZATION_CUTOFF_MARKER
+from aethersearch.prompts.compression_prompts import SUMMARIZATION_PROMPT
+from aethersearch.prompts.compression_prompts import USER_REMINDER
+from aethersearch.tracing.framework.create import ensure_trace
+from aethersearch.tracing.llm_utils import llm_generation_span
+from aethersearch.tracing.llm_utils import record_llm_response
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()

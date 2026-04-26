@@ -49,7 +49,7 @@ sensitive to outliers, better handles distribution drifts (min-max assumes stabl
 So while it is possible to apply time based boosting at the normalization stage (or specifically to the keyword score), we have
 decided it is better to not apply it during the OpenSearch query.
 
-Because of these limitations, Onyx in code applies further refinements, boostings, etc. based on OpenSearch providing an initial
+Because of these limitations, AetherSearch in code applies further refinements, boostings, etc. based on OpenSearch providing an initial
 filtering. The impact of time decay and boost should not be so big that we would need orders of magnitude more results back
 from OpenSearch.
 

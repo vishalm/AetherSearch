@@ -1,17 +1,17 @@
 """
-Standardized error codes for the Onyx backend.
+Standardized error codes for the AetherSearch backend.
 
 Usage:
-    from onyx.error_handling.error_codes import OnyxErrorCode
-    from onyx.error_handling.exceptions import OnyxError
+    from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+    from aethersearch.error_handling.exceptions import AetherSearchError
 
-    raise OnyxError(OnyxErrorCode.UNAUTHENTICATED, "Token expired")
+    raise AetherSearchError(AetherSearchErrorCode.UNAUTHENTICATED, "Token expired")
 """
 
 from enum import Enum
 
 
-class OnyxErrorCode(Enum):
+class AetherSearchErrorCode(Enum):
     """
     Each member is a tuple of (error_code_string, http_status_code).
 

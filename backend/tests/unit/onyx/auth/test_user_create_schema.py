@@ -5,8 +5,8 @@ Verifies that account_type is always included in create_update_dict
 and create_update_dict_superuser.
 """
 
-from onyx.auth.schemas import UserCreate
-from onyx.db.enums import AccountType
+from aethersearch.auth.schemas import UserCreate
+from aethersearch.db.enums import AccountType
 
 
 def test_create_update_dict_includes_default_account_type() -> None:

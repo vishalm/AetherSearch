@@ -500,7 +500,7 @@ function RecentFilesTableContent({
       {hasProcessingFiles && (
         <GeneralLayouts.Section height="auto" alignItems="start">
           <Text as="p" text03 secondaryBody>
-            Onyx is still processing your uploaded files. You can create the
+            AetherSearch is still processing your uploaded files. You can create the
             agent now, but it will not have access to all files until processing
             completes.
           </Text>

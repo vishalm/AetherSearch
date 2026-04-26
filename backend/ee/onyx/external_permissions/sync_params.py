@@ -4,45 +4,45 @@ from typing import TYPE_CHECKING
 
 from pydantic import BaseModel
 
-from ee.onyx.configs.app_configs import CONFLUENCE_PERMISSION_DOC_SYNC_FREQUENCY
-from ee.onyx.configs.app_configs import CONFLUENCE_PERMISSION_GROUP_SYNC_FREQUENCY
-from ee.onyx.configs.app_configs import DEFAULT_PERMISSION_DOC_SYNC_FREQUENCY
-from ee.onyx.configs.app_configs import GITHUB_PERMISSION_DOC_SYNC_FREQUENCY
-from ee.onyx.configs.app_configs import GITHUB_PERMISSION_GROUP_SYNC_FREQUENCY
-from ee.onyx.configs.app_configs import GOOGLE_DRIVE_PERMISSION_GROUP_SYNC_FREQUENCY
-from ee.onyx.configs.app_configs import JIRA_PERMISSION_DOC_SYNC_FREQUENCY
-from ee.onyx.configs.app_configs import JIRA_PERMISSION_GROUP_SYNC_FREQUENCY
-from ee.onyx.configs.app_configs import SHAREPOINT_PERMISSION_DOC_SYNC_FREQUENCY
-from ee.onyx.configs.app_configs import SHAREPOINT_PERMISSION_GROUP_SYNC_FREQUENCY
-from ee.onyx.configs.app_configs import SLACK_PERMISSION_DOC_SYNC_FREQUENCY
-from ee.onyx.configs.app_configs import TEAMS_PERMISSION_DOC_SYNC_FREQUENCY
-from ee.onyx.external_permissions.confluence.doc_sync import confluence_doc_sync
-from ee.onyx.external_permissions.confluence.group_sync import confluence_group_sync
-from ee.onyx.external_permissions.github.doc_sync import github_doc_sync
-from ee.onyx.external_permissions.github.group_sync import github_group_sync
-from ee.onyx.external_permissions.gmail.doc_sync import gmail_doc_sync
-from ee.onyx.external_permissions.google_drive.doc_sync import gdrive_doc_sync
-from ee.onyx.external_permissions.google_drive.group_sync import gdrive_group_sync
-from ee.onyx.external_permissions.jira.doc_sync import jira_doc_sync
-from ee.onyx.external_permissions.jira.group_sync import jira_group_sync
-from ee.onyx.external_permissions.perm_sync_types import CensoringFuncType
-from ee.onyx.external_permissions.perm_sync_types import DocSyncFuncType
-from ee.onyx.external_permissions.perm_sync_types import FetchAllDocumentsFunction
-from ee.onyx.external_permissions.perm_sync_types import FetchAllDocumentsIdsFunction
-from ee.onyx.external_permissions.perm_sync_types import GroupSyncFuncType
-from ee.onyx.external_permissions.salesforce.postprocessing import (
+from ee.aethersearch.configs.app_configs import CONFLUENCE_PERMISSION_DOC_SYNC_FREQUENCY
+from ee.aethersearch.configs.app_configs import CONFLUENCE_PERMISSION_GROUP_SYNC_FREQUENCY
+from ee.aethersearch.configs.app_configs import DEFAULT_PERMISSION_DOC_SYNC_FREQUENCY
+from ee.aethersearch.configs.app_configs import GITHUB_PERMISSION_DOC_SYNC_FREQUENCY
+from ee.aethersearch.configs.app_configs import GITHUB_PERMISSION_GROUP_SYNC_FREQUENCY
+from ee.aethersearch.configs.app_configs import GOOGLE_DRIVE_PERMISSION_GROUP_SYNC_FREQUENCY
+from ee.aethersearch.configs.app_configs import JIRA_PERMISSION_DOC_SYNC_FREQUENCY
+from ee.aethersearch.configs.app_configs import JIRA_PERMISSION_GROUP_SYNC_FREQUENCY
+from ee.aethersearch.configs.app_configs import SHAREPOINT_PERMISSION_DOC_SYNC_FREQUENCY
+from ee.aethersearch.configs.app_configs import SHAREPOINT_PERMISSION_GROUP_SYNC_FREQUENCY
+from ee.aethersearch.configs.app_configs import SLACK_PERMISSION_DOC_SYNC_FREQUENCY
+from ee.aethersearch.configs.app_configs import TEAMS_PERMISSION_DOC_SYNC_FREQUENCY
+from ee.aethersearch.external_permissions.confluence.doc_sync import confluence_doc_sync
+from ee.aethersearch.external_permissions.confluence.group_sync import confluence_group_sync
+from ee.aethersearch.external_permissions.github.doc_sync import github_doc_sync
+from ee.aethersearch.external_permissions.github.group_sync import github_group_sync
+from ee.aethersearch.external_permissions.gmail.doc_sync import gmail_doc_sync
+from ee.aethersearch.external_permissions.google_drive.doc_sync import gdrive_doc_sync
+from ee.aethersearch.external_permissions.google_drive.group_sync import gdrive_group_sync
+from ee.aethersearch.external_permissions.jira.doc_sync import jira_doc_sync
+from ee.aethersearch.external_permissions.jira.group_sync import jira_group_sync
+from ee.aethersearch.external_permissions.perm_sync_types import CensoringFuncType
+from ee.aethersearch.external_permissions.perm_sync_types import DocSyncFuncType
+from ee.aethersearch.external_permissions.perm_sync_types import FetchAllDocumentsFunction
+from ee.aethersearch.external_permissions.perm_sync_types import FetchAllDocumentsIdsFunction
+from ee.aethersearch.external_permissions.perm_sync_types import GroupSyncFuncType
+from ee.aethersearch.external_permissions.salesforce.postprocessing import (
     censor_salesforce_chunks,
 )
-from ee.onyx.external_permissions.sharepoint.doc_sync import sharepoint_doc_sync
-from ee.onyx.external_permissions.sharepoint.group_sync import sharepoint_group_sync
-from ee.onyx.external_permissions.slack.doc_sync import slack_doc_sync
-from ee.onyx.external_permissions.teams.doc_sync import teams_doc_sync
-from onyx.configs.constants import DocumentSource
+from ee.aethersearch.external_permissions.sharepoint.doc_sync import sharepoint_doc_sync
+from ee.aethersearch.external_permissions.sharepoint.group_sync import sharepoint_group_sync
+from ee.aethersearch.external_permissions.slack.doc_sync import slack_doc_sync
+from ee.aethersearch.external_permissions.teams.doc_sync import teams_doc_sync
+from aethersearch.configs.constants import DocumentSource
 
 if TYPE_CHECKING:
-    from onyx.access.models import DocExternalAccess  # noqa
-    from onyx.db.models import ConnectorCredentialPair  # noqa
-    from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface  # noqa
+    from aethersearch.access.models import DocExternalAccess  # noqa
+    from aethersearch.db.models import ConnectorCredentialPair  # noqa
+    from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface  # noqa
 
 
 class DocSyncConfig(BaseModel):

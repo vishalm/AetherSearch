@@ -4,23 +4,23 @@ from uuid import uuid4
 
 import pytest
 
-from onyx.background.celery.tasks.user_file_processing.tasks import (
+from aethersearch.background.celery.tasks.user_file_processing.tasks import (
     _user_file_project_sync_queued_key,
 )
-from onyx.background.celery.tasks.user_file_processing.tasks import (
+from aethersearch.background.celery.tasks.user_file_processing.tasks import (
     check_for_user_file_project_sync,
 )
-from onyx.background.celery.tasks.user_file_processing.tasks import (
+from aethersearch.background.celery.tasks.user_file_processing.tasks import (
     enqueue_user_file_project_sync_task,
 )
-from onyx.background.celery.tasks.user_file_processing.tasks import (
+from aethersearch.background.celery.tasks.user_file_processing.tasks import (
     process_single_user_file_project_sync,
 )
-from onyx.configs.constants import CELERY_USER_FILE_PROJECT_SYNC_TASK_EXPIRES
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import USER_FILE_PROJECT_SYNC_MAX_QUEUE_DEPTH
+from aethersearch.configs.constants import CELERY_USER_FILE_PROJECT_SYNC_TASK_EXPIRES
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import USER_FILE_PROJECT_SYNC_MAX_QUEUE_DEPTH
 
 
 def _build_redis_mock_with_lock() -> tuple[MagicMock, MagicMock]:
@@ -33,9 +33,9 @@ def _build_redis_mock_with_lock() -> tuple[MagicMock, MagicMock]:
 
 
 @patch(
-    "onyx.background.celery.tasks.user_file_processing.tasks.get_user_file_project_sync_queue_depth"
+    "aethersearch.background.celery.tasks.user_file_processing.tasks.get_user_file_project_sync_queue_depth"
 )
-@patch("onyx.background.celery.tasks.user_file_processing.tasks.get_redis_client")
+@patch("aethersearch.background.celery.tasks.user_file_processing.tasks.get_redis_client")
 def test_check_for_user_file_project_sync_applies_queue_backpressure(
     mock_get_redis_client: MagicMock,
     mock_get_queue_depth: MagicMock,
@@ -53,15 +53,15 @@ def test_check_for_user_file_project_sync_applies_queue_backpressure(
 
 
 @patch(
-    "onyx.background.celery.tasks.user_file_processing.tasks.enqueue_user_file_project_sync_task"
+    "aethersearch.background.celery.tasks.user_file_processing.tasks.enqueue_user_file_project_sync_task"
 )
 @patch(
-    "onyx.background.celery.tasks.user_file_processing.tasks.get_user_file_project_sync_queue_depth"
+    "aethersearch.background.celery.tasks.user_file_processing.tasks.get_user_file_project_sync_queue_depth"
 )
 @patch(
-    "onyx.background.celery.tasks.user_file_processing.tasks.get_session_with_current_tenant"
+    "aethersearch.background.celery.tasks.user_file_processing.tasks.get_session_with_current_tenant"
 )
-@patch("onyx.background.celery.tasks.user_file_processing.tasks.get_redis_client")
+@patch("aethersearch.background.celery.tasks.user_file_processing.tasks.get_redis_client")
 def test_check_for_user_file_project_sync_skips_duplicates(
     mock_get_redis_client: MagicMock,
     mock_get_session: MagicMock,
@@ -102,7 +102,7 @@ def test_enqueue_user_file_project_sync_task_sets_guard_and_expiry() -> None:
         redis_client=redis_client,
         user_file_id=user_file_id,
         tenant_id="test-tenant",
-        priority=OnyxCeleryPriority.HIGHEST,
+        priority=AetherSearchCeleryPriority.HIGHEST,
     )
 
     assert enqueued is True
@@ -113,10 +113,10 @@ def test_enqueue_user_file_project_sync_task_sets_guard_and_expiry() -> None:
         ex=CELERY_USER_FILE_PROJECT_SYNC_TASK_EXPIRES,
     )
     celery_app.send_task.assert_called_once_with(
-        OnyxCeleryTask.PROCESS_SINGLE_USER_FILE_PROJECT_SYNC,
+        AetherSearchCeleryTask.PROCESS_SINGLE_USER_FILE_PROJECT_SYNC,
         kwargs={"user_file_id": user_file_id, "tenant_id": "test-tenant"},
-        queue=OnyxCeleryQueues.USER_FILE_PROJECT_SYNC,
-        priority=OnyxCeleryPriority.HIGHEST,
+        queue=AetherSearchCeleryQueues.USER_FILE_PROJECT_SYNC,
+        priority=AetherSearchCeleryPriority.HIGHEST,
         expires=CELERY_USER_FILE_PROJECT_SYNC_TASK_EXPIRES,
     )
 
@@ -143,7 +143,7 @@ def test_enqueue_user_file_project_sync_task_rolls_back_guard_on_publish_failure
     )
 
 
-@patch("onyx.background.celery.tasks.user_file_processing.tasks.get_redis_client")
+@patch("aethersearch.background.celery.tasks.user_file_processing.tasks.get_redis_client")
 def test_process_single_user_file_project_sync_clears_queued_guard_on_pickup(
     mock_get_redis_client: MagicMock,
 ) -> None:

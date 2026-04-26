@@ -4,26 +4,26 @@
 #
 # Usage:
 #   kubectl apply -f test-job.yaml
-#   kubectl logs -f job/sandbox-test -n onyx-sandboxes
-#   kubectl delete job sandbox-test -n onyx-sandboxes
+#   kubectl logs -f job/sandbox-test -n aethersearch-sandboxes
+#   kubectl delete job sandbox-test -n aethersearch-sandboxes
 
 apiVersion: v1
 kind: Pod
 metadata:
   name: sandbox-test
-  namespace: onyx-sandboxes
+  namespace: aethersearch-sandboxes
 spec:
   serviceAccountName: sandbox-runner  # Needs permissions to create/delete pods
   containers:
   - name: test
-    image: onyxdotapp/onyx-backend:latest
+    image: aethersearchdotapp/aethersearch-backend:latest
     imagePullPolicy: Never  # Use local image, don't try to pull from registry
     command: ["sleep", "infinity"]
     env:
     - name: SANDBOX_BACKEND
       value: "kubernetes"
     - name: SANDBOX_NAMESPACE
-      value: "onyx-sandboxes"
+      value: "aethersearch-sandboxes"
     # Add any other required env vars (API keys, DB connection, etc.)
     # - name: OPENAI_API_KEY
     #   valueFrom:

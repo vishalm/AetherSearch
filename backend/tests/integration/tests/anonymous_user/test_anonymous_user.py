@@ -23,7 +23,7 @@ def test_me_endpoint_returns_anonymous_user_when_enabled(
     assert response.status_code == 200
     data = response.json()
     assert data["is_anonymous_user"] is True
-    assert data["email"] == "anonymous@onyx.app"
+    assert data["email"] == "anonymous@aethersearch.app"
     assert data["role"] == "limited"
 
 

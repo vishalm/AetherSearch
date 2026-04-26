@@ -1,8 +1,8 @@
 #!/bin/sh
 # fill in the template
-export ONYX_BACKEND_API_HOST="${ONYX_BACKEND_API_HOST:-api_server}"
-export ONYX_WEB_SERVER_HOST="${ONYX_WEB_SERVER_HOST:-web_server}"
-export ONYX_MCP_SERVER_HOST="${ONYX_MCP_SERVER_HOST:-mcp_server}"
+export AETHERSEARCH_BACKEND_API_HOST="${AETHERSEARCH_BACKEND_API_HOST:-api_server}"
+export AETHERSEARCH_WEB_SERVER_HOST="${AETHERSEARCH_WEB_SERVER_HOST:-web_server}"
+export AETHERSEARCH_MCP_SERVER_HOST="${AETHERSEARCH_MCP_SERVER_HOST:-mcp_server}"
 
 export SSL_CERT_FILE_NAME="${SSL_CERT_FILE_NAME:-ssl.crt}"
 export SSL_CERT_KEY_FILE_NAME="${SSL_CERT_KEY_FILE_NAME:-ssl.key}"
@@ -12,21 +12,21 @@ export NGINX_PROXY_CONNECT_TIMEOUT="${NGINX_PROXY_CONNECT_TIMEOUT:-300}"
 export NGINX_PROXY_SEND_TIMEOUT="${NGINX_PROXY_SEND_TIMEOUT:-300}"
 export NGINX_PROXY_READ_TIMEOUT="${NGINX_PROXY_READ_TIMEOUT:-300}"
 
-echo "Using API server host: $ONYX_BACKEND_API_HOST"
-echo "Using web server host: $ONYX_WEB_SERVER_HOST"
-echo "Using MCP server host: $ONYX_MCP_SERVER_HOST"
+echo "Using API server host: $AETHERSEARCH_BACKEND_API_HOST"
+echo "Using web server host: $AETHERSEARCH_WEB_SERVER_HOST"
+echo "Using MCP server host: $AETHERSEARCH_MCP_SERVER_HOST"
 echo "Using nginx proxy timeouts - connect: ${NGINX_PROXY_CONNECT_TIMEOUT}s, send: ${NGINX_PROXY_SEND_TIMEOUT}s, read: ${NGINX_PROXY_READ_TIMEOUT}s"
 
 # shellcheck disable=SC2016
-envsubst '$DOMAIN $SSL_CERT_FILE_NAME $SSL_CERT_KEY_FILE_NAME $ONYX_BACKEND_API_HOST $ONYX_WEB_SERVER_HOST $ONYX_MCP_SERVER_HOST $NGINX_PROXY_CONNECT_TIMEOUT $NGINX_PROXY_SEND_TIMEOUT $NGINX_PROXY_READ_TIMEOUT' < "/etc/nginx/conf.d/$1" > /etc/nginx/conf.d/app.conf
+envsubst '$DOMAIN $SSL_CERT_FILE_NAME $SSL_CERT_KEY_FILE_NAME $AETHERSEARCH_BACKEND_API_HOST $AETHERSEARCH_WEB_SERVER_HOST $AETHERSEARCH_MCP_SERVER_HOST $NGINX_PROXY_CONNECT_TIMEOUT $NGINX_PROXY_SEND_TIMEOUT $NGINX_PROXY_READ_TIMEOUT' < "/etc/nginx/conf.d/$1" > /etc/nginx/conf.d/app.conf
 
 # Conditionally create MCP server configuration
 if [ "${MCP_SERVER_ENABLED}" = "True" ] || [ "${MCP_SERVER_ENABLED}" = "true" ]; then
   echo "MCP server is enabled, creating MCP configuration..."
   # shellcheck disable=SC2016
-  envsubst '$ONYX_MCP_SERVER_HOST' < "/etc/nginx/conf.d/mcp_upstream.conf.inc.template" > /etc/nginx/conf.d/mcp_upstream.conf.inc
+  envsubst '$AETHERSEARCH_MCP_SERVER_HOST' < "/etc/nginx/conf.d/mcp_upstream.conf.inc.template" > /etc/nginx/conf.d/mcp_upstream.conf.inc
   # shellcheck disable=SC2016
-  envsubst '$ONYX_MCP_SERVER_HOST' < "/etc/nginx/conf.d/mcp.conf.inc.template" > /etc/nginx/conf.d/mcp.conf.inc
+  envsubst '$AETHERSEARCH_MCP_SERVER_HOST' < "/etc/nginx/conf.d/mcp.conf.inc.template" > /etc/nginx/conf.d/mcp.conf.inc
 else
   echo "MCP server is disabled, removing MCP configuration..."
   # Leave empty placeholder files so nginx includes do not fail
@@ -39,12 +39,12 @@ fi
 echo "Waiting for API server to boot up; this may take a minute or two..."
 echo "If this takes more than ~5 minutes, check the logs of the API server container for errors with the following command:"
 echo
-echo "docker logs onyx-api_server-1"
+echo "docker logs aethersearch-api_server-1"
 echo
 
 while true; do
   # Use curl to send a request and capture the HTTP status code
-  status_code=$(curl -o /dev/null -s -w "%{http_code}\n" "http://${ONYX_BACKEND_API_HOST}:8080/health")
+  status_code=$(curl -o /dev/null -s -w "%{http_code}\n" "http://${AETHERSEARCH_BACKEND_API_HOST}:8080/health")
   
   # Check if the status code is 200
   if [ "$status_code" -eq 200 ]; then

@@ -13,14 +13,14 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.configs.constants import FederatedConnectorSource
-from onyx.federated_connectors.factory import _federated_connector_cache
-from onyx.federated_connectors.factory import _load_federated_connector_class
-from onyx.federated_connectors.factory import FederatedConnectorMissingException
-from onyx.federated_connectors.factory import get_federated_connector_cls
-from onyx.federated_connectors.interfaces import FederatedConnector
-from onyx.federated_connectors.registry import FEDERATED_CONNECTOR_CLASS_MAP
-from onyx.federated_connectors.registry import FederatedConnectorMapping
+from aethersearch.configs.constants import FederatedConnectorSource
+from aethersearch.federated_connectors.factory import _federated_connector_cache
+from aethersearch.federated_connectors.factory import _load_federated_connector_class
+from aethersearch.federated_connectors.factory import FederatedConnectorMissingException
+from aethersearch.federated_connectors.factory import get_federated_connector_cls
+from aethersearch.federated_connectors.interfaces import FederatedConnector
+from aethersearch.federated_connectors.registry import FEDERATED_CONNECTOR_CLASS_MAP
+from aethersearch.federated_connectors.registry import FederatedConnectorMapping
 
 
 class TestFederatedConnectorMappingValidation:
@@ -81,8 +81,8 @@ class TestFederatedConnectorMappingValidation:
                 mapping.class_name, str
             ), f"{source.value} class_name is not a string"
             assert mapping.module_path.startswith(
-                "onyx.federated_connectors."
-            ), f"{source.value} module_path doesn't start with onyx.federated_connectors."
+                "aethersearch.federated_connectors."
+            ), f"{source.value} module_path doesn't start with aethersearch.federated_connectors."
             assert mapping.class_name.endswith(
                 "FederatedConnector"
             ), f"{source.value} class_name doesn't end with FederatedConnector"
@@ -134,7 +134,7 @@ class TestFederatedConnectorClassLoading:
             _load_federated_connector_class(FederatedConnectorSource.FEDERATED_SLACK)
 
         assert (
-            "Failed to import SlackFederatedConnector from onyx.federated_connectors.slack.federated_connector"
+            "Failed to import SlackFederatedConnector from aethersearch.federated_connectors.slack.federated_connector"
             in str(exc_info.value)
         )
 
@@ -157,7 +157,7 @@ class TestFederatedConnectorClassLoading:
             _load_federated_connector_class(FederatedConnectorSource.FEDERATED_SLACK)
 
         assert (
-            "Failed to import SlackFederatedConnector from onyx.federated_connectors.slack.federated_connector"
+            "Failed to import SlackFederatedConnector from aethersearch.federated_connectors.slack.federated_connector"
             in str(exc_info.value)
         )
 

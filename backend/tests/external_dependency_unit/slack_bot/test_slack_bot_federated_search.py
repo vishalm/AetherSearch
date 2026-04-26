@@ -7,10 +7,10 @@ from unittest.mock import Mock
 from unittest.mock import patch
 from uuid import uuid4
 
-from onyx.db.llm import update_default_provider
-from onyx.db.llm import upsert_llm_provider
-from onyx.server.manage.llm.models import LLMProviderUpsertRequest
-from onyx.server.manage.llm.models import ModelConfigurationUpsertRequest
+from aethersearch.db.llm import update_default_provider
+from aethersearch.db.llm import upsert_llm_provider
+from aethersearch.server.manage.llm.models import LLMProviderUpsertRequest
+from aethersearch.server.manage.llm.models import ModelConfigurationUpsertRequest
 
 # Set environment variables to disable model server for testing
 os.environ["DISABLE_MODEL_SERVER"] = "true"
@@ -21,23 +21,23 @@ from slack_sdk.errors import SlackApiError
 from sqlalchemy import inspect
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import FederatedConnectorSource
-from onyx.context.search.federated.slack_search import fetch_and_cache_channel_metadata
-from onyx.db.models import DocumentSet
-from onyx.db.models import FederatedConnector
-from onyx.db.models import FederatedConnector__DocumentSet
-from onyx.db.models import LLMProvider
-from onyx.db.models import Persona
-from onyx.db.models import Persona__DocumentSet
-from onyx.db.models import Persona__Tool
-from onyx.db.models import SlackBot
-from onyx.db.models import SlackChannelConfig
-from onyx.db.models import User
-from onyx.db.tools import get_builtin_tool
-from onyx.llm.constants import LlmProviderNames
-from onyx.onyxbot.slack.listener import process_message
-from onyx.onyxbot.slack.models import ChannelType
-from onyx.tools.built_in_tools import SearchTool
+from aethersearch.configs.constants import FederatedConnectorSource
+from aethersearch.context.search.federated.slack_search import fetch_and_cache_channel_metadata
+from aethersearch.db.models import DocumentSet
+from aethersearch.db.models import FederatedConnector
+from aethersearch.db.models import FederatedConnector__DocumentSet
+from aethersearch.db.models import LLMProvider
+from aethersearch.db.models import Persona
+from aethersearch.db.models import Persona__DocumentSet
+from aethersearch.db.models import Persona__Tool
+from aethersearch.db.models import SlackBot
+from aethersearch.db.models import SlackChannelConfig
+from aethersearch.db.models import User
+from aethersearch.db.tools import get_builtin_tool
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.aethersearchbot.slack.listener import process_message
+from aethersearch.aethersearchbot.slack.models import ChannelType
+from aethersearch.tools.built_in_tools import SearchTool
 from tests.external_dependency_unit.conftest import create_test_user
 
 
@@ -292,9 +292,9 @@ class TestSlackBotFederatedSearch:
         """Setup only Slack API mocks - everything else runs live"""
         patches = [
             patch("slack_sdk.WebClient.search_messages"),
-            patch("onyx.context.search.federated.slack_search.query_slack"),
-            patch("onyx.onyxbot.slack.listener.get_channel_type_from_id"),
-            patch("onyx.context.search.utils.get_query_embeddings"),
+            patch("aethersearch.context.search.federated.slack_search.query_slack"),
+            patch("aethersearch.aethersearchbot.slack.listener.get_channel_type_from_id"),
+            patch("aethersearch.context.search.utils.get_query_embeddings"),
         ]
 
         started_patches = [p.start() for p in patches]
@@ -364,7 +364,7 @@ class TestSlackBotFederatedSearch:
         self, mock_query_slack: Mock, channel_name: str
     ) -> None:
         """Setup query_slack mock to capture filtering parameters"""
-        from onyx.context.search.federated.slack_search import SlackQueryResult
+        from aethersearch.context.search.federated.slack_search import SlackQueryResult
 
         def mock_query_slack_capture_params(
             query_string: str,  # noqa: ARG001
@@ -454,9 +454,9 @@ class TestSlackBotFederatedSearch:
         for p in patches:
             p.stop()
 
-    @patch("onyx.utils.gpu_utils.fast_gpu_status_request", return_value=False)
+    @patch("aethersearch.utils.gpu_utils.fast_gpu_status_request", return_value=False)
     @patch(
-        "onyx.document_index.vespa.index.VespaIndex.hybrid_retrieval", return_value=[]
+        "aethersearch.document_index.vespa.index.VespaIndex.hybrid_retrieval", return_value=[]
     )
     def test_slack_bot_public_channel_filtering(
         self,
@@ -513,9 +513,9 @@ class TestSlackBotFederatedSearch:
         finally:
             self._teardown_common_mocks(patches)
 
-    @patch("onyx.utils.gpu_utils.fast_gpu_status_request", return_value=False)
+    @patch("aethersearch.utils.gpu_utils.fast_gpu_status_request", return_value=False)
     @patch(
-        "onyx.document_index.vespa.index.VespaIndex.hybrid_retrieval", return_value=[]
+        "aethersearch.document_index.vespa.index.VespaIndex.hybrid_retrieval", return_value=[]
     )
     def test_slack_bot_private_channel_filtering(
         self,
@@ -572,9 +572,9 @@ class TestSlackBotFederatedSearch:
         finally:
             self._teardown_common_mocks(patches)
 
-    @patch("onyx.utils.gpu_utils.fast_gpu_status_request", return_value=False)
+    @patch("aethersearch.utils.gpu_utils.fast_gpu_status_request", return_value=False)
     @patch(
-        "onyx.document_index.vespa.index.VespaIndex.hybrid_retrieval", return_value=[]
+        "aethersearch.document_index.vespa.index.VespaIndex.hybrid_retrieval", return_value=[]
     )
     def test_slack_bot_dm_filtering(
         self,
@@ -633,8 +633,8 @@ class TestSlackBotFederatedSearch:
             self._teardown_common_mocks(patches)
 
 
-@patch("onyx.context.search.federated.slack_search.get_redis_client")
-@patch("onyx.context.search.federated.slack_search.WebClient")
+@patch("aethersearch.context.search.federated.slack_search.get_redis_client")
+@patch("aethersearch.context.search.federated.slack_search.WebClient")
 def test_missing_scope_resilience(
     mock_web_client: Mock, mock_redis_client: Mock
 ) -> None:
@@ -724,8 +724,8 @@ def test_missing_scope_resilience(
     assert result["D9876543210"]["type"] == "im"
 
 
-@patch("onyx.context.search.federated.slack_search.get_redis_client")
-@patch("onyx.context.search.federated.slack_search.WebClient")
+@patch("aethersearch.context.search.federated.slack_search.get_redis_client")
+@patch("aethersearch.context.search.federated.slack_search.WebClient")
 def test_multiple_missing_scopes_resilience(
     mock_web_client: Mock, mock_redis_client: Mock
 ) -> None:
@@ -816,7 +816,7 @@ def test_slack_channel_config_eager_loads_persona(db_session: Session) -> None:
     This prevents lazy loading failures when the session context changes later
     in the request handling flow (e.g., in handle_regular_answer).
     """
-    from onyx.db.slack_channel_config import (
+    from aethersearch.db.slack_channel_config import (
         fetch_slack_channel_config_for_channel_or_default,
     )
 

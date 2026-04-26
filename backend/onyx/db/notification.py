@@ -9,10 +9,10 @@ from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
 
-from onyx.auth.schemas import UserRole
-from onyx.configs.constants import NotificationType
-from onyx.db.models import Notification
-from onyx.db.models import User
+from aethersearch.auth.schemas import UserRole
+from aethersearch.configs.constants import NotificationType
+from aethersearch.db.models import Notification
+from aethersearch.db.models import User
 
 
 def create_notification(

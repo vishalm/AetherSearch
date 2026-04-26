@@ -10,29 +10,29 @@ from uuid import uuid4
 from fastapi import Response
 from sqlalchemy.exc import IntegrityError
 
-from ee.onyx.server.scim.api import _check_seat_availability
-from ee.onyx.server.scim.api import _scim_name_to_str
-from ee.onyx.server.scim.api import _seat_lock_id_for_tenant
-from ee.onyx.server.scim.api import create_user
-from ee.onyx.server.scim.api import delete_user
-from ee.onyx.server.scim.api import get_user
-from ee.onyx.server.scim.api import list_users
-from ee.onyx.server.scim.api import patch_user
-from ee.onyx.server.scim.api import replace_user
-from ee.onyx.server.scim.models import ScimMappingFields
-from ee.onyx.server.scim.models import ScimName
-from ee.onyx.server.scim.models import ScimPatchOperation
-from ee.onyx.server.scim.models import ScimPatchOperationType
-from ee.onyx.server.scim.models import ScimPatchRequest
-from ee.onyx.server.scim.models import ScimUserResource
-from ee.onyx.server.scim.patch import ScimPatchError
-from ee.onyx.server.scim.providers.base import ScimProvider
-from tests.unit.onyx.server.scim.conftest import assert_scim_error
-from tests.unit.onyx.server.scim.conftest import make_db_user
-from tests.unit.onyx.server.scim.conftest import make_scim_user
-from tests.unit.onyx.server.scim.conftest import make_user_mapping
-from tests.unit.onyx.server.scim.conftest import parse_scim_list
-from tests.unit.onyx.server.scim.conftest import parse_scim_user
+from ee.aethersearch.server.scim.api import _check_seat_availability
+from ee.aethersearch.server.scim.api import _scim_name_to_str
+from ee.aethersearch.server.scim.api import _seat_lock_id_for_tenant
+from ee.aethersearch.server.scim.api import create_user
+from ee.aethersearch.server.scim.api import delete_user
+from ee.aethersearch.server.scim.api import get_user
+from ee.aethersearch.server.scim.api import list_users
+from ee.aethersearch.server.scim.api import patch_user
+from ee.aethersearch.server.scim.api import replace_user
+from ee.aethersearch.server.scim.models import ScimMappingFields
+from ee.aethersearch.server.scim.models import ScimName
+from ee.aethersearch.server.scim.models import ScimPatchOperation
+from ee.aethersearch.server.scim.models import ScimPatchOperationType
+from ee.aethersearch.server.scim.models import ScimPatchRequest
+from ee.aethersearch.server.scim.models import ScimUserResource
+from ee.aethersearch.server.scim.patch import ScimPatchError
+from ee.aethersearch.server.scim.providers.base import ScimProvider
+from tests.unit.aethersearch.server.scim.conftest import assert_scim_error
+from tests.unit.aethersearch.server.scim.conftest import make_db_user
+from tests.unit.aethersearch.server.scim.conftest import make_scim_user
+from tests.unit.aethersearch.server.scim.conftest import make_user_mapping
+from tests.unit.aethersearch.server.scim.conftest import parse_scim_list
+from tests.unit.aethersearch.server.scim.conftest import parse_scim_user
 
 
 class TestListUsers:
@@ -193,7 +193,7 @@ class TestGetUser:
 class TestCreateUser:
     """Tests for POST /scim/v2/Users."""
 
-    @patch("ee.onyx.server.scim.api._check_seat_availability", return_value=None)
+    @patch("ee.aethersearch.server.scim.api._check_seat_availability", return_value=None)
     def test_success(
         self,
         mock_seats: MagicMock,  # noqa: ARG002
@@ -217,7 +217,7 @@ class TestCreateUser:
         mock_dal.add_user.assert_called_once()
         mock_dal.commit.assert_called_once()
 
-    @patch("ee.onyx.server.scim.api._check_seat_availability", return_value=None)
+    @patch("ee.aethersearch.server.scim.api._check_seat_availability", return_value=None)
     def test_missing_external_id_still_creates_mapping(
         self,
         mock_seats: MagicMock,  # noqa: ARG002
@@ -243,7 +243,7 @@ class TestCreateUser:
         mock_dal.create_user_mapping.assert_called_once()
         mock_dal.commit.assert_called_once()
 
-    @patch("ee.onyx.server.scim.api._check_seat_availability", return_value=None)
+    @patch("ee.aethersearch.server.scim.api._check_seat_availability", return_value=None)
     def test_duplicate_scim_managed_email_returns_409(
         self,
         mock_seats: MagicMock,  # noqa: ARG002
@@ -269,7 +269,7 @@ class TestCreateUser:
 
         assert_scim_error(result, 409)
 
-    @patch("ee.onyx.server.scim.api._check_seat_availability", return_value=None)
+    @patch("ee.aethersearch.server.scim.api._check_seat_availability", return_value=None)
     def test_existing_user_without_mapping_gets_linked(
         self,
         mock_seats: MagicMock,  # noqa: ARG002
@@ -303,7 +303,7 @@ class TestCreateUser:
         mock_dal.create_user_mapping.assert_called_once()
         mock_dal.commit.assert_called_once()
 
-    @patch("ee.onyx.server.scim.api._check_seat_availability", return_value=None)
+    @patch("ee.aethersearch.server.scim.api._check_seat_availability", return_value=None)
     def test_integrity_error_returns_409(
         self,
         mock_seats: MagicMock,  # noqa: ARG002
@@ -326,7 +326,7 @@ class TestCreateUser:
         assert_scim_error(result, 409)
         mock_dal.rollback.assert_called_once()
 
-    @patch("ee.onyx.server.scim.api._check_seat_availability")
+    @patch("ee.aethersearch.server.scim.api._check_seat_availability")
     def test_seat_limit_returns_403(
         self,
         mock_seats: MagicMock,
@@ -347,7 +347,7 @@ class TestCreateUser:
 
         assert_scim_error(result, 403)
 
-    @patch("ee.onyx.server.scim.api._check_seat_availability", return_value=None)
+    @patch("ee.aethersearch.server.scim.api._check_seat_availability", return_value=None)
     def test_creates_external_id_mapping(
         self,
         mock_seats: MagicMock,  # noqa: ARG002
@@ -419,7 +419,7 @@ class TestReplaceUser:
 
         assert_scim_error(result, 404)
 
-    @patch("ee.onyx.server.scim.api._check_seat_availability")
+    @patch("ee.aethersearch.server.scim.api._check_seat_availability")
     def test_reactivation_checks_seats(
         self,
         mock_seats: MagicMock,
@@ -570,7 +570,7 @@ class TestPatchUser:
         call_kwargs = mock_dal.update_user.call_args
         assert call_kwargs[1]["personal_name"] == "New Display Name"
 
-    @patch("ee.onyx.server.scim.api.apply_user_patch")
+    @patch("ee.aethersearch.server.scim.api.apply_user_patch")
     def test_patch_error_returns_error_response(
         self,
         mock_apply: MagicMock,
@@ -693,7 +693,7 @@ class TestScimNameToStr:
 class TestEmailCasePreservation:
     """Tests verifying email case is preserved through SCIM endpoints."""
 
-    @patch("ee.onyx.server.scim.api._check_seat_availability", return_value=None)
+    @patch("ee.aethersearch.server.scim.api._check_seat_availability", return_value=None)
     def test_create_preserves_username_case(
         self,
         mock_seats: MagicMock,  # noqa: ARG002
@@ -749,7 +749,7 @@ class TestEmailCasePreservation:
 class TestSeatLock:
     """Tests for the advisory lock in _check_seat_availability."""
 
-    @patch("ee.onyx.server.scim.api.get_current_tenant_id", return_value="tenant_abc")
+    @patch("ee.aethersearch.server.scim.api.get_current_tenant_id", return_value="tenant_abc")
     def test_acquires_advisory_lock_before_checking(
         self,
         _mock_tenant: MagicMock,
@@ -765,7 +765,7 @@ class TestSeatLock:
         mock_dal.session.execute.side_effect = track_execute
 
         with patch(
-            "ee.onyx.server.scim.api.fetch_ee_implementation_or_noop"
+            "ee.aethersearch.server.scim.api.fetch_ee_implementation_or_noop"
         ) as mock_fetch:
             mock_result = MagicMock()
             mock_result.available = True
@@ -782,7 +782,7 @@ class TestSeatLock:
 
         assert call_order == ["lock", "check"]
 
-    @patch("ee.onyx.server.scim.api.get_current_tenant_id", return_value="tenant_xyz")
+    @patch("ee.aethersearch.server.scim.api.get_current_tenant_id", return_value="tenant_xyz")
     def test_lock_uses_tenant_scoped_key(
         self,
         _mock_tenant: MagicMock,
@@ -794,7 +794,7 @@ class TestSeatLock:
         mock_check = MagicMock(return_value=mock_result)
 
         with patch(
-            "ee.onyx.server.scim.api.fetch_ee_implementation_or_noop",
+            "ee.aethersearch.server.scim.api.fetch_ee_implementation_or_noop",
             return_value=mock_check,
         ):
             _check_seat_availability(mock_dal)
@@ -814,7 +814,7 @@ class TestSeatLock:
     ) -> None:
         """No advisory lock should be acquired when the EE check is absent."""
         with patch(
-            "ee.onyx.server.scim.api.fetch_ee_implementation_or_noop",
+            "ee.aethersearch.server.scim.api.fetch_ee_implementation_or_noop",
             return_value=None,
         ):
             result = _check_seat_availability(mock_dal)

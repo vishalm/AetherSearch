@@ -4,8 +4,8 @@ from office365.graph_client import GraphClient
 from office365.onedrive.driveitems.driveItem import DriveItem
 from office365.sharepoint.client_context import ClientContext
 
-from onyx.connectors.models import ExternalAccess
-from onyx.utils.variable_functionality import (
+from aethersearch.connectors.models import ExternalAccess
+from aethersearch.utils.variable_functionality import (
     fetch_versioned_implementation_with_fallback,
 )
 
@@ -29,7 +29,7 @@ def get_sharepoint_external_access(
         return ExternalAccess.empty()
 
     get_external_access_func = fetch_versioned_implementation_with_fallback(
-        "onyx.external_permissions.sharepoint.permission_utils",
+        "aethersearch.external_permissions.sharepoint.permission_utils",
         "get_external_access_from_sharepoint",
         fallback=noop_fallback,
     )

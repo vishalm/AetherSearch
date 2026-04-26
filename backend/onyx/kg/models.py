@@ -4,8 +4,8 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from onyx.configs.constants import DocumentSource
-from onyx.configs.kg_configs import KG_DEFAULT_MAX_PARENT_RECURSION_DEPTH
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.kg_configs import KG_DEFAULT_MAX_PARENT_RECURSION_DEPTH
 
 
 # Note: make sure to write a migration if adding a non-nullable field or removing a field

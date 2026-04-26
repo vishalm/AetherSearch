@@ -1,24 +1,24 @@
 import {
-  DEFAULT_ONYX_DOMAIN,
+  DEFAULT_AETHERSEARCH_DOMAIN,
   CHROME_SPECIFIC_STORAGE_KEYS,
 } from "./constants.js";
 
-export async function getOnyxDomain() {
+export async function getAetherSearchDomain() {
   const result = await chrome.storage.local.get({
-    [CHROME_SPECIFIC_STORAGE_KEYS.ONYX_DOMAIN]: DEFAULT_ONYX_DOMAIN,
+    [CHROME_SPECIFIC_STORAGE_KEYS.AETHERSEARCH_DOMAIN]: DEFAULT_AETHERSEARCH_DOMAIN,
   });
-  return result[CHROME_SPECIFIC_STORAGE_KEYS.ONYX_DOMAIN];
+  return result[CHROME_SPECIFIC_STORAGE_KEYS.AETHERSEARCH_DOMAIN];
 }
 
-export function setOnyxDomain(domain, callback) {
+export function setAetherSearchDomain(domain, callback) {
   chrome.storage.local.set(
-    { [CHROME_SPECIFIC_STORAGE_KEYS.ONYX_DOMAIN]: domain },
+    { [CHROME_SPECIFIC_STORAGE_KEYS.AETHERSEARCH_DOMAIN]: domain },
     callback,
   );
 }
 
-export function getOnyxDomainSync() {
+export function getAetherSearchDomainSync() {
   return new Promise((resolve) => {
-    getOnyxDomain(resolve);
+    getAetherSearchDomain(resolve);
   });
 }

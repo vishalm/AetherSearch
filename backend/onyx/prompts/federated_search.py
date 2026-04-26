@@ -1,4 +1,4 @@
-from onyx.configs.app_configs import MAX_SLACK_QUERY_EXPANSIONS
+from aethersearch.configs.app_configs import MAX_SLACK_QUERY_EXPANSIONS
 
 SLACK_QUERY_EXPANSION_PROMPT = f"""
 Rewrite the user's query into at most {MAX_SLACK_QUERY_EXPANSIONS} keyword-only queries for Slack's keyword search.

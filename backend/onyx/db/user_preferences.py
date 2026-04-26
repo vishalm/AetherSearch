@@ -8,22 +8,22 @@ from sqlalchemy import select
 from sqlalchemy import update
 from sqlalchemy.orm import Session
 
-from onyx.auth.schemas import UserRole
-from onyx.db.enums import AccountType
-from onyx.db.enums import DefaultAppMode
-from onyx.db.enums import ThemePreference
-from onyx.db.models import AccessToken
-from onyx.db.models import Assistant__UserSpecificConfig
-from onyx.db.models import Memory
-from onyx.db.models import User
-from onyx.db.models import User__UserGroup
-from onyx.db.models import UserGroup
-from onyx.db.permissions import recompute_user_permissions__no_commit
-from onyx.db.users import assign_user_to_default_groups__no_commit
-from onyx.db.users import is_limited_user
-from onyx.server.manage.models import MemoryItem
-from onyx.server.manage.models import UserSpecificAssistantPreference
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.schemas import UserRole
+from aethersearch.db.enums import AccountType
+from aethersearch.db.enums import DefaultAppMode
+from aethersearch.db.enums import ThemePreference
+from aethersearch.db.models import AccessToken
+from aethersearch.db.models import Assistant__UserSpecificConfig
+from aethersearch.db.models import Memory
+from aethersearch.db.models import User
+from aethersearch.db.models import User__UserGroup
+from aethersearch.db.models import UserGroup
+from aethersearch.db.permissions import recompute_user_permissions__no_commit
+from aethersearch.db.users import assign_user_to_default_groups__no_commit
+from aethersearch.db.users import is_limited_user
+from aethersearch.server.manage.models import MemoryItem
+from aethersearch.server.manage.models import UserSpecificAssistantPreference
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

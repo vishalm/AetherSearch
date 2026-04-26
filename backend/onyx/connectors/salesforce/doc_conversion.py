@@ -2,19 +2,19 @@ import re
 from typing import Any
 from typing import cast
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
-from onyx.connectors.models import BasicExpertInfo
-from onyx.connectors.models import Document
-from onyx.connectors.models import ImageSection
-from onyx.connectors.models import TextSection
-from onyx.connectors.salesforce.onyx_salesforce import OnyxSalesforce
-from onyx.connectors.salesforce.sqlite_functions import OnyxSalesforceSQLite
-from onyx.connectors.salesforce.utils import ID_FIELD
-from onyx.connectors.salesforce.utils import MODIFIED_FIELD
-from onyx.connectors.salesforce.utils import NAME_FIELD
-from onyx.connectors.salesforce.utils import SalesforceObject
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import ImageSection
+from aethersearch.connectors.models import TextSection
+from aethersearch.connectors.salesforce.aethersearch_salesforce import AetherSearchSalesforce
+from aethersearch.connectors.salesforce.sqlite_functions import AetherSearchSalesforceSQLite
+from aethersearch.connectors.salesforce.utils import ID_FIELD
+from aethersearch.connectors.salesforce.utils import MODIFIED_FIELD
+from aethersearch.connectors.salesforce.utils import NAME_FIELD
+from aethersearch.connectors.salesforce.utils import SalesforceObject
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -127,7 +127,7 @@ def _extract_section(salesforce_object_data: dict[str, Any], link: str) -> TextS
 
 
 def _extract_primary_owner(
-    sf_db: OnyxSalesforceSQLite,
+    sf_db: AetherSearchSalesforceSQLite,
     sf_object: SalesforceObject,
 ) -> BasicExpertInfo | None:
     object_dict = sf_object.data
@@ -164,7 +164,7 @@ def convert_sf_query_result_to_doc(
     record: dict[str, Any],
     child_records: dict[str, dict[str, Any]],
     primary_owner_list: list[BasicExpertInfo] | None,
-    sf_client: OnyxSalesforce,
+    sf_client: AetherSearchSalesforce,
 ) -> Document:
     """Generates a yieldable Document from query results"""
 
@@ -201,14 +201,14 @@ def convert_sf_query_result_to_doc(
 
 
 def convert_sf_object_to_doc(
-    sf_db: OnyxSalesforceSQLite,
+    sf_db: AetherSearchSalesforceSQLite,
     sf_object: SalesforceObject,
     sf_instance: str,
 ) -> Document:
     """Would be nice if this function was documented"""
     object_dict = sf_object.data
     salesforce_id = object_dict[ID_FIELD]
-    onyx_salesforce_id = f"{ID_PREFIX}{salesforce_id}"
+    aethersearch_salesforce_id = f"{ID_PREFIX}{salesforce_id}"
     base_url = f"https://{sf_instance}"
     extracted_doc_updated_at = time_str_to_utc(object_dict[MODIFIED_FIELD])
     extracted_semantic_identifier = object_dict.get(NAME_FIELD) or object_dict.get(
@@ -232,7 +232,7 @@ def convert_sf_object_to_doc(
         primary_owner_list = [primary_owner]
 
     doc = Document(
-        id=onyx_salesforce_id,
+        id=aethersearch_salesforce_id,
         sections=cast(list[TextSection | ImageSection], sections),
         source=DocumentSource.SALESFORCE,
         semantic_identifier=extracted_semantic_identifier,

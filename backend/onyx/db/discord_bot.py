@@ -9,20 +9,20 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import Session
 
-from onyx.auth.api_key import build_displayable_api_key
-from onyx.auth.api_key import generate_api_key
-from onyx.auth.api_key import hash_api_key
-from onyx.auth.schemas import UserRole
-from onyx.configs.constants import DISCORD_SERVICE_API_KEY_NAME
-from onyx.db.api_key import insert_api_key
-from onyx.db.models import ApiKey
-from onyx.db.models import DiscordBotConfig
-from onyx.db.models import DiscordChannelConfig
-from onyx.db.models import DiscordGuildConfig
-from onyx.db.models import User
-from onyx.db.utils import DiscordChannelView
-from onyx.server.api_key.models import APIKeyArgs
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.api_key import build_displayable_api_key
+from aethersearch.auth.api_key import generate_api_key
+from aethersearch.auth.api_key import hash_api_key
+from aethersearch.auth.schemas import UserRole
+from aethersearch.configs.constants import DISCORD_SERVICE_API_KEY_NAME
+from aethersearch.db.api_key import insert_api_key
+from aethersearch.db.models import ApiKey
+from aethersearch.db.models import DiscordBotConfig
+from aethersearch.db.models import DiscordChannelConfig
+from aethersearch.db.models import DiscordGuildConfig
+from aethersearch.db.models import User
+from aethersearch.db.utils import DiscordChannelView
+from aethersearch.server.api_key.models import APIKeyArgs
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -82,7 +82,7 @@ def get_or_create_discord_service_api_key(
     """Get existing Discord service API key or create one.
 
     The API key is used by the Discord bot to authenticate with the
-    Onyx API pods when sending chat requests.
+    AetherSearch API pods when sending chat requests.
 
     Args:
         db_session: Database session for the tenant.

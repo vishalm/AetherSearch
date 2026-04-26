@@ -2,7 +2,7 @@ from typing import Any
 
 from sentry_sdk.types import Event
 
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -31,7 +31,7 @@ def _add_instance_tags(
         if MULTI_TENANT:
             instance_id = "multi-tenant-cloud"
         else:
-            from onyx.utils.telemetry import get_or_generate_uuid
+            from aethersearch.utils.telemetry import get_or_generate_uuid
 
             instance_id = get_or_generate_uuid()
 

@@ -10,14 +10,14 @@ from unittest.mock import MagicMock
 import discord
 import pytest
 
-from onyx.onyxbot.discord.constants import MAX_CONTEXT_MESSAGES
-from onyx.onyxbot.discord.handle_message import _build_conversation_context
-from onyx.onyxbot.discord.handle_message import _build_reply_chain_context
-from onyx.onyxbot.discord.handle_message import _build_thread_context
-from onyx.onyxbot.discord.handle_message import _format_messages_as_context
-from onyx.onyxbot.discord.handle_message import format_message_content
-from tests.unit.onyx.onyxbot.discord.conftest import AsyncIteratorMock
-from tests.unit.onyx.onyxbot.discord.conftest import mock_message
+from aethersearch.aethersearchbot.discord.constants import MAX_CONTEXT_MESSAGES
+from aethersearch.aethersearchbot.discord.handle_message import _build_conversation_context
+from aethersearch.aethersearchbot.discord.handle_message import _build_reply_chain_context
+from aethersearch.aethersearchbot.discord.handle_message import _build_thread_context
+from aethersearch.aethersearchbot.discord.handle_message import _format_messages_as_context
+from aethersearch.aethersearchbot.discord.handle_message import format_message_content
+from tests.unit.aethersearch.aethersearchbot.discord.conftest import AsyncIteratorMock
+from tests.unit.aethersearch.aethersearchbot.discord.conftest import mock_message
 
 
 class TestThreadContextBuilder:
@@ -154,7 +154,7 @@ class TestThreadContextBuilder:
                 content="Bot response",
                 author_bot=True,
                 author_id=mock_bot_user.id,
-                author_display_name="OnyxBot",
+                author_display_name="AetherSearchBot",
             ),
         ]
 
@@ -631,7 +631,7 @@ class TestContextFormatting:
         assert "@TestUser:" in result
 
     def test_context_format_bot_marker(self, mock_bot_user: MagicMock) -> None:
-        """Bot messages in context are marked as OnyxBot:."""
+        """Bot messages in context are marked as AetherSearchBot:."""
         msg = mock_message(
             content="Bot response",
             author_bot=True,
@@ -642,4 +642,4 @@ class TestContextFormatting:
         result = _format_messages_as_context([msg], mock_bot_user)
 
         assert result is not None
-        assert "OnyxBot:" in result
+        assert "AetherSearchBot:" in result

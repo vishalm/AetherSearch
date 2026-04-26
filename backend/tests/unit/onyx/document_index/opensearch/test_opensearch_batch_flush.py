@@ -1,17 +1,17 @@
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from onyx.access.models import DocumentAccess
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.models import Document
-from onyx.connectors.models import TextSection
-from onyx.document_index.interfaces_new import IndexingMetadata
-from onyx.document_index.interfaces_new import TenantState
-from onyx.document_index.opensearch.opensearch_document_index import (
+from aethersearch.access.models import DocumentAccess
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import TextSection
+from aethersearch.document_index.interfaces_new import IndexingMetadata
+from aethersearch.document_index.interfaces_new import TenantState
+from aethersearch.document_index.opensearch.opensearch_document_index import (
     OpenSearchDocumentIndex,
 )
-from onyx.indexing.models import ChunkEmbedding
-from onyx.indexing.models import DocMetadataAwareIndexChunk
+from aethersearch.indexing.models import ChunkEmbedding
+from aethersearch.indexing.models import DocMetadataAwareIndexChunk
 
 
 def _make_chunk(
@@ -91,7 +91,7 @@ def _make_metadata(doc_id: str, chunk_count: int) -> IndexingMetadata:
 
 
 @patch(
-    "onyx.document_index.opensearch.opensearch_document_index.MAX_CHUNKS_PER_DOC_BATCH",
+    "aethersearch.document_index.opensearch.opensearch_document_index.MAX_CHUNKS_PER_DOC_BATCH",
     100,
 )
 def test_single_doc_under_batch_limit_flushes_once() -> None:
@@ -111,7 +111,7 @@ def test_single_doc_under_batch_limit_flushes_once() -> None:
 
 
 @patch(
-    "onyx.document_index.opensearch.opensearch_document_index.MAX_CHUNKS_PER_DOC_BATCH",
+    "aethersearch.document_index.opensearch.opensearch_document_index.MAX_CHUNKS_PER_DOC_BATCH",
     100,
 )
 def test_single_doc_over_batch_limit_flushes_multiple_times() -> None:
@@ -132,7 +132,7 @@ def test_single_doc_over_batch_limit_flushes_multiple_times() -> None:
 
 
 @patch(
-    "onyx.document_index.opensearch.opensearch_document_index.MAX_CHUNKS_PER_DOC_BATCH",
+    "aethersearch.document_index.opensearch.opensearch_document_index.MAX_CHUNKS_PER_DOC_BATCH",
     100,
 )
 def test_single_doc_exactly_at_batch_limit() -> None:
@@ -157,7 +157,7 @@ def test_single_doc_exactly_at_batch_limit() -> None:
 
 
 @patch(
-    "onyx.document_index.opensearch.opensearch_document_index.MAX_CHUNKS_PER_DOC_BATCH",
+    "aethersearch.document_index.opensearch.opensearch_document_index.MAX_CHUNKS_PER_DOC_BATCH",
     100,
 )
 def test_single_doc_one_over_batch_limit() -> None:
@@ -178,7 +178,7 @@ def test_single_doc_one_over_batch_limit() -> None:
 
 
 @patch(
-    "onyx.document_index.opensearch.opensearch_document_index.MAX_CHUNKS_PER_DOC_BATCH",
+    "aethersearch.document_index.opensearch.opensearch_document_index.MAX_CHUNKS_PER_DOC_BATCH",
     100,
 )
 def test_multiple_docs_each_under_limit_flush_per_doc() -> None:
@@ -205,7 +205,7 @@ def test_multiple_docs_each_under_limit_flush_per_doc() -> None:
 
 
 @patch(
-    "onyx.document_index.opensearch.opensearch_document_index.MAX_CHUNKS_PER_DOC_BATCH",
+    "aethersearch.document_index.opensearch.opensearch_document_index.MAX_CHUNKS_PER_DOC_BATCH",
     100,
 )
 def test_delete_called_once_per_document() -> None:

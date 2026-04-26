@@ -2,13 +2,13 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import NotificationType
-from onyx.db.models import Persona
-from onyx.db.models import Persona__User
-from onyx.db.models import Persona__UserGroup
-from onyx.db.notification import create_notification
-from onyx.db.persona import mark_persona_user_files_for_sync
-from onyx.server.features.persona.models import PersonaSharedNotificationData
+from aethersearch.configs.constants import NotificationType
+from aethersearch.db.models import Persona
+from aethersearch.db.models import Persona__User
+from aethersearch.db.models import Persona__UserGroup
+from aethersearch.db.notification import create_notification
+from aethersearch.db.persona import mark_persona_user_files_for_sync
+from aethersearch.server.features.persona.models import PersonaSharedNotificationData
 
 
 def update_persona_access(

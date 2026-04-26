@@ -1,5 +1,5 @@
 """
-Test cases for onyx/utils/gpu_utils.py with DISABLE_MODEL_SERVER environment variable
+Test cases for aethersearch/utils/gpu_utils.py with DISABLE_MODEL_SERVER environment variable
 """
 
 import os
@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 import requests
 
-from onyx.utils.gpu_utils import _get_gpu_status_from_model_server
+from aethersearch.utils.gpu_utils import _get_gpu_status_from_model_server
 
 
 class TestGPUUtils(TestCase):

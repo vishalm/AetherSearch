@@ -1,4 +1,4 @@
-// Package models defines API request/response types for the Onyx CLI.
+// Package models defines API request/response types for the AetherSearch CLI.
 package models
 
 import "time"

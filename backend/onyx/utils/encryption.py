@@ -1,13 +1,13 @@
 from typing import Any
 
-from onyx.configs.app_configs import ENCRYPTION_KEY_SECRET
-from onyx.configs.constants import MASK_CREDENTIAL_CHAR
-from onyx.configs.constants import MASK_CREDENTIAL_LONG_RE
-from onyx.connectors.google_utils.shared_constants import (
+from aethersearch.configs.app_configs import ENCRYPTION_KEY_SECRET
+from aethersearch.configs.constants import MASK_CREDENTIAL_CHAR
+from aethersearch.configs.constants import MASK_CREDENTIAL_LONG_RE
+from aethersearch.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_AUTHENTICATION_METHOD,
 )
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import fetch_versioned_implementation
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import fetch_versioned_implementation
 
 logger = setup_logger()
 
@@ -15,7 +15,7 @@ logger = setup_logger()
 # IMPORTANT DO NOT DELETE, THIS IS USED BY fetch_versioned_implementation
 def _encrypt_string(input_str: str, key: str | None = None) -> bytes:
     if ENCRYPTION_KEY_SECRET:
-        logger.warning("MIT version of Onyx does not support encryption of secrets.")
+        logger.warning("MIT version of AetherSearch does not support encryption of secrets.")
     elif key is not None:
         logger.debug("MIT encrypt called with explicit key — key ignored.")
     return input_str.encode()
@@ -24,7 +24,7 @@ def _encrypt_string(input_str: str, key: str | None = None) -> bytes:
 # IMPORTANT DO NOT DELETE, THIS IS USED BY fetch_versioned_implementation
 def _decrypt_bytes(input_bytes: bytes, key: str | None = None) -> str:
     if ENCRYPTION_KEY_SECRET:
-        logger.warning("MIT version of Onyx does not support decryption of secrets.")
+        logger.warning("MIT version of AetherSearch does not support decryption of secrets.")
     elif key is not None:
         logger.debug("MIT decrypt called with explicit key — key ignored.")
     return input_bytes.decode()
@@ -140,13 +140,13 @@ def _mask_list(items: list[Any]) -> list[Any]:
 
 def encrypt_string_to_bytes(intput_str: str, key: str | None = None) -> bytes:
     versioned_encryption_fn = fetch_versioned_implementation(
-        "onyx.utils.encryption", "_encrypt_string"
+        "aethersearch.utils.encryption", "_encrypt_string"
     )
     return versioned_encryption_fn(intput_str, key=key)
 
 
 def decrypt_bytes_to_string(intput_bytes: bytes, key: str | None = None) -> str:
     versioned_decryption_fn = fetch_versioned_implementation(
-        "onyx.utils.encryption", "_decrypt_bytes"
+        "aethersearch.utils.encryption", "_decrypt_bytes"
     )
     return versioned_decryption_fn(intput_bytes, key=key)

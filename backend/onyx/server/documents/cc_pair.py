@@ -10,63 +10,63 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import current_curator_or_admin_user
-from onyx.background.celery.tasks.pruning.tasks import try_creating_prune_generator_task
-from onyx.background.celery.versioned_apps.client import app as client_app
-from onyx.background.indexing.models import IndexAttemptErrorPydantic
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import PUBLIC_API_TAGS
-from onyx.connectors.exceptions import ValidationError
-from onyx.connectors.factory import validate_ccpair_for_user
-from onyx.db.connector import delete_connector
-from onyx.db.connector_credential_pair import add_credential_to_connector
-from onyx.db.connector_credential_pair import (
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import current_curator_or_admin_user
+from aethersearch.background.celery.tasks.pruning.tasks import try_creating_prune_generator_task
+from aethersearch.background.celery.versioned_apps.client import app as client_app
+from aethersearch.background.indexing.models import IndexAttemptErrorPydantic
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import PUBLIC_API_TAGS
+from aethersearch.connectors.exceptions import ValidationError
+from aethersearch.connectors.factory import validate_ccpair_for_user
+from aethersearch.db.connector import delete_connector
+from aethersearch.db.connector_credential_pair import add_credential_to_connector
+from aethersearch.db.connector_credential_pair import (
     get_connector_credential_pair_from_id_for_user,
 )
-from onyx.db.connector_credential_pair import remove_credential_from_connector
-from onyx.db.connector_credential_pair import update_connector_credential_pair_from_id
-from onyx.db.connector_credential_pair import verify_user_has_access_to_cc_pair
-from onyx.db.document import get_document_counts_for_cc_pairs
-from onyx.db.document import get_documents_for_cc_pair
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import AccessType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import IndexingStatus
-from onyx.db.enums import Permission
-from onyx.db.enums import PermissionSyncStatus
-from onyx.db.index_attempt import count_index_attempt_errors_for_cc_pair
-from onyx.db.index_attempt import count_index_attempts_for_cc_pair
-from onyx.db.index_attempt import get_index_attempt_errors_for_cc_pair
-from onyx.db.index_attempt import get_latest_index_attempt_for_cc_pair_id
-from onyx.db.index_attempt import get_latest_successful_index_attempt_for_cc_pair_id
-from onyx.db.index_attempt import get_paginated_index_attempts_for_cc_pair_id
-from onyx.db.indexing_coordination import IndexingCoordination
-from onyx.db.models import IndexAttempt
-from onyx.db.models import User
-from onyx.db.permission_sync_attempt import (
+from aethersearch.db.connector_credential_pair import remove_credential_from_connector
+from aethersearch.db.connector_credential_pair import update_connector_credential_pair_from_id
+from aethersearch.db.connector_credential_pair import verify_user_has_access_to_cc_pair
+from aethersearch.db.document import get_document_counts_for_cc_pairs
+from aethersearch.db.document import get_documents_for_cc_pair
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import IndexingStatus
+from aethersearch.db.enums import Permission
+from aethersearch.db.enums import PermissionSyncStatus
+from aethersearch.db.index_attempt import count_index_attempt_errors_for_cc_pair
+from aethersearch.db.index_attempt import count_index_attempts_for_cc_pair
+from aethersearch.db.index_attempt import get_index_attempt_errors_for_cc_pair
+from aethersearch.db.index_attempt import get_latest_index_attempt_for_cc_pair_id
+from aethersearch.db.index_attempt import get_latest_successful_index_attempt_for_cc_pair_id
+from aethersearch.db.index_attempt import get_paginated_index_attempts_for_cc_pair_id
+from aethersearch.db.indexing_coordination import IndexingCoordination
+from aethersearch.db.models import IndexAttempt
+from aethersearch.db.models import User
+from aethersearch.db.permission_sync_attempt import (
     get_latest_doc_permission_sync_attempt_for_cc_pair,
 )
-from onyx.db.permission_sync_attempt import (
+from aethersearch.db.permission_sync_attempt import (
     get_recent_doc_permission_sync_attempts_for_cc_pair,
 )
-from onyx.redis.redis_connector import RedisConnector
-from onyx.redis.redis_connector_utils import get_deletion_attempt_snapshot
-from onyx.redis.redis_pool import get_redis_client
-from onyx.redis.redis_tenant_work_gating import maybe_mark_tenant_active
-from onyx.server.documents.models import CCPairFullInfo
-from onyx.server.documents.models import CCPropertyUpdateRequest
-from onyx.server.documents.models import CCStatusUpdateRequest
-from onyx.server.documents.models import ConnectorCredentialPairIdentifier
-from onyx.server.documents.models import ConnectorCredentialPairMetadata
-from onyx.server.documents.models import DocumentSyncStatus
-from onyx.server.documents.models import IndexAttemptSnapshot
-from onyx.server.documents.models import PaginatedReturn
-from onyx.server.documents.models import PermissionSyncAttemptSnapshot
-from onyx.server.models import StatusResponse
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
+from aethersearch.redis.redis_connector import RedisConnector
+from aethersearch.redis.redis_connector_utils import get_deletion_attempt_snapshot
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.redis.redis_tenant_work_gating import maybe_mark_tenant_active
+from aethersearch.server.documents.models import CCPairFullInfo
+from aethersearch.server.documents.models import CCPropertyUpdateRequest
+from aethersearch.server.documents.models import CCStatusUpdateRequest
+from aethersearch.server.documents.models import ConnectorCredentialPairIdentifier
+from aethersearch.server.documents.models import ConnectorCredentialPairMetadata
+from aethersearch.server.documents.models import DocumentSyncStatus
+from aethersearch.server.documents.models import IndexAttemptSnapshot
+from aethersearch.server.documents.models import PaginatedReturn
+from aethersearch.server.documents.models import PermissionSyncAttemptSnapshot
+from aethersearch.server.models import StatusResponse
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import fetch_ee_implementation_or_noop
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()
@@ -324,9 +324,9 @@ def update_cc_pair_status(
 
     # this speeds up the start of indexing by firing the check immediately
     client_app.send_task(
-        OnyxCeleryTask.CHECK_FOR_INDEXING,
+        AetherSearchCeleryTask.CHECK_FOR_INDEXING,
         kwargs=dict(tenant_id=tenant_id),
-        priority=OnyxCeleryPriority.HIGH,
+        priority=AetherSearchCeleryPriority.HIGH,
     )
 
     return JSONResponse(
@@ -549,7 +549,7 @@ def associate_credential_to_connector(
     """
 
     fetch_ee_implementation_or_noop(
-        "onyx.db.user_group", "validate_object_creation_for_user", None
+        "aethersearch.db.user_group", "validate_object_creation_for_user", None
     )(
         db_session=db_session,
         user=user,
@@ -582,8 +582,8 @@ def associate_credential_to_connector(
 
         # trigger indexing immediately
         client_app.send_task(
-            OnyxCeleryTask.CHECK_FOR_INDEXING,
-            priority=OnyxCeleryPriority.HIGH,
+            AetherSearchCeleryTask.CHECK_FOR_INDEXING,
+            priority=AetherSearchCeleryPriority.HIGH,
             kwargs={"tenant_id": tenant_id},
         )
 

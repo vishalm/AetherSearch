@@ -7,8 +7,8 @@ import time
 
 import pytest
 
-from onyx.server.query_and_chat.streaming_models import StreamingType
-from onyx.tools.tool_implementations.images.image_generation_tool import (
+from aethersearch.server.query_and_chat.streaming_models import StreamingType
+from aethersearch.tools.tool_implementations.images.image_generation_tool import (
     HEARTBEAT_INTERVAL,
 )
 from tests.integration.common_utils.managers.chat import ChatSessionManager

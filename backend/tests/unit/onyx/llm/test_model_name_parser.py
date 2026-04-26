@@ -4,8 +4,8 @@ Unit tests for LiteLLM model name parser.
 Tests verify that enrichment data is correctly returned from the parser.
 """
 
-from onyx.llm.constants import LlmProviderNames
-from onyx.llm.model_name_parser import parse_litellm_model_name
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.llm.model_name_parser import parse_litellm_model_name
 
 
 def test_bedrock_model_with_enrichment() -> None:

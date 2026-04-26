@@ -7,20 +7,20 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import FederatedConnectorSource
-from onyx.context.search.models import ChunkIndexRequest
-from onyx.context.search.models import InferenceChunk
-from onyx.db.federated import (
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import FederatedConnectorSource
+from aethersearch.context.search.models import ChunkIndexRequest
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.db.federated import (
     get_federated_connector_document_set_mappings_by_document_set_names,
 )
-from onyx.db.federated import list_federated_connector_oauth_tokens
-from onyx.db.models import FederatedConnector__DocumentSet
-from onyx.db.slack_bot import fetch_slack_bots
-from onyx.federated_connectors.factory import get_federated_connector
-from onyx.federated_connectors.interfaces import FederatedConnector
-from onyx.onyxbot.slack.models import SlackContext
-from onyx.utils.logger import setup_logger
+from aethersearch.db.federated import list_federated_connector_oauth_tokens
+from aethersearch.db.models import FederatedConnector__DocumentSet
+from aethersearch.db.slack_bot import fetch_slack_bots
+from aethersearch.federated_connectors.factory import get_federated_connector
+from aethersearch.federated_connectors.interfaces import FederatedConnector
+from aethersearch.aethersearchbot.slack.models import SlackContext
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

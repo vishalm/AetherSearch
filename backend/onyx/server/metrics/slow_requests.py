@@ -15,7 +15,7 @@ SLOW_REQUEST_THRESHOLD_SECONDS: float = max(
 )
 
 _slow_requests = Counter(
-    "onyx_api_slow_requests_total",
+    "aethersearch_api_slow_requests_total",
     "Total requests exceeding the slow request threshold",
     ["method", "handler", "status"],
 )

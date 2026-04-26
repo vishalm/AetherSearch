@@ -16,11 +16,11 @@ from requests import HTTPError
 from requests import Response
 from sqlalchemy.orm import Session
 
-from onyx.auth.oauth_token_manager import OAuthTokenManager
-from onyx.db.models import OAuthConfig
-from onyx.db.oauth_config import create_oauth_config
-from onyx.db.oauth_config import upsert_user_oauth_token
-from onyx.utils.sensitive import SensitiveValue
+from aethersearch.auth.oauth_token_manager import OAuthTokenManager
+from aethersearch.db.models import OAuthConfig
+from aethersearch.db.oauth_config import create_oauth_config
+from aethersearch.db.oauth_config import upsert_user_oauth_token
+from aethersearch.utils.sensitive import SensitiveValue
 from tests.external_dependency_unit.conftest import create_test_user
 
 
@@ -88,7 +88,7 @@ class TestOAuthTokenManagerValidation:
 
         assert access_token == "token_without_expiry"
 
-    @patch("onyx.auth.oauth_token_manager.requests.post")
+    @patch("aethersearch.auth.oauth_token_manager.requests.post")
     def test_get_valid_access_token_with_expired_token_refreshes(
         self, mock_post: Mock, db_session: Session
     ) -> None:
@@ -148,7 +148,7 @@ class TestOAuthTokenManagerValidation:
 
         assert access_token is None
 
-    @patch("onyx.auth.oauth_token_manager.requests.post")
+    @patch("aethersearch.auth.oauth_token_manager.requests.post")
     def test_get_valid_access_token_refresh_fails(
         self, mock_post: Mock, db_session: Session
     ) -> None:
@@ -177,7 +177,7 @@ class TestOAuthTokenManagerValidation:
 class TestOAuthTokenManagerRefresh:
     """Tests for token refresh functionality"""
 
-    @patch("onyx.auth.oauth_token_manager.requests.post")
+    @patch("aethersearch.auth.oauth_token_manager.requests.post")
     def test_refresh_token_success(self, mock_post: Mock, db_session: Session) -> None:
         """Test successful token refresh"""
         oauth_config = _create_test_oauth_config(db_session)
@@ -218,7 +218,7 @@ class TestOAuthTokenManagerRefresh:
         assert token_data["refresh_token"] == "new_refresh"
         assert "expires_at" in token_data
 
-    @patch("onyx.auth.oauth_token_manager.requests.post")
+    @patch("aethersearch.auth.oauth_token_manager.requests.post")
     def test_refresh_token_preserves_refresh_token(
         self, mock_post: Mock, db_session: Session
     ) -> None:
@@ -256,7 +256,7 @@ class TestOAuthTokenManagerRefresh:
         token_data = user_token.token_data.get_value(apply_mask=False)
         assert token_data["refresh_token"] == "old_refresh"
 
-    @patch("onyx.auth.oauth_token_manager.requests.post")
+    @patch("aethersearch.auth.oauth_token_manager.requests.post")
     def test_refresh_token_http_error(
         self, mock_post: Mock, db_session: Session
     ) -> None:
@@ -339,7 +339,7 @@ class TestOAuthTokenManagerExpiration:
 class TestOAuthTokenManagerCodeExchange:
     """Tests for authorization code exchange"""
 
-    @patch("onyx.auth.oauth_token_manager.requests.post")
+    @patch("aethersearch.auth.oauth_token_manager.requests.post")
     def test_exchange_code_for_token_success(
         self, mock_post: Mock, db_session: Session
     ) -> None:
@@ -384,7 +384,7 @@ class TestOAuthTokenManagerCodeExchange:
         ] == oauth_config.client_secret.get_value(apply_mask=False)
         assert call_args[1]["data"]["redirect_uri"] == "https://example.com/callback"
 
-    @patch("onyx.auth.oauth_token_manager.requests.post")
+    @patch("aethersearch.auth.oauth_token_manager.requests.post")
     def test_exchange_code_for_token_http_error(
         self, mock_post: Mock, db_session: Session
     ) -> None:

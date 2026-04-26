@@ -12,13 +12,13 @@ from urllib.parse import urlparse
 import requests
 from dateutil.parser import parse
 
-from onyx.configs.app_configs import CONNECTOR_LOCALHOST_OVERRIDE
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import IGNORE_FOR_QA
-from onyx.connectors.models import BasicExpertInfo
-from onyx.connectors.models import OnyxMetadata
-from onyx.utils.logger import setup_logger
-from onyx.utils.text_processing import is_valid_email
+from aethersearch.configs.app_configs import CONNECTOR_LOCALHOST_OVERRIDE
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import IGNORE_FOR_QA
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.connectors.models import AetherSearchMetadata
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.text_processing import is_valid_email
 
 T = TypeVar("T")
 U = TypeVar("U")
@@ -140,11 +140,11 @@ def _parse_document_source(connector_type: Any) -> DocumentSource | None:
         return None
 
 
-def process_onyx_metadata(
+def process_aethersearch_metadata(
     metadata: dict[str, Any],
-) -> tuple[OnyxMetadata, dict[str, Any]]:
+) -> tuple[AetherSearchMetadata, dict[str, Any]]:
     """
-    Users may set Onyx metadata and custom tags in text files. https://docs.onyx.app/admins/connectors/official/file
+    Users may set AetherSearch metadata and custom tags in text files. https://docs.aethersearch.app/admins/connectors/official/file
     Any unrecognized fields are treated as custom tags.
     """
     p_owner_names = metadata.get("primary_owners")
@@ -166,7 +166,7 @@ def process_onyx_metadata(
     doc_updated_at = time_str_to_utc(dt_str) if dt_str else None
 
     return (
-        OnyxMetadata(
+        AetherSearchMetadata(
             document_id=metadata.get("id"),
             source_type=source_type,
             link=metadata.get("link"),

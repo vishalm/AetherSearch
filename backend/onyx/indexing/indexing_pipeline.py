@@ -10,79 +10,79 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import DEFAULT_CONTEXTUAL_RAG_LLM_NAME
-from onyx.configs.app_configs import DEFAULT_CONTEXTUAL_RAG_LLM_PROVIDER
-from onyx.configs.app_configs import ENABLE_CONTEXTUAL_RAG
-from onyx.configs.app_configs import MAX_CHUNKS_PER_DOC_BATCH
-from onyx.configs.app_configs import MAX_DOCUMENT_CHARS
-from onyx.configs.app_configs import MAX_TOKENS_FOR_FULL_INCLUSION
-from onyx.configs.app_configs import USE_CHUNK_SUMMARY
-from onyx.configs.app_configs import USE_DOCUMENT_SUMMARY
-from onyx.configs.llm_configs import get_image_extraction_and_analysis_enabled
-from onyx.connectors.cross_connector_utils.miscellaneous_utils import (
+from aethersearch.configs.app_configs import DEFAULT_CONTEXTUAL_RAG_LLM_NAME
+from aethersearch.configs.app_configs import DEFAULT_CONTEXTUAL_RAG_LLM_PROVIDER
+from aethersearch.configs.app_configs import ENABLE_CONTEXTUAL_RAG
+from aethersearch.configs.app_configs import MAX_CHUNKS_PER_DOC_BATCH
+from aethersearch.configs.app_configs import MAX_DOCUMENT_CHARS
+from aethersearch.configs.app_configs import MAX_TOKENS_FOR_FULL_INCLUSION
+from aethersearch.configs.app_configs import USE_CHUNK_SUMMARY
+from aethersearch.configs.app_configs import USE_DOCUMENT_SUMMARY
+from aethersearch.configs.llm_configs import get_image_extraction_and_analysis_enabled
+from aethersearch.connectors.cross_connector_utils.miscellaneous_utils import (
     get_experts_stores_representations,
 )
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import ConnectorStopSignal
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentFailure
-from onyx.connectors.models import ImageSection
-from onyx.connectors.models import IndexAttemptMetadata
-from onyx.connectors.models import IndexingDocument
-from onyx.connectors.models import Section
-from onyx.connectors.models import SectionType
-from onyx.connectors.models import TextSection
-from onyx.db.document import get_documents_by_ids
-from onyx.db.document import upsert_document_by_connector_credential_pair
-from onyx.db.document import upsert_documents
-from onyx.db.enums import HookPoint
-from onyx.db.hierarchy import link_hierarchy_nodes_to_documents
-from onyx.db.models import Document as DBDocument
-from onyx.db.models import IndexModelStatus
-from onyx.db.search_settings import get_active_search_settings
-from onyx.db.tag import upsert_document_tags
-from onyx.document_index.document_index_utils import get_multipass_config
-from onyx.document_index.interfaces import DocumentIndex
-from onyx.document_index.interfaces import DocumentInsertionRecord
-from onyx.document_index.interfaces import DocumentMetadata
-from onyx.document_index.interfaces import IndexBatchParams
-from onyx.file_processing.image_summarization import summarize_image_with_error_handling
-from onyx.file_store.file_store import get_default_file_store
-from onyx.file_store.staging import promote_staged_file
-from onyx.hooks.executor import execute_hook
-from onyx.hooks.executor import HookSkipped
-from onyx.hooks.executor import HookSoftFailed
-from onyx.hooks.points.document_ingestion import DocumentIngestionOwner
-from onyx.hooks.points.document_ingestion import DocumentIngestionPayload
-from onyx.hooks.points.document_ingestion import DocumentIngestionResponse
-from onyx.hooks.points.document_ingestion import DocumentIngestionSection
-from onyx.indexing.chunk_batch_store import ChunkBatchStore
-from onyx.indexing.chunker import Chunker
-from onyx.indexing.embedder import embed_chunks_with_failure_handling
-from onyx.indexing.embedder import IndexingEmbedder
-from onyx.indexing.models import DocAwareChunk
-from onyx.indexing.models import DocMetadataAwareIndexChunk
-from onyx.indexing.models import IndexingBatchAdapter
-from onyx.indexing.models import UpdatableChunkData
-from onyx.indexing.vector_db_insertion import write_chunks_to_vector_db_with_backoff
-from onyx.llm.factory import get_default_llm_with_vision
-from onyx.llm.factory import get_llm_for_contextual_rag
-from onyx.llm.interfaces import LLM
-from onyx.llm.models import UserMessage
-from onyx.llm.multi_llm import LLMRateLimitError
-from onyx.llm.utils import llm_response_to_string
-from onyx.llm.utils import MAX_CONTEXT_TOKENS
-from onyx.natural_language_processing.utils import BaseTokenizer
-from onyx.natural_language_processing.utils import get_tokenizer
-from onyx.natural_language_processing.utils import tokenizer_trim_middle
-from onyx.prompts.contextual_retrieval import CONTEXTUAL_RAG_PROMPT1
-from onyx.prompts.contextual_retrieval import CONTEXTUAL_RAG_PROMPT2
-from onyx.prompts.contextual_retrieval import DOCUMENT_SUMMARY_PROMPT
-from onyx.utils.batching import batch_generator
-from onyx.utils.logger import setup_logger
-from onyx.utils.postgres_sanitization import sanitize_documents_for_postgres
-from onyx.utils.threadpool_concurrency import run_functions_tuples_in_parallel
-from onyx.utils.timing import log_function_time
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import ConnectorStopSignal
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentFailure
+from aethersearch.connectors.models import ImageSection
+from aethersearch.connectors.models import IndexAttemptMetadata
+from aethersearch.connectors.models import IndexingDocument
+from aethersearch.connectors.models import Section
+from aethersearch.connectors.models import SectionType
+from aethersearch.connectors.models import TextSection
+from aethersearch.db.document import get_documents_by_ids
+from aethersearch.db.document import upsert_document_by_connector_credential_pair
+from aethersearch.db.document import upsert_documents
+from aethersearch.db.enums import HookPoint
+from aethersearch.db.hierarchy import link_hierarchy_nodes_to_documents
+from aethersearch.db.models import Document as DBDocument
+from aethersearch.db.models import IndexModelStatus
+from aethersearch.db.search_settings import get_active_search_settings
+from aethersearch.db.tag import upsert_document_tags
+from aethersearch.document_index.document_index_utils import get_multipass_config
+from aethersearch.document_index.interfaces import DocumentIndex
+from aethersearch.document_index.interfaces import DocumentInsertionRecord
+from aethersearch.document_index.interfaces import DocumentMetadata
+from aethersearch.document_index.interfaces import IndexBatchParams
+from aethersearch.file_processing.image_summarization import summarize_image_with_error_handling
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.file_store.staging import promote_staged_file
+from aethersearch.hooks.executor import execute_hook
+from aethersearch.hooks.executor import HookSkipped
+from aethersearch.hooks.executor import HookSoftFailed
+from aethersearch.hooks.points.document_ingestion import DocumentIngestionOwner
+from aethersearch.hooks.points.document_ingestion import DocumentIngestionPayload
+from aethersearch.hooks.points.document_ingestion import DocumentIngestionResponse
+from aethersearch.hooks.points.document_ingestion import DocumentIngestionSection
+from aethersearch.indexing.chunk_batch_store import ChunkBatchStore
+from aethersearch.indexing.chunker import Chunker
+from aethersearch.indexing.embedder import embed_chunks_with_failure_handling
+from aethersearch.indexing.embedder import IndexingEmbedder
+from aethersearch.indexing.models import DocAwareChunk
+from aethersearch.indexing.models import DocMetadataAwareIndexChunk
+from aethersearch.indexing.models import IndexingBatchAdapter
+from aethersearch.indexing.models import UpdatableChunkData
+from aethersearch.indexing.vector_db_insertion import write_chunks_to_vector_db_with_backoff
+from aethersearch.llm.factory import get_default_llm_with_vision
+from aethersearch.llm.factory import get_llm_for_contextual_rag
+from aethersearch.llm.interfaces import LLM
+from aethersearch.llm.models import UserMessage
+from aethersearch.llm.multi_llm import LLMRateLimitError
+from aethersearch.llm.utils import llm_response_to_string
+from aethersearch.llm.utils import MAX_CONTEXT_TOKENS
+from aethersearch.natural_language_processing.utils import BaseTokenizer
+from aethersearch.natural_language_processing.utils import get_tokenizer
+from aethersearch.natural_language_processing.utils import tokenizer_trim_middle
+from aethersearch.prompts.contextual_retrieval import CONTEXTUAL_RAG_PROMPT1
+from aethersearch.prompts.contextual_retrieval import CONTEXTUAL_RAG_PROMPT2
+from aethersearch.prompts.contextual_retrieval import DOCUMENT_SUMMARY_PROMPT
+from aethersearch.utils.batching import batch_generator
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.postgres_sanitization import sanitize_documents_for_postgres
+from aethersearch.utils.threadpool_concurrency import run_functions_tuples_in_parallel
+from aethersearch.utils.timing import log_function_time
 
 logger = setup_logger()
 
@@ -772,7 +772,7 @@ def add_chunk_summaries(
         response = llm.invoke(fallback_prompt, max_tokens=MAX_CONTEXT_TOKENS)
         doc_info = llm_response_to_string(response)
 
-    from onyx.llm.prompt_cache.processor import process_with_prompt_cache
+    from aethersearch.llm.prompt_cache.processor import process_with_prompt_cache
 
     context_prompt1 = CONTEXTUAL_RAG_PROMPT1.format(document=doc_info)
 

@@ -5,31 +5,31 @@ from fastapi import Depends
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from onyx.auth.oauth_token_manager import OAuthTokenManager
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import current_curator_or_admin_user
-from onyx.configs.app_configs import WEB_DOMAIN
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import OAuthConfig
-from onyx.db.models import User
-from onyx.db.oauth_config import create_oauth_config
-from onyx.db.oauth_config import delete_oauth_config
-from onyx.db.oauth_config import delete_user_oauth_token
-from onyx.db.oauth_config import get_oauth_config
-from onyx.db.oauth_config import get_oauth_configs
-from onyx.db.oauth_config import get_tools_by_oauth_config
-from onyx.db.oauth_config import update_oauth_config
-from onyx.db.oauth_config import upsert_user_oauth_token
-from onyx.federated_connectors.oauth_utils import generate_oauth_state
-from onyx.federated_connectors.oauth_utils import verify_oauth_state
-from onyx.server.features.oauth_config.models import OAuthCallbackResponse
-from onyx.server.features.oauth_config.models import OAuthConfigCreate
-from onyx.server.features.oauth_config.models import OAuthConfigSnapshot
-from onyx.server.features.oauth_config.models import OAuthConfigUpdate
-from onyx.server.features.oauth_config.models import OAuthInitiateRequest
-from onyx.server.features.oauth_config.models import OAuthInitiateResponse
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.oauth_token_manager import OAuthTokenManager
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import current_curator_or_admin_user
+from aethersearch.configs.app_configs import WEB_DOMAIN
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import OAuthConfig
+from aethersearch.db.models import User
+from aethersearch.db.oauth_config import create_oauth_config
+from aethersearch.db.oauth_config import delete_oauth_config
+from aethersearch.db.oauth_config import delete_user_oauth_token
+from aethersearch.db.oauth_config import get_oauth_config
+from aethersearch.db.oauth_config import get_oauth_configs
+from aethersearch.db.oauth_config import get_tools_by_oauth_config
+from aethersearch.db.oauth_config import update_oauth_config
+from aethersearch.db.oauth_config import upsert_user_oauth_token
+from aethersearch.federated_connectors.oauth_utils import generate_oauth_state
+from aethersearch.federated_connectors.oauth_utils import verify_oauth_state
+from aethersearch.server.features.oauth_config.models import OAuthCallbackResponse
+from aethersearch.server.features.oauth_config.models import OAuthConfigCreate
+from aethersearch.server.features.oauth_config.models import OAuthConfigSnapshot
+from aethersearch.server.features.oauth_config.models import OAuthConfigUpdate
+from aethersearch.server.features.oauth_config.models import OAuthInitiateRequest
+from aethersearch.server.features.oauth_config.models import OAuthInitiateResponse
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

@@ -7,7 +7,7 @@ from unittest.mock import patch
 import httpx
 import pytest
 
-from ee.onyx.server.license.models import LicensePayload
+from ee.aethersearch.server.license.models import LicensePayload
 
 from .conftest import make_license_payload
 from .conftest import make_mock_http_client
@@ -18,14 +18,14 @@ class TestProxySeatUpdate:
     """Tests for proxy_seat_update endpoint."""
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.tenants.proxy.forward_to_control_plane")
+    @patch("ee.aethersearch.server.tenants.proxy.forward_to_control_plane")
     async def test_proxies_seat_update(
         self,
         mock_forward: AsyncMock,
     ) -> None:
         """Should forward seat update request to control plane."""
-        from ee.onyx.server.billing.models import SeatUpdateRequest
-        from ee.onyx.server.tenants.proxy import proxy_seat_update
+        from ee.aethersearch.server.billing.models import SeatUpdateRequest
+        from ee.aethersearch.server.tenants.proxy import proxy_seat_update
 
         mock_forward.return_value = {
             "success": True,
@@ -60,8 +60,8 @@ class TestProxySeatUpdate:
         """Should reject license without tenant_id."""
         from fastapi import HTTPException
 
-        from ee.onyx.server.billing.models import SeatUpdateRequest
-        from ee.onyx.server.tenants.proxy import proxy_seat_update
+        from ee.aethersearch.server.billing.models import SeatUpdateRequest
+        from ee.aethersearch.server.tenants.proxy import proxy_seat_update
 
         # Create a license payload without tenant_id by using a mock
         license_payload = MagicMock(spec=LicensePayload)
@@ -83,14 +83,14 @@ class TestForwardToControlPlane:
     """Tests for forward_to_control_plane helper."""
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.tenants.proxy.generate_data_plane_token")
-    @patch("ee.onyx.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL", "https://cp.test")
+    @patch("ee.aethersearch.server.tenants.proxy.generate_data_plane_token")
+    @patch("ee.aethersearch.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL", "https://cp.test")
     async def test_forwards_post_request(
         self,
         mock_token: MagicMock,
     ) -> None:
         """Should forward POST request with JWT auth."""
-        from ee.onyx.server.tenants.proxy import forward_to_control_plane
+        from ee.aethersearch.server.tenants.proxy import forward_to_control_plane
 
         mock_token.return_value = "jwt_token"
         mock_response = make_mock_response({"result": "success"})
@@ -106,14 +106,14 @@ class TestForwardToControlPlane:
         assert result == {"result": "success"}
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.tenants.proxy.generate_data_plane_token")
-    @patch("ee.onyx.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL", "https://cp.test")
+    @patch("ee.aethersearch.server.tenants.proxy.generate_data_plane_token")
+    @patch("ee.aethersearch.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL", "https://cp.test")
     async def test_forwards_get_request(
         self,
         mock_token: MagicMock,
     ) -> None:
         """Should forward GET request with params."""
-        from ee.onyx.server.tenants.proxy import forward_to_control_plane
+        from ee.aethersearch.server.tenants.proxy import forward_to_control_plane
 
         mock_token.return_value = "jwt_token"
         mock_response = make_mock_response({"data": "test"})
@@ -129,8 +129,8 @@ class TestForwardToControlPlane:
         assert result == {"data": "test"}
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.tenants.proxy.generate_data_plane_token")
-    @patch("ee.onyx.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL", "https://cp.test")
+    @patch("ee.aethersearch.server.tenants.proxy.generate_data_plane_token")
+    @patch("ee.aethersearch.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL", "https://cp.test")
     async def test_raises_on_http_error(
         self,
         mock_token: MagicMock,
@@ -138,7 +138,7 @@ class TestForwardToControlPlane:
         """Should raise HTTPException on HTTP error."""
         from fastapi import HTTPException
 
-        from ee.onyx.server.tenants.proxy import forward_to_control_plane
+        from ee.aethersearch.server.tenants.proxy import forward_to_control_plane
 
         mock_token.return_value = "jwt_token"
         mock_response = make_mock_response({"detail": "Bad request"})
@@ -155,8 +155,8 @@ class TestForwardToControlPlane:
         assert exc_info.value.status_code == 400
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.tenants.proxy.generate_data_plane_token")
-    @patch("ee.onyx.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL", "https://cp.test")
+    @patch("ee.aethersearch.server.tenants.proxy.generate_data_plane_token")
+    @patch("ee.aethersearch.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL", "https://cp.test")
     async def test_raises_on_connection_error(
         self,
         mock_token: MagicMock,
@@ -164,7 +164,7 @@ class TestForwardToControlPlane:
         """Should raise HTTPException on connection error."""
         from fastapi import HTTPException
 
-        from ee.onyx.server.tenants.proxy import forward_to_control_plane
+        from ee.aethersearch.server.tenants.proxy import forward_to_control_plane
 
         mock_token.return_value = "jwt_token"
         error = httpx.RequestError("Connection failed")
@@ -182,16 +182,16 @@ class TestVerifyLicenseAuth:
     """Tests for verify_license_auth helper."""
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.tenants.proxy.LICENSE_ENFORCEMENT_ENABLED", True)
-    @patch("ee.onyx.server.tenants.proxy.verify_license_signature")
-    @patch("ee.onyx.server.tenants.proxy.is_license_valid")
+    @patch("ee.aethersearch.server.tenants.proxy.LICENSE_ENFORCEMENT_ENABLED", True)
+    @patch("ee.aethersearch.server.tenants.proxy.verify_license_signature")
+    @patch("ee.aethersearch.server.tenants.proxy.is_license_valid")
     async def test_valid_license(
         self,
         mock_is_valid: MagicMock,
         mock_verify: MagicMock,
     ) -> None:
         """Should return payload for valid license."""
-        from ee.onyx.server.tenants.proxy import verify_license_auth
+        from ee.aethersearch.server.tenants.proxy import verify_license_auth
 
         mock_payload = make_license_payload()
         mock_verify.return_value = mock_payload
@@ -202,8 +202,8 @@ class TestVerifyLicenseAuth:
         assert result == mock_payload
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.tenants.proxy.LICENSE_ENFORCEMENT_ENABLED", True)
-    @patch("ee.onyx.server.tenants.proxy.verify_license_signature")
+    @patch("ee.aethersearch.server.tenants.proxy.LICENSE_ENFORCEMENT_ENABLED", True)
+    @patch("ee.aethersearch.server.tenants.proxy.verify_license_signature")
     async def test_invalid_signature(
         self,
         mock_verify: MagicMock,
@@ -211,7 +211,7 @@ class TestVerifyLicenseAuth:
         """Should reject invalid license signature."""
         from fastapi import HTTPException
 
-        from ee.onyx.server.tenants.proxy import verify_license_auth
+        from ee.aethersearch.server.tenants.proxy import verify_license_auth
 
         mock_verify.side_effect = ValueError("Invalid signature")
 
@@ -222,9 +222,9 @@ class TestVerifyLicenseAuth:
         assert "Invalid license" in exc_info.value.detail
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.tenants.proxy.LICENSE_ENFORCEMENT_ENABLED", True)
-    @patch("ee.onyx.server.tenants.proxy.verify_license_signature")
-    @patch("ee.onyx.server.tenants.proxy.is_license_valid")
+    @patch("ee.aethersearch.server.tenants.proxy.LICENSE_ENFORCEMENT_ENABLED", True)
+    @patch("ee.aethersearch.server.tenants.proxy.verify_license_signature")
+    @patch("ee.aethersearch.server.tenants.proxy.is_license_valid")
     async def test_expired_license_rejected(
         self,
         mock_is_valid: MagicMock,
@@ -233,7 +233,7 @@ class TestVerifyLicenseAuth:
         """Should reject expired license when allow_expired=False."""
         from fastapi import HTTPException
 
-        from ee.onyx.server.tenants.proxy import verify_license_auth
+        from ee.aethersearch.server.tenants.proxy import verify_license_auth
 
         mock_payload = make_license_payload(expired=True)
         mock_verify.return_value = mock_payload
@@ -246,16 +246,16 @@ class TestVerifyLicenseAuth:
         assert "expired" in exc_info.value.detail
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.tenants.proxy.LICENSE_ENFORCEMENT_ENABLED", True)
-    @patch("ee.onyx.server.tenants.proxy.verify_license_signature")
-    @patch("ee.onyx.server.tenants.proxy.is_license_valid")
+    @patch("ee.aethersearch.server.tenants.proxy.LICENSE_ENFORCEMENT_ENABLED", True)
+    @patch("ee.aethersearch.server.tenants.proxy.verify_license_signature")
+    @patch("ee.aethersearch.server.tenants.proxy.is_license_valid")
     async def test_expired_license_allowed(
         self,
         mock_is_valid: MagicMock,
         mock_verify: MagicMock,
     ) -> None:
         """Should accept expired license when allow_expired=True."""
-        from ee.onyx.server.tenants.proxy import verify_license_auth
+        from ee.aethersearch.server.tenants.proxy import verify_license_auth
 
         mock_payload = make_license_payload(expired=True)
         mock_verify.return_value = mock_payload

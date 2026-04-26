@@ -6,9 +6,9 @@ These tests hit actual API endpoints via HTTP requests.
 import pytest
 import requests
 
-from onyx.db.discord_bot import get_discord_service_api_key
-from onyx.db.discord_bot import get_or_create_discord_service_api_key
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.discord_bot import get_discord_service_api_key
+from aethersearch.db.discord_bot import get_or_create_discord_service_api_key
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
 from tests.integration.common_utils.managers.discord_bot import DiscordBotManager
 from tests.integration.common_utils.managers.user import UserManager
 from tests.integration.common_utils.test_models import DATestUser

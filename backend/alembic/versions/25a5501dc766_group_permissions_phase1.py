@@ -10,9 +10,9 @@ from alembic import op
 import fastapi_users_db_sqlalchemy
 import sqlalchemy as sa
 
-from onyx.db.enums import AccountType
-from onyx.db.enums import GrantSource
-from onyx.db.enums import Permission
+from aethersearch.db.enums import AccountType
+from aethersearch.db.enums import GrantSource
+from aethersearch.db.enums import Permission
 
 
 # revision identifiers, used by Alembic.

@@ -7,23 +7,23 @@ import httpx
 from fastmcp.server.auth.auth import AccessToken
 from pydantic import BaseModel
 
-from onyx.chat.models import ChatFullResponse
-from onyx.configs.constants import DocumentSource
-from onyx.context.search.models import BaseFilters
-from onyx.context.search.models import SearchDoc
-from onyx.mcp_server.api import mcp_server
-from onyx.mcp_server.utils import get_http_client
-from onyx.mcp_server.utils import get_indexed_sources
-from onyx.mcp_server.utils import require_access_token
-from onyx.server.features.web_search.models import OpenUrlsToolRequest
-from onyx.server.features.web_search.models import OpenUrlsToolResponse
-from onyx.server.features.web_search.models import WebSearchToolRequest
-from onyx.server.features.web_search.models import WebSearchToolResponse
-from onyx.server.query_and_chat.models import ChatSessionCreationRequest
-from onyx.server.query_and_chat.models import SendMessageRequest
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import build_api_server_url_for_http_requests
-from onyx.utils.variable_functionality import global_version
+from aethersearch.chat.models import ChatFullResponse
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.context.search.models import BaseFilters
+from aethersearch.context.search.models import SearchDoc
+from aethersearch.mcp_server.api import mcp_server
+from aethersearch.mcp_server.utils import get_http_client
+from aethersearch.mcp_server.utils import get_indexed_sources
+from aethersearch.mcp_server.utils import require_access_token
+from aethersearch.server.features.web_search.models import OpenUrlsToolRequest
+from aethersearch.server.features.web_search.models import OpenUrlsToolResponse
+from aethersearch.server.features.web_search.models import WebSearchToolRequest
+from aethersearch.server.features.web_search.models import WebSearchToolResponse
+from aethersearch.server.query_and_chat.models import ChatSessionCreationRequest
+from aethersearch.server.query_and_chat.models import SendMessageRequest
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import build_api_server_url_for_http_requests
+from aethersearch.utils.variable_functionality import global_version
 
 logger = setup_logger()
 
@@ -39,7 +39,7 @@ async def _post_model(
     access_token: AccessToken,
     timeout: float | None = None,
 ) -> httpx.Response:
-    """POST a Pydantic model as JSON to the Onyx backend."""
+    """POST a Pydantic model as JSON to the AetherSearch backend."""
     return await get_http_client().post(
         url,
         content=body.model_dump_json(exclude_unset=True),
@@ -68,7 +68,7 @@ def _project_doc(doc: SearchDoc, content: str | None) -> dict[str, Any]:
 def _extract_error_detail(response: httpx.Response) -> str:
     """Extract a human-readable error message from a failed backend response.
 
-    The backend returns OnyxError responses as
+    The backend returns AetherSearchError responses as
     ``{"error_code": "...", "detail": "..."}``.
     """
     try:
@@ -89,7 +89,7 @@ async def search_indexed_documents(
     limit: int = 10,
 ) -> dict[str, Any]:
     """
-    Search the user's knowledge base indexed in Onyx.
+    Search the user's knowledge base indexed in AetherSearch.
     Use this tool for information that is not public knowledge and specific to the user,
     their team, their work, or their organization/company.
 
@@ -120,7 +120,7 @@ async def search_indexed_documents(
     ```
     """
     logger.info(
-        f"Onyx MCP Server: document search: query='{query}', sources={source_types}, "
+        f"AetherSearch MCP Server: document search: query='{query}', sources={source_types}, "
         f"document_sets={document_set_names}, limit={limit}"
     )
 
@@ -137,7 +137,7 @@ async def search_indexed_documents(
             time_cutoff_dt = datetime.fromisoformat(time_cutoff.replace("Z", "+00:00"))
         except ValueError as e:
             logger.warning(
-                f"Onyx MCP Server: Invalid time_cutoff format '{time_cutoff}': {e}. Continuing without time filter."
+                f"AetherSearch MCP Server: Invalid time_cutoff format '{time_cutoff}': {e}. Continuing without time filter."
             )
             # Continue with no time_cutoff instead of returning an error
             time_cutoff_dt = None
@@ -150,7 +150,7 @@ async def search_indexed_documents(
     except Exception as e:
         # Error fetching sources (network error, API failure, etc.)
         logger.error(
-            "Onyx MCP Server: Error checking indexed sources: %s",
+            "AetherSearch MCP Server: Error checking indexed sources: %s",
             e,
             exc_info=True,
         )
@@ -162,14 +162,14 @@ async def search_indexed_documents(
         }
 
     if not sources:
-        logger.info("Onyx MCP Server: No indexed sources available for tenant")
+        logger.info("AetherSearch MCP Server: No indexed sources available for tenant")
         return {
             "documents": [],
             "total_results": 0,
             "query": query,
             "message": (
                 "No document sources are indexed yet. Add connectors or upload data "
-                "through Onyx before calling onyx_search_documents."
+                "through AetherSearch before calling aethersearch_search_documents."
             ),
         }
 
@@ -183,7 +183,7 @@ async def search_indexed_documents(
                 source_type_enums.append(DocumentSource(src.lower()))
             except ValueError:
                 logger.warning(
-                    f"Onyx MCP Server: Invalid source type '{src}' - will be ignored by server"
+                    f"AetherSearch MCP Server: Invalid source type '{src}' - will be ignored by server"
                 )
 
     filters: BaseFilters | None = None
@@ -201,7 +201,7 @@ async def search_indexed_documents(
     if is_ee:
         # EE: use the dedicated search endpoint (no LLM invocation).
         # Lazy import so CE deployments that strip ee/ never load this module.
-        from ee.onyx.server.query_and_chat.models import SendSearchQueryRequest
+        from ee.aethersearch.server.query_and_chat.models import SendSearchQueryRequest
 
         request = SendSearchQueryRequest(
             search_query=query,
@@ -238,7 +238,7 @@ async def search_indexed_documents(
             }
 
         if is_ee:
-            from ee.onyx.server.query_and_chat.models import SearchFullResponse
+            from ee.aethersearch.server.query_and_chat.models import SearchFullResponse
 
             ee_payload = SearchFullResponse.model_validate_json(response.content)
             if ee_payload.error:
@@ -270,7 +270,7 @@ async def search_indexed_documents(
         documents = documents[:limit]
 
         logger.info(
-            f"Onyx MCP Server: Internal search returned {len(documents)} results"
+            f"AetherSearch MCP Server: Internal search returned {len(documents)} results"
         )
         return {
             "documents": documents,
@@ -278,7 +278,7 @@ async def search_indexed_documents(
             "query": query,
         }
     except Exception as e:
-        logger.error(f"Onyx MCP Server: Document search error: {e}", exc_info=True)
+        logger.error(f"AetherSearch MCP Server: Document search error: {e}", exc_info=True)
         return {
             "error": f"Document search failed: {str(e)}",
             "documents": [],
@@ -306,7 +306,7 @@ async def search_web(
     }
     ```
     """
-    logger.info(f"Onyx MCP Server: Web search: query='{query}', limit={limit}")
+    logger.info(f"AetherSearch MCP Server: Web search: query='{query}', limit={limit}")
 
     access_token = require_access_token()
 
@@ -328,7 +328,7 @@ async def search_web(
             "query": query,
         }
     except Exception as e:
-        logger.error(f"Onyx MCP Server: Web search error: {e}", exc_info=True)
+        logger.error(f"AetherSearch MCP Server: Web search error: {e}", exc_info=True)
         return {
             "error": f"Web search failed: {str(e)}",
             "results": [],
@@ -356,7 +356,7 @@ async def open_urls(
     }
     ```
     """
-    logger.info(f"Onyx MCP Server: Open URL: fetching {len(urls)} URLs")
+    logger.info(f"AetherSearch MCP Server: Open URL: fetching {len(urls)} URLs")
 
     access_token = require_access_token()
 
@@ -376,7 +376,7 @@ async def open_urls(
             "results": [result.model_dump(mode="json") for result in payload.results],
         }
     except Exception as e:
-        logger.error(f"Onyx MCP Server: URL fetch error: {e}", exc_info=True)
+        logger.error(f"AetherSearch MCP Server: URL fetch error: {e}", exc_info=True)
         return {
             "error": f"URL fetch failed: {str(e)}",
             "results": [],

@@ -86,12 +86,12 @@ jobs:
         run: |
           echo "=== Adding Helm repositories ==="
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-          helm repo add vespa https://onyx-dot-app.github.io/vespa-helm-charts
+          helm repo add vespa https://aethersearch-dot-app.github.io/vespa-helm-charts
           helm repo add opensearch https://opensearch-project.github.io/helm-charts
           helm repo add cloudnative-pg https://cloudnative-pg.github.io/charts
           helm repo add ot-container-kit https://ot-container-kit.github.io/helm-charts
           helm repo add minio https://charts.min.io/
-          helm repo add code-interpreter https://onyx-dot-app.github.io/python-sandbox/
+          helm repo add code-interpreter https://aethersearch-dot-app.github.io/python-sandbox/
           helm repo update
 
       - name: Install Redis operator
@@ -125,13 +125,13 @@ jobs:
           done
 
           echo "=== Images loaded into Kind cluster ==="
-          docker exec "$KIND_CLUSTER"-control-plane crictl images | grep -E "(cloudnative-pg|redis|onyx)" || echo "Some images may still be loading..."
+          docker exec "$KIND_CLUSTER"-control-plane crictl images | grep -E "(cloudnative-pg|redis|aethersearch)" || echo "Some images may still be loading..."
 
       - name: Validate chart dependencies
         if: steps.list-changed.outputs.changed == 'true'
         run: |
           echo "=== Validating chart dependencies ==="
-          cd deployment/helm/charts/onyx
+          cd deployment/helm/charts/aethersearch
           helm dependency update
           helm lint . --set auth.userauth.values.user_auth_secret=placeholder
 

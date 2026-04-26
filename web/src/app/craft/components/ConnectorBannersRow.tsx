@@ -14,7 +14,7 @@ import { SvgChevronRight, SvgCalendar } from "@opal/icons";
 import { useBuildConnectors } from "@/app/craft/hooks/useBuildConnectors";
 import {
   CRAFT_CONFIGURE_PATH,
-  ONYX_CRAFT_CALENDAR_URL,
+  AETHERSEARCH_CRAFT_CALENDAR_URL,
 } from "@/app/craft/v1/constants";
 
 interface ConnectorBannersRowProps {
@@ -52,7 +52,7 @@ export default function ConnectorBannersRow({
   };
 
   const handleHelpClick = () => {
-    window.open(ONYX_CRAFT_CALENDAR_URL, "_blank");
+    window.open(AETHERSEARCH_CRAFT_CALENDAR_URL, "_blank");
   };
 
   return (

@@ -644,7 +644,7 @@ export default function ChatPreferencesPage() {
               withLabel
             >
               <InputTextArea
-                placeholder="Describe your team and how Onyx should behave."
+                placeholder="Describe your team and how AetherSearch should behave."
                 rows={4}
                 maxRows={10}
                 autoResize
@@ -916,7 +916,7 @@ export default function ChatPreferencesPage() {
                   <Section>
                     <InputHorizontal
                       title="Keep Chat History"
-                      description="Specify how long Onyx should retain chats in your organization."
+                      description="Specify how long AetherSearch should retain chats in your organization."
                       withLabel
                     >
                       <InputSelect

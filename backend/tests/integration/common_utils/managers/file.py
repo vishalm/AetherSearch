@@ -7,8 +7,8 @@ from typing import Tuple
 
 import requests
 
-from onyx.file_store.models import FileDescriptor
-from onyx.server.documents.models import FileUploadResponse
+from aethersearch.file_store.models import FileDescriptor
+from aethersearch.server.documents.models import FileUploadResponse
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.test_models import DATestUser
 

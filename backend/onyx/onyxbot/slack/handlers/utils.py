@@ -1,6 +1,6 @@
 from slack_sdk import WebClient
 
-from onyx.onyxbot.slack.utils import respond_in_thread_or_channel
+from aethersearch.aethersearchbot.slack.utils import respond_in_thread_or_channel
 
 
 def send_team_member_message(

@@ -2,56 +2,56 @@ import time
 
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import DISABLE_INDEX_UPDATE_ON_SWAP
-from onyx.configs.app_configs import DISABLE_VECTOR_DB
-from onyx.configs.app_configs import ENABLE_OPENSEARCH_INDEXING_FOR_ONYX
-from onyx.configs.app_configs import INTEGRATION_TESTS_MODE
-from onyx.configs.app_configs import MANAGED_VESPA
-from onyx.configs.app_configs import ONYX_DISABLE_VESPA
-from onyx.configs.app_configs import VESPA_NUM_ATTEMPTS_ON_STARTUP
-from onyx.configs.constants import KV_REINDEX_KEY
-from onyx.configs.embedding_configs import SUPPORTED_EMBEDDING_MODELS
-from onyx.configs.embedding_configs import SupportedEmbeddingModel
-from onyx.configs.model_configs import GEN_AI_API_KEY
-from onyx.configs.model_configs import GEN_AI_MODEL_VERSION
-from onyx.context.search.models import SavedSearchSettings
-from onyx.db.connector import check_connectors_exist
-from onyx.db.connector import create_initial_default_connector
-from onyx.db.connector_credential_pair import associate_default_cc_pair
-from onyx.db.connector_credential_pair import get_connector_credential_pairs
-from onyx.db.connector_credential_pair import resync_cc_pair
-from onyx.db.credentials import create_initial_public_credential
-from onyx.db.document import check_docs_exist
-from onyx.db.enums import EmbeddingPrecision
-from onyx.db.index_attempt import cancel_indexing_attempts_past_model
-from onyx.db.index_attempt import expire_index_attempts
-from onyx.db.llm import fetch_default_llm_model
-from onyx.db.llm import fetch_existing_llm_provider
-from onyx.db.llm import update_default_provider
-from onyx.db.llm import upsert_llm_provider
-from onyx.db.search_settings import get_active_search_settings
-from onyx.db.search_settings import get_current_search_settings
-from onyx.db.search_settings import update_current_search_settings
-from onyx.db.swap_index import check_and_perform_index_swap
-from onyx.document_index.factory import get_all_document_indices
-from onyx.document_index.interfaces import DocumentIndex
-from onyx.document_index.opensearch.client import OpenSearchClient
-from onyx.document_index.opensearch.client import wait_for_opensearch_with_timeout
-from onyx.document_index.opensearch.opensearch_document_index import set_cluster_state
-from onyx.document_index.vespa.index import VespaIndex
-from onyx.indexing.models import IndexingSetting
-from onyx.key_value_store.factory import get_kv_store
-from onyx.key_value_store.interface import KvKeyNotFoundError
-from onyx.llm.constants import LlmProviderNames
-from onyx.llm.well_known_providers.llm_provider_options import get_openai_model_names
-from onyx.natural_language_processing.search_nlp_models import EmbeddingModel
-from onyx.natural_language_processing.search_nlp_models import warm_up_bi_encoder
-from onyx.server.manage.llm.models import LLMProviderUpsertRequest
-from onyx.server.manage.llm.models import ModelConfigurationUpsertRequest
-from onyx.server.settings.store import load_settings
-from onyx.server.settings.store import store_settings
-from onyx.utils.gpu_utils import gpu_status_request
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import DISABLE_INDEX_UPDATE_ON_SWAP
+from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
+from aethersearch.configs.app_configs import ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH
+from aethersearch.configs.app_configs import INTEGRATION_TESTS_MODE
+from aethersearch.configs.app_configs import MANAGED_VESPA
+from aethersearch.configs.app_configs import AETHERSEARCH_DISABLE_VESPA
+from aethersearch.configs.app_configs import VESPA_NUM_ATTEMPTS_ON_STARTUP
+from aethersearch.configs.constants import KV_REINDEX_KEY
+from aethersearch.configs.embedding_configs import SUPPORTED_EMBEDDING_MODELS
+from aethersearch.configs.embedding_configs import SupportedEmbeddingModel
+from aethersearch.configs.model_configs import GEN_AI_API_KEY
+from aethersearch.configs.model_configs import GEN_AI_MODEL_VERSION
+from aethersearch.context.search.models import SavedSearchSettings
+from aethersearch.db.connector import check_connectors_exist
+from aethersearch.db.connector import create_initial_default_connector
+from aethersearch.db.connector_credential_pair import associate_default_cc_pair
+from aethersearch.db.connector_credential_pair import get_connector_credential_pairs
+from aethersearch.db.connector_credential_pair import resync_cc_pair
+from aethersearch.db.credentials import create_initial_public_credential
+from aethersearch.db.document import check_docs_exist
+from aethersearch.db.enums import EmbeddingPrecision
+from aethersearch.db.index_attempt import cancel_indexing_attempts_past_model
+from aethersearch.db.index_attempt import expire_index_attempts
+from aethersearch.db.llm import fetch_default_llm_model
+from aethersearch.db.llm import fetch_existing_llm_provider
+from aethersearch.db.llm import update_default_provider
+from aethersearch.db.llm import upsert_llm_provider
+from aethersearch.db.search_settings import get_active_search_settings
+from aethersearch.db.search_settings import get_current_search_settings
+from aethersearch.db.search_settings import update_current_search_settings
+from aethersearch.db.swap_index import check_and_perform_index_swap
+from aethersearch.document_index.factory import get_all_document_indices
+from aethersearch.document_index.interfaces import DocumentIndex
+from aethersearch.document_index.opensearch.client import OpenSearchClient
+from aethersearch.document_index.opensearch.client import wait_for_opensearch_with_timeout
+from aethersearch.document_index.opensearch.opensearch_document_index import set_cluster_state
+from aethersearch.document_index.vespa.index import VespaIndex
+from aethersearch.indexing.models import IndexingSetting
+from aethersearch.key_value_store.factory import get_kv_store
+from aethersearch.key_value_store.interface import KvKeyNotFoundError
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.llm.well_known_providers.llm_provider_options import get_openai_model_names
+from aethersearch.natural_language_processing.search_nlp_models import EmbeddingModel
+from aethersearch.natural_language_processing.search_nlp_models import warm_up_bi_encoder
+from aethersearch.server.manage.llm.models import LLMProviderUpsertRequest
+from aethersearch.server.manage.llm.models import ModelConfigurationUpsertRequest
+from aethersearch.server.settings.store import load_settings
+from aethersearch.server.settings.store import store_settings
+from aethersearch.utils.gpu_utils import gpu_status_request
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import ALT_INDEX_SUFFIX
 from shared_configs.configs import MODEL_SERVER_HOST
 from shared_configs.configs import MODEL_SERVER_PORT
@@ -60,13 +60,13 @@ from shared_configs.configs import MULTI_TENANT
 logger = setup_logger()
 
 
-def setup_onyx(
+def setup_aethersearch(
     db_session: Session,
     tenant_id: str,  # noqa: ARG001
     cohere_enabled: bool = False,  # noqa: ARG001
 ) -> None:
     """
-    Setup Onyx for a particular tenant. In the Single Tenant case, it will set it up for the default schema
+    Setup AetherSearch for a particular tenant. In the Single Tenant case, it will set it up for the default schema
     on server startup. In the MT case, it will be called when the tenant is created.
 
     The Tenant Service calls the tenants/create endpoint which runs this.
@@ -317,12 +317,12 @@ def update_default_multipass_indexing(db_session: Session) -> None:
         )
 
 
-def setup_multitenant_onyx() -> None:
+def setup_multitenant_aethersearch() -> None:
     if DISABLE_VECTOR_DB:
         logger.notice("DISABLE_VECTOR_DB is set — skipping multitenant Vespa setup.")
         return
 
-    if ENABLE_OPENSEARCH_INDEXING_FOR_ONYX:
+    if ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH:
         opensearch_client = OpenSearchClient()
         if not wait_for_opensearch_with_timeout(client=opensearch_client):
             raise RuntimeError("Failed to connect to OpenSearch.")
@@ -330,7 +330,7 @@ def setup_multitenant_onyx() -> None:
 
     # For Managed Vespa, the schema is sent over via the Vespa Console manually.
     # NOTE: Pretty sure this code is never hit in any production environment.
-    if not MANAGED_VESPA and not ONYX_DISABLE_VESPA:
+    if not MANAGED_VESPA and not AETHERSEARCH_DISABLE_VESPA:
         setup_vespa_multitenant(SUPPORTED_EMBEDDING_MODELS)
 
 

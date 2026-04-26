@@ -7,16 +7,16 @@ from redis import Redis
 from redis.lock import Lock as RedisLock
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import DB_YIELD_PER_DEFAULT
-from onyx.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import OnyxRedisConstants
-from onyx.db.document import construct_document_id_select_by_needs_sync
-from onyx.db.document import count_documents_by_needs_sync
-from onyx.redis.redis_tenant_work_gating import maybe_mark_tenant_active
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import DB_YIELD_PER_DEFAULT
+from aethersearch.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import AetherSearchRedisConstants
+from aethersearch.db.document import construct_document_id_select_by_needs_sync
+from aethersearch.db.document import count_documents_by_needs_sync
+from aethersearch.redis.redis_tenant_work_gating import maybe_mark_tenant_active
+from aethersearch.utils.logger import setup_logger
 
 # Redis keys for document sync tracking
 DOCUMENT_SYNC_PREFIX = "documentsync"
@@ -49,12 +49,12 @@ def get_document_sync_remaining(r: Redis) -> int:
 def set_document_sync_fence(r: Redis, payload: int | None) -> None:
     """Set up the fence and register with active fences."""
     if payload is None:
-        r.srem(OnyxRedisConstants.ACTIVE_FENCES, DOCUMENT_SYNC_FENCE_KEY)
+        r.srem(AetherSearchRedisConstants.ACTIVE_FENCES, DOCUMENT_SYNC_FENCE_KEY)
         r.delete(DOCUMENT_SYNC_FENCE_KEY)
         return
 
     r.set(DOCUMENT_SYNC_FENCE_KEY, payload, ex=FENCE_TTL)
-    r.sadd(OnyxRedisConstants.ACTIVE_FENCES, DOCUMENT_SYNC_FENCE_KEY)
+    r.sadd(AetherSearchRedisConstants.ACTIVE_FENCES, DOCUMENT_SYNC_FENCE_KEY)
 
 
 def delete_document_sync_taskset(r: Redis) -> None:
@@ -64,7 +64,7 @@ def delete_document_sync_taskset(r: Redis) -> None:
 
 def reset_document_sync(r: Redis) -> None:
     """Reset all document sync tracking data."""
-    r.srem(OnyxRedisConstants.ACTIVE_FENCES, DOCUMENT_SYNC_FENCE_KEY)
+    r.srem(AetherSearchRedisConstants.ACTIVE_FENCES, DOCUMENT_SYNC_FENCE_KEY)
     r.delete(DOCUMENT_SYNC_TASKSET_KEY)
     r.delete(DOCUMENT_SYNC_FENCE_KEY)
 
@@ -117,11 +117,11 @@ def generate_document_sync_tasks(
 
         # Create the Celery task
         celery_app.send_task(
-            OnyxCeleryTask.VESPA_METADATA_SYNC_TASK,
+            AetherSearchCeleryTask.VESPA_METADATA_SYNC_TASK,
             kwargs=dict(document_id=doc_id, tenant_id=tenant_id),
-            queue=OnyxCeleryQueues.VESPA_METADATA_SYNC,
+            queue=AetherSearchCeleryQueues.VESPA_METADATA_SYNC,
             task_id=custom_task_id,
-            priority=OnyxCeleryPriority.MEDIUM,
+            priority=AetherSearchCeleryPriority.MEDIUM,
             ignore_result=True,
         )
 

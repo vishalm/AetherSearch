@@ -12,7 +12,7 @@ PDF_MIME_TYPE = "application/pdf"
 PLAIN_TEXT_MIME_TYPE = "text/plain"
 
 
-class OnyxMimeTypes:
+class AetherSearchMimeTypes:
     IMAGE_MIME_TYPES = {"image/jpg", "image/jpeg", "image/png", "image/webp"}
     CSV_MIME_TYPES = {"text/csv"}
     TABULAR_MIME_TYPES = CSV_MIME_TYPES | {SPREADSHEET_MIME_TYPE}
@@ -52,7 +52,7 @@ class OnyxMimeTypes:
     }
 
 
-class OnyxFileExtensions:
+class AetherSearchFileExtensions:
     SPREADSHEET_EXTENSIONS = {
         ".xlsx",
         ".xlsm",

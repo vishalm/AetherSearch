@@ -11,7 +11,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { transformLinkUri } from "@/lib/utils";
 import { SvgAlertCircle } from "@opal/icons";
-import { SvgOnyxLogo } from "@opal/logos";
+import { SvgAetherSearchLogo } from "@opal/logos";
 import type { IconProps } from "@opal/types";
 
 const ALL_USERS_INITIAL_POPUP_FLOW_COMPLETED =
@@ -60,24 +60,24 @@ export function AppPopup() {
   const logoDisplayStyle = enterpriseSettings?.logo_display_style;
 
   // Header icon rules:
-  // - If neither app name nor custom logo exists -> show Onyx icon
+  // - If neither app name nor custom logo exists -> show AetherSearch icon
   // - If logo display is "name_only" -> show alert icon
-  // - Otherwise -> show uploaded custom logo (fallback to Onyx icon)
+  // - Otherwise -> show uploaded custom logo (fallback to AetherSearch icon)
   const headerIcon =
     !hasApplicationName && !hasCustomLogo
-      ? (props: IconProps) => <SvgOnyxLogo size={24} {...props} />
+      ? (props: IconProps) => <SvgAetherSearchLogo size={24} {...props} />
       : logoDisplayStyle === "name_only"
         ? SvgAlertCircle
         : hasCustomLogo
           ? CustomLogoHeaderIcon
-          : (props: IconProps) => <SvgOnyxLogo size={24} {...props} />;
+          : (props: IconProps) => <SvgAetherSearchLogo size={24} {...props} />;
 
   return (
     <Modal open onOpenChange={() => {}}>
       <Modal.Content width="sm" height="lg">
         <Modal.Header
           icon={headerIcon}
-          title={popupTitle || "Welcome to Onyx!"}
+          title={popupTitle || "Welcome to AetherSearch!"}
         />
         <Modal.Body>
           <div className="overflow-y-auto text-left">

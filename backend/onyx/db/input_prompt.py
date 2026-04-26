@@ -8,12 +8,12 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import aliased
 from sqlalchemy.orm import Session
 
-from onyx.db.models import InputPrompt
-from onyx.db.models import InputPrompt__User
-from onyx.db.models import User
-from onyx.server.features.input_prompt.models import InputPromptSnapshot
-from onyx.server.manage.models import UserInfo
-from onyx.utils.logger import setup_logger
+from aethersearch.db.models import InputPrompt
+from aethersearch.db.models import InputPrompt__User
+from aethersearch.db.models import User
+from aethersearch.server.features.input_prompt.models import InputPromptSnapshot
+from aethersearch.server.manage.models import UserInfo
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

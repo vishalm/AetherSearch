@@ -1,6 +1,6 @@
-# Onyx Dev Container
+# AetherSearch Dev Container
 
-A containerized development environment for working on Onyx.
+A containerized development environment for working on AetherSearch.
 
 ## What's included
 
@@ -45,7 +45,7 @@ ods dev rebuild
 
 ## Image
 
-The devcontainer uses a prebuilt image published to `onyxdotapp/onyx-devcontainer`.
+The devcontainer uses a prebuilt image published to `aethersearchdotapp/aethersearch-devcontainer`.
 The tag is pinned in `devcontainer.json` — no local build is required.
 
 To build the image locally (e.g. while iterating on the Dockerfile):

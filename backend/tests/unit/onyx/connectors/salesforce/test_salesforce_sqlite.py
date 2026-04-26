@@ -12,27 +12,27 @@ from typing import cast
 
 import pytest
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
-from onyx.connectors.models import BasicExpertInfo
-from onyx.connectors.models import Document
-from onyx.connectors.models import ImageSection
-from onyx.connectors.models import TextSection
-from onyx.connectors.salesforce.doc_conversion import _extract_section
-from onyx.connectors.salesforce.doc_conversion import ID_PREFIX
-from onyx.connectors.salesforce.onyx_salesforce import OnyxSalesforce
-from onyx.connectors.salesforce.salesforce_calls import _bulk_retrieve_from_salesforce
-from onyx.connectors.salesforce.salesforce_calls import _make_time_filter_for_sf_type
-from onyx.connectors.salesforce.salesforce_calls import _make_time_filtered_query
-from onyx.connectors.salesforce.salesforce_calls import get_object_by_id_query
-from onyx.connectors.salesforce.sqlite_functions import OnyxSalesforceSQLite
-from onyx.connectors.salesforce.utils import ACCOUNT_OBJECT_TYPE
-from onyx.connectors.salesforce.utils import MODIFIED_FIELD
-from onyx.connectors.salesforce.utils import USER_OBJECT_TYPE
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import ImageSection
+from aethersearch.connectors.models import TextSection
+from aethersearch.connectors.salesforce.doc_conversion import _extract_section
+from aethersearch.connectors.salesforce.doc_conversion import ID_PREFIX
+from aethersearch.connectors.salesforce.aethersearch_salesforce import AetherSearchSalesforce
+from aethersearch.connectors.salesforce.salesforce_calls import _bulk_retrieve_from_salesforce
+from aethersearch.connectors.salesforce.salesforce_calls import _make_time_filter_for_sf_type
+from aethersearch.connectors.salesforce.salesforce_calls import _make_time_filtered_query
+from aethersearch.connectors.salesforce.salesforce_calls import get_object_by_id_query
+from aethersearch.connectors.salesforce.sqlite_functions import AetherSearchSalesforceSQLite
+from aethersearch.connectors.salesforce.utils import ACCOUNT_OBJECT_TYPE
+from aethersearch.connectors.salesforce.utils import MODIFIED_FIELD
+from aethersearch.connectors.salesforce.utils import USER_OBJECT_TYPE
+from aethersearch.utils.logger import setup_logger
 
-# from onyx.connectors.salesforce.onyx_salesforce_type import OnyxSalesforceType
-# from onyx.connectors.salesforce.salesforce_calls import get_children_of_sf_type
+# from aethersearch.connectors.salesforce.aethersearch_salesforce_type import AetherSearchSalesforceType
+# from aethersearch.connectors.salesforce.salesforce_calls import get_children_of_sf_type
 
 logger = setup_logger()
 
@@ -147,7 +147,7 @@ def _clear_sf_db(directory: str) -> None:
 
 
 def _create_csv_file_and_update_db(
-    sf_db: OnyxSalesforceSQLite,
+    sf_db: AetherSearchSalesforceSQLite,
     object_type: str,
     records: list[dict],
     filename: str = "test_data.csv",
@@ -182,7 +182,7 @@ def _create_csv_file_and_update_db(
         sf_db.update_from_csv(object_type, csv_path)
 
 
-def _create_csv_with_example_data(sf_db: OnyxSalesforceSQLite) -> None:
+def _create_csv_with_example_data(sf_db: AetherSearchSalesforceSQLite) -> None:
     """
     Creates CSV files with example data, organized by object type.
     """
@@ -375,7 +375,7 @@ def _create_csv_with_example_data(sf_db: OnyxSalesforceSQLite) -> None:
         _create_csv_file_and_update_db(sf_db, object_type, records)
 
 
-def _test_query(sf_db: OnyxSalesforceSQLite) -> None:
+def _test_query(sf_db: AetherSearchSalesforceSQLite) -> None:
     """
     Tests querying functionality by verifying:
     1. All expected Account IDs are found
@@ -458,7 +458,7 @@ def _test_query(sf_db: OnyxSalesforceSQLite) -> None:
     print("All query tests passed successfully!")
 
 
-def _test_upsert(sf_db: OnyxSalesforceSQLite) -> None:
+def _test_upsert(sf_db: AetherSearchSalesforceSQLite) -> None:
     """
     Tests upsert functionality by:
     1. Updating an existing account
@@ -504,7 +504,7 @@ def _test_upsert(sf_db: OnyxSalesforceSQLite) -> None:
     print("All upsert tests passed successfully!")
 
 
-def _test_relationships(sf_db: OnyxSalesforceSQLite) -> None:
+def _test_relationships(sf_db: AetherSearchSalesforceSQLite) -> None:
     """
     Tests relationship shelf updates and queries by:
     1. Creating test data with relationships
@@ -569,7 +569,7 @@ def _test_relationships(sf_db: OnyxSalesforceSQLite) -> None:
     print("All relationship tests passed successfully!")
 
 
-def _test_account_with_children(sf_db: OnyxSalesforceSQLite) -> None:
+def _test_account_with_children(sf_db: AetherSearchSalesforceSQLite) -> None:
     """
     Tests querying all accounts and retrieving their child objects.
     This test verifies that:
@@ -633,7 +633,7 @@ def _test_account_with_children(sf_db: OnyxSalesforceSQLite) -> None:
     print("All account with children tests passed successfully!")
 
 
-def _test_relationship_updates(sf_db: OnyxSalesforceSQLite) -> None:
+def _test_relationship_updates(sf_db: AetherSearchSalesforceSQLite) -> None:
     """
     Tests that relationships are properly updated when a child object's parent reference changes.
     This test verifies:
@@ -686,7 +686,7 @@ def _test_relationship_updates(sf_db: OnyxSalesforceSQLite) -> None:
     print("All relationship update tests passed successfully!")
 
 
-def _test_get_affected_parent_ids(sf_db: OnyxSalesforceSQLite) -> None:
+def _test_get_affected_parent_ids(sf_db: AetherSearchSalesforceSQLite) -> None:
     """
     Tests get_affected_parent_ids functionality by verifying:
     1. IDs that are directly in the parent_types list are included
@@ -790,7 +790,7 @@ def test_salesforce_sqlite() -> None:
         _clear_sf_db(directory)
 
         filename = os.path.join(directory, "salesforce_db.sqlite")
-        sf_db = OnyxSalesforceSQLite(filename)
+        sf_db = AetherSearchSalesforceSQLite(filename)
         sf_db.connect()
         sf_db.apply_schema()
 
@@ -820,14 +820,14 @@ def test_salesforce_bulk_retrieve() -> None:
     password = os.environ["SF_PASSWORD"]
     security_token = os.environ["SF_SECURITY_TOKEN"]
 
-    sf_client = OnyxSalesforce(
+    sf_client = AetherSearchSalesforce(
         username=username,
         password=password,
         security_token=security_token,
         domain=None,
     )
 
-    # onyx_sf_type = OnyxSalesforceType("Contact", sf_client)
+    # aethersearch_sf_type = AetherSearchSalesforceType("Contact", sf_client)
     sf_object_name = "Contact"
     queryable_fields = sf_client.get_queryable_fields_by_type(sf_object_name)
 
@@ -929,7 +929,7 @@ def test_normalize_record() -> None:
         for row in reader:
             assert len(row) == 64
 
-            normalized_record, parent_ids = OnyxSalesforceSQLite.normalize_record(row)
+            normalized_record, parent_ids = AetherSearchSalesforceSQLite.normalize_record(row)
             normalized_record_json_str = json.dumps(normalized_record)
             assert normalized_record_json_str == expected_str
             assert "005bm000002bBHtAAM" in parent_ids
@@ -981,14 +981,14 @@ def test_salesforce_connector_single() -> None:
     password = os.environ["SF_PASSWORD"]
     security_token = os.environ["SF_SECURITY_TOKEN"]
 
-    sf_client = OnyxSalesforce(
+    sf_client = AetherSearchSalesforce(
         username=username,
         password=password,
         security_token=security_token,
         domain=None,
     )
 
-    # onyx_parent_sf_type = OnyxSalesforceType(parent_type, sf_client)
+    # aethersearch_parent_sf_type = AetherSearchSalesforceType(parent_type, sf_client)
 
     child_types: set[str] = set()
     parent_to_child_types: dict[str, set[str]] = {}  # map from parent to child types
@@ -1009,7 +1009,7 @@ def test_salesforce_connector_single() -> None:
         logger.debug(f"Found {len(child_types)} child types for {parent_type_working}")
 
         for child_type, child_relationship in child_types_working.items():
-            # onyx_sf_type = OnyxSalesforceType(child_type, sf_client)
+            # aethersearch_sf_type = AetherSearchSalesforceType(child_type, sf_client)
 
             # map parent to child type
             if parent_type_working not in parent_to_child_types:
@@ -1051,7 +1051,7 @@ def test_salesforce_connector_single() -> None:
     parent_semantic_identifier = record.get("Name", "Unknown Object")
     parent_last_modified_by_id = record.get("LastModifiedById")
 
-    normalized_record, _ = OnyxSalesforceSQLite.normalize_record(record)
+    normalized_record, _ = AetherSearchSalesforceSQLite.normalize_record(record)
     parent_text_section = _extract_section(
         normalized_record, f"https://{sf_client.sf_instance}/{parent_id}"
     )

@@ -5,14 +5,14 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from onyx.llm.model_response import ModelResponse
-from onyx.llm.model_response import ModelResponseStream
-from onyx.llm.models import LanguageModelInput
-from onyx.llm.models import ReasoningEffort
-from onyx.llm.models import ToolChoiceOptions
-from onyx.llm.tracing_wrap import wrap_invoke
-from onyx.llm.tracing_wrap import wrap_stream
-from onyx.utils.logger import setup_logger
+from aethersearch.llm.model_response import ModelResponse
+from aethersearch.llm.model_response import ModelResponseStream
+from aethersearch.llm.models import LanguageModelInput
+from aethersearch.llm.models import ReasoningEffort
+from aethersearch.llm.models import ToolChoiceOptions
+from aethersearch.llm.tracing_wrap import wrap_invoke
+from aethersearch.llm.tracing_wrap import wrap_stream
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -37,7 +37,7 @@ class LLMConfig(BaseModel):
 
 
 class LLM(abc.ABC):
-    """Abstract base for every LLM backend used by Onyx.
+    """Abstract base for every LLM backend used by AetherSearch.
 
     Concrete subclasses have their ``invoke`` and ``stream`` methods
     auto-wrapped (via ``__init_subclass__`` below) with a fallback braintrust

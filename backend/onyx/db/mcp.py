@@ -8,18 +8,18 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.attributes import flag_modified
 
-from onyx.db.enums import MCPAuthenticationPerformer
-from onyx.db.enums import MCPServerStatus
-from onyx.db.enums import MCPTransport
-from onyx.db.models import MCPAuthenticationType
-from onyx.db.models import MCPConnectionConfig
-from onyx.db.models import MCPServer
-from onyx.db.models import Persona
-from onyx.db.models import Tool
-from onyx.db.models import User
-from onyx.server.features.mcp.models import MCPConnectionData
-from onyx.utils.logger import setup_logger
-from onyx.utils.sensitive import SensitiveValue
+from aethersearch.db.enums import MCPAuthenticationPerformer
+from aethersearch.db.enums import MCPServerStatus
+from aethersearch.db.enums import MCPTransport
+from aethersearch.db.models import MCPAuthenticationType
+from aethersearch.db.models import MCPConnectionConfig
+from aethersearch.db.models import MCPServer
+from aethersearch.db.models import Persona
+from aethersearch.db.models import Tool
+from aethersearch.db.models import User
+from aethersearch.server.features.mcp.models import MCPConnectionData
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.sensitive import SensitiveValue
 
 logger = setup_logger()
 

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
-from onyx.chat.citation_processor import CitationMapping
-from onyx.tools.models import ToolCallKickoff
+from aethersearch.chat.citation_processor import CitationMapping
+from aethersearch.tools.models import ToolCallKickoff
 
 
 class SpecialToolCalls(BaseModel):

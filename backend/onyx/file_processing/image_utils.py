@@ -1,10 +1,10 @@
 from io import BytesIO
 from typing import Tuple
 
-from onyx.configs.constants import FileOrigin
-from onyx.connectors.models import ImageSection
-from onyx.file_store.file_store import get_default_file_store
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.connectors.models import ImageSection
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

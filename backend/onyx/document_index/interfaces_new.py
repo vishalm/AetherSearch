@@ -5,18 +5,18 @@ from typing import Self
 from pydantic import BaseModel
 from pydantic import model_validator
 
-from onyx.access.models import DocumentAccess
-from onyx.configs.constants import PUBLIC_DOC_PAT
-from onyx.context.search.enums import QueryType
-from onyx.context.search.models import IndexFilters
-from onyx.context.search.models import InferenceChunk
-from onyx.db.enums import EmbeddingPrecision
-from onyx.document_index.opensearch.constants import DEFAULT_MAX_CHUNK_SIZE
-from onyx.indexing.models import DocMetadataAwareIndexChunk
+from aethersearch.access.models import DocumentAccess
+from aethersearch.configs.constants import PUBLIC_DOC_PAT
+from aethersearch.context.search.enums import QueryType
+from aethersearch.context.search.models import IndexFilters
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.db.enums import EmbeddingPrecision
+from aethersearch.document_index.opensearch.constants import DEFAULT_MAX_CHUNK_SIZE
+from aethersearch.indexing.models import DocMetadataAwareIndexChunk
 from shared_configs.model_server_models import Embedding
 
 # NOTE: "Document" in the naming convention is used to refer to the entire
-# document as represented in Onyx. What is actually stored in the index is the
+# document as represented in AetherSearch. What is actually stored in the index is the
 # document chunks. By the terminology of most search engines / vector databases,
 # the individual objects stored are called documents, but in this case it refers
 # to a chunk.
@@ -156,7 +156,7 @@ class IndexRetrievalFilters(BaseModel):
     """
     Filters for retrieving chunks from the index.
 
-    Used to filter on permissions and other Onyx-specific metadata rather than
+    Used to filter on permissions and other AetherSearch-specific metadata rather than
     chunk content. Should be passed in for every retrieval method.
 
     TODO(andrei): Currently unused, use this when making retrieval methods more
@@ -266,7 +266,7 @@ class Deletable(abc.ABC):
 
         Args:
             document_id: The unique identifier for the document as represented
-                in Onyx, not necessarily in the document index.
+                in AetherSearch, not necessarily in the document index.
             chunk_count: The number of chunks in the document. May be useful for
                 improving the efficiency of the delete operation. Defaults to
                 None.
@@ -466,7 +466,7 @@ class DocumentIndex(
     abc.ABC,
 ):
     """
-    A valid document index that can plug into all Onyx flows must implement all
+    A valid document index that can plug into all AetherSearch flows must implement all
     of these functionalities.
 
     As a high-level summary, document indices need to be able to:

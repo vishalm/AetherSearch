@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 def _reload_app_configs() -> ModuleType:
     """Reload the module so the env var is re-read at import time."""
-    import onyx.configs.app_configs as module
+    import aethersearch.configs.app_configs as module
 
     return importlib.reload(module)
 

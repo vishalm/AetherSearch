@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   BaseFilters,
-  MinimalOnyxDocument,
+  MinimalAetherSearchDocument,
   SourceMetadata,
 } from "@/lib/search/interfaces";
 import SearchCard from "@/ee/sections/SearchCard";
@@ -35,7 +35,7 @@ import SimpleLoader from "@/refresh-components/loaders/SimpleLoader";
 
 export interface SearchResultsProps {
   /** Callback when a document is clicked */
-  onDocumentClick: (doc: MinimalOnyxDocument) => void;
+  onDocumentClick: (doc: MinimalAetherSearchDocument) => void;
 }
 
 // ============================================================================

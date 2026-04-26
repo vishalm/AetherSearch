@@ -5,24 +5,24 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from onyx.cache.interface import CacheBackend
-from onyx.chat.citation_processor import CitationMapping
-from onyx.chat.models import ChatLoadedFile
-from onyx.chat.models import ChatMessageSimple
-from onyx.chat.models import ExtractedContextFiles
-from onyx.chat.models import FileToolMetadata
-from onyx.chat.models import SearchParams
-from onyx.context.search.models import SearchDoc
-from onyx.db.memory import UserMemoryContext
-from onyx.db.models import ChatMessage
-from onyx.db.models import ChatSession
-from onyx.db.models import Persona
-from onyx.llm.interfaces import LLM
-from onyx.llm.interfaces import LLMUserIdentity
-from onyx.onyxbot.slack.models import SlackContext
-from onyx.server.query_and_chat.models import SendMessageRequest
-from onyx.tools.models import ChatFile
-from onyx.tools.models import ToolCallInfo
+from aethersearch.cache.interface import CacheBackend
+from aethersearch.chat.citation_processor import CitationMapping
+from aethersearch.chat.models import ChatLoadedFile
+from aethersearch.chat.models import ChatMessageSimple
+from aethersearch.chat.models import ExtractedContextFiles
+from aethersearch.chat.models import FileToolMetadata
+from aethersearch.chat.models import SearchParams
+from aethersearch.context.search.models import SearchDoc
+from aethersearch.db.memory import UserMemoryContext
+from aethersearch.db.models import ChatMessage
+from aethersearch.db.models import ChatSession
+from aethersearch.db.models import Persona
+from aethersearch.llm.interfaces import LLM
+from aethersearch.llm.interfaces import LLMUserIdentity
+from aethersearch.aethersearchbot.slack.models import SlackContext
+from aethersearch.server.query_and_chat.models import SendMessageRequest
+from aethersearch.tools.models import ChatFile
+from aethersearch.tools.models import ToolCallInfo
 
 # Type alias for search doc deduplication key
 # Simple key: just document_id (str)

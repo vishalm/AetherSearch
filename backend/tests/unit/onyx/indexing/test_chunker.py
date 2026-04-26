@@ -3,16 +3,16 @@ from unittest.mock import Mock
 
 import pytest
 
-from onyx.configs.app_configs import USE_CHUNK_SUMMARY
-from onyx.configs.app_configs import USE_DOCUMENT_SUMMARY
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.models import Document
-from onyx.connectors.models import TextSection
-from onyx.indexing.chunker import Chunker
-from onyx.indexing.embedder import DefaultIndexingEmbedder
-from onyx.indexing.indexing_pipeline import process_image_sections
-from onyx.llm.utils import MAX_CONTEXT_TOKENS
-from tests.unit.onyx.indexing.conftest import MockHeartbeat
+from aethersearch.configs.app_configs import USE_CHUNK_SUMMARY
+from aethersearch.configs.app_configs import USE_DOCUMENT_SUMMARY
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import TextSection
+from aethersearch.indexing.chunker import Chunker
+from aethersearch.indexing.embedder import DefaultIndexingEmbedder
+from aethersearch.indexing.indexing_pipeline import process_image_sections
+from aethersearch.llm.utils import MAX_CONTEXT_TOKENS
+from tests.unit.aethersearch.indexing.conftest import MockHeartbeat
 
 
 @pytest.mark.parametrize("enable_contextual_rag", [True, False])

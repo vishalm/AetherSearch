@@ -3,12 +3,12 @@ from __future__ import annotations
 from typing import Any
 from typing import TYPE_CHECKING
 
-from onyx.image_gen.interfaces import ImageGenerationProvider
-from onyx.image_gen.interfaces import ImageGenerationProviderCredentials
-from onyx.image_gen.interfaces import ReferenceImage
+from aethersearch.image_gen.interfaces import ImageGenerationProvider
+from aethersearch.image_gen.interfaces import ImageGenerationProviderCredentials
+from aethersearch.image_gen.interfaces import ReferenceImage
 
 if TYPE_CHECKING:
-    from onyx.image_gen.interfaces import ImageGenerationResponse
+    from aethersearch.image_gen.interfaces import ImageGenerationResponse
 
 
 class AzureImageGenerationProvider(ImageGenerationProvider):

@@ -6,28 +6,28 @@ from typing import Any
 
 import requests
 
-from onyx.configs.app_configs import DISABLE_TELEMETRY
-from onyx.configs.app_configs import ENTERPRISE_EDITION_ENABLED
-from onyx.configs.constants import KV_CUSTOMER_UUID_KEY
-from onyx.configs.constants import KV_INSTANCE_DOMAIN_KEY
-from onyx.configs.constants import MilestoneRecordType
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.models import User
-from onyx.key_value_store.factory import get_kv_store
-from onyx.key_value_store.interface import KvKeyNotFoundError
-from onyx.key_value_store.interface import unwrap_str
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import (
+from aethersearch.configs.app_configs import DISABLE_TELEMETRY
+from aethersearch.configs.app_configs import ENTERPRISE_EDITION_ENABLED
+from aethersearch.configs.constants import KV_CUSTOMER_UUID_KEY
+from aethersearch.configs.constants import KV_INSTANCE_DOMAIN_KEY
+from aethersearch.configs.constants import MilestoneRecordType
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.models import User
+from aethersearch.key_value_store.factory import get_kv_store
+from aethersearch.key_value_store.interface import KvKeyNotFoundError
+from aethersearch.key_value_store.interface import unwrap_str
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import (
     fetch_versioned_implementation_with_fallback,
 )
-from onyx.utils.variable_functionality import noop_fallback
+from aethersearch.utils.variable_functionality import noop_fallback
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()
 
 
-_DANSWER_TELEMETRY_ENDPOINT = "https://telemetry.onyx.app/anonymous_telemetry"
+_DANSWER_TELEMETRY_ENDPOINT = "https://telemetry.aethersearch.app/anonymous_telemetry"
 _CACHED_UUID: str | None = None
 _CACHED_INSTANCE_DOMAIN: str | None = None
 
@@ -145,7 +145,7 @@ def optional_telemetry(
         )
         thread.start()
     except Exception:
-        # Should never interfere with normal functions of Onyx
+        # Should never interfere with normal functions of AetherSearch
         pass
 
 
@@ -167,10 +167,10 @@ def mt_cloud_telemetry(
     all_properties["tenant_id"] = tenant_id
 
     # MIT version should not need to include any Posthog code
-    # This is only for Onyx MT Cloud, this code should also never be hit, no reason for any orgs to
-    # be running the Multi Tenant version of Onyx.
+    # This is only for AetherSearch MT Cloud, this code should also never be hit, no reason for any orgs to
+    # be running the Multi Tenant version of AetherSearch.
     fetch_versioned_implementation_with_fallback(
-        module="onyx.utils.telemetry",
+        module="aethersearch.utils.telemetry",
         attribute="event_telemetry",
         fallback=noop_fallback,
     )(distinct_id, event, all_properties)
@@ -185,7 +185,7 @@ def mt_cloud_identify(
         return
 
     fetch_versioned_implementation_with_fallback(
-        module="onyx.utils.telemetry",
+        module="aethersearch.utils.telemetry",
         attribute="identify_user",
         fallback=noop_fallback,
     )(distinct_id, properties)
@@ -200,7 +200,7 @@ def mt_cloud_alias(
         return
 
     fetch_versioned_implementation_with_fallback(
-        module="onyx.utils.posthog_client",
+        module="aethersearch.utils.posthog_client",
         attribute="alias_user",
         fallback=noop_fallback,
     )(distinct_id, anonymous_id)
@@ -212,7 +212,7 @@ def mt_cloud_get_anon_id(request: Any) -> str | None:
         return None
 
     return fetch_versioned_implementation_with_fallback(
-        module="onyx.utils.posthog_client",
+        module="aethersearch.utils.posthog_client",
         attribute="get_anon_id_from_request",
         fallback=noop_fallback,
     )(request)

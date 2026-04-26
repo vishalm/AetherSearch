@@ -26,7 +26,7 @@ from pydantic import GetCoreSchemaHandler
 from pydantic.types import T
 from pydantic_core import core_schema
 
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

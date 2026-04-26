@@ -4,8 +4,8 @@ import argparse
 import subprocess
 import time
 
-from onyx.redis.redis_pool import get_redis_client
-from onyx.utils.logger import setup_logger
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

@@ -3,7 +3,7 @@ from collections.abc import Sequence
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from onyx.db.models import SlackBot
+from aethersearch.db.models import SlackBot
 
 
 def insert_slack_bot(

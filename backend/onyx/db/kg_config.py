@@ -1,9 +1,9 @@
-from onyx.configs.constants import KV_KG_CONFIG_KEY
-from onyx.key_value_store.factory import get_kv_store
-from onyx.key_value_store.interface import KvKeyNotFoundError
-from onyx.kg.models import KGConfigSettings
-from onyx.server.kg.models import EnableKGConfigRequest
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import KV_KG_CONFIG_KEY
+from aethersearch.key_value_store.factory import get_kv_store
+from aethersearch.key_value_store.interface import KvKeyNotFoundError
+from aethersearch.kg.models import KGConfigSettings
+from aethersearch.server.kg.models import EnableKGConfigRequest
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

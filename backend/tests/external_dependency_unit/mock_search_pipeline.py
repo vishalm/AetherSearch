@@ -8,18 +8,18 @@ from unittest.mock import patch
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import DocumentSource
-from onyx.context.search.models import ChunkSearchRequest
-from onyx.context.search.models import InferenceChunk
-from onyx.context.search.models import PersonaSearchInfo
-from onyx.context.search.models import SearchDoc
-from onyx.db.models import SearchSettings
-from onyx.db.models import User
-from onyx.document_index.interfaces import DocumentIndex
-from onyx.federated_connectors.federated_retrieval import FederatedRetrievalInfo
-from onyx.llm.interfaces import LLM
-from onyx.natural_language_processing.search_nlp_models import EmbeddingModel
-from onyx.tools.tool_implementations.search.search_tool import SearchTool
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.context.search.models import ChunkSearchRequest
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.context.search.models import PersonaSearchInfo
+from aethersearch.context.search.models import SearchDoc
+from aethersearch.db.models import SearchSettings
+from aethersearch.db.models import User
+from aethersearch.document_index.interfaces import DocumentIndex
+from aethersearch.federated_connectors.federated_retrieval import FederatedRetrievalInfo
+from aethersearch.llm.interfaces import LLM
+from aethersearch.natural_language_processing.search_nlp_models import EmbeddingModel
+from aethersearch.tools.tool_implementations.search.search_tool import SearchTool
 
 
 def run_functions_tuples_sequential(
@@ -162,64 +162,64 @@ def use_mock_search_pipeline(
 
     with (
         patch(
-            "onyx.tools.tool_implementations.search.search_tool.search_pipeline",
+            "aethersearch.tools.tool_implementations.search.search_tool.search_pipeline",
             new=override_search_pipeline,
         ),
         patch(
-            "onyx.tools.tool_implementations.search.search_tool.check_connectors_exist",
+            "aethersearch.tools.tool_implementations.search.search_tool.check_connectors_exist",
             new=mock_check_connectors_exist,
         ),
         patch(
-            "onyx.tools.tool_implementations.search.search_tool.check_federated_connectors_exist",
+            "aethersearch.tools.tool_implementations.search.search_tool.check_federated_connectors_exist",
             new=mock_check_federated_connectors_exist,
         ),
         patch(
-            "onyx.tools.tool_implementations.search.search_tool.semantic_query_rephrase",
+            "aethersearch.tools.tool_implementations.search.search_tool.semantic_query_rephrase",
             return_value="",
         ),
         patch(
-            "onyx.tools.tool_implementations.search.search_tool.keyword_query_expansion",
+            "aethersearch.tools.tool_implementations.search.search_tool.keyword_query_expansion",
             return_value=[],
         ),
         patch(
-            "onyx.tools.tool_runner.run_functions_tuples_in_parallel",
+            "aethersearch.tools.tool_runner.run_functions_tuples_in_parallel",
             new=run_functions_tuples_sequential,
         ),
         patch(
-            "onyx.db.connector.check_connectors_exist",
+            "aethersearch.db.connector.check_connectors_exist",
             new=mock_check_connectors_exist,
         ),
         patch(
-            "onyx.db.connector.check_federated_connectors_exist",
+            "aethersearch.db.connector.check_federated_connectors_exist",
             new=mock_check_federated_connectors_exist,
         ),
         patch(
-            "onyx.db.connector.check_user_files_exist",
+            "aethersearch.db.connector.check_user_files_exist",
             new=mock_check_user_files_exist,
         ),
         patch(
-            "onyx.db.connector.fetch_unique_document_sources",
+            "aethersearch.db.connector.fetch_unique_document_sources",
             new=mock_fetch_unique_document_sources,
         ),
         # Mock the pre-fetch phase of SearchTool.run()
         patch(
-            "onyx.tools.tool_implementations.search.search_tool.get_session_with_current_tenant",
+            "aethersearch.tools.tool_implementations.search.search_tool.get_session_with_current_tenant",
             new=mock_get_session,
         ),
         patch(
-            "onyx.tools.tool_implementations.search.search_tool.build_access_filters_for_user",
+            "aethersearch.tools.tool_implementations.search.search_tool.build_access_filters_for_user",
             return_value=[],
         ),
         patch(
-            "onyx.tools.tool_implementations.search.search_tool.get_current_search_settings",
+            "aethersearch.tools.tool_implementations.search.search_tool.get_current_search_settings",
             return_value=MagicMock(spec=SearchSettings),
         ),
         patch(
-            "onyx.tools.tool_implementations.search.search_tool.EmbeddingModel.from_db_model",
+            "aethersearch.tools.tool_implementations.search.search_tool.EmbeddingModel.from_db_model",
             return_value=MagicMock(spec=EmbeddingModel),
         ),
         patch(
-            "onyx.tools.tool_implementations.search.search_tool.get_federated_retrieval_functions",
+            "aethersearch.tools.tool_implementations.search.search_tool.get_federated_retrieval_functions",
             return_value=[],
         ),
         patch.object(

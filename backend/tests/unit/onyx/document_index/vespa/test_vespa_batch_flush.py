@@ -8,17 +8,17 @@ construction.
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from onyx.access.models import DocumentAccess
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.models import Document
-from onyx.connectors.models import TextSection
-from onyx.document_index.interfaces import EnrichedDocumentIndexingInfo
-from onyx.document_index.interfaces_new import IndexingMetadata
-from onyx.document_index.interfaces_new import TenantState
-from onyx.document_index.vespa.vespa_document_index import VespaDocumentIndex
-from onyx.indexing.models import ChunkEmbedding
-from onyx.indexing.models import DocMetadataAwareIndexChunk
-from onyx.indexing.models import IndexChunk
+from aethersearch.access.models import DocumentAccess
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import TextSection
+from aethersearch.document_index.interfaces import EnrichedDocumentIndexingInfo
+from aethersearch.document_index.interfaces_new import IndexingMetadata
+from aethersearch.document_index.interfaces_new import TenantState
+from aethersearch.document_index.vespa.vespa_document_index import VespaDocumentIndex
+from aethersearch.indexing.models import ChunkEmbedding
+from aethersearch.indexing.models import DocMetadataAwareIndexChunk
+from aethersearch.indexing.models import IndexChunk
 
 
 def _make_chunk(
@@ -104,15 +104,15 @@ def _stub_enrich(
     )
 
 
-@patch("onyx.document_index.vespa.vespa_document_index.batch_index_vespa_chunks")
-@patch("onyx.document_index.vespa.vespa_document_index.delete_vespa_chunks")
+@patch("aethersearch.document_index.vespa.vespa_document_index.batch_index_vespa_chunks")
+@patch("aethersearch.document_index.vespa.vespa_document_index.delete_vespa_chunks")
 @patch(
-    "onyx.document_index.vespa.vespa_document_index.get_document_chunk_ids",
+    "aethersearch.document_index.vespa.vespa_document_index.get_document_chunk_ids",
     return_value=[],
 )
-@patch("onyx.document_index.vespa.vespa_document_index._enrich_basic_chunk_info")
+@patch("aethersearch.document_index.vespa.vespa_document_index._enrich_basic_chunk_info")
 @patch(
-    "onyx.document_index.vespa.vespa_document_index.BATCH_SIZE",
+    "aethersearch.document_index.vespa.vespa_document_index.BATCH_SIZE",
     3,
 )
 def test_index_respects_batch_size(

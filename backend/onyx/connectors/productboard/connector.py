@@ -8,17 +8,17 @@ from bs4 import BeautifulSoup
 from dateutil import parser
 from retry import retry
 
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
-from onyx.connectors.interfaces import GenerateDocumentsOutput
-from onyx.connectors.interfaces import PollConnector
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.models import BasicExpertInfo
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import TextSection
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
+from aethersearch.connectors.interfaces import GenerateDocumentsOutput
+from aethersearch.connectors.interfaces import PollConnector
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import TextSection
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

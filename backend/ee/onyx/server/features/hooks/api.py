@@ -4,35 +4,35 @@ from fastapi import Depends
 from fastapi import Query
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import User
-from onyx.db.constants import UNSET
-from onyx.db.constants import UnsetType
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import Permission
-from onyx.db.hook import create_hook__no_commit
-from onyx.db.hook import delete_hook__no_commit
-from onyx.db.hook import get_hook_by_id
-from onyx.db.hook import get_hook_execution_logs
-from onyx.db.hook import get_hooks
-from onyx.db.hook import update_hook__no_commit
-from onyx.db.models import Hook
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.hooks.api_dependencies import require_hook_enabled
-from onyx.hooks.models import HookCreateRequest
-from onyx.hooks.models import HookExecutionRecord
-from onyx.hooks.models import HookPointMetaResponse
-from onyx.hooks.models import HookResponse
-from onyx.hooks.models import HookUpdateRequest
-from onyx.hooks.models import HookValidateResponse
-from onyx.hooks.models import HookValidateStatus
-from onyx.hooks.registry import get_all_specs
-from onyx.hooks.registry import get_hook_point_spec
-from onyx.utils.logger import setup_logger
-from onyx.utils.url import SSRFException
-from onyx.utils.url import validate_outbound_http_url
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import User
+from aethersearch.db.constants import UNSET
+from aethersearch.db.constants import UnsetType
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import Permission
+from aethersearch.db.hook import create_hook__no_commit
+from aethersearch.db.hook import delete_hook__no_commit
+from aethersearch.db.hook import get_hook_by_id
+from aethersearch.db.hook import get_hook_execution_logs
+from aethersearch.db.hook import get_hooks
+from aethersearch.db.hook import update_hook__no_commit
+from aethersearch.db.models import Hook
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.hooks.api_dependencies import require_hook_enabled
+from aethersearch.hooks.models import HookCreateRequest
+from aethersearch.hooks.models import HookExecutionRecord
+from aethersearch.hooks.models import HookPointMetaResponse
+from aethersearch.hooks.models import HookResponse
+from aethersearch.hooks.models import HookUpdateRequest
+from aethersearch.hooks.models import HookValidateResponse
+from aethersearch.hooks.models import HookValidateStatus
+from aethersearch.hooks.registry import get_all_specs
+from aethersearch.hooks.registry import get_hook_point_spec
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.url import SSRFException
+from aethersearch.utils.url import validate_outbound_http_url
 
 logger = setup_logger()
 
@@ -42,7 +42,7 @@ logger = setup_logger()
 
 
 def _check_ssrf_safety(endpoint_url: str) -> None:
-    """Raise OnyxError if endpoint_url could be used for SSRF.
+    """Raise AetherSearchError if endpoint_url could be used for SSRF.
 
     Delegates to validate_outbound_http_url with https_only=True.
     Uses BAD_GATEWAY so the frontend maps the error to the Endpoint URL field.
@@ -50,7 +50,7 @@ def _check_ssrf_safety(endpoint_url: str) -> None:
     try:
         validate_outbound_http_url(endpoint_url, https_only=True)
     except (SSRFException, ValueError) as e:
-        raise OnyxError(OnyxErrorCode.BAD_GATEWAY, str(e))
+        raise AetherSearchError(AetherSearchErrorCode.BAD_GATEWAY, str(e))
 
 
 # ---------------------------------------------------------------------------
@@ -92,21 +92,21 @@ def _get_hook_or_404(
         include_creator=include_creator,
     )
     if hook is None:
-        raise OnyxError(OnyxErrorCode.NOT_FOUND, f"Hook {hook_id} not found.")
+        raise AetherSearchError(AetherSearchErrorCode.NOT_FOUND, f"Hook {hook_id} not found.")
     return hook
 
 
 def _raise_for_validation_failure(validation: HookValidateResponse) -> None:
-    """Raise an appropriate OnyxError for a non-passed validation result."""
+    """Raise an appropriate AetherSearchError for a non-passed validation result."""
     if validation.status == HookValidateStatus.auth_failed:
-        raise OnyxError(OnyxErrorCode.CREDENTIAL_INVALID, validation.error_message)
+        raise AetherSearchError(AetherSearchErrorCode.CREDENTIAL_INVALID, validation.error_message)
     if validation.status == HookValidateStatus.timeout:
-        raise OnyxError(
-            OnyxErrorCode.GATEWAY_TIMEOUT,
+        raise AetherSearchError(
+            AetherSearchErrorCode.GATEWAY_TIMEOUT,
             f"Endpoint validation failed: {validation.error_message}",
         )
-    raise OnyxError(
-        OnyxErrorCode.BAD_GATEWAY,
+    raise AetherSearchError(
+        AetherSearchErrorCode.BAD_GATEWAY,
         f"Endpoint validation failed: {validation.error_message}",
     )
 
@@ -350,8 +350,8 @@ def activate_hook(
 ) -> HookResponse:
     hook = _get_hook_or_404(db_session, hook_id)
     if not hook.endpoint_url:
-        raise OnyxError(
-            OnyxErrorCode.INVALID_INPUT, "Hook has no endpoint URL configured."
+        raise AetherSearchError(
+            AetherSearchErrorCode.INVALID_INPUT, "Hook has no endpoint URL configured."
         )
 
     api_key = hook.api_key.get_value(apply_mask=False) if hook.api_key else None
@@ -392,8 +392,8 @@ def validate_hook(
 ) -> HookValidateResponse:
     hook = _get_hook_or_404(db_session, hook_id)
     if not hook.endpoint_url:
-        raise OnyxError(
-            OnyxErrorCode.INVALID_INPUT, "Hook has no endpoint URL configured."
+        raise AetherSearchError(
+            AetherSearchErrorCode.INVALID_INPUT, "Hook has no endpoint URL configured."
         )
 
     api_key = hook.api_key.get_value(apply_mask=False) if hook.api_key else None

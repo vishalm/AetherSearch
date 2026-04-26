@@ -1,19 +1,19 @@
 from collections.abc import Callable
 
-from onyx.cache.interface import CacheBackend
-from onyx.cache.interface import CacheBackendType
-from onyx.configs.app_configs import CACHE_BACKEND
+from aethersearch.cache.interface import CacheBackend
+from aethersearch.cache.interface import CacheBackendType
+from aethersearch.configs.app_configs import CACHE_BACKEND
 
 
 def _build_redis_backend(tenant_id: str) -> CacheBackend:
-    from onyx.cache.redis_backend import RedisCacheBackend
-    from onyx.redis.redis_pool import redis_pool
+    from aethersearch.cache.redis_backend import RedisCacheBackend
+    from aethersearch.redis.redis_pool import redis_pool
 
     return RedisCacheBackend(redis_pool.get_client(tenant_id))
 
 
 def _build_postgres_backend(tenant_id: str) -> CacheBackend:
-    from onyx.cache.postgres_backend import PostgresCacheBackend
+    from aethersearch.cache.postgres_backend import PostgresCacheBackend
 
     return PostgresCacheBackend(tenant_id)
 

@@ -12,22 +12,22 @@ from opensearchpy import TransportError
 from opensearchpy.helpers import bulk
 from pydantic import BaseModel
 
-from onyx.configs.app_configs import DEFAULT_OPENSEARCH_CLIENT_TIMEOUT_S
-from onyx.configs.app_configs import OPENSEARCH_ADMIN_PASSWORD
-from onyx.configs.app_configs import OPENSEARCH_ADMIN_USERNAME
-from onyx.configs.app_configs import OPENSEARCH_HOST
-from onyx.configs.app_configs import OPENSEARCH_REST_API_PORT
-from onyx.configs.app_configs import OPENSEARCH_USE_SSL
-from onyx.document_index.interfaces_new import TenantState
-from onyx.document_index.opensearch.constants import OpenSearchSearchType
-from onyx.document_index.opensearch.schema import DocumentChunk
-from onyx.document_index.opensearch.schema import DocumentChunkWithoutVectors
-from onyx.document_index.opensearch.schema import get_opensearch_doc_chunk_id
-from onyx.document_index.opensearch.search import DEFAULT_OPENSEARCH_MAX_RESULT_WINDOW
-from onyx.server.metrics.opensearch_search import observe_opensearch_search
-from onyx.server.metrics.opensearch_search import track_opensearch_search_in_progress
-from onyx.utils.logger import setup_logger
-from onyx.utils.timing import log_function_time
+from aethersearch.configs.app_configs import DEFAULT_OPENSEARCH_CLIENT_TIMEOUT_S
+from aethersearch.configs.app_configs import OPENSEARCH_ADMIN_PASSWORD
+from aethersearch.configs.app_configs import OPENSEARCH_ADMIN_USERNAME
+from aethersearch.configs.app_configs import OPENSEARCH_HOST
+from aethersearch.configs.app_configs import OPENSEARCH_REST_API_PORT
+from aethersearch.configs.app_configs import OPENSEARCH_USE_SSL
+from aethersearch.document_index.interfaces_new import TenantState
+from aethersearch.document_index.opensearch.constants import OpenSearchSearchType
+from aethersearch.document_index.opensearch.schema import DocumentChunk
+from aethersearch.document_index.opensearch.schema import DocumentChunkWithoutVectors
+from aethersearch.document_index.opensearch.schema import get_opensearch_doc_chunk_id
+from aethersearch.document_index.opensearch.search import DEFAULT_OPENSEARCH_MAX_RESULT_WINDOW
+from aethersearch.server.metrics.opensearch_search import observe_opensearch_search
+from aethersearch.server.metrics.opensearch_search import track_opensearch_search_in_progress
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.timing import log_function_time
 
 CLIENT_THRESHOLD_TO_LOG_SLOW_SEARCH_MS = 2000
 DEFAULT_INDEX_SETTINGS_TIMEOUT_S = 15
@@ -274,7 +274,7 @@ class OpenSearchIndexClient(OpenSearchClient):
 
     OpenSearch's Python module has pretty bad typing support so this client
     attempts to protect the rest of the codebase from this. As a consequence,
-    most methods here return the minimum data needed for the rest of Onyx, and
+    most methods here return the minimum data needed for the rest of AetherSearch, and
     tend to rely on Exceptions to handle errors.
 
     TODO(andrei): This class currently assumes the structure of the database
@@ -615,7 +615,7 @@ class OpenSearchIndexClient(OpenSearchClient):
         """Indexes a document.
 
         Args:
-            document: The document to index. In Onyx this is a chunk of a
+            document: The document to index. In AetherSearch this is a chunk of a
                 document, OpenSearch simply refers to this as a document as
                 well.
             tenant_state: The tenant state of the caller.
@@ -697,7 +697,7 @@ class OpenSearchIndexClient(OpenSearchClient):
         Retries on 429 too many requests.
 
         Args:
-            documents: The documents to index. In Onyx this is a chunk of a
+            documents: The documents to index. In AetherSearch this is a chunk of a
                 document, OpenSearch simply refers to this as a document as
                 well.
             tenant_state: The tenant state of the caller.

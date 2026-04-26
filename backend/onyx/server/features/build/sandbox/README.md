@@ -1,6 +1,6 @@
-# Onyx Sandbox System
+# AetherSearch Sandbox System
 
-This directory contains the implementation of Onyx's sandbox system for running OpenCode agents in isolated environments.
+This directory contains the implementation of AetherSearch's sandbox system for running OpenCode agents in isolated environments.
 
 ## Overview
 
@@ -52,11 +52,11 @@ The sandbox system provides isolated execution environments where OpenCode agent
 ```bash
 # Build backend image (includes both templates)
 cd backend
-docker build -f Dockerfile.sandbox-templates -t onyxdotapp/backend:latest .
+docker build -f Dockerfile.sandbox-templates -t aethersearchdotapp/backend:latest .
 
 # Build sandbox container (lightweight runner)
-cd onyx/server/features/build/sandbox/kubernetes/docker
-docker build -t onyxdotapp/sandbox:latest .
+cd aethersearch/server/features/build/sandbox/kubernetes/docker
+docker build -t aethersearchdotapp/sandbox:latest .
 
 # Deploy with docker-compose or kubectl - sandboxes work immediately!
 ```
@@ -71,19 +71,19 @@ docker build -t onyxdotapp/sandbox:latest .
 
 ### Running Backend Directly (Without Docker)
 
-**Only needed if you're running the Onyx backend outside of Docker.** Most developers use Docker and can skip this section.
+**Only needed if you're running the AetherSearch backend outside of Docker.** Most developers use Docker and can skip this section.
 
 If you're running the backend Python process directly on your machine, you need templates at `/templates/`:
 
 #### Web Template
 
-The web template is a lightweight Next.js app (Next.js 16, React 19, shadcn/ui, Recharts) checked into the codebase at `backend/onyx/server/features/build/templates/outputs/web/`.
+The web template is a lightweight Next.js app (Next.js 16, React 19, shadcn/ui, Recharts) checked into the codebase at `backend/aethersearch/server/features/build/templates/outputs/web/`.
 
 For local development, create a symlink to this template:
 
 ```bash
 sudo mkdir -p /templates/outputs
-sudo ln -s $(pwd)/backend/onyx/server/features/build/templates/outputs/web /templates/outputs/web
+sudo ln -s $(pwd)/backend/aethersearch/server/features/build/templates/outputs/web /templates/outputs/web
 ```
 
 #### Python Venv Template
@@ -93,11 +93,11 @@ If you don't have a venv template, create it:
 ```bash
 # Use the utility script
 cd backend
-python -m onyx.server.features.build.sandbox.util.build_venv_template
+python -m aethersearch.server.features.build.sandbox.util.build_venv_template
 
 # Or manually
 python3 -m venv /templates/venv
-/templates/venv/bin/pip install -r backend/onyx/server/features/build/sandbox/kubernetes/docker/initial-requirements.txt
+/templates/venv/bin/pip install -r backend/aethersearch/server/features/build/sandbox/kubernetes/docker/initial-requirements.txt
 ```
 
 #### System Dependencies (for PPTX skill)
@@ -181,7 +181,7 @@ OUTPUTS_TEMPLATE_PATH=/templates/outputs   # Default: /templates/outputs
 VENV_TEMPLATE_PATH=/templates/venv        # Default: /templates/venv
 
 # Sandbox base path (local mode)
-SANDBOX_BASE_PATH=/tmp/onyx-sandboxes     # Default: /tmp/onyx-sandboxes
+SANDBOX_BASE_PATH=/tmp/aethersearch-sandboxes     # Default: /tmp/aethersearch-sandboxes
 
 # OpenCode configuration
 OPENCODE_DISABLED_TOOLS=question          # Comma-separated list, default: question
@@ -191,13 +191,13 @@ OPENCODE_DISABLED_TOOLS=question          # Comma-separated list, default: quest
 
 ```bash
 # Kubernetes namespace
-SANDBOX_NAMESPACE=onyx-sandboxes          # Default: onyx-sandboxes
+SANDBOX_NAMESPACE=aethersearch-sandboxes          # Default: aethersearch-sandboxes
 
 # Container image
-SANDBOX_CONTAINER_IMAGE=onyxdotapp/sandbox:latest
+SANDBOX_CONTAINER_IMAGE=aethersearchdotapp/sandbox:latest
 
 # S3 bucket for snapshots and files
-SANDBOX_S3_BUCKET=onyx-sandbox-files      # Default: onyx-sandbox-files
+SANDBOX_S3_BUCKET=aethersearch-sandbox-files      # Default: aethersearch-sandbox-files
 
 # Service accounts
 SANDBOX_SERVICE_ACCOUNT_NAME=sandbox-runner          # No AWS access
@@ -257,9 +257,9 @@ curl -X POST http://localhost:3000/api/build/session/{session_id}/message \
 
 **Solutions**:
 
-- Check pod logs: `kubectl logs -n onyx-sandboxes sandbox-{sandbox-id}`
-- Check init container: `kubectl logs -n onyx-sandboxes sandbox-{sandbox-id} -c file-sync`
-- Verify init container completed: `kubectl describe pod -n onyx-sandboxes sandbox-{sandbox-id}`
+- Check pod logs: `kubectl logs -n aethersearch-sandboxes sandbox-{sandbox-id}`
+- Check init container: `kubectl logs -n aethersearch-sandboxes sandbox-{sandbox-id} -c file-sync`
+- Verify init container completed: `kubectl describe pod -n aethersearch-sandboxes sandbox-{sandbox-id}`
 - Check S3 bucket access: Ensure init container service account has IRSA configured
 
 ### Next.js Server Won't Start
@@ -269,9 +269,9 @@ curl -X POST http://localhost:3000/api/build/session/{session_id}/message \
 **Solutions**:
 
 - **Local mode**: Check if port is already in use
-- **Docker/K8s**: Check container logs: `kubectl logs -n onyx-sandboxes sandbox-{sandbox-id}`
+- **Docker/K8s**: Check container logs: `kubectl logs -n aethersearch-sandboxes sandbox-{sandbox-id}`
 - Verify npm install succeeded (check entrypoint.sh logs)
-- Check that web template was copied: `kubectl exec -n onyx-sandboxes sandbox-{sandbox-id} -- ls /workspace/outputs/web`
+- Check that web template was copied: `kubectl exec -n aethersearch-sandboxes sandbox-{sandbox-id} -- ls /workspace/outputs/web`
 
 ### Templates Not Found (Local Mode)
 
@@ -281,11 +281,11 @@ curl -X POST http://localhost:3000/api/build/session/{session_id}/message \
 
 ```bash
 # Symlink web template
-sudo ln -s $(pwd)/backend/onyx/server/features/build/templates/outputs/web /templates/outputs/web
+sudo ln -s $(pwd)/backend/aethersearch/server/features/build/templates/outputs/web /templates/outputs/web
 
 # Create Python venv
 python3 -m venv /templates/venv
-/templates/venv/bin/pip install -r backend/onyx/server/features/build/sandbox/kubernetes/docker/initial-requirements.txt
+/templates/venv/bin/pip install -r backend/aethersearch/server/features/build/sandbox/kubernetes/docker/initial-requirements.txt
 ```
 
 ### Permission Denied
@@ -295,12 +295,12 @@ python3 -m venv /templates/venv
 **Solution**: Either use sudo when creating symlinks, or use custom paths:
 
 ```bash
-export OUTPUTS_TEMPLATE_PATH=$HOME/.onyx/templates/outputs
-export VENV_TEMPLATE_PATH=$HOME/.onyx/templates/venv
+export OUTPUTS_TEMPLATE_PATH=$HOME/.aethersearch/templates/outputs
+export VENV_TEMPLATE_PATH=$HOME/.aethersearch/templates/venv
 
 # Then symlink to your home directory
-mkdir -p $HOME/.onyx/templates/outputs
-ln -s $(pwd)/backend/onyx/server/features/build/templates/outputs/web $HOME/.onyx/templates/outputs/web
+mkdir -p $HOME/.aethersearch/templates/outputs
+ln -s $(pwd)/backend/aethersearch/server/features/build/templates/outputs/web $HOME/.aethersearch/templates/outputs/web
 ```
 
 ## Security Considerations
@@ -350,7 +350,7 @@ Update `templates/opencode_config.py` to add/remove tool permissions in the `per
 
 ### Web Template
 
-The lightweight Next.js template (`backend/onyx/server/features/build/templates/outputs/web/`) includes:
+The lightweight Next.js template (`backend/aethersearch/server/features/build/templates/outputs/web/`) includes:
 
 - **Framework**: Next.js 16.1.4 with React 19.2.3
 - **UI Library**: shadcn/ui components with Radix UI primitives
@@ -358,7 +358,7 @@ The lightweight Next.js template (`backend/onyx/server/features/build/templates/
 - **Charts**: Recharts for data visualization
 - **Size**: ~2MB (excluding node_modules, which are installed fresh per sandbox)
 
-This template provides a modern development environment without the complexity of the full Onyx application, allowing agents to build custom UIs quickly.
+This template provides a modern development environment without the complexity of the full AetherSearch application, allowing agents to build custom UIs quickly.
 
 ### Python Venv Template
 

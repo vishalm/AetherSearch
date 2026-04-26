@@ -9,14 +9,14 @@ from sqlalchemy import cast
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Session
 
-from ee.onyx.db.query_history import fetch_chat_sessions_eagerly_by_time
-from ee.onyx.server.reporting.usage_export_models import ChatMessageSkeleton
-from ee.onyx.server.reporting.usage_export_models import FlowType
-from ee.onyx.server.reporting.usage_export_models import UsageReportMetadata
-from onyx.configs.constants import MessageType
-from onyx.db.models import UsageReport
-from onyx.db.models import User
-from onyx.file_store.file_store import get_default_file_store
+from ee.aethersearch.db.query_history import fetch_chat_sessions_eagerly_by_time
+from ee.aethersearch.server.reporting.usage_export_models import ChatMessageSkeleton
+from ee.aethersearch.server.reporting.usage_export_models import FlowType
+from ee.aethersearch.server.reporting.usage_export_models import UsageReportMetadata
+from aethersearch.configs.constants import MessageType
+from aethersearch.db.models import UsageReport
+from aethersearch.db.models import User
+from aethersearch.file_store.file_store import get_default_file_store
 
 
 # Gets skeletons of all messages in the given range
@@ -43,7 +43,7 @@ def get_empty_chat_messages_entries__paginated(
 
     message_skeletons: list[ChatMessageSkeleton] = []
     for chat_session in chat_sessions:
-        flow_type = FlowType.SLACK if chat_session.onyxbot_flow else FlowType.CHAT
+        flow_type = FlowType.SLACK if chat_session.aethersearchbot_flow else FlowType.CHAT
 
         for message in chat_session.messages:
             # Only count user messages

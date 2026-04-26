@@ -3,8 +3,8 @@ from uuid import uuid4
 
 import requests
 
-from onyx.server.documents.models import CredentialSnapshot
-from onyx.server.documents.models import DocumentSource
+from aethersearch.server.documents.models import CredentialSnapshot
+from aethersearch.server.documents.models import DocumentSource
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.test_models import DATestCredential
 from tests.integration.common_utils.test_models import DATestUser

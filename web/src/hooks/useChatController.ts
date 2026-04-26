@@ -23,7 +23,7 @@ import {
 import { MinimalPersonaSnapshot } from "@/app/admin/agents/interfaces";
 import { SEARCH_PARAM_NAMES } from "@/app/app/services/searchParams";
 import { SEARCH_TOOL_ID } from "@/app/app/components/tools/constants";
-import { OnyxDocument } from "@/lib/search/interfaces";
+import { AetherSearchDocument } from "@/lib/search/interfaces";
 import { FilterManager, LlmDescriptor, LlmManager } from "@/lib/hooks";
 import {
   BackendMessage,
@@ -112,7 +112,7 @@ interface UseChatControllerProps {
   liveAgent: MinimalPersonaSnapshot | undefined;
   availableAgents: MinimalPersonaSnapshot[];
   existingChatSessionId: string | null;
-  selectedDocuments: OnyxDocument[];
+  selectedDocuments: AetherSearchDocument[];
   searchParams: ReadonlyURLSearchParams;
   resetInputBar: () => void;
   setSelectedAgentFromId: (agentId: number | null) => void;
@@ -674,7 +674,7 @@ export default function useChatController({
         selectedDocuments.length > 0
           ? RetrievalType.SelectedDocs
           : RetrievalType.None;
-      let documents: OnyxDocument[] = selectedDocuments;
+      let documents: AetherSearchDocument[] = selectedDocuments;
       let citations: CitationMap | null = null;
       let aiMessageImages: FileDescriptor[] | null = null;
       let error: string | null = null;
@@ -700,7 +700,7 @@ export default function useChatController({
       const packetsPerModel: Packet[][] = isMultiModel
         ? Array.from({ length: numModels }, () => [])
         : [];
-      const documentsPerModel: OnyxDocument[][] = isMultiModel
+      const documentsPerModel: AetherSearchDocument[][] = isMultiModel
         ? Array.from({ length: numModels }, () => [])
         : [];
       const citationsPerModel: (CitationMap | null)[] = isMultiModel

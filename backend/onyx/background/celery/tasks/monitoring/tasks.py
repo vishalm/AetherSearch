@@ -17,34 +17,34 @@ from sqlalchemy import select
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from onyx.background.celery.apps.app_base import task_logger
-from onyx.background.celery.celery_redis import celery_get_broker_client
-from onyx.background.celery.celery_redis import celery_get_queue_length
-from onyx.background.celery.celery_redis import celery_get_unacked_task_ids
-from onyx.background.celery.memory_monitoring import emit_process_memory
-from onyx.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
-from onyx.configs.constants import ONYX_CLOUD_TENANT_ID
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import OnyxRedisLocks
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.engine.sql_engine import get_session_with_shared_schema
-from onyx.db.engine.tenant_utils import get_all_tenant_ids
-from onyx.db.engine.time_utils import get_db_current_time
-from onyx.db.enums import IndexingStatus
-from onyx.db.enums import SyncStatus
-from onyx.db.enums import SyncType
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import DocumentSet
-from onyx.db.models import IndexAttempt
-from onyx.db.models import SyncRecord
-from onyx.db.models import UserGroup
-from onyx.db.search_settings import get_active_search_settings_list
-from onyx.redis.redis_pool import get_redis_client
-from onyx.redis.redis_pool import redis_lock_dump
-from onyx.utils.platform import is_running_in_container
-from onyx.utils.telemetry import optional_telemetry
-from onyx.utils.telemetry import RecordType
+from aethersearch.background.celery.apps.app_base import task_logger
+from aethersearch.background.celery.celery_redis import celery_get_broker_client
+from aethersearch.background.celery.celery_redis import celery_get_queue_length
+from aethersearch.background.celery.celery_redis import celery_get_unacked_task_ids
+from aethersearch.background.celery.memory_monitoring import emit_process_memory
+from aethersearch.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
+from aethersearch.configs.constants import AETHERSEARCH_CLOUD_TENANT_ID
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import AetherSearchRedisLocks
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.engine.sql_engine import get_session_with_shared_schema
+from aethersearch.db.engine.tenant_utils import get_all_tenant_ids
+from aethersearch.db.engine.time_utils import get_db_current_time
+from aethersearch.db.enums import IndexingStatus
+from aethersearch.db.enums import SyncStatus
+from aethersearch.db.enums import SyncType
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import DocumentSet
+from aethersearch.db.models import IndexAttempt
+from aethersearch.db.models import SyncRecord
+from aethersearch.db.models import UserGroup
+from aethersearch.db.search_settings import get_active_search_settings_list
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.redis.redis_pool import redis_lock_dump
+from aethersearch.utils.platform import is_running_in_container
+from aethersearch.utils.telemetry import optional_telemetry
+from aethersearch.utils.telemetry import RecordType
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.contextvars import CURRENT_TENANT_ID_CONTEXTVAR
 
@@ -145,26 +145,26 @@ def _collect_queue_metrics(redis_celery: Redis) -> list[Metric]:
     """Collect metrics about queue lengths for different Celery queues"""
     metrics = []
     queue_mappings = {
-        "celery_queue_length": OnyxCeleryQueues.PRIMARY,
-        "docprocessing_queue_length": OnyxCeleryQueues.DOCPROCESSING,
-        "docfetching_queue_length": OnyxCeleryQueues.CONNECTOR_DOC_FETCHING,
-        "sync_queue_length": OnyxCeleryQueues.VESPA_METADATA_SYNC,
-        "deletion_queue_length": OnyxCeleryQueues.CONNECTOR_DELETION,
-        "pruning_queue_length": OnyxCeleryQueues.CONNECTOR_PRUNING,
-        "permissions_sync_queue_length": OnyxCeleryQueues.CONNECTOR_DOC_PERMISSIONS_SYNC,
-        "external_group_sync_queue_length": OnyxCeleryQueues.CONNECTOR_EXTERNAL_GROUP_SYNC,
-        "permissions_upsert_queue_length": OnyxCeleryQueues.DOC_PERMISSIONS_UPSERT,
-        "hierarchy_fetching_queue_length": OnyxCeleryQueues.CONNECTOR_HIERARCHY_FETCHING,
-        "llm_model_update_queue_length": OnyxCeleryQueues.LLM_MODEL_UPDATE,
-        "checkpoint_cleanup_queue_length": OnyxCeleryQueues.CHECKPOINT_CLEANUP,
-        "index_attempt_cleanup_queue_length": OnyxCeleryQueues.INDEX_ATTEMPT_CLEANUP,
-        "csv_generation_queue_length": OnyxCeleryQueues.CSV_GENERATION,
-        "user_file_processing_queue_length": OnyxCeleryQueues.USER_FILE_PROCESSING,
-        "user_file_project_sync_queue_length": OnyxCeleryQueues.USER_FILE_PROJECT_SYNC,
-        "user_file_delete_queue_length": OnyxCeleryQueues.USER_FILE_DELETE,
-        "monitoring_queue_length": OnyxCeleryQueues.MONITORING,
-        "sandbox_queue_length": OnyxCeleryQueues.SANDBOX,
-        "opensearch_migration_queue_length": OnyxCeleryQueues.OPENSEARCH_MIGRATION,
+        "celery_queue_length": AetherSearchCeleryQueues.PRIMARY,
+        "docprocessing_queue_length": AetherSearchCeleryQueues.DOCPROCESSING,
+        "docfetching_queue_length": AetherSearchCeleryQueues.CONNECTOR_DOC_FETCHING,
+        "sync_queue_length": AetherSearchCeleryQueues.VESPA_METADATA_SYNC,
+        "deletion_queue_length": AetherSearchCeleryQueues.CONNECTOR_DELETION,
+        "pruning_queue_length": AetherSearchCeleryQueues.CONNECTOR_PRUNING,
+        "permissions_sync_queue_length": AetherSearchCeleryQueues.CONNECTOR_DOC_PERMISSIONS_SYNC,
+        "external_group_sync_queue_length": AetherSearchCeleryQueues.CONNECTOR_EXTERNAL_GROUP_SYNC,
+        "permissions_upsert_queue_length": AetherSearchCeleryQueues.DOC_PERMISSIONS_UPSERT,
+        "hierarchy_fetching_queue_length": AetherSearchCeleryQueues.CONNECTOR_HIERARCHY_FETCHING,
+        "llm_model_update_queue_length": AetherSearchCeleryQueues.LLM_MODEL_UPDATE,
+        "checkpoint_cleanup_queue_length": AetherSearchCeleryQueues.CHECKPOINT_CLEANUP,
+        "index_attempt_cleanup_queue_length": AetherSearchCeleryQueues.INDEX_ATTEMPT_CLEANUP,
+        "csv_generation_queue_length": AetherSearchCeleryQueues.CSV_GENERATION,
+        "user_file_processing_queue_length": AetherSearchCeleryQueues.USER_FILE_PROCESSING,
+        "user_file_project_sync_queue_length": AetherSearchCeleryQueues.USER_FILE_PROJECT_SYNC,
+        "user_file_delete_queue_length": AetherSearchCeleryQueues.USER_FILE_DELETE,
+        "monitoring_queue_length": AetherSearchCeleryQueues.MONITORING,
+        "sandbox_queue_length": AetherSearchCeleryQueues.SANDBOX,
+        "opensearch_migration_queue_length": AetherSearchCeleryQueues.OPENSEARCH_MIGRATION,
     }
 
     for name, queue in queue_mappings.items():
@@ -666,11 +666,11 @@ def build_job_id(
 
 
 @shared_task(
-    name=OnyxCeleryTask.MONITOR_BACKGROUND_PROCESSES,
+    name=AetherSearchCeleryTask.MONITOR_BACKGROUND_PROCESSES,
     ignore_result=True,
     soft_time_limit=_MONITORING_SOFT_TIME_LIMIT,
     time_limit=_MONITORING_TIME_LIMIT,
-    queue=OnyxCeleryQueues.MONITORING,
+    queue=AetherSearchCeleryQueues.MONITORING,
     bind=True,
 )
 def monitor_background_processes(self: Task, *, tenant_id: str) -> None:
@@ -688,7 +688,7 @@ def monitor_background_processes(self: Task, *, tenant_id: str) -> None:
     r = get_redis_client()
 
     lock_monitoring: RedisLock = r.lock(
-        OnyxRedisLocks.MONITOR_BACKGROUND_PROCESSES_LOCK,
+        AetherSearchRedisLocks.MONITOR_BACKGROUND_PROCESSES_LOCK,
         timeout=_MONITORING_SOFT_TIME_LIMIT,
     )
 
@@ -736,7 +736,7 @@ def monitor_background_processes(self: Task, *, tenant_id: str) -> None:
 
 
 @shared_task(
-    name=OnyxCeleryTask.CLOUD_MONITOR_ALEMBIC,
+    name=AetherSearchCeleryTask.CLOUD_MONITOR_ALEMBIC,
 )
 def cloud_check_alembic() -> bool | None:
     """A task to verify that all tenants are on the same alembic revision.
@@ -753,10 +753,10 @@ def cloud_check_alembic() -> bool | None:
 
     time_start = time.monotonic()
 
-    redis_client = get_redis_client(tenant_id=ONYX_CLOUD_TENANT_ID)
+    redis_client = get_redis_client(tenant_id=AETHERSEARCH_CLOUD_TENANT_ID)
 
     lock_beat: RedisLock = redis_client.lock(
-        OnyxRedisLocks.CLOUD_CHECK_ALEMBIC_BEAT_LOCK,
+        AetherSearchRedisLocks.CLOUD_CHECK_ALEMBIC_BEAT_LOCK,
         timeout=CELERY_GENERIC_BEAT_LOCK_TIMEOUT,
     )
 
@@ -868,7 +868,7 @@ def cloud_check_alembic() -> bool | None:
 
 
 @shared_task(
-    name=OnyxCeleryTask.CLOUD_MONITOR_CELERY_QUEUES, ignore_result=True, bind=True
+    name=AetherSearchCeleryTask.CLOUD_MONITOR_CELERY_QUEUES, ignore_result=True, bind=True
 )
 def cloud_monitor_celery_queues(
     self: Task,
@@ -876,7 +876,7 @@ def cloud_monitor_celery_queues(
     return monitor_celery_queues_helper(self)
 
 
-@shared_task(name=OnyxCeleryTask.MONITOR_CELERY_QUEUES, ignore_result=True, bind=True)
+@shared_task(name=AetherSearchCeleryTask.MONITOR_CELERY_QUEUES, ignore_result=True, bind=True)
 def monitor_celery_queues(self: Task, *, tenant_id: str) -> None:  # noqa: ARG001
     return monitor_celery_queues_helper(self)
 
@@ -887,59 +887,59 @@ def monitor_celery_queues_helper(
     """A task to monitor all celery queue lengths."""
 
     r_celery = celery_get_broker_client(task.app)
-    n_celery = celery_get_queue_length(OnyxCeleryQueues.PRIMARY, r_celery)
+    n_celery = celery_get_queue_length(AetherSearchCeleryQueues.PRIMARY, r_celery)
     n_docfetching = celery_get_queue_length(
-        OnyxCeleryQueues.CONNECTOR_DOC_FETCHING, r_celery
+        AetherSearchCeleryQueues.CONNECTOR_DOC_FETCHING, r_celery
     )
-    n_docprocessing = celery_get_queue_length(OnyxCeleryQueues.DOCPROCESSING, r_celery)
+    n_docprocessing = celery_get_queue_length(AetherSearchCeleryQueues.DOCPROCESSING, r_celery)
 
     n_user_file_processing = celery_get_queue_length(
-        OnyxCeleryQueues.USER_FILE_PROCESSING, r_celery
+        AetherSearchCeleryQueues.USER_FILE_PROCESSING, r_celery
     )
     n_user_file_project_sync = celery_get_queue_length(
-        OnyxCeleryQueues.USER_FILE_PROJECT_SYNC, r_celery
+        AetherSearchCeleryQueues.USER_FILE_PROJECT_SYNC, r_celery
     )
     n_user_file_delete = celery_get_queue_length(
-        OnyxCeleryQueues.USER_FILE_DELETE, r_celery
+        AetherSearchCeleryQueues.USER_FILE_DELETE, r_celery
     )
-    n_sync = celery_get_queue_length(OnyxCeleryQueues.VESPA_METADATA_SYNC, r_celery)
-    n_deletion = celery_get_queue_length(OnyxCeleryQueues.CONNECTOR_DELETION, r_celery)
-    n_pruning = celery_get_queue_length(OnyxCeleryQueues.CONNECTOR_PRUNING, r_celery)
+    n_sync = celery_get_queue_length(AetherSearchCeleryQueues.VESPA_METADATA_SYNC, r_celery)
+    n_deletion = celery_get_queue_length(AetherSearchCeleryQueues.CONNECTOR_DELETION, r_celery)
+    n_pruning = celery_get_queue_length(AetherSearchCeleryQueues.CONNECTOR_PRUNING, r_celery)
     n_permissions_sync = celery_get_queue_length(
-        OnyxCeleryQueues.CONNECTOR_DOC_PERMISSIONS_SYNC, r_celery
+        AetherSearchCeleryQueues.CONNECTOR_DOC_PERMISSIONS_SYNC, r_celery
     )
     n_external_group_sync = celery_get_queue_length(
-        OnyxCeleryQueues.CONNECTOR_EXTERNAL_GROUP_SYNC, r_celery
+        AetherSearchCeleryQueues.CONNECTOR_EXTERNAL_GROUP_SYNC, r_celery
     )
     n_permissions_upsert = celery_get_queue_length(
-        OnyxCeleryQueues.DOC_PERMISSIONS_UPSERT, r_celery
+        AetherSearchCeleryQueues.DOC_PERMISSIONS_UPSERT, r_celery
     )
     n_hierarchy_fetching = celery_get_queue_length(
-        OnyxCeleryQueues.CONNECTOR_HIERARCHY_FETCHING, r_celery
+        AetherSearchCeleryQueues.CONNECTOR_HIERARCHY_FETCHING, r_celery
     )
     n_llm_model_update = celery_get_queue_length(
-        OnyxCeleryQueues.LLM_MODEL_UPDATE, r_celery
+        AetherSearchCeleryQueues.LLM_MODEL_UPDATE, r_celery
     )
     n_checkpoint_cleanup = celery_get_queue_length(
-        OnyxCeleryQueues.CHECKPOINT_CLEANUP, r_celery
+        AetherSearchCeleryQueues.CHECKPOINT_CLEANUP, r_celery
     )
     n_index_attempt_cleanup = celery_get_queue_length(
-        OnyxCeleryQueues.INDEX_ATTEMPT_CLEANUP, r_celery
+        AetherSearchCeleryQueues.INDEX_ATTEMPT_CLEANUP, r_celery
     )
     n_csv_generation = celery_get_queue_length(
-        OnyxCeleryQueues.CSV_GENERATION, r_celery
+        AetherSearchCeleryQueues.CSV_GENERATION, r_celery
     )
-    n_monitoring = celery_get_queue_length(OnyxCeleryQueues.MONITORING, r_celery)
-    n_sandbox = celery_get_queue_length(OnyxCeleryQueues.SANDBOX, r_celery)
+    n_monitoring = celery_get_queue_length(AetherSearchCeleryQueues.MONITORING, r_celery)
+    n_sandbox = celery_get_queue_length(AetherSearchCeleryQueues.SANDBOX, r_celery)
     n_opensearch_migration = celery_get_queue_length(
-        OnyxCeleryQueues.OPENSEARCH_MIGRATION, r_celery
+        AetherSearchCeleryQueues.OPENSEARCH_MIGRATION, r_celery
     )
 
     n_docfetching_prefetched = celery_get_unacked_task_ids(
-        OnyxCeleryQueues.CONNECTOR_DOC_FETCHING, r_celery
+        AetherSearchCeleryQueues.CONNECTOR_DOC_FETCHING, r_celery
     )
     n_docprocessing_prefetched = celery_get_unacked_task_ids(
-        OnyxCeleryQueues.DOCPROCESSING, r_celery
+        AetherSearchCeleryQueues.DOCPROCESSING, r_celery
     )
 
     task_logger.info(
@@ -979,11 +979,11 @@ def _get_cmdline_for_process(process: psutil.Process) -> str | None:
 
 
 @shared_task(
-    name=OnyxCeleryTask.MONITOR_PROCESS_MEMORY,
+    name=AetherSearchCeleryTask.MONITOR_PROCESS_MEMORY,
     ignore_result=True,
     soft_time_limit=_MONITORING_SOFT_TIME_LIMIT,
     time_limit=_MONITORING_TIME_LIMIT,
-    queue=OnyxCeleryQueues.MONITORING,
+    queue=AetherSearchCeleryQueues.MONITORING,
     bind=True,
 )
 def monitor_process_memory(self: Task, *, tenant_id: str) -> None:  # noqa: ARG001
@@ -1057,7 +1057,7 @@ def monitor_process_memory(self: Task, *, tenant_id: str) -> None:  # noqa: ARG0
 
 
 @shared_task(
-    name=OnyxCeleryTask.CLOUD_MONITOR_CELERY_PIDBOX, ignore_result=True, bind=True
+    name=AetherSearchCeleryTask.CLOUD_MONITOR_CELERY_PIDBOX, ignore_result=True, bind=True
 )
 def cloud_monitor_celery_pidbox(
     self: Task,

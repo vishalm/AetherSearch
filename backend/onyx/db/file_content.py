@@ -1,7 +1,7 @@
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
-from onyx.db.models import FileContent
+from aethersearch.db.models import FileContent
 
 
 def get_file_content_by_file_id(

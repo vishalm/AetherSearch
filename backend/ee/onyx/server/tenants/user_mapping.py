@@ -1,15 +1,15 @@
 from fastapi_users import exceptions
 from sqlalchemy import select
 
-from onyx.auth.invited_users import get_invited_users
-from onyx.auth.invited_users import get_pending_users
-from onyx.auth.invited_users import write_invited_users
-from onyx.auth.invited_users import write_pending_users
-from onyx.db.engine.sql_engine import get_session_with_shared_schema
-from onyx.db.engine.sql_engine import get_session_with_tenant
-from onyx.db.models import UserTenantMapping
-from onyx.server.manage.models import TenantSnapshot
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.invited_users import get_invited_users
+from aethersearch.auth.invited_users import get_pending_users
+from aethersearch.auth.invited_users import write_invited_users
+from aethersearch.auth.invited_users import write_pending_users
+from aethersearch.db.engine.sql_engine import get_session_with_shared_schema
+from aethersearch.db.engine.sql_engine import get_session_with_tenant
+from aethersearch.db.models import UserTenantMapping
+from aethersearch.server.manage.models import TenantSnapshot
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.configs import POSTGRES_DEFAULT_SCHEMA
 from shared_configs.contextvars import CURRENT_TENANT_ID_CONTEXTVAR
@@ -323,10 +323,10 @@ def get_tenant_count(tenant_id: str) -> int:
 
     TODO: Exclude API key dummy users from seat counting. API keys create
     users with emails like `__DANSWER_API_KEY_*` that should not count toward
-    seat limits. See: https://linear.app/onyx-app/issue/ENG-3518
+    seat limits. See: https://linear.app/aethersearch-app/issue/ENG-3518
     """
-    from onyx.configs.constants import ANONYMOUS_USER_EMAIL
-    from onyx.db.models import User
+    from aethersearch.configs.constants import ANONYMOUS_USER_EMAIL
+    from aethersearch.db.models import User
 
     # First get all emails with active mappings to this tenant
     with get_session_with_shared_schema() as db_session:

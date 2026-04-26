@@ -4,11 +4,11 @@
  * Tests the full groups management page — list, create, edit, delete.
  *
  * Uses the GroupsAdminPage POM for all interactions. Groups are created via
- * OnyxApiClient for setup and cleaned up in afterAll/afterEach.
+ * AetherSearchApiClient for setup and cleaned up in afterAll/afterEach.
  */
 
 import { test, expect } from "./fixtures";
-import type { OnyxApiClient } from "@tests/e2e/utils/onyxApiClient";
+import type { AetherSearchApiClient } from "@tests/e2e/utils/aethersearchApiClient";
 import type { Browser } from "@playwright/test";
 
 // ---------------------------------------------------------------------------
@@ -29,14 +29,14 @@ async function softCleanup(fn: () => Promise<unknown>): Promise<void> {
  */
 async function withApiContext(
   browser: Browser,
-  fn: (api: OnyxApiClient) => Promise<void>
+  fn: (api: AetherSearchApiClient) => Promise<void>
 ): Promise<void> {
   const context = await browser.newContext({
     storageState: "admin_auth.json",
   });
   try {
-    const { OnyxApiClient } = await import("@tests/e2e/utils/onyxApiClient");
-    const api = new OnyxApiClient(context.request);
+    const { AetherSearchApiClient } = await import("@tests/e2e/utils/aethersearchApiClient");
+    const api = new AetherSearchApiClient(context.request);
     await fn(api);
   } finally {
     await context.close();
@@ -257,8 +257,8 @@ test.describe("Groups page — sync @lite", () => {
       storageState: "admin_auth.json",
     });
     try {
-      const { OnyxApiClient } = await import("@tests/e2e/utils/onyxApiClient");
-      const client = new OnyxApiClient(context.request);
+      const { AetherSearchApiClient } = await import("@tests/e2e/utils/aethersearchApiClient");
+      const client = new AetherSearchApiClient(context.request);
       const vectorDbEnabled = await client.isVectorDbEnabled();
       test.skip(
         vectorDbEnabled,

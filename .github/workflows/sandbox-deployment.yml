@@ -41,7 +41,7 @@ jobs:
 
           # Check if any sandbox-relevant files changed
           SANDBOX_PATHS=(
-            "backend/onyx/server/features/build/sandbox/"
+            "backend/aethersearch/server/features/build/sandbox/"
           )
 
           CHANGED=false
@@ -144,8 +144,8 @@ jobs:
         id: build
         uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # ratchet:docker/build-push-action@v7
         with:
-          context: ./backend/onyx/server/features/build/sandbox/kubernetes/docker
-          file: ./backend/onyx/server/features/build/sandbox/kubernetes/docker/Dockerfile
+          context: ./backend/aethersearch/server/features/build/sandbox/kubernetes/docker
+          file: ./backend/aethersearch/server/features/build/sandbox/kubernetes/docker/Dockerfile
           platforms: linux/amd64
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: |
@@ -214,8 +214,8 @@ jobs:
         id: build
         uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # ratchet:docker/build-push-action@v7
         with:
-          context: ./backend/onyx/server/features/build/sandbox/kubernetes/docker
-          file: ./backend/onyx/server/features/build/sandbox/kubernetes/docker/Dockerfile
+          context: ./backend/aethersearch/server/features/build/sandbox/kubernetes/docker
+          file: ./backend/aethersearch/server/features/build/sandbox/kubernetes/docker/Dockerfile
           platforms: linux/arm64
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: |

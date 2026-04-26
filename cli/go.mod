@@ -1,4 +1,4 @@
-module github.com/onyx-dot-app/onyx/cli
+module github.com/aethersearch-dot-app/aethersearch/cli
 
 go 1.26.1
 

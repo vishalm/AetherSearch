@@ -46,8 +46,8 @@ export interface Settings {
   // Default Assistant settings
   disable_default_assistant?: boolean;
 
-  // Onyx Craft (Build Mode) feature flag
-  onyx_craft_enabled?: boolean;
+  // AetherSearch Craft (Build Mode) feature flag
+  aethersearch_craft_enabled?: boolean;
 
   // Whether EE features are unlocked (user has a valid enterprise license).
   // Controls UI visibility of EE features like user groups, analytics, RBAC.
@@ -68,7 +68,7 @@ export interface Settings {
   // True when hooks are available: single-tenant deployment with HOOK_ENABLED=true.
   hooks_enabled?: boolean;
 
-  // Application version from the ONYX_VERSION env var on the server.
+  // Application version from the AETHERSEARCH_VERSION env var on the server.
   version?: string | null;
   // Hard ceiling for user_file_max_upload_size_mb, derived from env var.
   max_allowed_upload_size_mb?: number;

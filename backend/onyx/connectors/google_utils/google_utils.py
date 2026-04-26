@@ -10,9 +10,9 @@ from typing import Any
 
 from googleapiclient.errors import HttpError
 
-from onyx.connectors.google_drive.models import GoogleDriveFileType
-from onyx.utils.logger import setup_logger
-from onyx.utils.retry_wrapper import retry_builder
+from aethersearch.connectors.google_drive.models import GoogleDriveFileType
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.retry_wrapper import retry_builder
 
 logger = setup_logger()
 

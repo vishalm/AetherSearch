@@ -15,7 +15,7 @@ import time
 
 import pytest
 
-from onyx.background.indexing.job_client import SimpleJob
+from aethersearch.background.indexing.job_client import SimpleJob
 
 
 def _ignore_sigterm_and_sleep_forever(ready_path: str) -> None:

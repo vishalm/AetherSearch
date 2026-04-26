@@ -2,17 +2,17 @@ from typing import cast
 
 from chonkie import SentenceChunker
 
-from onyx.configs.constants import SECTION_SEPARATOR
-from onyx.connectors.models import Section
-from onyx.indexing.chunking.section_chunker import AccumulatorState
-from onyx.indexing.chunking.section_chunker import ChunkPayload
-from onyx.indexing.chunking.section_chunker import SectionChunker
-from onyx.indexing.chunking.section_chunker import SectionChunkerOutput
-from onyx.natural_language_processing.utils import BaseTokenizer
-from onyx.natural_language_processing.utils import count_tokens
-from onyx.natural_language_processing.utils import split_text_by_tokens
-from onyx.utils.text_processing import clean_text
-from onyx.utils.text_processing import shared_precompare_cleanup
+from aethersearch.configs.constants import SECTION_SEPARATOR
+from aethersearch.connectors.models import Section
+from aethersearch.indexing.chunking.section_chunker import AccumulatorState
+from aethersearch.indexing.chunking.section_chunker import ChunkPayload
+from aethersearch.indexing.chunking.section_chunker import SectionChunker
+from aethersearch.indexing.chunking.section_chunker import SectionChunkerOutput
+from aethersearch.natural_language_processing.utils import BaseTokenizer
+from aethersearch.natural_language_processing.utils import count_tokens
+from aethersearch.natural_language_processing.utils import split_text_by_tokens
+from aethersearch.utils.text_processing import clean_text
+from aethersearch.utils.text_processing import shared_precompare_cleanup
 from shared_configs.configs import STRICT_CHUNK_TOKEN_LIMIT
 
 

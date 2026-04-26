@@ -1,9 +1,9 @@
 from typing import Any
 from uuid import UUID
 
-from ee.onyx.utils.posthog_client import posthog
-from onyx.feature_flags.interface import FeatureFlagProvider
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.utils.posthog_client import posthog
+from aethersearch.feature_flags.interface import FeatureFlagProvider
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

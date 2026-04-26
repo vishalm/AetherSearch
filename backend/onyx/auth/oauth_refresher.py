@@ -10,12 +10,12 @@ import httpx
 from fastapi_users.manager import BaseUserManager
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from onyx.configs.app_configs import OAUTH_CLIENT_ID
-from onyx.configs.app_configs import OAUTH_CLIENT_SECRET
-from onyx.configs.app_configs import TRACK_EXTERNAL_IDP_EXPIRY
-from onyx.db.models import OAuthAccount
-from onyx.db.models import User
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import OAUTH_CLIENT_ID
+from aethersearch.configs.app_configs import OAUTH_CLIENT_SECRET
+from aethersearch.configs.app_configs import TRACK_EXTERNAL_IDP_EXPIRY
+from aethersearch.db.models import OAuthAccount
+from aethersearch.db.models import User
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

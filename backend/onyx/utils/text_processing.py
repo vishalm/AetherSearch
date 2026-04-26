@@ -4,7 +4,7 @@ import re
 import string
 from urllib.parse import quote
 
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger(__name__)
 

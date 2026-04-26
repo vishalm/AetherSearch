@@ -7,29 +7,29 @@ from pathlib import Path
 from typing import Any
 from typing import IO
 
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import FileOrigin
-from onyx.connectors.cross_connector_utils.miscellaneous_utils import (
-    process_onyx_metadata,
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.connectors.cross_connector_utils.miscellaneous_utils import (
+    process_aethersearch_metadata,
 )
-from onyx.connectors.cross_connector_utils.tabular_section_utils import is_tabular_file
-from onyx.connectors.cross_connector_utils.tabular_section_utils import (
+from aethersearch.connectors.cross_connector_utils.tabular_section_utils import is_tabular_file
+from aethersearch.connectors.cross_connector_utils.tabular_section_utils import (
     tabular_file_to_sections,
 )
-from onyx.connectors.interfaces import GenerateDocumentsOutput
-from onyx.connectors.interfaces import LoadConnector
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import ImageSection
-from onyx.connectors.models import TabularSection
-from onyx.connectors.models import TextSection
-from onyx.file_processing.extract_file_text import extract_text_and_images
-from onyx.file_processing.extract_file_text import get_file_ext
-from onyx.file_processing.file_types import OnyxFileExtensions
-from onyx.file_processing.image_utils import store_image_and_create_section
-from onyx.file_store.file_store import get_default_file_store
-from onyx.utils.logger import setup_logger
+from aethersearch.connectors.interfaces import GenerateDocumentsOutput
+from aethersearch.connectors.interfaces import LoadConnector
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import ImageSection
+from aethersearch.connectors.models import TabularSection
+from aethersearch.connectors.models import TextSection
+from aethersearch.file_processing.extract_file_text import extract_text_and_images
+from aethersearch.file_processing.extract_file_text import get_file_ext
+from aethersearch.file_processing.file_types import AetherSearchFileExtensions
+from aethersearch.file_processing.image_utils import store_image_and_create_section
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -96,28 +96,28 @@ def _process_file(
     # Get file extension and determine file type
     extension = get_file_ext(file_name)
 
-    if extension not in OnyxFileExtensions.ALL_ALLOWED_EXTENSIONS:
+    if extension not in AetherSearchFileExtensions.ALL_ALLOWED_EXTENSIONS:
         logger.warning(
             f"Skipping file '{file_name}' with unrecognized extension '{extension}'"
         )
         return []
 
     # If a zip is uploaded with a metadata file, we can process it here
-    onyx_metadata, custom_tags = process_onyx_metadata(metadata)
-    file_display_name = onyx_metadata.file_display_name or os.path.basename(file_name)
-    time_updated = onyx_metadata.doc_updated_at or datetime.now(timezone.utc)
-    primary_owners = onyx_metadata.primary_owners
-    secondary_owners = onyx_metadata.secondary_owners
-    link = onyx_metadata.link
+    aethersearch_metadata, custom_tags = process_aethersearch_metadata(metadata)
+    file_display_name = aethersearch_metadata.file_display_name or os.path.basename(file_name)
+    time_updated = aethersearch_metadata.doc_updated_at or datetime.now(timezone.utc)
+    primary_owners = aethersearch_metadata.primary_owners
+    secondary_owners = aethersearch_metadata.secondary_owners
+    link = aethersearch_metadata.link
 
     # These metadata items are not settable by the user
-    source_type = onyx_metadata.source_type or DocumentSource.FILE
+    source_type = aethersearch_metadata.source_type or DocumentSource.FILE
 
-    doc_id = onyx_metadata.document_id or f"FILE_CONNECTOR__{file_id}"
+    doc_id = aethersearch_metadata.document_id or f"FILE_CONNECTOR__{file_id}"
     title = metadata.get("title") or file_display_name
 
     # 1) If the file itself is an image, handle that scenario quickly
-    if extension in OnyxFileExtensions.IMAGE_EXTENSIONS:
+    if extension in AetherSearchFileExtensions.IMAGE_EXTENSIONS:
         # Read the image data
         image_data = file.read()
         if not image_data:
@@ -161,13 +161,13 @@ def _process_file(
         content_type=file_type,
     )
 
-    # Each file may have file-specific ONYX_METADATA https://docs.onyx.app/admins/connectors/official/file
+    # Each file may have file-specific AETHERSEARCH_METADATA https://docs.aethersearch.app/admins/connectors/official/file
     # If so, we should add it to any metadata processed so far
     if extraction_result.metadata:
         logger.debug(
             f"Found file-specific metadata for {file_name}: {extraction_result.metadata}"
         )
-        onyx_metadata, more_custom_tags = process_onyx_metadata(
+        aethersearch_metadata, more_custom_tags = process_aethersearch_metadata(
             extraction_result.metadata
         )
 
@@ -175,13 +175,13 @@ def _process_file(
         custom_tags.update(more_custom_tags)
 
         # File-specific metadata overrides metadata processed so far
-        source_type = onyx_metadata.source_type or source_type
-        primary_owners = onyx_metadata.primary_owners or primary_owners
-        secondary_owners = onyx_metadata.secondary_owners or secondary_owners
-        time_updated = onyx_metadata.doc_updated_at or time_updated
-        file_display_name = onyx_metadata.file_display_name or file_display_name
-        title = onyx_metadata.title or onyx_metadata.file_display_name or title
-        link = onyx_metadata.link or link
+        source_type = aethersearch_metadata.source_type or source_type
+        primary_owners = aethersearch_metadata.primary_owners or primary_owners
+        secondary_owners = aethersearch_metadata.secondary_owners or secondary_owners
+        time_updated = aethersearch_metadata.doc_updated_at or time_updated
+        file_display_name = aethersearch_metadata.file_display_name or file_display_name
+        title = aethersearch_metadata.title or aethersearch_metadata.file_display_name or title
+        link = aethersearch_metadata.link or link
 
     # Build sections: first the text as a single Section
     sections: list[TextSection | ImageSection | TabularSection] = []
@@ -202,7 +202,7 @@ def _process_file(
 
         # Produce TabularSections
         lowered_name = file_name.lower()
-        if lowered_name.endswith(tuple(OnyxFileExtensions.SPREADSHEET_EXTENSIONS)):
+        if lowered_name.endswith(tuple(AetherSearchFileExtensions.SPREADSHEET_EXTENSIONS)):
             file.seek(0)
             tabular_source: IO[bytes] = file
         else:

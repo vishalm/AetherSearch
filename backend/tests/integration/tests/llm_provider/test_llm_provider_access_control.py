@@ -4,22 +4,22 @@ import pytest
 import requests
 from sqlalchemy.orm import Session
 
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.llm import can_user_access_llm_provider
-from onyx.db.llm import fetch_user_group_ids
-from onyx.db.llm import update_default_provider
-from onyx.db.llm import upsert_llm_provider
-from onyx.db.models import LLMProvider as LLMProviderModel
-from onyx.db.models import LLMProvider__Persona
-from onyx.db.models import LLMProvider__UserGroup
-from onyx.db.models import Persona
-from onyx.db.models import User
-from onyx.db.models import User__UserGroup
-from onyx.db.models import UserGroup
-from onyx.llm.constants import LlmProviderNames
-from onyx.llm.factory import get_llm_for_persona
-from onyx.server.manage.llm.models import LLMProviderUpsertRequest
-from onyx.server.manage.llm.models import ModelConfigurationUpsertRequest
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.llm import can_user_access_llm_provider
+from aethersearch.db.llm import fetch_user_group_ids
+from aethersearch.db.llm import update_default_provider
+from aethersearch.db.llm import upsert_llm_provider
+from aethersearch.db.models import LLMProvider as LLMProviderModel
+from aethersearch.db.models import LLMProvider__Persona
+from aethersearch.db.models import LLMProvider__UserGroup
+from aethersearch.db.models import Persona
+from aethersearch.db.models import User
+from aethersearch.db.models import User__UserGroup
+from aethersearch.db.models import UserGroup
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.llm.factory import get_llm_for_persona
+from aethersearch.server.manage.llm.models import LLMProviderUpsertRequest
+from aethersearch.server.manage.llm.models import ModelConfigurationUpsertRequest
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.managers.llm_provider import LLMProviderManager
 from tests.integration.common_utils.managers.persona import PersonaManager

@@ -1,5 +1,5 @@
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
 from shared_configs.configs import MULTI_TENANT
 
 
@@ -11,7 +11,7 @@ def require_hook_enabled() -> None:
     Use as: Depends(require_hook_enabled)
     """
     if MULTI_TENANT:
-        raise OnyxError(
-            OnyxErrorCode.SINGLE_TENANT_ONLY,
+        raise AetherSearchError(
+            AetherSearchErrorCode.SINGLE_TENANT_ONLY,
             "Hooks are not available in multi-tenant deployments",
         )

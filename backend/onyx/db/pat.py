@@ -10,14 +10,14 @@ from sqlalchemy import update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
-from onyx.auth.pat import build_displayable_pat
-from onyx.auth.pat import calculate_expiration
-from onyx.auth.pat import generate_pat
-from onyx.auth.pat import hash_pat
-from onyx.db.engine.async_sql_engine import get_async_session_context_manager
-from onyx.db.models import PersonalAccessToken
-from onyx.db.models import User
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.pat import build_displayable_pat
+from aethersearch.auth.pat import calculate_expiration
+from aethersearch.auth.pat import generate_pat
+from aethersearch.auth.pat import hash_pat
+from aethersearch.db.engine.async_sql_engine import get_async_session_context_manager
+from aethersearch.db.models import PersonalAccessToken
+from aethersearch.db.models import User
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()

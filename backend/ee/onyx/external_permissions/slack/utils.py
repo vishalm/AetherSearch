@@ -1,6 +1,6 @@
 from slack_sdk import WebClient
 
-from onyx.connectors.slack.utils import make_paginated_slack_api_call
+from aethersearch.connectors.slack.utils import make_paginated_slack_api_call
 
 
 def fetch_user_id_to_email_map(

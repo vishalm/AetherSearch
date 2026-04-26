@@ -11,7 +11,7 @@ opencode's flat file session storage.
 Usage:
     client = ACPExecClient(
         pod_name="sandbox-abc123",
-        namespace="onyx-sandboxes",
+        namespace="aethersearch-sandboxes",
     )
     client.start(cwd="/workspace")
     session_id = client.resume_or_create_session(cwd="/workspace/sessions/abc")
@@ -47,10 +47,10 @@ from kubernetes.stream.ws_client import WSClient
 from pydantic import BaseModel
 from pydantic import ValidationError
 
-from onyx.server.features.build.api.packet_logger import get_packet_logger
-from onyx.server.features.build.configs import ACP_MESSAGE_TIMEOUT
-from onyx.server.features.build.configs import SSE_KEEPALIVE_INTERVAL
-from onyx.utils.logger import setup_logger
+from aethersearch.server.features.build.api.packet_logger import get_packet_logger
+from aethersearch.server.features.build.configs import ACP_MESSAGE_TIMEOUT
+from aethersearch.server.features.build.configs import SSE_KEEPALIVE_INTERVAL
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -59,8 +59,8 @@ ACP_PROTOCOL_VERSION = 1
 
 # Default client info
 DEFAULT_CLIENT_INFO = {
-    "name": "onyx-sandbox-k8s-exec",
-    "title": "Onyx Sandbox Agent Client (K8s Exec)",
+    "name": "aethersearch-sandbox-k8s-exec",
+    "title": "AetherSearch Sandbox Agent Client (K8s Exec)",
     "version": "1.0.0",
 }
 

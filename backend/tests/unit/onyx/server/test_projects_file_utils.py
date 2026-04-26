@@ -4,11 +4,11 @@ from unittest.mock import MagicMock
 import pytest
 from fastapi import UploadFile
 
-from onyx.natural_language_processing import utils as nlp_utils
-from onyx.natural_language_processing.utils import BaseTokenizer
-from onyx.natural_language_processing.utils import count_tokens
-from onyx.server.features.projects import projects_file_utils as utils
-from onyx.server.settings.models import Settings
+from aethersearch.natural_language_processing import utils as nlp_utils
+from aethersearch.natural_language_processing.utils import BaseTokenizer
+from aethersearch.natural_language_processing.utils import count_tokens
+from aethersearch.server.features.projects import projects_file_utils as utils
+from aethersearch.server.settings.models import Settings
 
 
 class _Tokenizer(BaseTokenizer):

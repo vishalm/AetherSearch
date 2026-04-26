@@ -2,22 +2,22 @@ from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
 
-from onyx.configs.constants import INDEX_SEPARATOR
-from onyx.context.search.models import IndexFilters
-from onyx.document_index.interfaces import VespaChunkRequest
-from onyx.document_index.vespa_constants import ACCESS_CONTROL_LIST
-from onyx.document_index.vespa_constants import CHUNK_ID
-from onyx.document_index.vespa_constants import DOC_UPDATED_AT
-from onyx.document_index.vespa_constants import DOCUMENT_ID
-from onyx.document_index.vespa_constants import DOCUMENT_SETS
-from onyx.document_index.vespa_constants import HIDDEN
-from onyx.document_index.vespa_constants import METADATA_LIST
-from onyx.document_index.vespa_constants import PERSONAS
-from onyx.document_index.vespa_constants import SOURCE_TYPE
-from onyx.document_index.vespa_constants import TENANT_ID
-from onyx.document_index.vespa_constants import USER_PROJECT
-from onyx.kg.utils.formatting_utils import split_relationship_id
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import INDEX_SEPARATOR
+from aethersearch.context.search.models import IndexFilters
+from aethersearch.document_index.interfaces import VespaChunkRequest
+from aethersearch.document_index.vespa_constants import ACCESS_CONTROL_LIST
+from aethersearch.document_index.vespa_constants import CHUNK_ID
+from aethersearch.document_index.vespa_constants import DOC_UPDATED_AT
+from aethersearch.document_index.vespa_constants import DOCUMENT_ID
+from aethersearch.document_index.vespa_constants import DOCUMENT_SETS
+from aethersearch.document_index.vespa_constants import HIDDEN
+from aethersearch.document_index.vespa_constants import METADATA_LIST
+from aethersearch.document_index.vespa_constants import PERSONAS
+from aethersearch.document_index.vespa_constants import SOURCE_TYPE
+from aethersearch.document_index.vespa_constants import TENANT_ID
+from aethersearch.document_index.vespa_constants import USER_PROJECT
+from aethersearch.kg.utils.formatting_utils import split_relationship_id
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()

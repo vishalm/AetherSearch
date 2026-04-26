@@ -14,7 +14,7 @@ class BasicAuthenticationError(HTTPException):
         super().__init__(status_code=status.HTTP_403_FORBIDDEN, detail=detail)
 
 
-class OnyxJSONEncoder(json.JSONEncoder):
+class AetherSearchJSONEncoder(json.JSONEncoder):
     """Custom JSON encoder that converts datetime and UUID objects to strings."""
 
     def default(self, obj: Any) -> Any:  # ty: ignore[invalid-method-override]
@@ -26,14 +26,14 @@ class OnyxJSONEncoder(json.JSONEncoder):
 
 
 def get_json_line(
-    json_dict: dict[str, Any], encoder: type[json.JSONEncoder] = OnyxJSONEncoder
+    json_dict: dict[str, Any], encoder: type[json.JSONEncoder] = AetherSearchJSONEncoder
 ) -> str:
     """
     Convert a dictionary to a JSON string with custom type handling, and add a newline.
 
     Args:
         json_dict: The dictionary to be converted to JSON.
-        encoder: JSON encoder class to use, defaults to OnyxJSONEncoder.
+        encoder: JSON encoder class to use, defaults to AetherSearchJSONEncoder.
 
     Returns:
         A JSON string representation of the input dictionary with a newline character.

@@ -9,10 +9,10 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.auth import captcha as captcha_module
-from onyx.auth.captcha import CaptchaAction
-from onyx.auth.captcha import CaptchaVerificationError
-from onyx.auth.captcha import verify_captcha_token
+from aethersearch.auth import captcha as captcha_module
+from aethersearch.auth.captcha import CaptchaAction
+from aethersearch.auth.captcha import CaptchaVerificationError
+from aethersearch.auth.captcha import verify_captcha_token
 
 
 def _fake_client(payload: dict) -> MagicMock:
@@ -36,7 +36,7 @@ def _assessment(
     valid: bool = True,
     invalid_reason: str | None = None,
     action: str = "signup",
-    hostname: str = "cloud.onyx.app",
+    hostname: str = "cloud.aethersearch.app",
     create_time: str | None = None,
     score: float = 0.9,
     reasons: list[str] | None = None,
@@ -68,7 +68,7 @@ def _test_env() -> Iterator[None]:
         patch.object(
             captcha_module,
             "RECAPTCHA_HOSTNAME_ALLOWLIST",
-            frozenset({"cloud.onyx.app"}),
+            frozenset({"cloud.aethersearch.app"}),
         ),
         patch.object(captcha_module, "RECAPTCHA_SCORE_THRESHOLD", 0.8),
     ):

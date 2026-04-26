@@ -9,8 +9,8 @@ from pydantic import field_validator
 from pydantic import model_validator
 from pydantic import SecretStr
 
-from onyx.db.enums import HookFailStrategy
-from onyx.db.enums import HookPoint
+from aethersearch.db.enums import HookFailStrategy
+from aethersearch.db.enums import HookPoint
 
 NonEmptySecretStr = Annotated[SecretStr, Field(min_length=1)]
 

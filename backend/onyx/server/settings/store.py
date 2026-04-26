@@ -1,21 +1,21 @@
-from onyx.cache.factory import get_cache_backend
-from onyx.configs.app_configs import DEFAULT_USER_FILE_MAX_UPLOAD_SIZE_MB
-from onyx.configs.app_configs import DISABLE_USER_KNOWLEDGE
-from onyx.configs.app_configs import DISABLE_VECTOR_DB
-from onyx.configs.app_configs import ENABLE_OPENSEARCH_INDEXING_FOR_ONYX
-from onyx.configs.app_configs import MAX_ALLOWED_UPLOAD_SIZE_MB
-from onyx.configs.app_configs import ONYX_QUERY_HISTORY_TYPE
-from onyx.configs.app_configs import SHOW_EXTRA_CONNECTORS
-from onyx.configs.constants import KV_SETTINGS_KEY
-from onyx.configs.constants import OnyxRedisLocks
-from onyx.key_value_store.factory import get_kv_store
-from onyx.key_value_store.interface import KvKeyNotFoundError
-from onyx.server.settings.models import (
+from aethersearch.cache.factory import get_cache_backend
+from aethersearch.configs.app_configs import DEFAULT_USER_FILE_MAX_UPLOAD_SIZE_MB
+from aethersearch.configs.app_configs import DISABLE_USER_KNOWLEDGE
+from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
+from aethersearch.configs.app_configs import ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH
+from aethersearch.configs.app_configs import MAX_ALLOWED_UPLOAD_SIZE_MB
+from aethersearch.configs.app_configs import AETHERSEARCH_QUERY_HISTORY_TYPE
+from aethersearch.configs.app_configs import SHOW_EXTRA_CONNECTORS
+from aethersearch.configs.constants import KV_SETTINGS_KEY
+from aethersearch.configs.constants import AetherSearchRedisLocks
+from aethersearch.key_value_store.factory import get_kv_store
+from aethersearch.key_value_store.interface import KvKeyNotFoundError
+from aethersearch.server.settings.models import (
     DEFAULT_FILE_TOKEN_COUNT_THRESHOLD_K_NO_VECTOR_DB,
 )
-from onyx.server.settings.models import DEFAULT_FILE_TOKEN_COUNT_THRESHOLD_K_VECTOR_DB
-from onyx.server.settings.models import Settings
-from onyx.utils.logger import setup_logger
+from aethersearch.server.settings.models import DEFAULT_FILE_TOKEN_COUNT_THRESHOLD_K_VECTOR_DB
+from aethersearch.server.settings.models import Settings
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -41,25 +41,25 @@ def load_settings() -> Settings:
     cache = get_cache_backend()
 
     try:
-        value = cache.get(OnyxRedisLocks.ANONYMOUS_USER_ENABLED)
+        value = cache.get(AetherSearchRedisLocks.ANONYMOUS_USER_ENABLED)
         if value is not None:
             anonymous_user_enabled = int(value.decode("utf-8")) == 1
         else:
             anonymous_user_enabled = False
-            cache.set(OnyxRedisLocks.ANONYMOUS_USER_ENABLED, "0", ex=SETTINGS_TTL)
+            cache.set(AetherSearchRedisLocks.ANONYMOUS_USER_ENABLED, "0", ex=SETTINGS_TTL)
     except Exception as e:
         logger.error(f"Error loading anonymous user setting from cache: {str(e)}")
         anonymous_user_enabled = False
 
     settings.anonymous_user_enabled = anonymous_user_enabled
     if settings.query_history_type is None:
-        settings.query_history_type = ONYX_QUERY_HISTORY_TYPE
+        settings.query_history_type = AETHERSEARCH_QUERY_HISTORY_TYPE
 
     if DISABLE_USER_KNOWLEDGE:
         settings.user_knowledge_enabled = False
 
     settings.show_extra_connectors = SHOW_EXTRA_CONNECTORS
-    settings.opensearch_indexing_enabled = ENABLE_OPENSEARCH_INDEXING_FOR_ONYX
+    settings.opensearch_indexing_enabled = ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH
 
     # Resolve context-aware defaults for token threshold.
     # None = admin hasn't set a value yet → use context-aware default.
@@ -96,7 +96,7 @@ def store_settings(settings: Settings) -> None:
 
     if settings.anonymous_user_enabled is not None:
         cache.set(
-            OnyxRedisLocks.ANONYMOUS_USER_ENABLED,
+            AetherSearchRedisLocks.ANONYMOUS_USER_ENABLED,
             "1" if settings.anonymous_user_enabled else "0",
             ex=SETTINGS_TTL,
         )

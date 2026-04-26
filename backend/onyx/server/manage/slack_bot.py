@@ -3,35 +3,35 @@ from fastapi import Depends
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.configs.constants import MilestoneRecordType
-from onyx.db.constants import SLACK_BOT_PERSONA_PREFIX
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import ChannelConfig
-from onyx.db.models import User
-from onyx.db.persona import get_persona_by_id
-from onyx.db.slack_bot import fetch_slack_bot
-from onyx.db.slack_bot import fetch_slack_bots
-from onyx.db.slack_bot import insert_slack_bot
-from onyx.db.slack_bot import remove_slack_bot
-from onyx.db.slack_bot import update_slack_bot
-from onyx.db.slack_channel_config import create_slack_channel_persona
-from onyx.db.slack_channel_config import fetch_slack_channel_config
-from onyx.db.slack_channel_config import fetch_slack_channel_configs
-from onyx.db.slack_channel_config import insert_slack_channel_config
-from onyx.db.slack_channel_config import remove_slack_channel_config
-from onyx.db.slack_channel_config import update_slack_channel_config
-from onyx.onyxbot.slack.config import validate_channel_name
-from onyx.server.manage.models import SlackBot
-from onyx.server.manage.models import SlackBotCreationRequest
-from onyx.server.manage.models import SlackChannelConfig
-from onyx.server.manage.models import SlackChannelConfigCreationRequest
-from onyx.server.manage.validate_tokens import validate_app_token
-from onyx.server.manage.validate_tokens import validate_bot_token
-from onyx.server.manage.validate_tokens import validate_user_token
-from onyx.utils.logger import setup_logger
-from onyx.utils.telemetry import mt_cloud_telemetry
+from aethersearch.auth.permissions import require_permission
+from aethersearch.configs.constants import MilestoneRecordType
+from aethersearch.db.constants import SLACK_BOT_PERSONA_PREFIX
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import ChannelConfig
+from aethersearch.db.models import User
+from aethersearch.db.persona import get_persona_by_id
+from aethersearch.db.slack_bot import fetch_slack_bot
+from aethersearch.db.slack_bot import fetch_slack_bots
+from aethersearch.db.slack_bot import insert_slack_bot
+from aethersearch.db.slack_bot import remove_slack_bot
+from aethersearch.db.slack_bot import update_slack_bot
+from aethersearch.db.slack_channel_config import create_slack_channel_persona
+from aethersearch.db.slack_channel_config import fetch_slack_channel_config
+from aethersearch.db.slack_channel_config import fetch_slack_channel_configs
+from aethersearch.db.slack_channel_config import insert_slack_channel_config
+from aethersearch.db.slack_channel_config import remove_slack_channel_config
+from aethersearch.db.slack_channel_config import update_slack_channel_config
+from aethersearch.aethersearchbot.slack.config import validate_channel_name
+from aethersearch.server.manage.models import SlackBot
+from aethersearch.server.manage.models import SlackBotCreationRequest
+from aethersearch.server.manage.models import SlackChannelConfig
+from aethersearch.server.manage.models import SlackChannelConfigCreationRequest
+from aethersearch.server.manage.validate_tokens import validate_app_token
+from aethersearch.server.manage.validate_tokens import validate_bot_token
+from aethersearch.server.manage.validate_tokens import validate_user_token
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.telemetry import mt_cloud_telemetry
 from shared_configs.contextvars import get_current_tenant_id
 
 SLACK_API_CHANNELS_PER_PAGE = 100
@@ -71,7 +71,7 @@ def _form_channel_config(
 
     if respond_tag_only and respond_member_group_list:
         raise ValueError(
-            "Cannot set OnyxBot to only respond to tags only and also respond to a predetermined set of users."
+            "Cannot set AetherSearchBot to only respond to tags only and also respond to a predetermined set of users."
         )
 
     if (
@@ -79,7 +79,7 @@ def _form_channel_config(
         and slack_channel_config_creation_request.respond_member_group_list
     ):
         raise ValueError(
-            "Cannot set OnyxBot to respond to users in a private (ephemeral) message "
+            "Cannot set AetherSearchBot to respond to users in a private (ephemeral) message "
             "and also respond to a selected list of users."
         )
 
@@ -188,7 +188,7 @@ def patch_slack_channel_config(
             if not persona.name.startswith(SLACK_BOT_PERSONA_PREFIX):
                 # Don't update actual non-slackbot specific personas
                 # Since this one specified document sets, we have to create a new persona
-                # for this OnyxBot config
+                # for this AetherSearchBot config
                 existing_persona_id = None
             else:
                 existing_persona_id = existing_slack_channel_config.persona_id
@@ -276,7 +276,7 @@ def create_bot(
     mt_cloud_telemetry(
         tenant_id=tenant_id,
         distinct_id=tenant_id,
-        event=MilestoneRecordType.CREATED_ONYX_BOT,
+        event=MilestoneRecordType.CREATED_AETHERSEARCH_BOT,
     )
 
     return SlackBot.from_model(slack_bot_model)

@@ -7,8 +7,8 @@ from datetime import timezone
 
 import pytest
 
-from onyx.configs.constants import QAFeedbackType
-from onyx.configs.constants import SessionType
+from aethersearch.configs.constants import QAFeedbackType
+from aethersearch.configs.constants import SessionType
 from tests.integration.common_utils.managers.api_key import APIKeyManager
 from tests.integration.common_utils.managers.cc_pair import CCPairManager
 from tests.integration.common_utils.managers.chat import ChatSessionManager

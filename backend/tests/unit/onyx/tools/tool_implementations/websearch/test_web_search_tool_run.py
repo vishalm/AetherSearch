@@ -7,14 +7,14 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.server.query_and_chat.placement import Placement
-from onyx.tools.models import ToolCallException
-from onyx.tools.models import WebSearchToolOverrideKwargs
-from onyx.tools.tool_implementations.web_search.models import WebSearchResult
-from onyx.tools.tool_implementations.web_search.web_search_tool import (
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.tools.models import ToolCallException
+from aethersearch.tools.models import WebSearchToolOverrideKwargs
+from aethersearch.tools.tool_implementations.web_search.models import WebSearchResult
+from aethersearch.tools.tool_implementations.web_search.web_search_tool import (
     _normalize_queries_input,
 )
-from onyx.tools.tool_implementations.web_search.web_search_tool import WebSearchTool
+from aethersearch.tools.tool_implementations.web_search.web_search_tool import WebSearchTool
 
 
 def _make_result(
@@ -33,14 +33,14 @@ def _make_tool(mock_provider: Any) -> WebSearchTool:
 
     with (
         patch(
-            "onyx.tools.tool_implementations.web_search.web_search_tool.get_session_with_current_tenant"
+            "aethersearch.tools.tool_implementations.web_search.web_search_tool.get_session_with_current_tenant"
         ) as mock_session_ctx,
         patch(
-            "onyx.tools.tool_implementations.web_search.web_search_tool.fetch_active_web_search_provider",
+            "aethersearch.tools.tool_implementations.web_search.web_search_tool.fetch_active_web_search_provider",
             return_value=provider_model,
         ),
         patch(
-            "onyx.tools.tool_implementations.web_search.web_search_tool.build_search_provider_from_config",
+            "aethersearch.tools.tool_implementations.web_search.web_search_tool.build_search_provider_from_config",
             return_value=mock_provider,
         ),
     ):

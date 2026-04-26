@@ -3,18 +3,18 @@ from sqlalchemy import delete
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from onyx.configs.model_configs import DEFAULT_DOCUMENT_ENCODER_MODEL
-from onyx.configs.model_configs import DOCUMENT_ENCODER_MODEL
-from onyx.context.search.models import SavedSearchSettings
-from onyx.db.llm import fetch_embedding_provider
-from onyx.db.models import CloudEmbeddingProvider
-from onyx.db.models import IndexAttempt
-from onyx.db.models import IndexModelStatus
-from onyx.db.models import SearchSettings
-from onyx.server.manage.embedding.models import (
+from aethersearch.configs.model_configs import DEFAULT_DOCUMENT_ENCODER_MODEL
+from aethersearch.configs.model_configs import DOCUMENT_ENCODER_MODEL
+from aethersearch.context.search.models import SavedSearchSettings
+from aethersearch.db.llm import fetch_embedding_provider
+from aethersearch.db.models import CloudEmbeddingProvider
+from aethersearch.db.models import IndexAttempt
+from aethersearch.db.models import IndexModelStatus
+from aethersearch.db.models import SearchSettings
+from aethersearch.server.manage.embedding.models import (
     CloudEmbeddingProvider as ServerCloudEmbeddingProvider,
 )
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import PRESERVED_SEARCH_FIELDS
 from shared_configs.enums import EmbeddingProvider
 

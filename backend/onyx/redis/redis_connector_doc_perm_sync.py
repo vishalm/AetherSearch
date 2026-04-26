@@ -9,16 +9,16 @@ import redis
 from pydantic import BaseModel
 from redis.lock import Lock as RedisLock
 
-from onyx.access.models import DocExternalAccess
-from onyx.access.models import ElementExternalAccess
-from onyx.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
-from onyx.configs.constants import CELERY_PERMISSIONS_SYNC_LOCK_TIMEOUT
-from onyx.configs.constants import OnyxRedisConstants
-from onyx.redis.redis_pool import SCAN_ITER_COUNT_DEFAULT
-from onyx.server.metrics.perm_sync_metrics import (
+from aethersearch.access.models import DocExternalAccess
+from aethersearch.access.models import ElementExternalAccess
+from aethersearch.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
+from aethersearch.configs.constants import CELERY_PERMISSIONS_SYNC_LOCK_TIMEOUT
+from aethersearch.configs.constants import AetherSearchRedisConstants
+from aethersearch.redis.redis_pool import SCAN_ITER_COUNT_DEFAULT
+from aethersearch.server.metrics.perm_sync_metrics import (
     observe_doc_perm_sync_db_update_duration,
 )
-from onyx.utils.variable_functionality import fetch_versioned_implementation
+from aethersearch.utils.variable_functionality import fetch_versioned_implementation
 
 
 class PermissionSyncResult(NamedTuple):
@@ -97,7 +97,7 @@ class RedisConnectorPermissionSync:
         """Count of active permission sync tasks"""
         count = 0
         for _ in self.redis.sscan_iter(
-            OnyxRedisConstants.ACTIVE_FENCES,
+            AetherSearchRedisConstants.ACTIVE_FENCES,
             RedisConnectorPermissionSync.FENCE_PREFIX + "*",
             count=SCAN_ITER_COUNT_DEFAULT,
         ):
@@ -127,12 +127,12 @@ class RedisConnectorPermissionSync:
         payload: RedisConnectorPermissionSyncPayload | None,
     ) -> None:
         if not payload:
-            self.redis.srem(OnyxRedisConstants.ACTIVE_FENCES, self.fence_key)
+            self.redis.srem(AetherSearchRedisConstants.ACTIVE_FENCES, self.fence_key)
             self.redis.delete(self.fence_key)
             return
 
         self.redis.set(self.fence_key, payload.model_dump_json(), ex=self.FENCE_TTL)
-        self.redis.sadd(OnyxRedisConstants.ACTIVE_FENCES, self.fence_key)
+        self.redis.sadd(AetherSearchRedisConstants.ACTIVE_FENCES, self.fence_key)
 
     def set_active(self) -> None:
         """This sets a signal to keep the permissioning flow from getting cleaned up within
@@ -186,7 +186,7 @@ class RedisConnectorPermissionSync:
         last_lock_time = time.monotonic()
 
         element_update_permissions_fn = fetch_versioned_implementation(
-            "onyx.background.celery.tasks.doc_permission_syncing.tasks",
+            "aethersearch.background.celery.tasks.doc_permission_syncing.tasks",
             "element_update_permissions",
         )
 
@@ -262,7 +262,7 @@ class RedisConnectorPermissionSync:
         return PermissionSyncResult(num_updated=num_permissions, num_errors=num_errors)
 
     def reset(self) -> None:
-        self.redis.srem(OnyxRedisConstants.ACTIVE_FENCES, self.fence_key)
+        self.redis.srem(AetherSearchRedisConstants.ACTIVE_FENCES, self.fence_key)
         self.redis.delete(self.active_key)
         self.redis.delete(self.generator_progress_key)
         self.redis.delete(self.generator_complete_key)

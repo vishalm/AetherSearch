@@ -3,13 +3,13 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from onyx.deep_research.dr_mock_tools import GENERATE_REPORT_TOOL_NAME
-from onyx.deep_research.dr_mock_tools import THINK_TOOL_NAME
-from onyx.deep_research.models import SpecialToolCalls
-from onyx.llm.model_response import ChatCompletionDeltaToolCall
-from onyx.llm.model_response import Delta
-from onyx.llm.model_response import FunctionCall
-from onyx.tools.models import ToolCallKickoff
+from aethersearch.deep_research.dr_mock_tools import GENERATE_REPORT_TOOL_NAME
+from aethersearch.deep_research.dr_mock_tools import THINK_TOOL_NAME
+from aethersearch.deep_research.models import SpecialToolCalls
+from aethersearch.llm.model_response import ChatCompletionDeltaToolCall
+from aethersearch.llm.model_response import Delta
+from aethersearch.llm.model_response import FunctionCall
+from aethersearch.tools.models import ToolCallKickoff
 
 # JSON prefixes to detect in think_tool arguments
 # The schema is: {"reasoning": "...content..."}

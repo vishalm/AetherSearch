@@ -3,7 +3,7 @@ from typing import Literal
 from pydantic import BaseModel
 from pydantic import ConfigDict
 
-from ee.onyx.server.query_and_chat.models import SearchDocWithContent
+from ee.aethersearch.server.query_and_chat.models import SearchDocWithContent
 
 
 class SearchQueriesPacket(BaseModel):

@@ -1,6 +1,6 @@
 import {
   CHROME_SPECIFIC_STORAGE_KEYS,
-  DEFAULT_ONYX_DOMAIN,
+  DEFAULT_AETHERSEARCH_DOMAIN,
   ACTIONS,
 } from "./constants.js";
 
@@ -19,7 +19,7 @@ const errorModalHTML = `
         <h2>Configuration Error</h2>
       </div>
       <div class="modal-body">
-        <p class="modal-description">The Onyx configuration needs to be updated. Please check your settings or contact your Onyx administrator.</p>
+        <p class="modal-description">The AetherSearch configuration needs to be updated. Please check your settings or contact your AetherSearch administrator.</p>
         <div class="url-display">
           <span class="url-label">Attempted to load:</span>
           <span id="attempted-url" class="url-value"></span>
@@ -241,11 +241,11 @@ const authModalHTML = `
         <h2>Authentication Required</h2>
       </div>
       <div class="modal-body">
-        <p class="modal-description">You need to log in to access Onyx. Click the button below to authenticate.</p>
+        <p class="modal-description">You need to log in to access AetherSearch. Click the button below to authenticate.</p>
       </div>
       <div class="modal-footer">
         <div class="button-container">
-          <button id="open-auth" class="button primary">Log In to Onyx</button>
+          <button id="open-auth" class="button primary">Log In to AetherSearch</button>
         </div>
       </div>
     </div>
@@ -278,7 +278,7 @@ export function initErrorModal() {
     });
 
     disableOverrideButton.addEventListener("click", () => {
-      chrome.storage.local.set({ useOnyxAsDefaultNewTab: false }, () => {
+      chrome.storage.local.set({ useAetherSearchAsDefaultNewTab: false }, () => {
         chrome.tabs.update({ url: "chrome://new-tab-page" });
       });
     });
@@ -326,9 +326,9 @@ export function initAuthModal() {
     openAuthButton.addEventListener("click", (e) => {
       e.preventDefault();
       chrome.storage.local.get(
-        { [CHROME_SPECIFIC_STORAGE_KEYS.ONYX_DOMAIN]: DEFAULT_ONYX_DOMAIN },
+        { [CHROME_SPECIFIC_STORAGE_KEYS.AETHERSEARCH_DOMAIN]: DEFAULT_AETHERSEARCH_DOMAIN },
         (result) => {
-          const onyxDomain = result[CHROME_SPECIFIC_STORAGE_KEYS.ONYX_DOMAIN];
+          const aethersearchDomain = result[CHROME_SPECIFIC_STORAGE_KEYS.AETHERSEARCH_DOMAIN];
           chrome.runtime.sendMessage(
             { action: ACTIONS.CLOSE_SIDE_PANEL },
             () => {
@@ -340,7 +340,7 @@ export function initAuthModal() {
               }
               chrome.tabs.create(
                 {
-                  url: `${onyxDomain}/auth/login`,
+                  url: `${aethersearchDomain}/auth/login`,
                   active: true,
                 },
                 (_) => {

@@ -15,11 +15,11 @@ from collections.abc import Generator
 from enum import Enum
 from typing import TypeAlias
 
-from onyx.configs.chat_configs import STOP_STREAM_PAT
-from onyx.context.search.models import SearchDoc
-from onyx.prompts.constants import TRIPLE_BACKTICK
-from onyx.server.query_and_chat.streaming_models import CitationInfo
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.chat_configs import STOP_STREAM_PAT
+from aethersearch.context.search.models import SearchDoc
+from aethersearch.prompts.constants import TRIPLE_BACKTICK
+from aethersearch.server.query_and_chat.streaming_models import CitationInfo
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

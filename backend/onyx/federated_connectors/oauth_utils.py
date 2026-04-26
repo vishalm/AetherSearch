@@ -5,9 +5,9 @@ import json
 import uuid
 from typing import Any
 
-from onyx.cache.factory import get_cache_backend
-from onyx.configs.app_configs import WEB_DOMAIN
-from onyx.utils.logger import setup_logger
+from aethersearch.cache.factory import get_cache_backend
+from aethersearch.configs.app_configs import WEB_DOMAIN
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

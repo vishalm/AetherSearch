@@ -9,14 +9,14 @@ from typing import Any
 
 import pytest
 
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentSource
-from onyx.connectors.models import TextSection
-from onyx.connectors.sharepoint.connector import DriveItemData
-from onyx.connectors.sharepoint.connector import SHARED_DOCUMENTS_MAP
-from onyx.connectors.sharepoint.connector import SharepointConnector
-from onyx.connectors.sharepoint.connector import SharepointConnectorCheckpoint
-from onyx.connectors.sharepoint.connector import SiteDescriptor
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentSource
+from aethersearch.connectors.models import TextSection
+from aethersearch.connectors.sharepoint.connector import DriveItemData
+from aethersearch.connectors.sharepoint.connector import SHARED_DOCUMENTS_MAP
+from aethersearch.connectors.sharepoint.connector import SharepointConnector
+from aethersearch.connectors.sharepoint.connector import SharepointConnectorCheckpoint
+from aethersearch.connectors.sharepoint.connector import SiteDescriptor
 
 
 class _FakeQuery:
@@ -237,7 +237,7 @@ def test_load_from_checkpoint_maps_drive_name(monkeypatch: pytest.MonkeyPatch) -
         fake_fetch_one_delta_page,
     )
     monkeypatch.setattr(
-        "onyx.connectors.sharepoint.connector._convert_driveitem_to_document_with_permissions",
+        "aethersearch.connectors.sharepoint.connector._convert_driveitem_to_document_with_permissions",
         fake_convert,
     )
     monkeypatch.setattr(
@@ -271,7 +271,7 @@ def test_load_from_checkpoint_maps_drive_name(monkeypatch: pytest.MonkeyPatch) -
     except StopIteration:
         pass
 
-    from onyx.connectors.models import HierarchyNode
+    from aethersearch.connectors.models import HierarchyNode
 
     documents = [item for item in all_yielded if not isinstance(item, HierarchyNode)]
     hierarchy_nodes = [item for item in all_yielded if isinstance(item, HierarchyNode)]

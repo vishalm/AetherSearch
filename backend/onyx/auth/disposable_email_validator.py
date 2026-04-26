@@ -12,8 +12,8 @@ from typing import Set
 
 import httpx
 
-from onyx.configs.app_configs import DISPOSABLE_EMAIL_DOMAINS_URL
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import DISPOSABLE_EMAIL_DOMAINS_URL
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

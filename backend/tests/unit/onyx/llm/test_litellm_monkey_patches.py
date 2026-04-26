@@ -2,7 +2,7 @@ from typing import Any
 
 from litellm.llms.ollama.chat.transformation import OllamaChatCompletionResponseIterator
 
-from onyx.llm.litellm_singleton.monkey_patches import apply_monkey_patches
+from aethersearch.llm.litellm_singleton.monkey_patches import apply_monkey_patches
 
 _UNSET = object()
 

@@ -1,10 +1,10 @@
 import pytest
 
-from onyx.db.enums import HookPoint
-from onyx.hooks import registry as registry_module
-from onyx.hooks.registry import get_all_specs
-from onyx.hooks.registry import get_hook_point_spec
-from onyx.hooks.registry import validate_registry
+from aethersearch.db.enums import HookPoint
+from aethersearch.hooks import registry as registry_module
+from aethersearch.hooks.registry import get_all_specs
+from aethersearch.hooks.registry import get_hook_point_spec
+from aethersearch.hooks.registry import validate_registry
 
 
 def test_registry_covers_all_hook_points() -> None:

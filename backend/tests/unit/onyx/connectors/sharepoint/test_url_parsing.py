@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from onyx.connectors.sharepoint.connector import SharepointConnector
+from aethersearch.connectors.sharepoint.connector import SharepointConnector
 
 
 def test_extract_site_and_drive_info_from_share_link() -> None:

@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/onyx-dot-app/onyx/cli/internal/config"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/config"
 	"github.com/spf13/cobra"
 )
 

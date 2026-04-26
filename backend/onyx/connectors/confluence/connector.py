@@ -10,50 +10,50 @@ from atlassian.errors import ApiError
 from requests.exceptions import HTTPError
 from typing_extensions import override
 
-from onyx.access.models import ExternalAccess
-from onyx.configs.app_configs import CONFLUENCE_CONNECTOR_LABELS_TO_SKIP
-from onyx.configs.app_configs import CONFLUENCE_TIMEZONE_OFFSET
-from onyx.configs.app_configs import CONTINUE_ON_CONNECTOR_FAILURE
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.confluence.access import get_all_space_permissions
-from onyx.connectors.confluence.access import get_page_restrictions
-from onyx.connectors.confluence.onyx_confluence import extract_text_from_confluence_html
-from onyx.connectors.confluence.onyx_confluence import OnyxConfluence
-from onyx.connectors.confluence.utils import build_confluence_document_id
-from onyx.connectors.confluence.utils import convert_attachment_to_content
-from onyx.connectors.confluence.utils import datetime_from_string
-from onyx.connectors.confluence.utils import update_param_in_path
-from onyx.connectors.confluence.utils import validate_attachment_filetype
-from onyx.connectors.credentials_provider import OnyxStaticCredentialsProvider
-from onyx.connectors.cross_connector_utils.miscellaneous_utils import (
+from aethersearch.access.models import ExternalAccess
+from aethersearch.configs.app_configs import CONFLUENCE_CONNECTOR_LABELS_TO_SKIP
+from aethersearch.configs.app_configs import CONFLUENCE_TIMEZONE_OFFSET
+from aethersearch.configs.app_configs import CONTINUE_ON_CONNECTOR_FAILURE
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.confluence.access import get_all_space_permissions
+from aethersearch.connectors.confluence.access import get_page_restrictions
+from aethersearch.connectors.confluence.aethersearch_confluence import extract_text_from_confluence_html
+from aethersearch.connectors.confluence.aethersearch_confluence import AetherSearchConfluence
+from aethersearch.connectors.confluence.utils import build_confluence_document_id
+from aethersearch.connectors.confluence.utils import convert_attachment_to_content
+from aethersearch.connectors.confluence.utils import datetime_from_string
+from aethersearch.connectors.confluence.utils import update_param_in_path
+from aethersearch.connectors.confluence.utils import validate_attachment_filetype
+from aethersearch.connectors.credentials_provider import AetherSearchStaticCredentialsProvider
+from aethersearch.connectors.cross_connector_utils.miscellaneous_utils import (
     is_atlassian_date_error,
 )
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.connectors.exceptions import CredentialExpiredError
-from onyx.connectors.exceptions import InsufficientPermissionsError
-from onyx.connectors.exceptions import UnexpectedValidationError
-from onyx.connectors.interfaces import CheckpointedConnector
-from onyx.connectors.interfaces import CheckpointOutput
-from onyx.connectors.interfaces import ConnectorCheckpoint
-from onyx.connectors.interfaces import ConnectorFailure
-from onyx.connectors.interfaces import CredentialsConnector
-from onyx.connectors.interfaces import CredentialsProviderInterface
-from onyx.connectors.interfaces import GenerateSlimDocumentOutput
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.interfaces import SlimConnector
-from onyx.connectors.interfaces import SlimConnectorWithPermSync
-from onyx.connectors.models import BasicExpertInfo
-from onyx.connectors.models import ConnectorMissingCredentialError
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentFailure
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import ImageSection
-from onyx.connectors.models import SlimDocument
-from onyx.connectors.models import TextSection
-from onyx.db.enums import HierarchyNodeType
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.utils.logger import setup_logger
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.connectors.exceptions import CredentialExpiredError
+from aethersearch.connectors.exceptions import InsufficientPermissionsError
+from aethersearch.connectors.exceptions import UnexpectedValidationError
+from aethersearch.connectors.interfaces import CheckpointedConnector
+from aethersearch.connectors.interfaces import CheckpointOutput
+from aethersearch.connectors.interfaces import ConnectorCheckpoint
+from aethersearch.connectors.interfaces import ConnectorFailure
+from aethersearch.connectors.interfaces import CredentialsConnector
+from aethersearch.connectors.interfaces import CredentialsProviderInterface
+from aethersearch.connectors.interfaces import GenerateSlimDocumentOutput
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.interfaces import SlimConnector
+from aethersearch.connectors.interfaces import SlimConnectorWithPermSync
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.connectors.models import ConnectorMissingCredentialError
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentFailure
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import ImageSection
+from aethersearch.connectors.models import SlimDocument
+from aethersearch.connectors.models import TextSection
+from aethersearch.db.enums import HierarchyNodeType
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 # Potential Improvements
@@ -131,8 +131,8 @@ class ConfluenceConnector(
         self.labels_to_skip = labels_to_skip
         self.timezone_offset = timezone_offset
         self.scoped_token = scoped_token
-        self._confluence_client: OnyxConfluence | None = None
-        self._low_timeout_confluence_client: OnyxConfluence | None = None
+        self._confluence_client: AetherSearchConfluence | None = None
+        self._low_timeout_confluence_client: AetherSearchConfluence | None = None
         self._fetched_titles: set[str] = set()
         self.allow_images = False
 
@@ -347,13 +347,13 @@ class ConfluenceConnector(
         )
 
     @property
-    def confluence_client(self) -> OnyxConfluence:
+    def confluence_client(self) -> AetherSearchConfluence:
         if self._confluence_client is None:
             raise ConnectorMissingCredentialError("Confluence")
         return self._confluence_client
 
     @property
-    def low_timeout_confluence_client(self) -> OnyxConfluence:
+    def low_timeout_confluence_client(self) -> AetherSearchConfluence:
         if self._low_timeout_confluence_client is None:
             raise ConnectorMissingCredentialError("Confluence")
         return self._low_timeout_confluence_client
@@ -364,7 +364,7 @@ class ConfluenceConnector(
         self.credentials_provider = credentials_provider
 
         # raises exception if there's a problem
-        confluence_client = OnyxConfluence(
+        confluence_client = AetherSearchConfluence(
             is_cloud=self.is_cloud,
             url=self.wiki_base,
             credentials_provider=credentials_provider,
@@ -376,7 +376,7 @@ class ConfluenceConnector(
         self._confluence_client = confluence_client
 
         # create a low timeout confluence client for sync flows
-        low_timeout_confluence_client = OnyxConfluence(
+        low_timeout_confluence_client = AetherSearchConfluence(
             is_cloud=self.is_cloud,
             url=self.wiki_base,
             credentials_provider=credentials_provider,
@@ -1055,7 +1055,7 @@ class ConfluenceConnector(
 if __name__ == "__main__":
     import os
 
-    from onyx.utils.variable_functionality import global_version
+    from aethersearch.utils.variable_functionality import global_version
     from tests.daily.connectors.utils import load_all_from_connector
 
     # For connector permission testing, set EE to true.
@@ -1080,7 +1080,7 @@ if __name__ == "__main__":
         # page_id=page_id,
     )
 
-    credentials_provider = OnyxStaticCredentialsProvider(
+    credentials_provider = AetherSearchStaticCredentialsProvider(
         None,
         DocumentSource.CONFLUENCE,
         {

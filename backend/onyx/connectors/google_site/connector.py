@@ -6,18 +6,18 @@ from typing import cast
 from bs4 import BeautifulSoup
 from bs4 import Tag
 
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.interfaces import GenerateDocumentsOutput
-from onyx.connectors.interfaces import LoadConnector
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import TextSection
-from onyx.file_processing.extract_file_text import load_files_from_zip
-from onyx.file_processing.extract_file_text import read_text_file
-from onyx.file_processing.html_utils import web_html_cleanup
-from onyx.file_store.file_store import get_default_file_store
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.interfaces import GenerateDocumentsOutput
+from aethersearch.connectors.interfaces import LoadConnector
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import TextSection
+from aethersearch.file_processing.extract_file_text import load_files_from_zip
+from aethersearch.file_processing.extract_file_text import read_text_file
+from aethersearch.file_processing.html_utils import web_html_cleanup
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

@@ -151,7 +151,7 @@ function BedrockModalInternals({
           <InputVertical
             withLabel={FIELD_BEDROCK_AUTH_METHOD}
             title="Authentication Method"
-            subDescription="Choose how Onyx should authenticate with Bedrock."
+            subDescription="Choose how AetherSearch should authenticate with Bedrock."
           >
             <InputSelect
               value={authMethod || AUTH_METHOD_ACCESS_KEY}
@@ -214,7 +214,7 @@ function BedrockModalInternals({
         <InputPadder>
           <MessageCard
             variant="info"
-            title="Onyx will use the IAM role attached to the environment it’s running in to authenticate."
+            title="AetherSearch will use the IAM role attached to the environment it’s running in to authenticate."
           />
         </InputPadder>
       )}

@@ -19,36 +19,36 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from onyx.access.models import ExternalAccess
-from onyx.background.celery.celery_utils import extract_ids_from_runnable_connector
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.interfaces import GenerateSlimDocumentOutput
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.interfaces import SlimConnectorWithPermSync
-from onyx.connectors.models import HierarchyNode as PydanticHierarchyNode
-from onyx.connectors.models import InputType
-from onyx.connectors.models import SlimDocument
-from onyx.db.enums import AccessType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import HierarchyNodeType
-from onyx.db.hierarchy import delete_orphaned_hierarchy_nodes
-from onyx.db.hierarchy import ensure_source_node_exists
-from onyx.db.hierarchy import get_all_hierarchy_nodes_for_source
-from onyx.db.hierarchy import get_hierarchy_node_by_raw_id
-from onyx.db.hierarchy import link_hierarchy_nodes_to_documents
-from onyx.db.hierarchy import remove_stale_hierarchy_node_cc_pair_entries
-from onyx.db.hierarchy import reparent_orphaned_hierarchy_nodes
-from onyx.db.hierarchy import update_document_parent_hierarchy_nodes
-from onyx.db.hierarchy import upsert_hierarchy_node_cc_pair_entries
-from onyx.db.hierarchy import upsert_hierarchy_nodes_batch
-from onyx.db.models import Connector
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import Credential
-from onyx.db.models import Document as DbDocument
-from onyx.db.models import HierarchyNode as DBHierarchyNode
-from onyx.db.models import HierarchyNodeByConnectorCredentialPair
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.kg.models import KGStage
+from aethersearch.access.models import ExternalAccess
+from aethersearch.background.celery.celery_utils import extract_ids_from_runnable_connector
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.interfaces import GenerateSlimDocumentOutput
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.interfaces import SlimConnectorWithPermSync
+from aethersearch.connectors.models import HierarchyNode as PydanticHierarchyNode
+from aethersearch.connectors.models import InputType
+from aethersearch.connectors.models import SlimDocument
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import HierarchyNodeType
+from aethersearch.db.hierarchy import delete_orphaned_hierarchy_nodes
+from aethersearch.db.hierarchy import ensure_source_node_exists
+from aethersearch.db.hierarchy import get_all_hierarchy_nodes_for_source
+from aethersearch.db.hierarchy import get_hierarchy_node_by_raw_id
+from aethersearch.db.hierarchy import link_hierarchy_nodes_to_documents
+from aethersearch.db.hierarchy import remove_stale_hierarchy_node_cc_pair_entries
+from aethersearch.db.hierarchy import reparent_orphaned_hierarchy_nodes
+from aethersearch.db.hierarchy import update_document_parent_hierarchy_nodes
+from aethersearch.db.hierarchy import upsert_hierarchy_node_cc_pair_entries
+from aethersearch.db.hierarchy import upsert_hierarchy_nodes_batch
+from aethersearch.db.models import Connector
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import Credential
+from aethersearch.db.models import Document as DbDocument
+from aethersearch.db.models import HierarchyNode as DBHierarchyNode
+from aethersearch.db.models import HierarchyNodeByConnectorCredentialPair
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.kg.models import KGStage
 
 # ---------------------------------------------------------------------------
 # Constants

@@ -15,10 +15,10 @@ from fastapi.routing import APIRoute
 
 from shared_configs.contextvars import CURRENT_ENDPOINT_CONTEXTVAR
 from shared_configs.contextvars import CURRENT_TENANT_ID_CONTEXTVAR
-from shared_configs.contextvars import ONYX_REQUEST_ID_CONTEXTVAR
+from shared_configs.contextvars import AETHERSEARCH_REQUEST_ID_CONTEXTVAR
 
 
-def add_onyx_tenant_id_middleware(
+def add_aethersearch_tenant_id_middleware(
     app: FastAPI,
     logger: logging.LoggerAdapter,  # noqa: ARG001
 ) -> None:
@@ -28,13 +28,13 @@ def add_onyx_tenant_id_middleware(
     ) -> Response:
         """Captures and sets the context var for the tenant."""
 
-        onyx_tenant_id = request.headers.get("X-Onyx-Tenant-ID")
-        if onyx_tenant_id:
-            CURRENT_TENANT_ID_CONTEXTVAR.set(onyx_tenant_id)
+        aethersearch_tenant_id = request.headers.get("X-AetherSearch-Tenant-ID")
+        if aethersearch_tenant_id:
+            CURRENT_TENANT_ID_CONTEXTVAR.set(aethersearch_tenant_id)
         return await call_next(request)
 
 
-def add_onyx_request_id_middleware(
+def add_aethersearch_request_id_middleware(
     app: FastAPI,
     prefix: str,
     logger: logging.LoggerAdapter,  # noqa: ARG001
@@ -51,28 +51,28 @@ def add_onyx_request_id_middleware(
         Total length is 12 chars.
         """
 
-        onyx_request_id = request.headers.get("X-Onyx-Request-ID")
-        if not onyx_request_id:
-            onyx_request_id = make_randomized_onyx_request_id(prefix)
+        aethersearch_request_id = request.headers.get("X-AetherSearch-Request-ID")
+        if not aethersearch_request_id:
+            aethersearch_request_id = make_randomized_aethersearch_request_id(prefix)
 
-        ONYX_REQUEST_ID_CONTEXTVAR.set(onyx_request_id)
+        AETHERSEARCH_REQUEST_ID_CONTEXTVAR.set(aethersearch_request_id)
         return await call_next(request)
 
 
-def make_randomized_onyx_request_id(prefix: str) -> str:
+def make_randomized_aethersearch_request_id(prefix: str) -> str:
     """generates a randomized request id"""
 
     hash_input = str(uuid.uuid4())
-    return _make_onyx_request_id(prefix, hash_input)
+    return _make_aethersearch_request_id(prefix, hash_input)
 
 
-def make_structured_onyx_request_id(prefix: str, request_url: str) -> str:
+def make_structured_aethersearch_request_id(prefix: str, request_url: str) -> str:
     """Not used yet, but could be in the future!"""
     hash_input = f"{request_url}:{datetime.now(timezone.utc)}"
-    return _make_onyx_request_id(prefix, hash_input)
+    return _make_aethersearch_request_id(prefix, hash_input)
 
 
-def _make_onyx_request_id(prefix: str, hash_input: str) -> str:
+def _make_aethersearch_request_id(prefix: str, hash_input: str) -> str:
     """helper function to return an id given a string input"""
     hash_obj = hashlib.md5(hash_input.encode("utf-8"), usedforsecurity=False)
     hash_bytes = hash_obj.digest()[:6]  # Truncate to 6 bytes
@@ -80,8 +80,8 @@ def _make_onyx_request_id(prefix: str, hash_input: str) -> str:
     # 6 bytes becomes 8 bytes. we shouldn't need to strip but just in case
     # NOTE: possible we'll want more input bytes if id's aren't unique enough
     hash_str = base64.urlsafe_b64encode(hash_bytes).decode("utf-8").rstrip("=")
-    onyx_request_id = f"{prefix}:{hash_str}"
-    return onyx_request_id
+    aethersearch_request_id = f"{prefix}:{hash_str}"
+    return aethersearch_request_id
 
 
 def _build_route_map(app: FastAPI) -> list[tuple[re.Pattern[str], str]]:
@@ -109,8 +109,8 @@ def add_endpoint_context_middleware(app: FastAPI) -> None:
     """Set CURRENT_ENDPOINT_CONTEXTVAR so Prometheus pool metrics can
     attribute DB connections to the endpoint that checked them out.
 
-    Used by ``onyx_db_connections_held_by_endpoint`` and
-    ``onyx_db_connection_hold_seconds`` in the pool event listeners.
+    Used by ``aethersearch_db_connections_held_by_endpoint`` and
+    ``aethersearch_db_connection_hold_seconds`` in the pool event listeners.
 
     Resolves request paths to route templates (e.g. /api/chat/{chat_id}
     instead of /api/chat/abc-123) to keep metric label cardinality low.

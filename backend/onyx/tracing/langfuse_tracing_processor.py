@@ -12,13 +12,13 @@ from typing import Union
 from langfuse import Langfuse
 from langfuse._client.span import LangfuseObservationWrapper
 
-from onyx.tracing.framework.processor_interface import TracingProcessor
-from onyx.tracing.framework.span_data import AgentSpanData
-from onyx.tracing.framework.span_data import FunctionSpanData
-from onyx.tracing.framework.span_data import GenerationSpanData
-from onyx.tracing.framework.span_data import SpanData
-from onyx.tracing.framework.spans import Span
-from onyx.tracing.framework.traces import Trace
+from aethersearch.tracing.framework.processor_interface import TracingProcessor
+from aethersearch.tracing.framework.span_data import AgentSpanData
+from aethersearch.tracing.framework.span_data import FunctionSpanData
+from aethersearch.tracing.framework.span_data import GenerationSpanData
+from aethersearch.tracing.framework.span_data import SpanData
+from aethersearch.tracing.framework.spans import Span
+from aethersearch.tracing.framework.traces import Trace
 
 logger = logging.getLogger(__name__)
 
@@ -77,7 +77,7 @@ class LangfuseTracingProcessor(TracingProcessor):
         if not self._enable_masking:
             return data
         try:
-            from onyx.tracing.masking import mask_sensitive_data
+            from aethersearch.tracing.masking import mask_sensitive_data
 
             return mask_sensitive_data(data)
         except Exception as e:
@@ -87,7 +87,7 @@ class LangfuseTracingProcessor(TracingProcessor):
     def _calculate_cost(self, data: GenerationSpanData) -> Optional[float]:
         """Calculate LLM cost for this generation span."""
         try:
-            from onyx.llm.cost import calculate_llm_cost_cents
+            from aethersearch.llm.cost import calculate_llm_cost_cents
 
             usage = data.usage or {}
             prompt_tokens = usage.get("prompt_tokens") or usage.get("input_tokens") or 0

@@ -1,26 +1,26 @@
-"""Unit tests for onyx.db.voice module."""
+"""Unit tests for aethersearch.db.voice module."""
 
 from unittest.mock import MagicMock
 from uuid import uuid4
 
 import pytest
 
-from onyx.db.models import VoiceProvider
-from onyx.db.voice import deactivate_stt_provider
-from onyx.db.voice import deactivate_tts_provider
-from onyx.db.voice import delete_voice_provider
-from onyx.db.voice import fetch_default_stt_provider
-from onyx.db.voice import fetch_default_tts_provider
-from onyx.db.voice import fetch_voice_provider_by_id
-from onyx.db.voice import fetch_voice_provider_by_type
-from onyx.db.voice import fetch_voice_providers
-from onyx.db.voice import MAX_VOICE_PLAYBACK_SPEED
-from onyx.db.voice import MIN_VOICE_PLAYBACK_SPEED
-from onyx.db.voice import set_default_stt_provider
-from onyx.db.voice import set_default_tts_provider
-from onyx.db.voice import update_user_voice_settings
-from onyx.db.voice import upsert_voice_provider
-from onyx.error_handling.exceptions import OnyxError
+from aethersearch.db.models import VoiceProvider
+from aethersearch.db.voice import deactivate_stt_provider
+from aethersearch.db.voice import deactivate_tts_provider
+from aethersearch.db.voice import delete_voice_provider
+from aethersearch.db.voice import fetch_default_stt_provider
+from aethersearch.db.voice import fetch_default_tts_provider
+from aethersearch.db.voice import fetch_voice_provider_by_id
+from aethersearch.db.voice import fetch_voice_provider_by_type
+from aethersearch.db.voice import fetch_voice_providers
+from aethersearch.db.voice import MAX_VOICE_PLAYBACK_SPEED
+from aethersearch.db.voice import MIN_VOICE_PLAYBACK_SPEED
+from aethersearch.db.voice import set_default_stt_provider
+from aethersearch.db.voice import set_default_tts_provider
+from aethersearch.db.voice import update_user_voice_settings
+from aethersearch.db.voice import upsert_voice_provider
+from aethersearch.error_handling.exceptions import AetherSearchError
 
 
 def _make_voice_provider(
@@ -196,7 +196,7 @@ class TestUpsertVoiceProvider:
     def test_raises_when_provider_not_found(self, mock_db_session: MagicMock) -> None:
         mock_db_session.scalar.return_value = None
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             upsert_voice_provider(
                 db_session=mock_db_session,
                 provider_id=999,
@@ -313,7 +313,7 @@ class TestSetDefaultProviders:
     ) -> None:
         mock_db_session.scalar.return_value = None
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             set_default_stt_provider(db_session=mock_db_session, provider_id=999)
 
         assert "No voice provider with id 999" in str(exc_info.value)
@@ -352,7 +352,7 @@ class TestSetDefaultProviders:
     ) -> None:
         mock_db_session.scalar.return_value = None
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             set_default_tts_provider(db_session=mock_db_session, provider_id=999)
 
         assert "No voice provider with id 999" in str(exc_info.value)
@@ -378,7 +378,7 @@ class TestDeactivateProviders:
     ) -> None:
         mock_db_session.scalar.return_value = None
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             deactivate_stt_provider(db_session=mock_db_session, provider_id=999)
 
         assert "No voice provider with id 999" in str(exc_info.value)
@@ -400,7 +400,7 @@ class TestDeactivateProviders:
     ) -> None:
         mock_db_session.scalar.return_value = None
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             deactivate_tts_provider(db_session=mock_db_session, provider_id=999)
 
         assert "No voice provider with id 999" in str(exc_info.value)

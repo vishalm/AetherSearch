@@ -1,7 +1,7 @@
 import boto3
 from mypy_boto3_s3.client import S3Client
 
-from onyx.configs.app_configs import AWS_REGION_NAME
+from aethersearch.configs.app_configs import AWS_REGION_NAME
 
 
 def build_s3_client() -> S3Client:

@@ -1,8 +1,8 @@
-import SvgOnyxLogo from "@opal/logos/onyx-logo";
-import SvgOnyxTyped from "@opal/logos/onyx-typed";
+import SvgAetherSearchLogo from "@opal/logos/aethersearch-logo";
+import SvgAetherSearchTyped from "@opal/logos/aethersearch-typed";
 import { cn } from "@opal/utils";
 
-interface OnyxLogoTypedProps {
+interface AetherSearchLogoTypedProps {
   size?: number;
   className?: string;
 }
@@ -11,7 +11,7 @@ interface OnyxLogoTypedProps {
 // This ratio is not some random, magical number; it is available on Figma.
 const HEIGHT_TO_GAP_RATIO = 5 / 16;
 
-const SvgOnyxLogoTyped = ({ size: height, className }: OnyxLogoTypedProps) => {
+const SvgAetherSearchLogoTyped = ({ size: height, className }: AetherSearchLogoTypedProps) => {
   const gap = height != null ? height * HEIGHT_TO_GAP_RATIO : undefined;
 
   return (
@@ -19,9 +19,9 @@ const SvgOnyxLogoTyped = ({ size: height, className }: OnyxLogoTypedProps) => {
       className={cn(`flex flex-row items-center`, className)}
       style={{ gap }}
     >
-      <SvgOnyxLogo size={height} />
-      <SvgOnyxTyped size={height} />
+      <SvgAetherSearchLogo size={height} />
+      <SvgAetherSearchTyped size={height} />
     </div>
   );
 };
-export default SvgOnyxLogoTyped;
+export default SvgAetherSearchLogoTyped;

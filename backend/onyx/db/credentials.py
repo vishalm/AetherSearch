@@ -8,20 +8,20 @@ from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import and_
 from sqlalchemy.sql.expression import or_
 
-from onyx.auth.schemas import UserRole
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.google_utils.shared_constants import (
+from aethersearch.auth.schemas import UserRole
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_DICT_SERVICE_ACCOUNT_KEY,
 )
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import Credential
-from onyx.db.models import Credential__UserGroup
-from onyx.db.models import DocumentByConnectorCredentialPair
-from onyx.db.models import User
-from onyx.db.models import User__UserGroup
-from onyx.server.documents.models import CredentialBase
-from onyx.utils.logger import setup_logger
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import Credential
+from aethersearch.db.models import Credential__UserGroup
+from aethersearch.db.models import DocumentByConnectorCredentialPair
+from aethersearch.db.models import User
+from aethersearch.db.models import User__UserGroup
+from aethersearch.server.documents.models import CredentialBase
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

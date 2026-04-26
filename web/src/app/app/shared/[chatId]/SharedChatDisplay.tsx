@@ -7,13 +7,13 @@ import { processRawChatHistory } from "@/app/app/services/lib";
 import { getLatestMessageChain } from "@/app/app/services/messageTree";
 import HumanMessage from "@/app/app/message/HumanMessage";
 import AgentMessage from "@/app/app/message/messageComponents/AgentMessage";
-import OnyxInitializingLoader from "@/components/OnyxInitializingLoader";
+import AetherSearchInitializingLoader from "@/components/AetherSearchInitializingLoader";
 import { Section } from "@/layouts/general-layouts";
 import { IllustrationContent } from "@opal/layouts";
 import SvgNotFound from "@opal/illustrations/not-found";
 import { Button } from "@opal/components";
 import { Persona } from "@/app/admin/agents/interfaces";
-import { MinimalOnyxDocument } from "@/lib/search/interfaces";
+import { MinimalAetherSearchDocument } from "@/lib/search/interfaces";
 import PreviewModal from "@/sections/modals/PreviewModal";
 import { UNNAMED_CHAT } from "@/lib/constants";
 import Text from "@/refresh-components/texts/Text";
@@ -30,7 +30,7 @@ export default function SharedChatDisplay({
   persona,
 }: SharedChatDisplayProps) {
   const [presentingDocument, setPresentingDocument] =
-    useState<MinimalOnyxDocument | null>(null);
+    useState<MinimalAetherSearchDocument | null>(null);
 
   const isMounted = useOnMount();
 
@@ -147,7 +147,7 @@ export default function SharedChatDisplay({
             </div>
           ) : (
             <div className="h-full w-full flex items-center justify-center">
-              <OnyxInitializingLoader />
+              <AetherSearchInitializingLoader />
             </div>
           )}
         </div>

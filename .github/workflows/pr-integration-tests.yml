@@ -35,11 +35,11 @@ env:
   PERM_SYNC_SHAREPOINT_CERTIFICATE_PASSWORD: ${{ secrets.PERM_SYNC_SHAREPOINT_CERTIFICATE_PASSWORD }}
   PERM_SYNC_SHAREPOINT_DIRECTORY_ID: ${{ secrets.PERM_SYNC_SHAREPOINT_DIRECTORY_ID }}
   EXA_API_KEY: ${{ secrets.EXA_API_KEY }}
-  GITHUB_PERMISSION_SYNC_TEST_ACCESS_TOKEN: ${{ secrets.ONYX_GITHUB_PERMISSION_SYNC_TEST_ACCESS_TOKEN }}
-  GITHUB_PERMISSION_SYNC_TEST_ACCESS_TOKEN_CLASSIC: ${{ secrets.ONYX_GITHUB_PERMISSION_SYNC_TEST_ACCESS_TOKEN_CLASSIC }}
-  GITHUB_ADMIN_EMAIL: ${{ secrets.ONYX_GITHUB_ADMIN_EMAIL }}
-  GITHUB_TEST_USER_1_EMAIL: ${{ secrets.ONYX_GITHUB_TEST_USER_1_EMAIL }}
-  GITHUB_TEST_USER_2_EMAIL: ${{ secrets.ONYX_GITHUB_TEST_USER_2_EMAIL }}
+  GITHUB_PERMISSION_SYNC_TEST_ACCESS_TOKEN: ${{ secrets.AETHERSEARCH_GITHUB_PERMISSION_SYNC_TEST_ACCESS_TOKEN }}
+  GITHUB_PERMISSION_SYNC_TEST_ACCESS_TOKEN_CLASSIC: ${{ secrets.AETHERSEARCH_GITHUB_PERMISSION_SYNC_TEST_ACCESS_TOKEN_CLASSIC }}
+  GITHUB_ADMIN_EMAIL: ${{ secrets.AETHERSEARCH_GITHUB_ADMIN_EMAIL }}
+  GITHUB_TEST_USER_1_EMAIL: ${{ secrets.AETHERSEARCH_GITHUB_TEST_USER_1_EMAIL }}
+  GITHUB_TEST_USER_2_EMAIL: ${{ secrets.AETHERSEARCH_GITHUB_TEST_USER_2_EMAIL }}
 
 jobs:
   discover-test-dirs:
@@ -317,14 +317,14 @@ jobs:
           # Base config shared by both editions
           cat <<EOF > deployment/docker_compose/.env
           COMPOSE_PROFILES=s3-filestore
-          OPENSEARCH_FOR_ONYX_ENABLED=false
+          OPENSEARCH_FOR_AETHERSEARCH_ENABLED=false
           AUTH_TYPE=basic
           POSTGRES_POOL_PRE_PING=true
           POSTGRES_USE_NULL_POOL=true
           REQUIRE_EMAIL_VERIFICATION=false
           DISABLE_TELEMETRY=true
-          ONYX_BACKEND_IMAGE=${ECR_CACHE}:integration-test-backend-test-${RUN_ID}
-          ONYX_MODEL_SERVER_IMAGE=${ECR_CACHE}:integration-test-model-server-test-${RUN_ID}
+          AETHERSEARCH_BACKEND_IMAGE=${ECR_CACHE}:integration-test-backend-test-${RUN_ID}
+          AETHERSEARCH_MODEL_SERVER_IMAGE=${ECR_CACHE}:integration-test-model-server-test-${RUN_ID}
           INTEGRATION_TESTS_MODE=true
           MCP_SERVER_ENABLED=true
           AUTO_LLM_UPDATE_INTERVAL_SECONDS=10
@@ -334,7 +334,7 @@ jobs:
           if [ "$EDITION" = "ee" ]; then
             cat <<EOF >> deployment/docker_compose/.env
           ENABLE_PAID_ENTERPRISE_EDITION_FEATURES=true
-          # TODO(Nik): https://linear.app/onyx-app/issue/ENG-1/update-test-infra-to-use-test-license
+          # TODO(Nik): https://linear.app/aethersearch-app/issue/ENG-1/update-test-infra-to-use-test-license
           LICENSE_ENFORCEMENT_ENABLED=false
           CHECK_TTL_MANAGEMENT_TASK_FREQUENCY_IN_HOURS=0.001
           EOF
@@ -409,7 +409,7 @@ jobs:
           retry_wait_seconds: 10
           command: |
             echo "Running ${{ matrix.edition }} integration tests for ${{ matrix.test-dir.path }}..."
-            docker run --rm --network onyx_default \
+            docker run --rm --network aethersearch_default \
               --name test-runner \
               -e POSTGRES_HOST=relational_db \
               -e POSTGRES_USER=postgres \
@@ -420,7 +420,7 @@ jobs:
               -e POSTGRES_POOL_PRE_PING=true \
               -e POSTGRES_USE_NULL_POOL=true \
               -e VESPA_HOST=index \
-              -e ENABLE_OPENSEARCH_INDEXING_FOR_ONYX=false \
+              -e ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH=false \
               -e REDIS_HOST=cache \
               -e API_SERVER_HOST=api_server \
               -e S3_ENDPOINT_URL=http://minio:9000 \
@@ -514,7 +514,7 @@ jobs:
           POSTGRES_USE_NULL_POOL=true
           REQUIRE_EMAIL_VERIFICATION=false
           DISABLE_TELEMETRY=true
-          ONYX_BACKEND_IMAGE=${ECR_CACHE}:integration-test-backend-test-${RUN_ID}
+          AETHERSEARCH_BACKEND_IMAGE=${ECR_CACHE}:integration-test-backend-test-${RUN_ID}
           INTEGRATION_TESTS_MODE=true
           EOF
 
@@ -522,7 +522,7 @@ jobs:
       - name: Start Docker containers (aethersearch-lite)
         run: |
           cd deployment/docker_compose
-          docker compose -f docker-compose.yml -f docker-compose.onyx-lite.yml -f docker-compose.dev.yml up \
+          docker compose -f docker-compose.yml -f docker-compose.aethersearch-lite.yml -f docker-compose.dev.yml up \
             relational_db \
             api_server \
             -d
@@ -560,7 +560,7 @@ jobs:
           retry_wait_seconds: 10
           command: |
             echo "Running aethersearch-lite integration tests..."
-            docker run --rm --network onyx_default \
+            docker run --rm --network aethersearch_default \
               --name test-runner \
               -e POSTGRES_HOST=relational_db \
               -e POSTGRES_USER=postgres \
@@ -580,14 +580,14 @@ jobs:
         if: always()
         run: |
           cd deployment/docker_compose
-          docker compose -f docker-compose.yml -f docker-compose.onyx-lite.yml -f docker-compose.dev.yml \
+          docker compose -f docker-compose.yml -f docker-compose.aethersearch-lite.yml -f docker-compose.dev.yml \
             logs --no-color api_server > $GITHUB_WORKSPACE/api_server_aethersearch_lite.log || true
 
       - name: Dump all-container logs (aethersearch-lite)
         if: always()
         run: |
           cd deployment/docker_compose
-          docker compose -f docker-compose.yml -f docker-compose.onyx-lite.yml -f docker-compose.dev.yml \
+          docker compose -f docker-compose.yml -f docker-compose.aethersearch-lite.yml -f docker-compose.dev.yml \
             logs --no-color > $GITHUB_WORKSPACE/docker-compose-aethersearch-lite.log || true
 
       - name: Upload logs (aethersearch-lite)
@@ -601,7 +601,7 @@ jobs:
         if: always()
         run: |
           cd deployment/docker_compose
-          docker compose -f docker-compose.yml -f docker-compose.onyx-lite.yml -f docker-compose.dev.yml down -v
+          docker compose -f docker-compose.yml -f docker-compose.aethersearch-lite.yml -f docker-compose.dev.yml down -v
 
   multitenant-tests:
     needs:
@@ -641,10 +641,10 @@ jobs:
           REQUIRE_EMAIL_VERIFICATION=false \
           DISABLE_TELEMETRY=true \
           OPENAI_DEFAULT_API_KEY=${OPENAI_API_KEY} \
-          ONYX_BACKEND_IMAGE=${ECR_CACHE}:integration-test-backend-test-${RUN_ID} \
-          ONYX_MODEL_SERVER_IMAGE=${ECR_CACHE}:integration-test-model-server-test-${RUN_ID} \
+          AETHERSEARCH_BACKEND_IMAGE=${ECR_CACHE}:integration-test-backend-test-${RUN_ID} \
+          AETHERSEARCH_MODEL_SERVER_IMAGE=${ECR_CACHE}:integration-test-model-server-test-${RUN_ID} \
           DEV_MODE=true \
-          OPENSEARCH_FOR_ONYX_ENABLED=false \
+          OPENSEARCH_FOR_AETHERSEARCH_ENABLED=false \
           docker compose -f docker-compose.multitenant-dev.yml up \
             relational_db \
             index \
@@ -660,7 +660,7 @@ jobs:
       - name: Wait for service to be ready (multi-tenant)
         run: |
           echo "Starting wait-for-service script for multi-tenant..."
-          docker logs -f onyx-api_server-1 &
+          docker logs -f aethersearch-api_server-1 &
           start_time=$(date +%s)
           timeout=300
           while true; do
@@ -689,7 +689,7 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         run: |
           echo "Running multi-tenant integration tests..."
-          docker run --rm --network onyx_default \
+          docker run --rm --network aethersearch_default \
             --name test-runner \
             -e POSTGRES_HOST=relational_db \
             -e POSTGRES_USER=postgres \
@@ -699,7 +699,7 @@ jobs:
             -e POSTGRES_DB=postgres \
             -e POSTGRES_USE_NULL_POOL=true \
             -e VESPA_HOST=index \
-            -e ENABLE_OPENSEARCH_INDEXING_FOR_ONYX=false \
+            -e ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH=false \
             -e REDIS_HOST=cache \
             -e API_SERVER_HOST=api_server \
             -e OPENAI_API_KEY=${OPENAI_API_KEY} \

@@ -4,8 +4,8 @@ from unittest.mock import patch
 import pytest
 from discord.errors import LoginFailure
 
-from onyx.connectors.discord.connector import DiscordConnector
-from onyx.connectors.exceptions import CredentialInvalidError
+from aethersearch.connectors.discord.connector import DiscordConnector
+from aethersearch.connectors.exceptions import CredentialInvalidError
 
 
 def _build_connector(token: str = "fake-bot-token") -> DiscordConnector:
@@ -14,8 +14,8 @@ def _build_connector(token: str = "fake-bot-token") -> DiscordConnector:
     return connector
 
 
-@patch("onyx.connectors.discord.connector.Client.close", new_callable=AsyncMock)
-@patch("onyx.connectors.discord.connector.Client.login", new_callable=AsyncMock)
+@patch("aethersearch.connectors.discord.connector.Client.close", new_callable=AsyncMock)
+@patch("aethersearch.connectors.discord.connector.Client.login", new_callable=AsyncMock)
 def test_validate_success(
     mock_login: AsyncMock,
     mock_close: AsyncMock,
@@ -27,9 +27,9 @@ def test_validate_success(
     mock_close.assert_awaited_once()
 
 
-@patch("onyx.connectors.discord.connector.Client.close", new_callable=AsyncMock)
+@patch("aethersearch.connectors.discord.connector.Client.close", new_callable=AsyncMock)
 @patch(
-    "onyx.connectors.discord.connector.Client.login",
+    "aethersearch.connectors.discord.connector.Client.login",
     new_callable=AsyncMock,
     side_effect=LoginFailure("Improper token has been passed."),
 )

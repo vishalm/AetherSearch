@@ -5,7 +5,7 @@ from typing import Any
 from fastapi_users import schemas
 from typing_extensions import override
 
-from onyx.db.enums import AccountType
+from aethersearch.db.enums import AccountType
 
 
 class UserRole(str, Enum):
@@ -18,7 +18,7 @@ class UserRole(str, Enum):
     - Global Curator can perform admin actions
         for all groups they are a member of
     - Limited can access a limited set of basic api endpoints
-    - Slack are users that have used onyx via slack but dont have a web login
+    - Slack are users that have used aethersearch via slack but dont have a web login
     - External permissioned users that have been picked up during the external permissions sync process but don't have a web login
     """
 

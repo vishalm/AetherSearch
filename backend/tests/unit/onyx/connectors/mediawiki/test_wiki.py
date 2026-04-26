@@ -8,7 +8,7 @@ import pytest
 import pywikibot.config
 from pytest_mock import MockFixture
 
-from onyx.connectors.mediawiki import wiki
+from aethersearch.connectors.mediawiki import wiki
 
 # Some of these tests are disabled for now due to flakiness with wikipedia as the backend
 

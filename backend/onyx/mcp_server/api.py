@@ -15,30 +15,30 @@ from starlette.types import Receive
 from starlette.types import Scope
 from starlette.types import Send
 
-from onyx.configs.app_configs import MCP_SERVER_CORS_ORIGINS
-from onyx.mcp_server.auth import OnyxTokenVerifier
-from onyx.mcp_server.utils import shutdown_http_client
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import set_is_ee_based_on_env_variable
+from aethersearch.configs.app_configs import MCP_SERVER_CORS_ORIGINS
+from aethersearch.mcp_server.auth import AetherSearchTokenVerifier
+from aethersearch.mcp_server.utils import shutdown_http_client
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import set_is_ee_based_on_env_variable
 
 logger = setup_logger()
 
 # Initialize EE flag at module import so it's set regardless of the entry point
-# (python -m onyx.mcp_server_main, uvicorn onyx.mcp_server.api:mcp_app, etc.).
+# (python -m aethersearch.mcp_server_main, uvicorn aethersearch.mcp_server.api:mcp_app, etc.).
 set_is_ee_based_on_env_variable()
 
-logger.info("Creating Onyx MCP Server...")
+logger.info("Creating AetherSearch MCP Server...")
 
 mcp_server = FastMCP(
-    name="Onyx MCP Server",
+    name="AetherSearch MCP Server",
     version="1.0.0",
-    auth=OnyxTokenVerifier(),
+    auth=AetherSearchTokenVerifier(),
 )
 
 # Import tools and resources AFTER mcp_server is created to avoid circular imports
 # Components register themselves via decorators on the shared mcp_server instance
-from onyx.mcp_server.resources import indexed_sources  # noqa: E402, F401
-from onyx.mcp_server.tools import search  # noqa: E402, F401
+from aethersearch.mcp_server.resources import indexed_sources  # noqa: E402, F401
+from aethersearch.mcp_server.tools import search  # noqa: E402, F401
 
 logger.info("MCP server instance created")
 
@@ -79,7 +79,7 @@ def create_mcp_fastapi_app() -> FastAPI:
             await shutdown_http_client()
 
     app = FastAPI(
-        title="Onyx MCP Server",
+        title="AetherSearch MCP Server",
         description="HTTP POST transport with bearer auth delegated to API /me",
         version="1.0.0",
         lifespan=combined_lifespan,
@@ -94,7 +94,7 @@ def create_mcp_fastapi_app() -> FastAPI:
             return JSONResponse({"status": "healthy", "service": "mcp_server"})
         return await call_next(request)
 
-    # Authentication is handled by FastMCP's OnyxTokenVerifier (see auth.py)
+    # Authentication is handled by FastMCP's AetherSearchTokenVerifier (see auth.py)
 
     if MCP_SERVER_CORS_ORIGINS:
         logger.info(f"CORS origins: {MCP_SERVER_CORS_ORIGINS}")

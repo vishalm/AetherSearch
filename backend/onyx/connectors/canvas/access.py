@@ -8,10 +8,10 @@ at runtime via ``fetch_versioned_implementation``.
 from collections.abc import Callable
 from typing import cast
 
-from onyx.access.models import ExternalAccess
-from onyx.connectors.canvas.client import CanvasApiClient
-from onyx.utils.variable_functionality import fetch_versioned_implementation
-from onyx.utils.variable_functionality import global_version
+from aethersearch.access.models import ExternalAccess
+from aethersearch.connectors.canvas.client import CanvasApiClient
+from aethersearch.utils.variable_functionality import fetch_versioned_implementation
+from aethersearch.utils.variable_functionality import global_version
 
 
 def get_course_permissions(
@@ -24,7 +24,7 @@ def get_course_permissions(
     ee_get_course_permissions = cast(
         Callable[[CanvasApiClient, int], ExternalAccess | None],
         fetch_versioned_implementation(
-            "onyx.external_permissions.canvas.access",
+            "aethersearch.external_permissions.canvas.access",
             "get_course_permissions",
         ),
     )

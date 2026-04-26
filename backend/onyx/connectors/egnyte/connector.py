@@ -9,30 +9,30 @@ from urllib.parse import quote
 
 from pydantic import Field
 
-from onyx.configs.app_configs import EGNYTE_CLIENT_ID
-from onyx.configs.app_configs import EGNYTE_CLIENT_SECRET
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.cross_connector_utils.miscellaneous_utils import (
+from aethersearch.configs.app_configs import EGNYTE_CLIENT_ID
+from aethersearch.configs.app_configs import EGNYTE_CLIENT_SECRET
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.cross_connector_utils.miscellaneous_utils import (
     get_oauth_callback_uri,
 )
-from onyx.connectors.interfaces import GenerateDocumentsOutput
-from onyx.connectors.interfaces import LoadConnector
-from onyx.connectors.interfaces import OAuthConnector
-from onyx.connectors.interfaces import PollConnector
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.models import BasicExpertInfo
-from onyx.connectors.models import ConnectorMissingCredentialError
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import TextSection
-from onyx.file_processing.extract_file_text import detect_encoding
-from onyx.file_processing.extract_file_text import extract_file_text
-from onyx.file_processing.extract_file_text import get_file_ext
-from onyx.file_processing.extract_file_text import read_text_file
-from onyx.file_processing.file_types import OnyxFileExtensions
-from onyx.utils.logger import setup_logger
-from onyx.utils.retry_wrapper import request_with_retries
+from aethersearch.connectors.interfaces import GenerateDocumentsOutput
+from aethersearch.connectors.interfaces import LoadConnector
+from aethersearch.connectors.interfaces import OAuthConnector
+from aethersearch.connectors.interfaces import PollConnector
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.connectors.models import ConnectorMissingCredentialError
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import TextSection
+from aethersearch.file_processing.extract_file_text import detect_encoding
+from aethersearch.file_processing.extract_file_text import extract_file_text
+from aethersearch.file_processing.extract_file_text import get_file_ext
+from aethersearch.file_processing.extract_file_text import read_text_file
+from aethersearch.file_processing.file_types import AetherSearchFileExtensions
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.retry_wrapper import request_with_retries
 
 logger = setup_logger()
 
@@ -70,16 +70,16 @@ def _process_egnyte_file(
     extension = get_file_ext(file_name)
 
     # Explicitly excluding image extensions here. TODO: consider allowing images
-    if extension not in OnyxFileExtensions.TEXT_AND_DOCUMENT_EXTENSIONS:
+    if extension not in AetherSearchFileExtensions.TEXT_AND_DOCUMENT_EXTENSIONS:
         logger.warning(f"Skipping file '{file_name}' with extension '{extension}'")
         return None
 
     # Extract text content based on file type
-    # TODO @wenxi-onyx: convert to extract_text_and_images
-    if extension in OnyxFileExtensions.PLAIN_TEXT_EXTENSIONS:
+    # TODO @wenxi-aethersearch: convert to extract_text_and_images
+    if extension in AetherSearchFileExtensions.PLAIN_TEXT_EXTENSIONS:
         encoding = detect_encoding(file_content)
         file_content_raw, file_metadata = read_text_file(
-            file_content, encoding=encoding, ignore_onyx_metadata=False
+            file_content, encoding=encoding, ignore_aethersearch_metadata=False
         )
     else:
         file_content_raw = extract_file_text(

@@ -13,19 +13,19 @@ from typing import Literal
 from pydantic import BaseModel
 from typing_extensions import override
 
-from onyx.chat.emitter import Emitter
-from onyx.llm.interfaces import LLM
-from onyx.secondary_llm_flows.memory_update import process_memory_update
-from onyx.server.query_and_chat.placement import Placement
-from onyx.server.query_and_chat.streaming_models import MemoryToolDelta
-from onyx.server.query_and_chat.streaming_models import MemoryToolStart
-from onyx.server.query_and_chat.streaming_models import Packet
-from onyx.tools.interface import Tool
-from onyx.tools.models import ChatMinimalTextMessage
-from onyx.tools.models import ToolCallException
-from onyx.tools.models import ToolResponse
-from onyx.tools.tool_implementations.memory.models import MemoryToolResponse
-from onyx.utils.logger import setup_logger
+from aethersearch.chat.emitter import Emitter
+from aethersearch.llm.interfaces import LLM
+from aethersearch.secondary_llm_flows.memory_update import process_memory_update
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.server.query_and_chat.streaming_models import MemoryToolDelta
+from aethersearch.server.query_and_chat.streaming_models import MemoryToolStart
+from aethersearch.server.query_and_chat.streaming_models import Packet
+from aethersearch.tools.interface import Tool
+from aethersearch.tools.models import ChatMinimalTextMessage
+from aethersearch.tools.models import ToolCallException
+from aethersearch.tools.models import ToolResponse
+from aethersearch.tools.tool_implementations.memory.models import MemoryToolResponse
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

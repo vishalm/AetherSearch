@@ -62,19 +62,19 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "histogram_quantile(0.5, sum by (le) (rate(onyx_opensearch_search_client_duration_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.5, sum by (le) (rate(aethersearch_opensearch_search_client_duration_seconds_bucket[5m])))",
           "legendFormat": "P50",
           "refId": "A"
         },
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(onyx_opensearch_search_client_duration_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(aethersearch_opensearch_search_client_duration_seconds_bucket[5m])))",
           "legendFormat": "P95",
           "refId": "B"
         },
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "histogram_quantile(0.99, sum by (le) (rate(onyx_opensearch_search_client_duration_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(aethersearch_opensearch_search_client_duration_seconds_bucket[5m])))",
           "legendFormat": "P99",
           "refId": "C"
         }
@@ -123,19 +123,19 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "histogram_quantile(0.5, sum by (le) (rate(onyx_opensearch_search_server_duration_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.5, sum by (le) (rate(aethersearch_opensearch_search_server_duration_seconds_bucket[5m])))",
           "legendFormat": "P50",
           "refId": "A"
         },
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(onyx_opensearch_search_server_duration_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(aethersearch_opensearch_search_server_duration_seconds_bucket[5m])))",
           "legendFormat": "P95",
           "refId": "B"
         },
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "histogram_quantile(0.99, sum by (le) (rate(onyx_opensearch_search_server_duration_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(aethersearch_opensearch_search_server_duration_seconds_bucket[5m])))",
           "legendFormat": "P99",
           "refId": "C"
         }
@@ -176,7 +176,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "histogram_quantile(0.95, sum by (search_type, le) (rate(onyx_opensearch_search_client_duration_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.95, sum by (search_type, le) (rate(aethersearch_opensearch_search_client_duration_seconds_bucket[5m])))",
           "legendFormat": "{{ search_type }}",
           "refId": "A"
         }
@@ -217,7 +217,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "sum by (search_type) (rate(onyx_opensearch_search_total[5m]))",
+          "expr": "sum by (search_type) (rate(aethersearch_opensearch_search_total[5m]))",
           "legendFormat": "{{ search_type }}",
           "refId": "A"
         }
@@ -257,7 +257,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "sum by (search_type) (onyx_opensearch_searches_in_progress)",
+          "expr": "sum by (search_type) (aethersearch_opensearch_searches_in_progress)",
           "legendFormat": "{{ search_type }}",
           "refId": "A"
         }
@@ -298,19 +298,19 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "histogram_quantile(0.5, sum by (le) (rate(onyx_opensearch_search_client_duration_seconds_bucket[5m]))) - histogram_quantile(0.5, sum by (le) (rate(onyx_opensearch_search_server_duration_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.5, sum by (le) (rate(aethersearch_opensearch_search_client_duration_seconds_bucket[5m]))) - histogram_quantile(0.5, sum by (le) (rate(aethersearch_opensearch_search_server_duration_seconds_bucket[5m])))",
           "legendFormat": "Client - Server overhead (P50)",
           "refId": "A"
         },
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "histogram_quantile(0.5, sum by (le) (rate(onyx_opensearch_search_client_duration_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.5, sum by (le) (rate(aethersearch_opensearch_search_client_duration_seconds_bucket[5m])))",
           "legendFormat": "Client P50",
           "refId": "B"
         },
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "histogram_quantile(0.5, sum by (le) (rate(onyx_opensearch_search_server_duration_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.5, sum by (le) (rate(aethersearch_opensearch_search_server_duration_seconds_bucket[5m])))",
           "legendFormat": "Server P50",
           "refId": "C"
         }
@@ -320,7 +320,7 @@
   "refresh": "5s",
   "schemaVersion": 37,
   "style": "dark",
-  "tags": ["onyx", "opensearch", "search", "latency"],
+  "tags": ["aethersearch", "opensearch", "search", "latency"],
   "templating": {
     "list": [
       {
@@ -342,8 +342,8 @@
     "refresh_intervals": ["5s", "10s", "30s", "1m"]
   },
   "timezone": "",
-  "title": "Onyx OpenSearch Search Latency",
-  "uid": "onyx-opensearch-search-latency",
+  "title": "AetherSearch OpenSearch Search Latency",
+  "uid": "aethersearch-opensearch-search-latency",
   "version": 0,
   "weekStart": ""
 }

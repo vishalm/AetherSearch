@@ -5,17 +5,17 @@ from datetime import datetime
 from typing import Generic
 from typing import TypeVar
 
-from onyx.connectors.interfaces import BaseConnector
-from onyx.connectors.interfaces import CheckpointedConnector
-from onyx.connectors.interfaces import CheckpointedConnectorWithPermSync
-from onyx.connectors.interfaces import CheckpointOutput
-from onyx.connectors.interfaces import LoadConnector
-from onyx.connectors.interfaces import PollConnector
-from onyx.connectors.models import ConnectorCheckpoint
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.utils.logger import setup_logger
+from aethersearch.connectors.interfaces import BaseConnector
+from aethersearch.connectors.interfaces import CheckpointedConnector
+from aethersearch.connectors.interfaces import CheckpointedConnectorWithPermSync
+from aethersearch.connectors.interfaces import CheckpointOutput
+from aethersearch.connectors.interfaces import LoadConnector
+from aethersearch.connectors.interfaces import PollConnector
+from aethersearch.connectors.models import ConnectorCheckpoint
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

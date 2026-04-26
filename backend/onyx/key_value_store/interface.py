@@ -1,7 +1,7 @@
 import abc
 from typing import cast
 
-from onyx.utils.special_types import JSON_ro
+from aethersearch.utils.special_types import JSON_ro
 
 
 class KvKeyNotFoundError(Exception):

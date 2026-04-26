@@ -181,7 +181,7 @@ export const MarkdownLink: Story = {
   args: {
     font: "main-ui-body",
     color: "text-05",
-    children: markdown("Visit [Onyx](https://www.onyx.app/) for more info"),
+    children: markdown("Visit [AetherSearch](https://www.aethersearch.app/) for more info"),
   },
 };
 
@@ -198,7 +198,7 @@ export const MarkdownCombined: Story = {
     font: "main-ui-body",
     color: "text-05",
     children: markdown(
-      "*Hello*, **world**! Check out [Onyx](https://www.onyx.app/) and run `onyx start` to begin."
+      "*Hello*, **world**! Check out [AetherSearch](https://www.aethersearch.app/) and run `aethersearch start` to begin."
     ),
   },
 };

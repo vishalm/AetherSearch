@@ -1,6 +1,6 @@
-from onyx.connectors.confluence.connector import ConfluenceConnector
-from onyx.connectors.google_drive.connector import GoogleDriveConnector
-from onyx.connectors.interfaces import BaseConnector
+from aethersearch.connectors.confluence.connector import ConfluenceConnector
+from aethersearch.connectors.google_drive.connector import GoogleDriveConnector
+from aethersearch.connectors.interfaces import BaseConnector
 
 
 def validate_confluence_perm_sync(connector: ConfluenceConnector) -> None:

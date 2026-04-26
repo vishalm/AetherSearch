@@ -16,20 +16,20 @@ from fastapi_users.authentication import Strategy
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
 from pydantic import BaseModel
 
-from onyx.auth.schemas import UserCreate
-from onyx.auth.schemas import UserRole
-from onyx.auth.users import auth_backend
-from onyx.auth.users import fastapi_users
-from onyx.auth.users import get_user_manager
-from onyx.auth.users import UserManager
-from onyx.configs.app_configs import REQUIRE_EMAIL_VERIFICATION
-from onyx.configs.app_configs import SAML_CONF_DIR
-from onyx.configs.app_configs import WEB_DOMAIN
-from onyx.db.auth import get_user_count
-from onyx.db.auth import get_user_db
-from onyx.db.engine.async_sql_engine import get_async_session_context_manager
-from onyx.db.models import User
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.schemas import UserCreate
+from aethersearch.auth.schemas import UserRole
+from aethersearch.auth.users import auth_backend
+from aethersearch.auth.users import fastapi_users
+from aethersearch.auth.users import get_user_manager
+from aethersearch.auth.users import UserManager
+from aethersearch.configs.app_configs import REQUIRE_EMAIL_VERIFICATION
+from aethersearch.configs.app_configs import SAML_CONF_DIR
+from aethersearch.configs.app_configs import WEB_DOMAIN
+from aethersearch.db.auth import get_user_count
+from aethersearch.db.auth import get_user_db
+from aethersearch.db.engine.async_sql_engine import get_async_session_context_manager
+from aethersearch.db.models import User
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 router = APIRouter(prefix="/auth/saml")

@@ -5,16 +5,16 @@ from redis import Redis
 from redis.lock import Lock as RedisLock
 from sqlalchemy.orm import Session
 
-from onyx.background.celery.apps.app_base import task_logger
-from onyx.configs.constants import DANSWER_REDIS_FUNCTION_LOCK_PREFIX
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.index_attempt import mark_attempt_failed
-from onyx.db.indexing_coordination import IndexingCoordination
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import SearchSettings
+from aethersearch.background.celery.apps.app_base import task_logger
+from aethersearch.configs.constants import DANSWER_REDIS_FUNCTION_LOCK_PREFIX
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.index_attempt import mark_attempt_failed
+from aethersearch.db.indexing_coordination import IndexingCoordination
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import SearchSettings
 
 
 def try_creating_docfetching_task(
@@ -76,21 +76,21 @@ def try_creating_docfetching_task(
         # get processed before re-indexing of existing connectors
         has_successful_attempt = cc_pair.last_successful_index_time is not None
         priority = (
-            OnyxCeleryPriority.MEDIUM
+            AetherSearchCeleryPriority.MEDIUM
             if has_successful_attempt
-            else OnyxCeleryPriority.HIGH
+            else AetherSearchCeleryPriority.HIGH
         )
 
         # Send the task to Celery
         result = celery_app.send_task(
-            OnyxCeleryTask.CONNECTOR_DOC_FETCHING_TASK,
+            AetherSearchCeleryTask.CONNECTOR_DOC_FETCHING_TASK,
             kwargs=dict(
                 index_attempt_id=index_attempt_id,
                 cc_pair_id=cc_pair.id,
                 search_settings_id=search_settings.id,
                 tenant_id=tenant_id,
             ),
-            queue=OnyxCeleryQueues.CONNECTOR_DOC_FETCHING,
+            queue=AetherSearchCeleryQueues.CONNECTOR_DOC_FETCHING,
             task_id=custom_task_id,
             priority=priority,
         )

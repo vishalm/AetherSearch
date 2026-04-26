@@ -10,20 +10,20 @@ from uuid import UUID
 
 from pydantic import ValidationError
 
-from ee.onyx.server.scim.models import SCIM_ENTERPRISE_USER_SCHEMA
-from ee.onyx.server.scim.models import SCIM_USER_SCHEMA
-from ee.onyx.server.scim.models import ScimEmail
-from ee.onyx.server.scim.models import ScimEnterpriseExtension
-from ee.onyx.server.scim.models import ScimGroupMember
-from ee.onyx.server.scim.models import ScimGroupResource
-from ee.onyx.server.scim.models import ScimManagerRef
-from ee.onyx.server.scim.models import ScimMappingFields
-from ee.onyx.server.scim.models import ScimMeta
-from ee.onyx.server.scim.models import ScimName
-from ee.onyx.server.scim.models import ScimUserGroupRef
-from ee.onyx.server.scim.models import ScimUserResource
-from onyx.db.models import User
-from onyx.db.models import UserGroup
+from ee.aethersearch.server.scim.models import SCIM_ENTERPRISE_USER_SCHEMA
+from ee.aethersearch.server.scim.models import SCIM_USER_SCHEMA
+from ee.aethersearch.server.scim.models import ScimEmail
+from ee.aethersearch.server.scim.models import ScimEnterpriseExtension
+from ee.aethersearch.server.scim.models import ScimGroupMember
+from ee.aethersearch.server.scim.models import ScimGroupResource
+from ee.aethersearch.server.scim.models import ScimManagerRef
+from ee.aethersearch.server.scim.models import ScimMappingFields
+from ee.aethersearch.server.scim.models import ScimMeta
+from ee.aethersearch.server.scim.models import ScimName
+from ee.aethersearch.server.scim.models import ScimUserGroupRef
+from ee.aethersearch.server.scim.models import ScimUserResource
+from aethersearch.db.models import User
+from aethersearch.db.models import UserGroup
 
 logger = logging.getLogger(__name__)
 
@@ -77,10 +77,10 @@ class ScimProvider(ABC):
         scim_username: str | None = None,
         fields: ScimMappingFields | None = None,
     ) -> ScimUserResource:
-        """Build a SCIM User response from an Onyx User.
+        """Build a SCIM User response from an AetherSearch User.
 
         Args:
-            user: The Onyx user model.
+            user: The AetherSearch user model.
             external_id: The IdP's external identifier for this user.
             groups: List of ``(group_id, group_name)`` tuples for the
                 ``groups`` read-only attribute. Pass ``None`` or ``[]``
@@ -136,7 +136,7 @@ class ScimProvider(ABC):
         members: list[tuple[UUID, str | None]],
         external_id: str | None = None,
     ) -> ScimGroupResource:
-        """Build a SCIM Group response from an Onyx UserGroup."""
+        """Build a SCIM Group response from an AetherSearch UserGroup."""
         scim_members = [
             ScimGroupMember(value=str(uid), display=email) for uid, email in members
         ]
@@ -209,6 +209,6 @@ def get_default_provider() -> ScimProvider:
     IdP. When provider detection is added (via token metadata or tenant
     config), this can be replaced with dynamic resolution.
     """
-    from ee.onyx.server.scim.providers.okta import OktaProvider
+    from ee.aethersearch.server.scim.providers.okta import OktaProvider
 
     return OktaProvider()

@@ -2,10 +2,10 @@
 
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import DEV_MODE
-from onyx.db.models import User
-from onyx.server.usage_limits import is_tenant_on_trial_fn
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import DEV_MODE
+from aethersearch.db.models import User
+from aethersearch.server.usage_limits import is_tenant_on_trial_fn
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.contextvars import get_current_tenant_id
 

@@ -10,60 +10,60 @@ import httpx
 from pydantic import BaseModel
 from retry import retry
 
-from onyx.configs.app_configs import MAX_CHUNKS_PER_DOC_BATCH
-from onyx.configs.app_configs import RECENCY_BIAS_MULTIPLIER
-from onyx.configs.app_configs import RERANK_COUNT
-from onyx.configs.chat_configs import DOC_TIME_DECAY
-from onyx.configs.chat_configs import HYBRID_ALPHA
-from onyx.configs.chat_configs import TITLE_CONTENT_RATIO
-from onyx.context.search.enums import QueryType
-from onyx.context.search.models import IndexFilters
-from onyx.context.search.models import InferenceChunk
-from onyx.db.enums import EmbeddingPrecision
-from onyx.document_index.chunk_content_enrichment import cleanup_content_for_chunks
-from onyx.document_index.document_index_utils import get_document_chunk_ids
-from onyx.document_index.document_index_utils import get_uuid_from_chunk_info
-from onyx.document_index.interfaces import EnrichedDocumentIndexingInfo
-from onyx.document_index.interfaces import MinimalDocumentIndexingInfo
-from onyx.document_index.interfaces import VespaChunkRequest
-from onyx.document_index.interfaces_new import DocumentIndex
-from onyx.document_index.interfaces_new import DocumentInsertionRecord
-from onyx.document_index.interfaces_new import DocumentSectionRequest
-from onyx.document_index.interfaces_new import IndexingMetadata
-from onyx.document_index.interfaces_new import MetadataUpdateRequest
-from onyx.document_index.interfaces_new import TenantState
-from onyx.document_index.vespa.chunk_retrieval import batch_search_api_retrieval
-from onyx.document_index.vespa.chunk_retrieval import get_all_chunks_paginated
-from onyx.document_index.vespa.chunk_retrieval import get_chunks_via_visit_api
-from onyx.document_index.vespa.chunk_retrieval import parallel_visit_api_retrieval
-from onyx.document_index.vespa.chunk_retrieval import query_vespa
-from onyx.document_index.vespa.deletion import delete_vespa_chunks
-from onyx.document_index.vespa.indexing_utils import BaseHTTPXClientContext
-from onyx.document_index.vespa.indexing_utils import batch_index_vespa_chunks
-from onyx.document_index.vespa.indexing_utils import check_for_final_chunk_existence
-from onyx.document_index.vespa.indexing_utils import clean_chunk_id_copy
-from onyx.document_index.vespa.indexing_utils import GlobalHTTPXClientContext
-from onyx.document_index.vespa.indexing_utils import TemporaryHTTPXClientContext
-from onyx.document_index.vespa.shared_utils.utils import get_vespa_http_client
-from onyx.document_index.vespa.shared_utils.utils import (
+from aethersearch.configs.app_configs import MAX_CHUNKS_PER_DOC_BATCH
+from aethersearch.configs.app_configs import RECENCY_BIAS_MULTIPLIER
+from aethersearch.configs.app_configs import RERANK_COUNT
+from aethersearch.configs.chat_configs import DOC_TIME_DECAY
+from aethersearch.configs.chat_configs import HYBRID_ALPHA
+from aethersearch.configs.chat_configs import TITLE_CONTENT_RATIO
+from aethersearch.context.search.enums import QueryType
+from aethersearch.context.search.models import IndexFilters
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.db.enums import EmbeddingPrecision
+from aethersearch.document_index.chunk_content_enrichment import cleanup_content_for_chunks
+from aethersearch.document_index.document_index_utils import get_document_chunk_ids
+from aethersearch.document_index.document_index_utils import get_uuid_from_chunk_info
+from aethersearch.document_index.interfaces import EnrichedDocumentIndexingInfo
+from aethersearch.document_index.interfaces import MinimalDocumentIndexingInfo
+from aethersearch.document_index.interfaces import VespaChunkRequest
+from aethersearch.document_index.interfaces_new import DocumentIndex
+from aethersearch.document_index.interfaces_new import DocumentInsertionRecord
+from aethersearch.document_index.interfaces_new import DocumentSectionRequest
+from aethersearch.document_index.interfaces_new import IndexingMetadata
+from aethersearch.document_index.interfaces_new import MetadataUpdateRequest
+from aethersearch.document_index.interfaces_new import TenantState
+from aethersearch.document_index.vespa.chunk_retrieval import batch_search_api_retrieval
+from aethersearch.document_index.vespa.chunk_retrieval import get_all_chunks_paginated
+from aethersearch.document_index.vespa.chunk_retrieval import get_chunks_via_visit_api
+from aethersearch.document_index.vespa.chunk_retrieval import parallel_visit_api_retrieval
+from aethersearch.document_index.vespa.chunk_retrieval import query_vespa
+from aethersearch.document_index.vespa.deletion import delete_vespa_chunks
+from aethersearch.document_index.vespa.indexing_utils import BaseHTTPXClientContext
+from aethersearch.document_index.vespa.indexing_utils import batch_index_vespa_chunks
+from aethersearch.document_index.vespa.indexing_utils import check_for_final_chunk_existence
+from aethersearch.document_index.vespa.indexing_utils import clean_chunk_id_copy
+from aethersearch.document_index.vespa.indexing_utils import GlobalHTTPXClientContext
+from aethersearch.document_index.vespa.indexing_utils import TemporaryHTTPXClientContext
+from aethersearch.document_index.vespa.shared_utils.utils import get_vespa_http_client
+from aethersearch.document_index.vespa.shared_utils.utils import (
     replace_invalid_doc_id_characters,
 )
-from onyx.document_index.vespa.shared_utils.vespa_request_builders import (
+from aethersearch.document_index.vespa.shared_utils.vespa_request_builders import (
     build_vespa_filters,
 )
-from onyx.document_index.vespa_constants import BATCH_SIZE
-from onyx.document_index.vespa_constants import CHUNK_ID
-from onyx.document_index.vespa_constants import CONTENT_SUMMARY
-from onyx.document_index.vespa_constants import DOCUMENT_ID
-from onyx.document_index.vespa_constants import DOCUMENT_ID_ENDPOINT
-from onyx.document_index.vespa_constants import NUM_THREADS
-from onyx.document_index.vespa_constants import SEARCH_ENDPOINT
-from onyx.document_index.vespa_constants import VESPA_TIMEOUT
-from onyx.document_index.vespa_constants import YQL_BASE
-from onyx.indexing.models import DocMetadataAwareIndexChunk
-from onyx.tools.tool_implementations.search.constants import KEYWORD_QUERY_HYBRID_ALPHA
-from onyx.utils.batching import batch_generator
-from onyx.utils.logger import setup_logger
+from aethersearch.document_index.vespa_constants import BATCH_SIZE
+from aethersearch.document_index.vespa_constants import CHUNK_ID
+from aethersearch.document_index.vespa_constants import CONTENT_SUMMARY
+from aethersearch.document_index.vespa_constants import DOCUMENT_ID
+from aethersearch.document_index.vespa_constants import DOCUMENT_ID_ENDPOINT
+from aethersearch.document_index.vespa_constants import NUM_THREADS
+from aethersearch.document_index.vespa_constants import SEARCH_ENDPOINT
+from aethersearch.document_index.vespa_constants import VESPA_TIMEOUT
+from aethersearch.document_index.vespa_constants import YQL_BASE
+from aethersearch.indexing.models import DocMetadataAwareIndexChunk
+from aethersearch.tools.tool_implementations.search.constants import KEYWORD_QUERY_HYBRID_ALPHA
+from aethersearch.utils.batching import batch_generator
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.model_server_models import Embedding
 
@@ -191,7 +191,7 @@ def _update_single_chunk(
         model_config = {"frozen": True}
         # The names of these fields are based the Vespa schema. Changes to the
         # schema require changes here. These names were originally found in
-        # backend/onyx/document_index/vespa_constants.py.
+        # backend/aethersearch/document_index/vespa_constants.py.
         boost: _Boost | None = None
         document_sets: _DocumentSets | None = None
         access_control_list: _AccessControl | None = None

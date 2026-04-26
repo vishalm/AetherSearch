@@ -1,11 +1,11 @@
 from slack_sdk import WebClient
 from sqlalchemy.orm import Session
 
-from onyx.db.models import SlackChannelConfig
-from onyx.onyxbot.slack.models import SlackMessageInfo
-from onyx.utils.logger import OnyxLoggingAdapter
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import fetch_versioned_implementation
+from aethersearch.db.models import SlackChannelConfig
+from aethersearch.aethersearchbot.slack.models import SlackMessageInfo
+from aethersearch.utils.logger import AetherSearchLoggingAdapter
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import fetch_versioned_implementation
 
 logger = setup_logger()
 
@@ -14,14 +14,14 @@ def handle_standard_answers(
     message_info: SlackMessageInfo,
     receiver_ids: list[str] | None,
     slack_channel_config: SlackChannelConfig,
-    logger: OnyxLoggingAdapter,
+    logger: AetherSearchLoggingAdapter,
     client: WebClient,
     db_session: Session,
 ) -> bool:
     """Returns whether one or more Standard Answer message blocks were
     emitted by the Slack bot"""
     versioned_handle_standard_answers = fetch_versioned_implementation(
-        "onyx.onyxbot.slack.handlers.handle_standard_answers",
+        "aethersearch.aethersearchbot.slack.handlers.handle_standard_answers",
         "_handle_standard_answers",
     )
     return versioned_handle_standard_answers(
@@ -38,7 +38,7 @@ def _handle_standard_answers(
     message_info: SlackMessageInfo,  # noqa: ARG001
     receiver_ids: list[str] | None,  # noqa: ARG001
     slack_channel_config: SlackChannelConfig,  # noqa: ARG001
-    logger: OnyxLoggingAdapter,  # noqa: ARG001
+    logger: AetherSearchLoggingAdapter,  # noqa: ARG001
     client: WebClient,  # noqa: ARG001
     db_session: Session,  # noqa: ARG001
 ) -> bool:

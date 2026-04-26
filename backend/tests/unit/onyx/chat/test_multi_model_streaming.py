@@ -15,23 +15,23 @@ from uuid import uuid4
 
 import pytest
 
-from onyx.chat.models import StreamingError
-from onyx.configs.constants import MessageType
-from onyx.db.chat import set_preferred_response
-from onyx.llm.override_models import LLMOverride
-from onyx.server.query_and_chat.models import SendMessageRequest
-from onyx.server.query_and_chat.placement import Placement
-from onyx.server.query_and_chat.streaming_models import OverallStop
-from onyx.server.query_and_chat.streaming_models import Packet
-from onyx.server.query_and_chat.streaming_models import ReasoningStart
-from onyx.utils.variable_functionality import global_version
+from aethersearch.chat.models import StreamingError
+from aethersearch.configs.constants import MessageType
+from aethersearch.db.chat import set_preferred_response
+from aethersearch.llm.override_models import LLMOverride
+from aethersearch.server.query_and_chat.models import SendMessageRequest
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.server.query_and_chat.streaming_models import OverallStop
+from aethersearch.server.query_and_chat.streaming_models import Packet
+from aethersearch.server.query_and_chat.streaming_models import ReasoningStart
+from aethersearch.utils.variable_functionality import global_version
 
 
 @pytest.fixture(autouse=True)
 def _restore_ee_version() -> Generator[None, None, None]:
     """Reset EE global state after each test.
 
-    Importing onyx.chat.process_message triggers set_is_ee_based_on_env_variable()
+    Importing aethersearch.chat.process_message triggers set_is_ee_based_on_env_variable()
     (via the celery client import chain).  Without this fixture, the EE flag stays
     True for the rest of the session and breaks unrelated tests that mock Confluence
     or other connectors and assume EE is disabled.
@@ -61,7 +61,7 @@ def _make_override(provider: str = "openai", version: str = "gpt-4") -> LLMOverr
 
 def _first_from_stream(req: SendMessageRequest, overrides: list[LLMOverride]) -> Any:
     """Return the first item yielded by handle_multi_model_stream."""
-    from onyx.chat.process_message import handle_multi_model_stream
+    from aethersearch.chat.process_message import handle_multi_model_stream
 
     user = MagicMock()
     user.is_anonymous = False
@@ -274,7 +274,7 @@ def _make_setup(n_models: int = 1) -> MagicMock:
 
 def _run_models_collect(setup: MagicMock) -> list:
     """Drive _run_models to completion and return all yielded items."""
-    from onyx.chat.process_message import _run_models
+    from aethersearch.chat.process_message import _run_models
 
     return list(_run_models(setup, MagicMock(), MagicMock()))
 
@@ -298,12 +298,12 @@ class TestRunModels:
             )
 
         with (
-            patch("onyx.chat.process_message.run_llm_loop", side_effect=emit_stop),
-            patch("onyx.chat.process_message.run_deep_research_llm_loop"),
-            patch("onyx.chat.process_message.construct_tools", return_value={}),
-            patch("onyx.chat.process_message.llm_loop_completion_handle"),
+            patch("aethersearch.chat.process_message.run_llm_loop", side_effect=emit_stop),
+            patch("aethersearch.chat.process_message.run_deep_research_llm_loop"),
+            patch("aethersearch.chat.process_message.construct_tools", return_value={}),
+            patch("aethersearch.chat.process_message.llm_loop_completion_handle"),
             patch(
-                "onyx.chat.process_message.get_llm_token_counter",
+                "aethersearch.chat.process_message.get_llm_token_counter",
                 return_value=lambda _: 0,
             ),
         ):
@@ -328,12 +328,12 @@ class TestRunModels:
             )
 
         with (
-            patch("onyx.chat.process_message.run_llm_loop", side_effect=emit_one),
-            patch("onyx.chat.process_message.run_deep_research_llm_loop"),
-            patch("onyx.chat.process_message.construct_tools", return_value={}),
-            patch("onyx.chat.process_message.llm_loop_completion_handle"),
+            patch("aethersearch.chat.process_message.run_llm_loop", side_effect=emit_one),
+            patch("aethersearch.chat.process_message.run_deep_research_llm_loop"),
+            patch("aethersearch.chat.process_message.construct_tools", return_value={}),
+            patch("aethersearch.chat.process_message.llm_loop_completion_handle"),
             patch(
-                "onyx.chat.process_message.get_llm_token_counter",
+                "aethersearch.chat.process_message.get_llm_token_counter",
                 return_value=lambda _: 0,
             ),
         ):
@@ -358,12 +358,12 @@ class TestRunModels:
             )
 
         with (
-            patch("onyx.chat.process_message.run_llm_loop", side_effect=emit_one),
-            patch("onyx.chat.process_message.run_deep_research_llm_loop"),
-            patch("onyx.chat.process_message.construct_tools", return_value={}),
-            patch("onyx.chat.process_message.llm_loop_completion_handle"),
+            patch("aethersearch.chat.process_message.run_llm_loop", side_effect=emit_one),
+            patch("aethersearch.chat.process_message.run_deep_research_llm_loop"),
+            patch("aethersearch.chat.process_message.construct_tools", return_value={}),
+            patch("aethersearch.chat.process_message.llm_loop_completion_handle"),
             patch(
-                "onyx.chat.process_message.get_llm_token_counter",
+                "aethersearch.chat.process_message.get_llm_token_counter",
                 return_value=lambda _: 0,
             ),
         ):
@@ -385,12 +385,12 @@ class TestRunModels:
             raise RuntimeError("intentional test failure")
 
         with (
-            patch("onyx.chat.process_message.run_llm_loop", side_effect=always_fail),
-            patch("onyx.chat.process_message.run_deep_research_llm_loop"),
-            patch("onyx.chat.process_message.construct_tools", return_value={}),
-            patch("onyx.chat.process_message.llm_loop_completion_handle"),
+            patch("aethersearch.chat.process_message.run_llm_loop", side_effect=always_fail),
+            patch("aethersearch.chat.process_message.run_deep_research_llm_loop"),
+            patch("aethersearch.chat.process_message.construct_tools", return_value={}),
+            patch("aethersearch.chat.process_message.llm_loop_completion_handle"),
             patch(
-                "onyx.chat.process_message.get_llm_token_counter",
+                "aethersearch.chat.process_message.get_llm_token_counter",
                 return_value=lambda _: 0,
             ),
         ):
@@ -414,14 +414,14 @@ class TestRunModels:
 
         with (
             patch(
-                "onyx.chat.process_message.run_llm_loop",
+                "aethersearch.chat.process_message.run_llm_loop",
                 side_effect=fail_model_0_succeed_model_1,
             ),
-            patch("onyx.chat.process_message.run_deep_research_llm_loop"),
-            patch("onyx.chat.process_message.construct_tools", return_value={}),
-            patch("onyx.chat.process_message.llm_loop_completion_handle"),
+            patch("aethersearch.chat.process_message.run_deep_research_llm_loop"),
+            patch("aethersearch.chat.process_message.construct_tools", return_value={}),
+            patch("aethersearch.chat.process_message.llm_loop_completion_handle"),
             patch(
-                "onyx.chat.process_message.get_llm_token_counter",
+                "aethersearch.chat.process_message.get_llm_token_counter",
                 return_value=lambda _: 0,
             ),
         ):
@@ -448,12 +448,12 @@ class TestRunModels:
         setup.check_is_connected = MagicMock(return_value=False)
 
         with (
-            patch("onyx.chat.process_message.run_llm_loop", side_effect=slow_llm),
-            patch("onyx.chat.process_message.run_deep_research_llm_loop"),
-            patch("onyx.chat.process_message.construct_tools", return_value={}),
-            patch("onyx.chat.process_message.llm_loop_completion_handle"),
+            patch("aethersearch.chat.process_message.run_llm_loop", side_effect=slow_llm),
+            patch("aethersearch.chat.process_message.run_deep_research_llm_loop"),
+            patch("aethersearch.chat.process_message.construct_tools", return_value={}),
+            patch("aethersearch.chat.process_message.llm_loop_completion_handle"),
             patch(
-                "onyx.chat.process_message.get_llm_token_counter",
+                "aethersearch.chat.process_message.get_llm_token_counter",
                 return_value=lambda _: 0,
             ),
         ):
@@ -488,14 +488,14 @@ class TestRunModels:
         setup.check_is_connected = MagicMock(return_value=False)
 
         with (
-            patch("onyx.chat.process_message.run_llm_loop", side_effect=slow_llm),
-            patch("onyx.chat.process_message.run_deep_research_llm_loop"),
-            patch("onyx.chat.process_message.construct_tools", return_value={}),
+            patch("aethersearch.chat.process_message.run_llm_loop", side_effect=slow_llm),
+            patch("aethersearch.chat.process_message.run_deep_research_llm_loop"),
+            patch("aethersearch.chat.process_message.construct_tools", return_value={}),
             patch(
-                "onyx.chat.process_message.llm_loop_completion_handle"
+                "aethersearch.chat.process_message.llm_loop_completion_handle"
             ) as mock_handle,
             patch(
-                "onyx.chat.process_message.get_llm_token_counter",
+                "aethersearch.chat.process_message.get_llm_token_counter",
                 return_value=lambda _: 0,
             ),
         ):
@@ -509,14 +509,14 @@ class TestRunModels:
         setup = _make_setup(n_models=2)
 
         with (
-            patch("onyx.chat.process_message.run_llm_loop"),
-            patch("onyx.chat.process_message.run_deep_research_llm_loop"),
-            patch("onyx.chat.process_message.construct_tools", return_value={}),
+            patch("aethersearch.chat.process_message.run_llm_loop"),
+            patch("aethersearch.chat.process_message.run_deep_research_llm_loop"),
+            patch("aethersearch.chat.process_message.construct_tools", return_value={}),
             patch(
-                "onyx.chat.process_message.llm_loop_completion_handle"
+                "aethersearch.chat.process_message.llm_loop_completion_handle"
             ) as mock_handle,
             patch(
-                "onyx.chat.process_message.get_llm_token_counter",
+                "aethersearch.chat.process_message.get_llm_token_counter",
                 return_value=lambda _: 0,
             ),
         ):
@@ -531,14 +531,14 @@ class TestRunModels:
             raise RuntimeError("fail")
 
         with (
-            patch("onyx.chat.process_message.run_llm_loop", side_effect=always_fail),
-            patch("onyx.chat.process_message.run_deep_research_llm_loop"),
-            patch("onyx.chat.process_message.construct_tools", return_value={}),
+            patch("aethersearch.chat.process_message.run_llm_loop", side_effect=always_fail),
+            patch("aethersearch.chat.process_message.run_deep_research_llm_loop"),
+            patch("aethersearch.chat.process_message.construct_tools", return_value={}),
             patch(
-                "onyx.chat.process_message.llm_loop_completion_handle"
+                "aethersearch.chat.process_message.llm_loop_completion_handle"
             ) as mock_handle,
             patch(
-                "onyx.chat.process_message.get_llm_token_counter",
+                "aethersearch.chat.process_message.get_llm_token_counter",
                 return_value=lambda _: 0,
             ),
         ):
@@ -582,21 +582,21 @@ class TestRunModels:
 
         with (
             patch(
-                "onyx.chat.process_message.run_llm_loop",
+                "aethersearch.chat.process_message.run_llm_loop",
                 side_effect=emit_then_block_until_drain,
             ),
-            patch("onyx.chat.process_message.run_deep_research_llm_loop"),
-            patch("onyx.chat.process_message.construct_tools", return_value={}),
+            patch("aethersearch.chat.process_message.run_deep_research_llm_loop"),
+            patch("aethersearch.chat.process_message.construct_tools", return_value={}),
             patch(
-                "onyx.chat.process_message.llm_loop_completion_handle",
+                "aethersearch.chat.process_message.llm_loop_completion_handle",
                 side_effect=lambda *_, **__: completion_called.set(),
             ) as mock_handle,
             patch(
-                "onyx.chat.process_message.get_llm_token_counter",
+                "aethersearch.chat.process_message.get_llm_token_counter",
                 return_value=lambda _: 0,
             ),
         ):
-            from onyx.chat.process_message import _run_models
+            from aethersearch.chat.process_message import _run_models
 
             gen = cast(Generator, _run_models(setup, MagicMock(), MagicMock()))
             first = next(gen)
@@ -638,21 +638,21 @@ class TestRunModels:
 
         with (
             patch(
-                "onyx.chat.process_message.run_llm_loop",
+                "aethersearch.chat.process_message.run_llm_loop",
                 side_effect=emit_and_return_immediately,
             ),
-            patch("onyx.chat.process_message.run_deep_research_llm_loop"),
-            patch("onyx.chat.process_message.construct_tools", return_value={}),
+            patch("aethersearch.chat.process_message.run_deep_research_llm_loop"),
+            patch("aethersearch.chat.process_message.construct_tools", return_value={}),
             patch(
-                "onyx.chat.process_message.llm_loop_completion_handle",
+                "aethersearch.chat.process_message.llm_loop_completion_handle",
                 side_effect=lambda *_, **__: completion_called.set(),
             ) as mock_handle,
             patch(
-                "onyx.chat.process_message.get_llm_token_counter",
+                "aethersearch.chat.process_message.get_llm_token_counter",
                 return_value=lambda _: 0,
             ),
         ):
-            from onyx.chat.process_message import _run_models
+            from aethersearch.chat.process_message import _run_models
 
             gen = cast(Generator, _run_models(setup, MagicMock(), MagicMock()))
             first = next(gen)
@@ -692,14 +692,14 @@ class TestRunModels:
         setup.check_is_connected = lambda: False
 
         with (
-            patch("onyx.chat.process_message.run_llm_loop", side_effect=fail_model_0),
-            patch("onyx.chat.process_message.run_deep_research_llm_loop"),
-            patch("onyx.chat.process_message.construct_tools", return_value={}),
+            patch("aethersearch.chat.process_message.run_llm_loop", side_effect=fail_model_0),
+            patch("aethersearch.chat.process_message.run_deep_research_llm_loop"),
+            patch("aethersearch.chat.process_message.construct_tools", return_value={}),
             patch(
-                "onyx.chat.process_message.llm_loop_completion_handle"
+                "aethersearch.chat.process_message.llm_loop_completion_handle"
             ) as mock_handle,
             patch(
-                "onyx.chat.process_message.get_llm_token_counter",
+                "aethersearch.chat.process_message.get_llm_token_counter",
                 return_value=lambda _: 0,
             ),
         ):
@@ -714,19 +714,19 @@ class TestRunModels:
 
     def test_external_state_container_used_for_model_zero(self) -> None:
         """When provided, external_state_container is used as state_containers[0]."""
-        from onyx.chat.chat_state import ChatStateContainer
-        from onyx.chat.process_message import _run_models
+        from aethersearch.chat.chat_state import ChatStateContainer
+        from aethersearch.chat.process_message import _run_models
 
         external = ChatStateContainer()
         setup = _make_setup(n_models=1)
 
         with (
-            patch("onyx.chat.process_message.run_llm_loop") as mock_llm,
-            patch("onyx.chat.process_message.run_deep_research_llm_loop"),
-            patch("onyx.chat.process_message.construct_tools", return_value={}),
-            patch("onyx.chat.process_message.llm_loop_completion_handle"),
+            patch("aethersearch.chat.process_message.run_llm_loop") as mock_llm,
+            patch("aethersearch.chat.process_message.run_deep_research_llm_loop"),
+            patch("aethersearch.chat.process_message.construct_tools", return_value={}),
+            patch("aethersearch.chat.process_message.llm_loop_completion_handle"),
             patch(
-                "onyx.chat.process_message.get_llm_token_counter",
+                "aethersearch.chat.process_message.get_llm_token_counter",
                 return_value=lambda _: 0,
             ),
         ):

@@ -1,11 +1,11 @@
 #!/bin/sh
-# Setup Onyx Craft templates
+# Setup AetherSearch Craft templates
 # This script is called on container startup to ensure Craft templates are ready
 # Set ENABLE_CRAFT=false to skip setup
 
 # Check if Craft is disabled
 if [ "$ENABLE_CRAFT" = "false" ] || [ "$ENABLE_CRAFT" = "False" ]; then
-    echo "Onyx Craft is disabled (ENABLE_CRAFT=false), skipping template setup"
+    echo "AetherSearch Craft is disabled (ENABLE_CRAFT=false), skipping template setup"
     exit 0
 fi
 
@@ -19,7 +19,7 @@ if ! command -v opencode >/dev/null 2>&1; then
     exit 1
 fi
 
-CRAFT_BASE="/app/onyx/server/features/build/sandbox/kubernetes/docker"
+CRAFT_BASE="/app/aethersearch/server/features/build/sandbox/kubernetes/docker"
 DEMO_DATA_ZIP="${CRAFT_BASE}/demo_data.zip"
 DEMO_DATA_DIR="${CRAFT_BASE}/demo_data"
 # Use environment variables if set, otherwise use defaults
@@ -28,7 +28,7 @@ VENV_TEMPLATE_PATH="${VENV_TEMPLATE_PATH:-${CRAFT_BASE}/templates/venv}"
 WEB_TEMPLATE_PATH="${WEB_TEMPLATE_PATH:-${OUTPUTS_TEMPLATE_PATH}/web}"
 REQUIREMENTS_PATH="${CRAFT_BASE}/initial-requirements.txt"
 
-echo "Setting up Onyx Craft templates..."
+echo "Setting up AetherSearch Craft templates..."
 
 # 1. Unzip demo_data.zip if demo_data directory doesn't exist
 if [ ! -d "$DEMO_DATA_DIR" ] && [ -f "$DEMO_DATA_ZIP" ]; then

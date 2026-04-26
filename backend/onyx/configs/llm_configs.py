@@ -1,5 +1,5 @@
-from onyx.configs.app_configs import DEFAULT_IMAGE_ANALYSIS_MAX_SIZE_MB
-from onyx.server.settings.store import load_settings
+from aethersearch.configs.app_configs import DEFAULT_IMAGE_ANALYSIS_MAX_SIZE_MB
+from aethersearch.server.settings.store import load_settings
 
 
 def get_image_extraction_and_analysis_enabled() -> bool:

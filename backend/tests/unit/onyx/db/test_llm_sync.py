@@ -5,9 +5,9 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.db.llm import sync_model_configurations
-from onyx.llm.constants import LlmProviderNames
-from onyx.server.manage.llm.models import SyncModelEntry
+from aethersearch.db.llm import sync_model_configurations
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.server.manage.llm.models import SyncModelEntry
 
 
 class TestSyncModelConfigurations:
@@ -23,7 +23,7 @@ class TestSyncModelConfigurations:
         mock_session = MagicMock()
 
         with patch(
-            "onyx.db.llm.fetch_existing_llm_provider", return_value=mock_provider
+            "aethersearch.db.llm.fetch_existing_llm_provider", return_value=mock_provider
         ):
             models = [
                 SyncModelEntry(
@@ -65,7 +65,7 @@ class TestSyncModelConfigurations:
         mock_session = MagicMock()
 
         with patch(
-            "onyx.db.llm.fetch_existing_llm_provider", return_value=mock_provider
+            "aethersearch.db.llm.fetch_existing_llm_provider", return_value=mock_provider
         ):
             models = [
                 SyncModelEntry(
@@ -103,7 +103,7 @@ class TestSyncModelConfigurations:
         mock_session = MagicMock()
 
         with patch(
-            "onyx.db.llm.fetch_existing_llm_provider", return_value=mock_provider
+            "aethersearch.db.llm.fetch_existing_llm_provider", return_value=mock_provider
         ):
             models = [
                 SyncModelEntry(
@@ -127,7 +127,7 @@ class TestSyncModelConfigurations:
         """Test that ValueError is raised when provider not found."""
         mock_session = MagicMock()
 
-        with patch("onyx.db.llm.fetch_existing_llm_provider", return_value=None):
+        with patch("aethersearch.db.llm.fetch_existing_llm_provider", return_value=None):
             with pytest.raises(ValueError, match="not found"):
                 sync_model_configurations(
                     db_session=mock_session,
@@ -144,7 +144,7 @@ class TestSyncModelConfigurations:
         mock_session = MagicMock()
 
         with patch(
-            "onyx.db.llm.fetch_existing_llm_provider", return_value=mock_provider
+            "aethersearch.db.llm.fetch_existing_llm_provider", return_value=mock_provider
         ):
             # Model with only required fields (max_input_tokens and supports_image_input default)
             models = [

@@ -6,10 +6,10 @@ the permissions of the curator manipulating connector-credential pairs.
 import os
 
 import pytest
-from onyx_openapi_client.exceptions import ApiException  # ty: ignore[unresolved-import]
+from aethersearch_openapi_client.exceptions import ApiException  # ty: ignore[unresolved-import]
 
-from onyx.db.enums import AccessType
-from onyx.server.documents.models import DocumentSource
+from aethersearch.db.enums import AccessType
+from aethersearch.server.documents.models import DocumentSource
 from tests.integration.common_utils.managers.cc_pair import CCPairManager
 from tests.integration.common_utils.managers.connector import ConnectorManager
 from tests.integration.common_utils.managers.credential import CredentialManager

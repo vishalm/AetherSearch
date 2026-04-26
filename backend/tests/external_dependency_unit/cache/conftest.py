@@ -10,10 +10,10 @@ from collections.abc import Generator
 
 import pytest
 
-from onyx.cache.interface import CacheBackend
-from onyx.cache.postgres_backend import PostgresCacheBackend
-from onyx.cache.redis_backend import RedisCacheBackend
-from onyx.db.engine.sql_engine import SqlEngine
+from aethersearch.cache.interface import CacheBackend
+from aethersearch.cache.postgres_backend import PostgresCacheBackend
+from aethersearch.cache.redis_backend import RedisCacheBackend
+from aethersearch.db.engine.sql_engine import SqlEngine
 from shared_configs.contextvars import CURRENT_TENANT_ID_CONTEXTVAR
 from tests.external_dependency_unit.constants import TEST_TENANT_ID
 
@@ -41,7 +41,7 @@ def pg_cache() -> PostgresCacheBackend:
 
 @pytest.fixture
 def redis_cache() -> RedisCacheBackend:
-    from onyx.redis.redis_pool import redis_pool
+    from aethersearch.redis.redis_pool import redis_pool
 
     return RedisCacheBackend(redis_pool.get_client(TEST_TENANT_ID))
 

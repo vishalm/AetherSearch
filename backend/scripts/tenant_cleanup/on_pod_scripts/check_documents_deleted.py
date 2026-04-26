@@ -16,10 +16,10 @@ import sys
 from sqlalchemy import func
 from sqlalchemy import select
 
-from onyx.db.engine.sql_engine import get_session_with_tenant
-from onyx.db.engine.sql_engine import SqlEngine
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import Document
+from aethersearch.db.engine.sql_engine import get_session_with_tenant
+from aethersearch.db.engine.sql_engine import SqlEngine
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import Document
 
 
 def check_documents_deleted(tenant_id: str) -> dict:

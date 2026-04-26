@@ -10,12 +10,12 @@ from unittest.mock import PropertyMock
 
 import pytest
 
-from onyx.access.models import ExternalAccess
-from onyx.background.celery.celery_utils import extract_ids_from_runnable_connector
-from onyx.connectors.github.connector import GithubConnector
-from onyx.connectors.interfaces import SlimConnector
-from onyx.connectors.interfaces import SlimConnectorWithPermSync
-from onyx.connectors.models import SlimDocument
+from aethersearch.access.models import ExternalAccess
+from aethersearch.background.celery.celery_utils import extract_ids_from_runnable_connector
+from aethersearch.connectors.github.connector import GithubConnector
+from aethersearch.connectors.interfaces import SlimConnector
+from aethersearch.connectors.interfaces import SlimConnectorWithPermSync
+from aethersearch.connectors.models import SlimDocument
 
 
 def _make_pr(html_url: str) -> MagicMock:
@@ -51,7 +51,7 @@ def _make_connector(include_issues: bool = False) -> GithubConnector:
 @pytest.fixture(autouse=True)
 def patch_deserialize_repository(mock_repo: MagicMock) -> Generator[None, None, None]:
     with patch(
-        "onyx.connectors.github.connector.deserialize_repository",
+        "aethersearch.connectors.github.connector.deserialize_repository",
         return_value=mock_repo,
     ):
         yield
@@ -116,7 +116,7 @@ def test_retrieve_all_slim_docs_perm_sync_populates_external_access(
 
     with patch.object(connector, "fetch_configured_repos", return_value=[mock_repo]):
         with patch(
-            "onyx.connectors.github.connector.get_external_access_permission",
+            "aethersearch.connectors.github.connector.get_external_access_permission",
             return_value=mock_access,
         ) as mock_perm:
             batches = list(connector.retrieve_all_slim_docs_perm_sync())

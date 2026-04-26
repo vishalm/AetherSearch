@@ -2,14 +2,14 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from ee.onyx.external_permissions.confluence.group_sync import confluence_group_sync
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.models import InputType
-from onyx.db.enums import AccessType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.models import Connector
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import Credential
+from ee.aethersearch.external_permissions.confluence.group_sync import confluence_group_sync
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.models import InputType
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.models import Connector
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import Credential
 from shared_configs.contextvars import get_current_tenant_id
 from tests.daily.connectors.confluence.models import ExternalUserGroupSet
 
@@ -19,28 +19,28 @@ from tests.daily.connectors.confluence.models import ExternalUserGroupSet
 _EXPECTED_CONFLUENCE_GROUPS = [
     ExternalUserGroupSet(
         id="confluence-admins-danswerai",
-        user_emails={"chris@onyx.app", "yuhong@onyx.app"},
+        user_emails={"chris@aethersearch.app", "yuhong@aethersearch.app"},
         gives_anyone_access=False,
     ),
     ExternalUserGroupSet(
         id="org-admins",
         user_emails={
-            "founders@onyx.app",
-            "chris@onyx.app",
-            "yuhong@onyx.app",
-            "oauth@onyx.app",
+            "founders@aethersearch.app",
+            "chris@aethersearch.app",
+            "yuhong@aethersearch.app",
+            "oauth@aethersearch.app",
         },
         gives_anyone_access=False,
     ),
     ExternalUserGroupSet(
         id="confluence-users-danswerai",
         user_emails={
-            "chris@onyx.app",
+            "chris@aethersearch.app",
             "hagen@danswer.ai",
-            "founders@onyx.app",
-            "pablo@onyx.app",
-            "yuhong@onyx.app",
-            "oauth@onyx.app",
+            "founders@aethersearch.app",
+            "pablo@aethersearch.app",
+            "yuhong@aethersearch.app",
+            "oauth@aethersearch.app",
         },
         gives_anyone_access=False,
     ),
@@ -48,16 +48,16 @@ _EXPECTED_CONFLUENCE_GROUPS = [
         id="jira-users-danswerai",
         user_emails={
             "hagen@danswer.ai",
-            "founders@onyx.app",
-            "pablo@onyx.app",
-            "chris@onyx.app",
-            "oauth@onyx.app",
+            "founders@aethersearch.app",
+            "pablo@aethersearch.app",
+            "chris@aethersearch.app",
+            "oauth@aethersearch.app",
         },
         gives_anyone_access=False,
     ),
     ExternalUserGroupSet(
         id="jira-admins-danswerai",
-        user_emails={"hagen@danswer.ai", "founders@onyx.app", "pablo@onyx.app"},
+        user_emails={"hagen@danswer.ai", "founders@aethersearch.app", "pablo@aethersearch.app"},
         gives_anyone_access=False,
     ),
     ExternalUserGroupSet(
@@ -72,39 +72,39 @@ _EXPECTED_CONFLUENCE_GROUPS = [
     ),
     ExternalUserGroupSet(
         id="Yuhong Only No Chris Allowed",
-        user_emails={"yuhong@onyx.app"},
+        user_emails={"yuhong@aethersearch.app"},
         gives_anyone_access=False,
     ),
     ExternalUserGroupSet(
-        id="All_Confluence_Users_Found_By_Onyx",
+        id="All_Confluence_Users_Found_By_AetherSearch",
         user_emails={
-            "chris@onyx.app",
-            "founders@onyx.app",
+            "chris@aethersearch.app",
+            "founders@aethersearch.app",
             "hagen@danswer.ai",
-            "pablo@onyx.app",
-            "yuhong@onyx.app",
-            "oauth@onyx.app",
+            "pablo@aethersearch.app",
+            "yuhong@aethersearch.app",
+            "oauth@aethersearch.app",
         },
         gives_anyone_access=False,
     ),
     ExternalUserGroupSet(
-        id="bitbucket-users-onyxai",
-        user_emails={"founders@onyx.app", "oauth@onyx.app"},
+        id="bitbucket-users-aethersearchai",
+        user_emails={"founders@aethersearch.app", "oauth@aethersearch.app"},
         gives_anyone_access=False,
     ),
     ExternalUserGroupSet(
-        id="bitbucket-admins-onyxai",
-        user_emails={"founders@onyx.app", "oauth@onyx.app"},
+        id="bitbucket-admins-aethersearchai",
+        user_emails={"founders@aethersearch.app", "oauth@aethersearch.app"},
         gives_anyone_access=False,
     ),
     ExternalUserGroupSet(
         id="jira-servicemanagement-users-danswerai",
-        user_emails={"oauth@onyx.app"},
+        user_emails={"oauth@aethersearch.app"},
         gives_anyone_access=False,
     ),
     ExternalUserGroupSet(
         id="no yuhong allowed",
-        user_emails={"hagen@danswer.ai", "pablo@onyx.app", "chris@onyx.app"},
+        user_emails={"hagen@danswer.ai", "pablo@aethersearch.app", "chris@aethersearch.app"},
         gives_anyone_access=False,
     ),
 ]

@@ -2,27 +2,27 @@ from collections.abc import Generator
 from datetime import datetime
 from datetime import timezone
 
-from ee.onyx.external_permissions.google_drive.models import GoogleDrivePermission
-from ee.onyx.external_permissions.google_drive.models import PermissionType
-from ee.onyx.external_permissions.google_drive.permission_retrieval import (
+from ee.aethersearch.external_permissions.google_drive.models import GoogleDrivePermission
+from ee.aethersearch.external_permissions.google_drive.models import PermissionType
+from ee.aethersearch.external_permissions.google_drive.permission_retrieval import (
     get_permissions_by_ids,
 )
-from ee.onyx.external_permissions.perm_sync_types import FetchAllDocumentsFunction
-from ee.onyx.external_permissions.perm_sync_types import FetchAllDocumentsIdsFunction
-from onyx.access.models import DocExternalAccess
-from onyx.access.models import ElementExternalAccess
-from onyx.access.models import ExternalAccess
-from onyx.access.models import NodeExternalAccess
-from onyx.access.utils import build_ext_group_name_for_onyx
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.google_drive.connector import GoogleDriveConnector
-from onyx.connectors.google_drive.models import GoogleDriveFileType
-from onyx.connectors.google_utils.resources import GoogleDriveService
-from onyx.connectors.interfaces import GenerateSlimDocumentOutput
-from onyx.connectors.models import HierarchyNode
-from onyx.db.models import ConnectorCredentialPair
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.external_permissions.perm_sync_types import FetchAllDocumentsFunction
+from ee.aethersearch.external_permissions.perm_sync_types import FetchAllDocumentsIdsFunction
+from aethersearch.access.models import DocExternalAccess
+from aethersearch.access.models import ElementExternalAccess
+from aethersearch.access.models import ExternalAccess
+from aethersearch.access.models import NodeExternalAccess
+from aethersearch.access.utils import build_ext_group_name_for_aethersearch
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.google_drive.connector import GoogleDriveConnector
+from aethersearch.connectors.google_drive.models import GoogleDriveFileType
+from aethersearch.connectors.google_utils.resources import GoogleDriveService
+from aethersearch.connectors.interfaces import GenerateSlimDocumentOutput
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -126,7 +126,7 @@ def get_external_access_for_raw_gdrive_file(
     # and permissions.list may return 403. In this case, fall back to
     # granting access to the user who found the file in their drive.
     # Note, even if other users also have access to this file,
-    # they will not be granted access in Onyx.
+    # they will not be granted access in AetherSearch.
     # We check permissions_list (the final result after all fetch attempts)
     # rather than the raw fields, because permission_ids may be present
     # but the actual fetch can still return empty due to a 403.
@@ -150,7 +150,7 @@ def get_external_access_for_raw_gdrive_file(
     for permission in permissions_list:
         # if the permission is inherited, do not add it directly to the file
         # instead, add the folder ID as a group that has access to the file
-        # we will then handle mapping that folder to the list of Onyx users
+        # we will then handle mapping that folder to the list of AetherSearch users
         # in the group sync job
         # NOTE: this doesn't handle the case where a folder initially has no
         # permissioning, but then later that folder is shared with a user or group.
@@ -199,7 +199,7 @@ def get_external_access_for_raw_gdrive_file(
     # Prefix group IDs with source type if requested (for indexing path)
     if add_prefix:
         group_ids = {
-            build_ext_group_name_for_onyx(group_id, DocumentSource.GOOGLE_DRIVE)
+            build_ext_group_name_for_aethersearch(group_id, DocumentSource.GOOGLE_DRIVE)
             for group_id in group_ids
         }
 
@@ -294,7 +294,7 @@ def get_external_access_for_folder(
     group_ids: set[str] = group_emails
     if add_prefix:
         group_ids = {
-            build_ext_group_name_for_onyx(group_id, DocumentSource.GOOGLE_DRIVE)
+            build_ext_group_name_for_aethersearch(group_id, DocumentSource.GOOGLE_DRIVE)
             for group_id in group_emails
         }
 

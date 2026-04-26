@@ -1,8 +1,8 @@
 # Copy this file to .env in the .vscode folder.
 # Fill in the <REPLACE THIS> values as needed; it is recommended to set the
 # GEN_AI_API_KEY value to avoid having to set up an LLM in the UI.
-# Also check out onyx/backend/scripts/restart_containers.sh for a script to
-# restart the containers which Onyx relies on outside of VSCode/Cursor
+# Also check out aethersearch/backend/scripts/restart_containers.sh for a script to
+# restart the containers which AetherSearch relies on outside of VSCode/Cursor
 # processes.
 
 
@@ -15,7 +15,7 @@ DEV_MODE=true
 
 # Always keep these on for Dev.
 # Logs model prompts, reasoning, and answer to stdout.
-LOG_ONYX_MODEL_INTERACTIONS=False
+LOG_AETHERSEARCH_MODEL_INTERACTIONS=False
 # More verbose logging
 LOG_LEVEL=debug
 
@@ -24,7 +24,7 @@ LOG_LEVEL=debug
 OAUTH_CLIENT_ID=<REPLACE THIS>
 OAUTH_CLIENT_SECRET=<REPLACE THIS>
 OPENID_CONFIG_URL=<REPLACE THIS>
-SAML_CONF_DIR=/<ABSOLUTE PATH TO ONYX>/onyx/backend/ee/onyx/configs/saml_config
+SAML_CONF_DIR=/<ABSOLUTE PATH TO AETHERSEARCH>/aethersearch/backend/ee/aethersearch/configs/saml_config
 
 
 # Generally not useful for dev, we don't generally want to set up an SMTP server
@@ -53,7 +53,7 @@ ENABLE_PAID_ENTERPRISE_EDITION_FEATURES=False
 
 # S3 File Store Configuration (MinIO for local development)
 S3_ENDPOINT_URL=http://localhost:9004
-S3_FILE_STORE_BUCKET_NAME=onyx-file-store-bucket
+S3_FILE_STORE_BUCKET_NAME=aethersearch-file-store-bucket
 S3_AWS_ACCESS_KEY_ID=minioadmin
 S3_AWS_SECRET_ACCESS_KEY=minioadmin
 

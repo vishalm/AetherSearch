@@ -6,12 +6,12 @@ from uuid import UUID
 import requests
 from sqlalchemy.orm import Session
 
-from onyx.db.models import OAuthConfig
-from onyx.db.models import OAuthUserToken
-from onyx.db.oauth_config import get_user_oauth_token
-from onyx.db.oauth_config import upsert_user_oauth_token
-from onyx.utils.logger import setup_logger
-from onyx.utils.sensitive import SensitiveValue
+from aethersearch.db.models import OAuthConfig
+from aethersearch.db.models import OAuthUserToken
+from aethersearch.db.oauth_config import get_user_oauth_token
+from aethersearch.db.oauth_config import upsert_user_oauth_token
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.sensitive import SensitiveValue
 
 logger = setup_logger()
 

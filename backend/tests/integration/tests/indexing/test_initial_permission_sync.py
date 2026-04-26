@@ -7,18 +7,18 @@ import httpx
 import pytest
 from sqlalchemy import select
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.mock_connector.connector import EXTERNAL_USER_EMAILS
-from onyx.connectors.mock_connector.connector import EXTERNAL_USER_GROUP_IDS
-from onyx.connectors.mock_connector.connector import MockConnectorCheckpoint
-from onyx.connectors.models import Document
-from onyx.connectors.models import InputType
-from onyx.db.document import get_documents_by_ids
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import AccessType
-from onyx.db.enums import IndexingStatus
-from onyx.db.enums import PermissionSyncStatus
-from onyx.db.models import DocPermissionSyncAttempt
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.mock_connector.connector import EXTERNAL_USER_EMAILS
+from aethersearch.connectors.mock_connector.connector import EXTERNAL_USER_GROUP_IDS
+from aethersearch.connectors.mock_connector.connector import MockConnectorCheckpoint
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import InputType
+from aethersearch.db.document import get_documents_by_ids
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import IndexingStatus
+from aethersearch.db.enums import PermissionSyncStatus
+from aethersearch.db.models import DocPermissionSyncAttempt
 from tests.integration.common_utils.constants import MOCK_CONNECTOR_SERVER_HOST
 from tests.integration.common_utils.constants import MOCK_CONNECTOR_SERVER_PORT
 from tests.integration.common_utils.managers.cc_pair import CCPairManager

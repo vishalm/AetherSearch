@@ -1,4 +1,4 @@
-from onyx.connectors.confluence.models import ConfluenceUser
+from aethersearch.connectors.confluence.models import ConfluenceUser
 
 
 def process_confluence_user_profiles_override(

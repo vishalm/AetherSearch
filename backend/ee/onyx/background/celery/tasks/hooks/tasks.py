@@ -1,10 +1,10 @@
 from celery import shared_task
 
-from onyx.configs.app_configs import JOB_TIMEOUT
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.hook import cleanup_old_execution_logs__no_commit
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import JOB_TIMEOUT
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.hook import cleanup_old_execution_logs__no_commit
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -12,7 +12,7 @@ _HOOK_EXECUTION_LOG_RETENTION_DAYS: int = 30
 
 
 @shared_task(
-    name=OnyxCeleryTask.HOOK_EXECUTION_LOG_CLEANUP_TASK,
+    name=AetherSearchCeleryTask.HOOK_EXECUTION_LOG_CLEANUP_TASK,
     ignore_result=True,
     soft_time_limit=JOB_TIMEOUT,
     trail=False,

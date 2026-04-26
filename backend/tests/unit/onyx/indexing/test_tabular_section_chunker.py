@@ -11,23 +11,23 @@ arithmetic is deterministic and expected chunks can be spelled out
 exactly.
 """
 
-from onyx.connectors.models import Section
-from onyx.connectors.models import TabularSection
-from onyx.indexing.chunking.section_chunker import AccumulatorState
-from onyx.indexing.chunking.tabular_section_chunker import TabularChunker
-from onyx.indexing.chunking.tabular_section_chunker.analysis import analyze_sheet
-from onyx.indexing.chunking.tabular_section_chunker.sheet_descriptor import (
+from aethersearch.connectors.models import Section
+from aethersearch.connectors.models import TabularSection
+from aethersearch.indexing.chunking.section_chunker import AccumulatorState
+from aethersearch.indexing.chunking.tabular_section_chunker import TabularChunker
+from aethersearch.indexing.chunking.tabular_section_chunker.analysis import analyze_sheet
+from aethersearch.indexing.chunking.tabular_section_chunker.sheet_descriptor import (
     build_sheet_descriptor_chunks,
 )
-from onyx.indexing.chunking.tabular_section_chunker.total_descriptor import (
+from aethersearch.indexing.chunking.tabular_section_chunker.total_descriptor import (
     build_total_descriptor_chunks,
 )
-from onyx.indexing.chunking.tabular_section_chunker.total_descriptor import (
+from aethersearch.indexing.chunking.tabular_section_chunker.total_descriptor import (
     TOTALS_HEADER,
 )
-from onyx.natural_language_processing.utils import BaseTokenizer
-from onyx.utils.csv_utils import parse_csv_string
-from onyx.utils.csv_utils import read_csv_header
+from aethersearch.natural_language_processing.utils import BaseTokenizer
+from aethersearch.utils.csv_utils import parse_csv_string
+from aethersearch.utils.csv_utils import read_csv_header
 
 
 class CharTokenizer(BaseTokenizer):

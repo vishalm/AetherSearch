@@ -12,7 +12,7 @@ import { uploadLicense } from "@/lib/billing/svc";
 import { LicenseStatus } from "@/lib/billing/interfaces";
 import { formatDateShort } from "@/lib/dateUtils";
 
-const BILLING_HELP_URL = "https://docs.onyx.app/more/billing";
+const BILLING_HELP_URL = "https://docs.aethersearch.app/more/billing";
 
 interface LicenseActivationCardProps {
   isOpen: boolean;
@@ -155,7 +155,7 @@ export default function LicenseActivationCard({
           </Button>
         </Section>
         <Text secondaryBody text03>
-          Manually add and activate a license for this Onyx instance.
+          Manually add and activate a license for this AetherSearch instance.
         </Text>
       </Section>
 
@@ -180,7 +180,7 @@ export default function LicenseActivationCard({
             subDescription={
               error
                 ? undefined
-                : "Paste or attach your license key file you received from Onyx."
+                : "Paste or attach your license key file you received from AetherSearch."
             }
             withLabel
           >

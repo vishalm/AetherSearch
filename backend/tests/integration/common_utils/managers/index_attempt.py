@@ -5,14 +5,14 @@ from urllib.parse import urlencode
 
 import requests
 
-from onyx.background.indexing.models import IndexAttemptErrorPydantic
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import IndexModelStatus
-from onyx.db.models import IndexAttempt
-from onyx.db.models import IndexingStatus
-from onyx.db.search_settings import get_current_search_settings
-from onyx.server.documents.models import IndexAttemptSnapshot
-from onyx.server.documents.models import PaginatedReturn
+from aethersearch.background.indexing.models import IndexAttemptErrorPydantic
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import IndexModelStatus
+from aethersearch.db.models import IndexAttempt
+from aethersearch.db.models import IndexingStatus
+from aethersearch.db.search_settings import get_current_search_settings
+from aethersearch.server.documents.models import IndexAttemptSnapshot
+from aethersearch.server.documents.models import PaginatedReturn
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.constants import MAX_DELAY
 from tests.integration.common_utils.test_models import DATestIndexAttempt

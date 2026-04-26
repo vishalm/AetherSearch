@@ -5,11 +5,11 @@ import os
 from collections.abc import Callable
 from unittest.mock import patch
 
-from onyx.connectors.google_drive.connector import GoogleDriveConnector
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentFailure
-from onyx.connectors.models import HierarchyNode
+from aethersearch.connectors.google_drive.connector import GoogleDriveConnector
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentFailure
+from aethersearch.connectors.models import HierarchyNode
 from tests.daily.connectors.google_drive.consts_and_utils import ADMIN_EMAIL
 from tests.daily.connectors.google_drive.consts_and_utils import (
     ALL_EXPECTED_HIERARCHY_NODES,
@@ -41,7 +41,7 @@ def _build_failures(web_view_links: list[str]) -> list[ConnectorFailure]:
     ]
 
 
-@patch("onyx.file_processing.extract_file_text.get_unstructured_api_key")
+@patch("aethersearch.file_processing.extract_file_text.get_unstructured_api_key")
 def test_resolve_single_file(
     mock_api_key: None,  # noqa: ARG001
     google_drive_service_acct_connector_factory: Callable[..., GoogleDriveConnector],
@@ -74,7 +74,7 @@ def test_resolve_single_file(
     assert len(hierarchy_nodes) > 0
 
 
-@patch("onyx.file_processing.extract_file_text.get_unstructured_api_key")
+@patch("aethersearch.file_processing.extract_file_text.get_unstructured_api_key")
 def test_resolve_multiple_files(
     mock_api_key: None,  # noqa: ARG001
     google_drive_service_acct_connector_factory: Callable[..., GoogleDriveConnector],
@@ -110,7 +110,7 @@ def test_resolve_multiple_files(
     assert len(hierarchy_nodes) > 0
 
 
-@patch("onyx.file_processing.extract_file_text.get_unstructured_api_key")
+@patch("aethersearch.file_processing.extract_file_text.get_unstructured_api_key")
 def test_resolve_hierarchy_nodes_are_valid(
     mock_api_key: None,  # noqa: ARG001
     google_drive_service_acct_connector_factory: Callable[..., GoogleDriveConnector],
@@ -158,7 +158,7 @@ def test_resolve_hierarchy_nodes_are_valid(
         )
 
 
-@patch("onyx.file_processing.extract_file_text.get_unstructured_api_key")
+@patch("aethersearch.file_processing.extract_file_text.get_unstructured_api_key")
 def test_resolve_with_invalid_link(
     mock_api_key: None,  # noqa: ARG001
     google_drive_service_acct_connector_factory: Callable[..., GoogleDriveConnector],
@@ -190,7 +190,7 @@ def test_resolve_with_invalid_link(
     assert new_failures[0].failed_document.document_id == invalid_link
 
 
-@patch("onyx.file_processing.extract_file_text.get_unstructured_api_key")
+@patch("aethersearch.file_processing.extract_file_text.get_unstructured_api_key")
 def test_resolve_empty_errors(
     mock_api_key: None,  # noqa: ARG001
     google_drive_service_acct_connector_factory: Callable[..., GoogleDriveConnector],
@@ -211,13 +211,13 @@ def test_resolve_empty_errors(
     assert len(results) == 0
 
 
-@patch("onyx.file_processing.extract_file_text.get_unstructured_api_key")
+@patch("aethersearch.file_processing.extract_file_text.get_unstructured_api_key")
 def test_resolve_entity_failures_are_skipped(
     mock_api_key: None,  # noqa: ARG001
     google_drive_service_acct_connector_factory: Callable[..., GoogleDriveConnector],
 ) -> None:
     """Entity failures (not document failures) should be skipped by resolve_errors."""
-    from onyx.connectors.models import EntityFailure
+    from aethersearch.connectors.models import EntityFailure
 
     connector = google_drive_service_acct_connector_factory(
         primary_admin_email=ADMIN_EMAIL,

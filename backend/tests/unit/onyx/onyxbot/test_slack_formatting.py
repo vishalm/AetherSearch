@@ -1,10 +1,10 @@
-from onyx.onyxbot.slack.formatting import _convert_slack_links_to_markdown
-from onyx.onyxbot.slack.formatting import _normalize_link_destinations
-from onyx.onyxbot.slack.formatting import _sanitize_html
-from onyx.onyxbot.slack.formatting import _transform_outside_code_blocks
-from onyx.onyxbot.slack.formatting import format_slack_message
-from onyx.onyxbot.slack.utils import remove_slack_text_interactions
-from onyx.utils.text_processing import decode_escapes
+from aethersearch.aethersearchbot.slack.formatting import _convert_slack_links_to_markdown
+from aethersearch.aethersearchbot.slack.formatting import _normalize_link_destinations
+from aethersearch.aethersearchbot.slack.formatting import _sanitize_html
+from aethersearch.aethersearchbot.slack.formatting import _transform_outside_code_blocks
+from aethersearch.aethersearchbot.slack.formatting import format_slack_message
+from aethersearch.aethersearchbot.slack.utils import remove_slack_text_interactions
+from aethersearch.utils.text_processing import decode_escapes
 
 
 def test_normalize_citation_link_wraps_url_with_parentheses() -> None:

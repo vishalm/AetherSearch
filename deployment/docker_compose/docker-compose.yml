@@ -47,7 +47,7 @@ services:
     command: >
       /bin/sh -c "alembic upgrade head &&
       echo \"Starting AetherSearch Api Server\" &&
-      uvicorn onyx.main:app --host 0.0.0.0 --port 8080"
+      uvicorn aethersearch.main:app --host 0.0.0.0 --port 8080"
     # Check env.template and copy to .env for env vars
     env_file:
       - path: .env
@@ -91,9 +91,9 @@ services:
       # AetherSearch Craft configuration (disabled by default, set ENABLE_CRAFT=true in .env to enable)
       # Use --include-craft with install script, or manually set in .env file
       - ENABLE_CRAFT=${ENABLE_CRAFT:-false}
-      - OUTPUTS_TEMPLATE_PATH=${OUTPUTS_TEMPLATE_PATH:-/app/onyx/server/features/build/sandbox/kubernetes/docker/templates/outputs}
-      - VENV_TEMPLATE_PATH=${VENV_TEMPLATE_PATH:-/app/onyx/server/features/build/sandbox/kubernetes/docker/templates/venv}
-      - WEB_TEMPLATE_PATH=${WEB_TEMPLATE_PATH:-/app/onyx/server/features/build/sandbox/kubernetes/docker/templates/outputs/web}
+      - OUTPUTS_TEMPLATE_PATH=${OUTPUTS_TEMPLATE_PATH:-/app/aethersearch/server/features/build/sandbox/kubernetes/docker/templates/outputs}
+      - VENV_TEMPLATE_PATH=${VENV_TEMPLATE_PATH:-/app/aethersearch/server/features/build/sandbox/kubernetes/docker/templates/venv}
+      - WEB_TEMPLATE_PATH=${WEB_TEMPLATE_PATH:-/app/aethersearch/server/features/build/sandbox/kubernetes/docker/templates/outputs/web}
       - PERSISTENT_DOCUMENT_STORAGE_PATH=${PERSISTENT_DOCUMENT_STORAGE_PATH:-/app/file-system}
     # PRODUCTION: Uncomment the line below to use if IAM_AUTH is true and you are using iam auth for postgres
     # volumes:
@@ -177,9 +177,9 @@ services:
       - API_SERVER_HOST=${API_SERVER_HOST:-api_server}
       # AetherSearch Craft configuration (set up automatically on container startup)
       - ENABLE_CRAFT=${ENABLE_CRAFT:-false}
-      - OUTPUTS_TEMPLATE_PATH=${OUTPUTS_TEMPLATE_PATH:-/app/onyx/server/features/build/sandbox/kubernetes/docker/templates/outputs}
-      - VENV_TEMPLATE_PATH=${VENV_TEMPLATE_PATH:-/app/onyx/server/features/build/sandbox/kubernetes/docker/templates/venv}
-      - WEB_TEMPLATE_PATH=${WEB_TEMPLATE_PATH:-/app/onyx/server/features/build/sandbox/kubernetes/docker/templates/outputs/web}
+      - OUTPUTS_TEMPLATE_PATH=${OUTPUTS_TEMPLATE_PATH:-/app/aethersearch/server/features/build/sandbox/kubernetes/docker/templates/outputs}
+      - VENV_TEMPLATE_PATH=${VENV_TEMPLATE_PATH:-/app/aethersearch/server/features/build/sandbox/kubernetes/docker/templates/venv}
+      - WEB_TEMPLATE_PATH=${WEB_TEMPLATE_PATH:-/app/aethersearch/server/features/build/sandbox/kubernetes/docker/templates/outputs/web}
       - PERSISTENT_DOCUMENT_STORAGE_PATH=${PERSISTENT_DOCUMENT_STORAGE_PATH:-/app/file-system}
     # PRODUCTION: Uncomment the line below to use if IAM_AUTH is true and you are using iam auth for postgres
     # volumes:
@@ -239,7 +239,7 @@ services:
   #       echo 'MCP server is disabled (MCP_SERVER_ENABLED=false), skipping...';
   #       exit 0;
   #     else
-  #       exec python -m onyx.mcp_server_main;
+  #       exec python -m aethersearch.mcp_server_main;
   #     fi"
   #   env_file:
   #     - path: .env

@@ -27,9 +27,9 @@ down_revision = "78ebc66946a0"
 branch_labels = None
 depends_on = None
 
-# Must match constants in onyx/configs/constants.py file
+# Must match constants in aethersearch/configs/constants.py file
 NO_AUTH_PLACEHOLDER_USER_UUID = "00000000-0000-0000-0000-000000000001"
-NO_AUTH_PLACEHOLDER_USER_EMAIL = "no-auth-placeholder@onyx.app"
+NO_AUTH_PLACEHOLDER_USER_EMAIL = "no-auth-placeholder@aethersearch.app"
 
 # Trigger and function names
 TRIGGER_NAME = "trg_migrate_no_auth_data"

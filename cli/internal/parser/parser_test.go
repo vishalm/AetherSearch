@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/onyx-dot-app/onyx/cli/internal/models"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/models"
 )
 
 func TestEmptyLineReturnsNil(t *testing.T) {

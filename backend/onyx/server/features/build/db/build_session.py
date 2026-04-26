@@ -11,19 +11,19 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import MessageType
-from onyx.db.enums import BuildSessionStatus
-from onyx.db.enums import SandboxStatus
-from onyx.db.enums import SharingScope
-from onyx.db.models import Artifact
-from onyx.db.models import BuildMessage
-from onyx.db.models import BuildSession
-from onyx.db.models import LLMProvider as LLMProviderModel
-from onyx.db.models import Sandbox
-from onyx.server.features.build.configs import SANDBOX_NEXTJS_PORT_END
-from onyx.server.features.build.configs import SANDBOX_NEXTJS_PORT_START
-from onyx.server.manage.llm.models import LLMProviderView
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import MessageType
+from aethersearch.db.enums import BuildSessionStatus
+from aethersearch.db.enums import SandboxStatus
+from aethersearch.db.enums import SharingScope
+from aethersearch.db.models import Artifact
+from aethersearch.db.models import BuildMessage
+from aethersearch.db.models import BuildSession
+from aethersearch.db.models import LLMProvider as LLMProviderModel
+from aethersearch.db.models import Sandbox
+from aethersearch.server.features.build.configs import SANDBOX_NEXTJS_PORT_END
+from aethersearch.server.features.build.configs import SANDBOX_NEXTJS_PORT_START
+from aethersearch.server.manage.llm.models import LLMProviderView
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -481,7 +481,7 @@ def allocate_nextjs_port(db_session: Session) -> int:
     Raises:
         RuntimeError: If no ports are available in the configured range
     """
-    from onyx.db.models import BuildSession
+    from aethersearch.db.models import BuildSession
 
     # Get all currently allocated ports from active sessions
     allocated_ports = set(
@@ -568,7 +568,7 @@ def fetch_llm_provider_by_type_for_build_mode(
     Returns:
         LLMProviderView if found, None otherwise
     """
-    from onyx.db.llm import fetch_existing_llm_provider
+    from aethersearch.db.llm import fetch_existing_llm_provider
 
     # First try to find a "build-mode-{type}" provider
     build_mode_name = f"build-mode-{provider_type}"

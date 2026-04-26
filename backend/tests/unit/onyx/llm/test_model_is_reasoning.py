@@ -1,4 +1,4 @@
-from onyx.llm.utils import model_is_reasoning_model
+from aethersearch.llm.utils import model_is_reasoning_model
 
 
 def test_model_is_reasoning_model() -> None:

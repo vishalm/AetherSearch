@@ -15,9 +15,9 @@ from prometheus_client import Counter
 from prometheus_client import Gauge
 from redis.client import Redis
 
-from onyx.configs.constants import ONYX_CLOUD_TENANT_ID
-from onyx.redis.redis_pool import get_redis_client
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import AETHERSEARCH_CLOUD_TENANT_ID
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()
@@ -31,32 +31,32 @@ _SET_KEY = "active_tenants"
 # --- Prometheus metrics ---
 
 _active_set_size = Gauge(
-    "onyx_tenant_work_gating_active_set_size",
+    "aethersearch_tenant_work_gating_active_set_size",
     "Current cardinality of the active_tenants sorted set (updated once per "
     "generator invocation when the gate reads it).",
 )
 
 _marked_total = Counter(
-    "onyx_tenant_work_gating_marked_total",
+    "aethersearch_tenant_work_gating_marked_total",
     "Writes into active_tenants, labelled by caller.",
     ["caller"],
 )
 
 _skipped_total = Counter(
-    "onyx_tenant_work_gating_skipped_total",
+    "aethersearch_tenant_work_gating_skipped_total",
     "Per-tenant fanouts skipped by the gate (enforce mode only), by task.",
     ["task"],
 )
 
 _would_skip_total = Counter(
-    "onyx_tenant_work_gating_would_skip_total",
+    "aethersearch_tenant_work_gating_would_skip_total",
     "Per-tenant fanouts that would have been skipped if enforce were on "
     "(shadow counter), by task.",
     ["task"],
 )
 
 _full_fanout_total = Counter(
-    "onyx_tenant_work_gating_full_fanout_total",
+    "aethersearch_tenant_work_gating_full_fanout_total",
     "Generator invocations that bypassed the gate for a full fanout cycle, by task.",
     ["task"],
 )
@@ -67,7 +67,7 @@ def _now_ms() -> int:
 
 
 def _client() -> Redis:
-    return get_redis_client(tenant_id=ONYX_CLOUD_TENANT_ID)
+    return get_redis_client(tenant_id=AETHERSEARCH_CLOUD_TENANT_ID)
 
 
 def mark_tenant_active(tenant_id: str) -> None:
@@ -99,12 +99,12 @@ def maybe_mark_tenant_active(tenant_id: str, caller: str = "unknown") -> None:
     consumer is firing the hook most.
     """
     try:
-        # Local import to avoid a module-load cycle: OnyxRuntime imports
-        # onyx.redis.redis_pool, so a top-level import here would wedge on
+        # Local import to avoid a module-load cycle: AetherSearchRuntime imports
+        # aethersearch.redis.redis_pool, so a top-level import here would wedge on
         # certain startup paths.
-        from onyx.server.runtime.onyx_runtime import OnyxRuntime
+        from aethersearch.server.runtime.aethersearch_runtime import AetherSearchRuntime
 
-        if not OnyxRuntime.get_tenant_work_gating_enabled():
+        if not AetherSearchRuntime.get_tenant_work_gating_enabled():
             return
         mark_tenant_active(tenant_id)
         _marked_total.labels(caller=caller).inc()

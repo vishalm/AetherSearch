@@ -13,27 +13,27 @@ from pydantic import BaseModel
 from retry import retry
 from typing_extensions import override
 
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.app_configs import NOTION_CONNECTOR_DISABLE_RECURSIVE_PAGE_LOOKUP
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.cross_connector_utils.rate_limit_wrapper import rl_requests
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.connectors.exceptions import CredentialExpiredError
-from onyx.connectors.exceptions import InsufficientPermissionsError
-from onyx.connectors.exceptions import UnexpectedValidationError
-from onyx.connectors.interfaces import GenerateDocumentsOutput
-from onyx.connectors.interfaces import LoadConnector
-from onyx.connectors.interfaces import NormalizationResult
-from onyx.connectors.interfaces import PollConnector
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.models import ConnectorMissingCredentialError
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import ImageSection
-from onyx.connectors.models import TextSection
-from onyx.db.enums import HierarchyNodeType
-from onyx.utils.batching import batch_generator
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.app_configs import NOTION_CONNECTOR_DISABLE_RECURSIVE_PAGE_LOOKUP
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.cross_connector_utils.rate_limit_wrapper import rl_requests
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.connectors.exceptions import CredentialExpiredError
+from aethersearch.connectors.exceptions import InsufficientPermissionsError
+from aethersearch.connectors.exceptions import UnexpectedValidationError
+from aethersearch.connectors.interfaces import GenerateDocumentsOutput
+from aethersearch.connectors.interfaces import LoadConnector
+from aethersearch.connectors.interfaces import NormalizationResult
+from aethersearch.connectors.interfaces import PollConnector
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.models import ConnectorMissingCredentialError
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import ImageSection
+from aethersearch.connectors.models import TextSection
+from aethersearch.db.enums import HierarchyNodeType
+from aethersearch.utils.batching import batch_generator
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -200,7 +200,7 @@ class NotionConnector(LoadConnector, PollConnector):
                 logger.error(
                     f"Unable to access block with ID '{block_id}'. "
                     f"This is likely due to the block not being shared "
-                    f"with the Onyx integration. Exact exception:\n\n{e}"
+                    f"with the AetherSearch integration. Exact exception:\n\n{e}"
                 )
             else:
                 logger.exception(
@@ -280,7 +280,7 @@ class NotionConnector(LoadConnector, PollConnector):
                 logger.error(
                     f"Unable to access database with ID '{database_id}'. "
                     f"This is likely due to the database not being shared "
-                    f"with the Onyx integration. Exact exception:\n{e}"
+                    f"with the AetherSearch integration. Exact exception:\n{e}"
                 )
                 return []
             logger.exception(f"Error fetching database - {res.json()}")
@@ -315,7 +315,7 @@ class NotionConnector(LoadConnector, PollConnector):
                 logger.error(
                     f"Unable to access data source with ID '{data_source_id}'. "
                     f"This is likely due to it not being shared "
-                    f"with the Onyx integration. Exact exception:\n{e}"
+                    f"with the AetherSearch integration. Exact exception:\n{e}"
                 )
                 return {"results": [], "next_cursor": None}
             logger.exception(f"Error querying data source - {res.json()}")
@@ -646,7 +646,7 @@ class NotionConnector(LoadConnector, PollConnector):
                     logger.warning(
                         f"Skipping 'ai_block' ('{result_block_id}') for base block '{base_block_id}': "
                         f"Notion API does not currently support reading AI blocks (as of 24/02/09) "
-                        f"(discussion: https://github.com/onyx-dot-app/onyx/issues/1053)"
+                        f"(discussion: https://github.com/aethersearch-dot-app/aethersearch/issues/1053)"
                     )
                     continue
 
@@ -654,7 +654,7 @@ class NotionConnector(LoadConnector, PollConnector):
                     logger.warning(
                         f"Skipping unsupported block type '{result_type}' "
                         f"('{result_block_id}') for base block '{base_block_id}': "
-                        f"(discussion: https://github.com/onyx-dot-app/onyx/issues/1230)"
+                        f"(discussion: https://github.com/aethersearch-dot-app/aethersearch/issues/1230)"
                     )
                     continue
 
@@ -662,7 +662,7 @@ class NotionConnector(LoadConnector, PollConnector):
                     logger.warning(
                         f"Skipping 'external_object_instance_page' ('{result_block_id}') for base block '{base_block_id}': "
                         f"Notion API does not currently support reading external blocks (as of 24/07/03) "
-                        f"(discussion: https://github.com/onyx-dot-app/onyx/issues/1761)"
+                        f"(discussion: https://github.com/aethersearch-dot-app/aethersearch/issues/1761)"
                     )
                     continue
 

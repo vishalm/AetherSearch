@@ -2,10 +2,10 @@
 
 from unittest.mock import MagicMock
 
-from onyx.chat.chat_utils import _build_tool_call_response_history_message
-from onyx.chat.chat_utils import get_custom_agent_prompt
-from onyx.configs.constants import DEFAULT_PERSONA_ID
-from onyx.prompts.chat_prompts import TOOL_CALL_RESPONSE_CROSS_MESSAGE
+from aethersearch.chat.chat_utils import _build_tool_call_response_history_message
+from aethersearch.chat.chat_utils import get_custom_agent_prompt
+from aethersearch.configs.constants import DEFAULT_PERSONA_ID
+from aethersearch.prompts.chat_prompts import TOOL_CALL_RESPONSE_CROSS_MESSAGE
 
 
 class TestGetCustomAgentPrompt:

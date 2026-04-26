@@ -18,15 +18,15 @@ from github.RateLimit import RateLimit
 from github.Repository import Repository
 from github.Requester import Requester
 
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.connectors.exceptions import CredentialExpiredError
-from onyx.connectors.exceptions import InsufficientPermissionsError
-from onyx.connectors.github.connector import GithubConnector
-from onyx.connectors.github.connector import GithubConnectorStage
-from onyx.connectors.github.models import SerializedRepository
-from onyx.connectors.models import Document
-from tests.unit.onyx.connectors.utils import load_everything_from_checkpoint_connector
-from tests.unit.onyx.connectors.utils import (
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.connectors.exceptions import CredentialExpiredError
+from aethersearch.connectors.exceptions import InsufficientPermissionsError
+from aethersearch.connectors.github.connector import GithubConnector
+from aethersearch.connectors.github.connector import GithubConnectorStage
+from aethersearch.connectors.github.models import SerializedRepository
+from aethersearch.connectors.models import Document
+from tests.unit.aethersearch.connectors.utils import load_everything_from_checkpoint_connector
+from tests.unit.aethersearch.connectors.utils import (
     load_everything_from_checkpoint_connector_from_checkpoint,
 )
 
@@ -274,7 +274,7 @@ def test_load_from_checkpoint_with_rate_limit(
         # Call load_from_checkpoint
         end_time = time.time()
         with patch(
-            "onyx.connectors.github.connector.sleep_after_rate_limit_exception"
+            "aethersearch.connectors.github.connector.sleep_after_rate_limit_exception"
         ) as mock_sleep:
             outputs = load_everything_from_checkpoint_connector(
                 github_connector, 0, end_time

@@ -2,17 +2,17 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.db.api_key import ApiKeyDescriptor
-from onyx.db.api_key import fetch_api_keys
-from onyx.db.api_key import insert_api_key
-from onyx.db.api_key import regenerate_api_key
-from onyx.db.api_key import remove_api_key
-from onyx.db.api_key import update_api_key
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.server.api_key.models import APIKeyArgs
+from aethersearch.auth.permissions import require_permission
+from aethersearch.db.api_key import ApiKeyDescriptor
+from aethersearch.db.api_key import fetch_api_keys
+from aethersearch.db.api_key import insert_api_key
+from aethersearch.db.api_key import regenerate_api_key
+from aethersearch.db.api_key import remove_api_key
+from aethersearch.db.api_key import update_api_key
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.server.api_key.models import APIKeyArgs
 
 router = APIRouter(prefix="/admin/api-key")
 

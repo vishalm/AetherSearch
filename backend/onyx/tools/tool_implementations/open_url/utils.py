@@ -1,4 +1,4 @@
-from onyx.tools.tool_implementations.open_url.models import WebContent
+from aethersearch.tools.tool_implementations.open_url.models import WebContent
 
 
 def filter_web_contents_with_no_title_or_content(

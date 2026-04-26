@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 # Import your models and constants
-from onyx.db.models import (
+from aethersearch.db.models import (
     Connector,
     ConnectorCredentialPair,
     Credential,

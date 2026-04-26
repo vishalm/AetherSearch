@@ -1,10 +1,10 @@
 import re
 
-from onyx.chat.citation_processor import CitationMapping
-from onyx.chat.citation_processor import DynamicCitationProcessor
-from onyx.context.search.models import SearchDocsResponse
-from onyx.tools.built_in_tools import CITEABLE_TOOLS_NAMES
-from onyx.tools.models import ToolResponse
+from aethersearch.chat.citation_processor import CitationMapping
+from aethersearch.chat.citation_processor import DynamicCitationProcessor
+from aethersearch.context.search.models import SearchDocsResponse
+from aethersearch.tools.built_in_tools import CITEABLE_TOOLS_NAMES
+from aethersearch.tools.models import ToolResponse
 
 
 def update_citation_processor_from_tool_response(

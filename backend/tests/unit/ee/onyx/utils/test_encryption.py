@@ -8,13 +8,13 @@ from unittest.mock import patch
 
 import pytest
 
-from ee.onyx.utils.encryption import _decrypt_bytes
-from ee.onyx.utils.encryption import _encrypt_string
-from ee.onyx.utils.encryption import _get_trimmed_key
-from ee.onyx.utils.encryption import decrypt_bytes_to_string
-from ee.onyx.utils.encryption import encrypt_string_to_bytes
+from ee.aethersearch.utils.encryption import _decrypt_bytes
+from ee.aethersearch.utils.encryption import _encrypt_string
+from ee.aethersearch.utils.encryption import _get_trimmed_key
+from ee.aethersearch.utils.encryption import decrypt_bytes_to_string
+from ee.aethersearch.utils.encryption import encrypt_string_to_bytes
 
-EE_MODULE = "ee.onyx.utils.encryption"
+EE_MODULE = "ee.aethersearch.utils.encryption"
 
 # Keys must be exactly 16, 24, or 32 bytes for AES
 KEY_16 = "a" * 16

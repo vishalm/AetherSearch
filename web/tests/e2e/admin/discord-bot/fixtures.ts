@@ -9,7 +9,7 @@
 
 import { test as base, expect, Page } from "@playwright/test";
 import { loginAs } from "@tests/e2e/utils/auth";
-import { OnyxApiClient } from "@tests/e2e/utils/onyxApiClient";
+import { AetherSearchApiClient } from "@tests/e2e/utils/aethersearchApiClient";
 
 /**
  * Mock data types matching backend response schemas
@@ -134,7 +134,7 @@ function createMockPendingGuild(id: number): MockGuild {
 // Extend base test with Discord bot fixtures
 export const test = base.extend<{
   adminPage: Page;
-  apiClient: OnyxApiClient;
+  apiClient: AetherSearchApiClient;
   seededGuild: { id: number; name: string; registrationKey: string };
   mockRegisteredGuild: {
     id: number;
@@ -150,10 +150,10 @@ export const test = base.extend<{
     await use(page);
   },
 
-  // API client fixture - provides access to OnyxApiClient for backend operations
+  // API client fixture - provides access to AetherSearchApiClient for backend operations
   apiClient: async ({ page }, use) => {
     await authenticateAdmin(page);
-    const client = new OnyxApiClient(page.request);
+    const client = new AetherSearchApiClient(page.request);
     await use(client);
   },
 
@@ -161,7 +161,7 @@ export const test = base.extend<{
   seededGuild: async ({ page }, use) => {
     await authenticateAdmin(page);
 
-    const apiClient = new OnyxApiClient(page.request);
+    const apiClient = new AetherSearchApiClient(page.request);
     const guild = await apiClient.createDiscordGuild();
 
     await use({

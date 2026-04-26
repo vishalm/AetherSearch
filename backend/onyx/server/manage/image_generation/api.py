@@ -3,33 +3,33 @@ from fastapi import Depends
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.image_generation import create_image_generation_config__no_commit
-from onyx.db.image_generation import delete_image_generation_config__no_commit
-from onyx.db.image_generation import get_all_image_generation_configs
-from onyx.db.image_generation import get_image_generation_config
-from onyx.db.image_generation import set_default_image_generation_config
-from onyx.db.image_generation import unset_default_image_generation_config
-from onyx.db.llm import remove_llm_provider__no_commit
-from onyx.db.models import LLMProvider as LLMProviderModel
-from onyx.db.models import ModelConfiguration
-from onyx.db.models import User
-from onyx.image_gen.exceptions import ImageProviderCredentialsError
-from onyx.image_gen.factory import get_image_generation_provider
-from onyx.image_gen.factory import validate_credentials
-from onyx.image_gen.interfaces import ImageGenerationProviderCredentials
-from onyx.llm.utils import get_max_input_tokens
-from onyx.server.manage.image_generation.models import ImageGenerationConfigCreate
-from onyx.server.manage.image_generation.models import ImageGenerationConfigUpdate
-from onyx.server.manage.image_generation.models import ImageGenerationConfigView
-from onyx.server.manage.image_generation.models import ImageGenerationCredentials
-from onyx.server.manage.image_generation.models import TestImageGenerationRequest
-from onyx.server.manage.llm.api import _validate_llm_provider_change
-from onyx.server.manage.llm.models import LLMProviderUpsertRequest
-from onyx.server.manage.llm.models import ModelConfigurationUpsertRequest
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.permissions import require_permission
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.image_generation import create_image_generation_config__no_commit
+from aethersearch.db.image_generation import delete_image_generation_config__no_commit
+from aethersearch.db.image_generation import get_all_image_generation_configs
+from aethersearch.db.image_generation import get_image_generation_config
+from aethersearch.db.image_generation import set_default_image_generation_config
+from aethersearch.db.image_generation import unset_default_image_generation_config
+from aethersearch.db.llm import remove_llm_provider__no_commit
+from aethersearch.db.models import LLMProvider as LLMProviderModel
+from aethersearch.db.models import ModelConfiguration
+from aethersearch.db.models import User
+from aethersearch.image_gen.exceptions import ImageProviderCredentialsError
+from aethersearch.image_gen.factory import get_image_generation_provider
+from aethersearch.image_gen.factory import validate_credentials
+from aethersearch.image_gen.interfaces import ImageGenerationProviderCredentials
+from aethersearch.llm.utils import get_max_input_tokens
+from aethersearch.server.manage.image_generation.models import ImageGenerationConfigCreate
+from aethersearch.server.manage.image_generation.models import ImageGenerationConfigUpdate
+from aethersearch.server.manage.image_generation.models import ImageGenerationConfigView
+from aethersearch.server.manage.image_generation.models import ImageGenerationCredentials
+from aethersearch.server.manage.image_generation.models import TestImageGenerationRequest
+from aethersearch.server.manage.llm.api import _validate_llm_provider_change
+from aethersearch.server.manage.llm.models import LLMProviderUpsertRequest
+from aethersearch.server.manage.llm.models import ModelConfigurationUpsertRequest
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

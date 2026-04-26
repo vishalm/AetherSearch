@@ -5,19 +5,19 @@ from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import Session
 
-from onyx.db.constants import DEFAULT_PERSONA_SLACK_CHANNEL_NAME
-from onyx.db.constants import SLACK_BOT_PERSONA_PREFIX
-from onyx.db.models import ChannelConfig
-from onyx.db.models import Persona
-from onyx.db.models import Persona__DocumentSet
-from onyx.db.models import SlackChannelConfig
-from onyx.db.models import User
-from onyx.db.persona import mark_persona_as_deleted
-from onyx.db.persona import upsert_persona
-from onyx.db.tools import get_builtin_tool
-from onyx.tools.tool_implementations.search.search_tool import SearchTool
-from onyx.utils.errors import EERequiredError
-from onyx.utils.variable_functionality import (
+from aethersearch.db.constants import DEFAULT_PERSONA_SLACK_CHANNEL_NAME
+from aethersearch.db.constants import SLACK_BOT_PERSONA_PREFIX
+from aethersearch.db.models import ChannelConfig
+from aethersearch.db.models import Persona
+from aethersearch.db.models import Persona__DocumentSet
+from aethersearch.db.models import SlackChannelConfig
+from aethersearch.db.models import User
+from aethersearch.db.persona import mark_persona_as_deleted
+from aethersearch.db.persona import upsert_persona
+from aethersearch.db.tools import get_builtin_tool
+from aethersearch.tools.tool_implementations.search.search_tool import SearchTool
+from aethersearch.utils.errors import EERequiredError
+from aethersearch.utils.variable_functionality import (
     fetch_versioned_implementation_with_fallback,
 )
 
@@ -101,7 +101,7 @@ def insert_slack_channel_config(
 ) -> SlackChannelConfig:
     versioned_fetch_standard_answer_categories_by_ids = (
         fetch_versioned_implementation_with_fallback(
-            "onyx.db.standard_answer",
+            "aethersearch.db.standard_answer",
             "fetch_standard_answer_categories_by_ids",
             _no_ee_standard_answer_categories,
         )
@@ -172,7 +172,7 @@ def update_slack_channel_config(
 
     versioned_fetch_standard_answer_categories_by_ids = (
         fetch_versioned_implementation_with_fallback(
-            "onyx.db.standard_answer",
+            "aethersearch.db.standard_answer",
             "fetch_standard_answer_categories_by_ids",
             _no_ee_standard_answer_categories,
         )

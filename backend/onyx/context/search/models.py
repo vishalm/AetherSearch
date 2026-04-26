@@ -6,11 +6,11 @@ from typing import Any
 from pydantic import BaseModel
 from pydantic import Field
 
-from onyx.configs.constants import DocumentSource
-from onyx.db.models import SearchSettings
-from onyx.indexing.models import BaseChunk
-from onyx.indexing.models import IndexingSetting
-from onyx.tools.tool_implementations.web_search.models import WEB_SEARCH_PREFIX
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.db.models import SearchSettings
+from aethersearch.indexing.models import BaseChunk
+from aethersearch.indexing.models import IndexingSetting
+from aethersearch.tools.tool_implementations.web_search.models import WEB_SEARCH_PREFIX
 
 
 class QueryExpansions(BaseModel):

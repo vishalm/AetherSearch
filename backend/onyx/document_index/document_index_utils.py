@@ -4,13 +4,13 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import ENABLE_MULTIPASS_INDEXING
-from onyx.db.models import SearchSettings
-from onyx.db.search_settings import get_current_search_settings
-from onyx.db.search_settings import get_secondary_search_settings
-from onyx.document_index.interfaces import EnrichedDocumentIndexingInfo
-from onyx.indexing.models import DocMetadataAwareIndexChunk
-from onyx.indexing.models import MultipassConfig
+from aethersearch.configs.app_configs import ENABLE_MULTIPASS_INDEXING
+from aethersearch.db.models import SearchSettings
+from aethersearch.db.search_settings import get_current_search_settings
+from aethersearch.db.search_settings import get_secondary_search_settings
+from aethersearch.document_index.interfaces import EnrichedDocumentIndexingInfo
+from aethersearch.indexing.models import DocMetadataAwareIndexChunk
+from aethersearch.indexing.models import MultipassConfig
 from shared_configs.configs import MULTI_TENANT
 
 DEFAULT_BATCH_SIZE = 30

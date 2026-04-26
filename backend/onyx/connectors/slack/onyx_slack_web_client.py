@@ -9,16 +9,16 @@ from redis import Redis
 from redis.lock import Lock as RedisLock
 from slack_sdk import WebClient
 
-from onyx.connectors.slack.utils import ONYX_SLACK_LOCK_BLOCKING_TIMEOUT
-from onyx.connectors.slack.utils import ONYX_SLACK_LOCK_TOTAL_BLOCKING_TIMEOUT
-from onyx.connectors.slack.utils import ONYX_SLACK_LOCK_TTL
-from onyx.utils.logger import setup_logger
+from aethersearch.connectors.slack.utils import AETHERSEARCH_SLACK_LOCK_BLOCKING_TIMEOUT
+from aethersearch.connectors.slack.utils import AETHERSEARCH_SLACK_LOCK_TOTAL_BLOCKING_TIMEOUT
+from aethersearch.connectors.slack.utils import AETHERSEARCH_SLACK_LOCK_TTL
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
 
-class OnyxSlackWebClient(WebClient):
-    """Use in combination with the Onyx Retry Handler.
+class AetherSearchSlackWebClient(WebClient):
+    """Use in combination with the AetherSearch Retry Handler.
 
     This client wrapper enforces a proper retry delay through redis BEFORE the api call
     so that multiple clients can synchronize and rate limit properly.
@@ -47,13 +47,13 @@ class OnyxSlackWebClient(WebClient):
         # lock and extend the ttl
         lock: RedisLock = self._redis.lock(
             self._delay_lock,
-            timeout=ONYX_SLACK_LOCK_TTL,
+            timeout=AETHERSEARCH_SLACK_LOCK_TTL,
         )
 
         # try to acquire the lock
         start = time.monotonic()
         while True:
-            acquired = lock.acquire(blocking_timeout=ONYX_SLACK_LOCK_BLOCKING_TIMEOUT)
+            acquired = lock.acquire(blocking_timeout=AETHERSEARCH_SLACK_LOCK_BLOCKING_TIMEOUT)
             if acquired:
                 break
 
@@ -62,10 +62,10 @@ class OnyxSlackWebClient(WebClient):
             if self._redis.exists(self._delay_lock):
                 continue
 
-            if time.monotonic() - start > ONYX_SLACK_LOCK_TOTAL_BLOCKING_TIMEOUT:
+            if time.monotonic() - start > AETHERSEARCH_SLACK_LOCK_TOTAL_BLOCKING_TIMEOUT:
                 raise RuntimeError(
-                    f"OnyxSlackWebClient._perform_urllib_http_request - "
-                    f"timed out waiting for lock: {ONYX_SLACK_LOCK_TOTAL_BLOCKING_TIMEOUT=}"
+                    f"AetherSearchSlackWebClient._perform_urllib_http_request - "
+                    f"timed out waiting for lock: {AETHERSEARCH_SLACK_LOCK_TOTAL_BLOCKING_TIMEOUT=}"
                 )
 
         try:
@@ -75,12 +75,12 @@ class OnyxSlackWebClient(WebClient):
                 lock.release()
             else:
                 logger.warning(
-                    "OnyxSlackWebClient._perform_urllib_http_request lock not owned on release"
+                    "AetherSearchSlackWebClient._perform_urllib_http_request lock not owned on release"
                 )
 
         time.monotonic() - start
         # logger.info(
-        #     f"OnyxSlackWebClient._perform_urllib_http_request: Releasing lock: {elapsed=}"
+        #     f"AetherSearchSlackWebClient._perform_urllib_http_request: Releasing lock: {elapsed=}"
         # )
 
         return result
@@ -100,7 +100,7 @@ class OnyxSlackWebClient(WebClient):
 
         if delay_ms > 0:
             logger.warning(
-                f"OnyxSlackWebClient._perform_urllib_http_request_internal delay: {delay_ms=} {self.num_requests=}"
+                f"AetherSearchSlackWebClient._perform_urllib_http_request_internal delay: {delay_ms=} {self.num_requests=}"
             )
 
             time.sleep(delay_ms / 1000.0)

@@ -4,9 +4,9 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.jira.connector import JiraConnector
-from onyx.connectors.models import Document
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.jira.connector import JiraConnector
+from aethersearch.connectors.models import Document
 from tests.daily.connectors.utils import load_all_from_connector
 
 
@@ -59,7 +59,7 @@ def jira_connector_with_jql() -> JiraConnector:
 
 
 @patch(
-    "onyx.file_processing.extract_file_text.get_unstructured_api_key",
+    "aethersearch.file_processing.extract_file_text.get_unstructured_api_key",
     return_value=None,
 )
 def test_jira_connector_basic(
@@ -70,7 +70,7 @@ def test_jira_connector_basic(
 
 
 @patch(
-    "onyx.file_processing.extract_file_text.get_unstructured_api_key",
+    "aethersearch.file_processing.extract_file_text.get_unstructured_api_key",
     return_value=None,
 )
 def test_jira_connector_basic_scoped(
@@ -113,8 +113,8 @@ def _test_jira_connector_basic(jira_connector: JiraConnector) -> None:
         "assignee": "Chris Weaver",
         "issuetype": "Story",
         "created": "2025-04-16T16:44:06.716-0700",
-        "reporter_email": "chris@onyx.app",
-        "assignee_email": "chris@onyx.app",
+        "reporter_email": "chris@aethersearch.app",
+        "assignee_email": "chris@aethersearch.app",
         "project_name": "DailyConnectorTestProject",
         "project": "AS",
         "parent": "AS-4",
@@ -130,7 +130,7 @@ def _test_jira_connector_basic(jira_connector: JiraConnector) -> None:
     section = story.sections[0]
     assert (
         section.text
-        == "This is a critical request for super-human answer quality in Onyx! We need magic!\n"
+        == "This is a critical request for super-human answer quality in AetherSearch! We need magic!\n"
     )
     assert section.link == "https://danswerai.atlassian.net/browse/AS-3"
 
@@ -141,12 +141,12 @@ def _test_jira_connector_basic(jira_connector: JiraConnector) -> None:
     assert epic.metadata == {
         "priority": "Medium",
         "status": "Backlog",
-        "reporter": "Founder Onyx",
+        "reporter": "Founder AetherSearch",
         "assignee": "Chris Weaver",
         "issuetype": "Epic",
         "created": "2025-04-16T16:55:53.068-0700",
-        "reporter_email": "founders@onyx.app",
-        "assignee_email": "chris@onyx.app",
+        "reporter_email": "founders@aethersearch.app",
+        "assignee_email": "chris@aethersearch.app",
         "project_name": "DailyConnectorTestProject",
         "project": "AS",
         "key": "AS-4",
@@ -164,7 +164,7 @@ def _test_jira_connector_basic(jira_connector: JiraConnector) -> None:
 
 
 @patch(
-    "onyx.file_processing.extract_file_text.get_unstructured_api_key",
+    "aethersearch.file_processing.extract_file_text.get_unstructured_api_key",
     return_value=None,
 )
 def test_jira_connector_with_jql(

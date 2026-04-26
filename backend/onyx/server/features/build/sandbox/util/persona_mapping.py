@@ -22,61 +22,61 @@ PERSONA_MAPPING: dict[str, dict[str, PersonaInfo]] = {
     "engineering": {
         "ic": {
             "name": "Jiwon Kang",
-            "email": "jiwon_kang@netherite-extraction.onyx.app",
+            "email": "jiwon_kang@netherite-extraction.aethersearch.app",
         },
         "manager": {
             "name": "Javier Morales",
-            "email": "javier_morales@netherite-extraction.onyx.app",
+            "email": "javier_morales@netherite-extraction.aethersearch.app",
         },
     },
     "sales": {
         "ic": {
             "name": "Megan Foster",
-            "email": "megan_foster@netherite-extraction.onyx.app",
+            "email": "megan_foster@netherite-extraction.aethersearch.app",
         },
         "manager": {
             "name": "Valeria Cruz",
-            "email": "valeria_cruz@netherite-extraction.onyx.app",
+            "email": "valeria_cruz@netherite-extraction.aethersearch.app",
         },
     },
     "product": {
         "ic": {
             "name": "Michael Anderson",
-            "email": "michael_anderson@netherite-extraction.onyx.app",
+            "email": "michael_anderson@netherite-extraction.aethersearch.app",
         },
         "manager": {
             "name": "David Liu",
-            "email": "david_liu@netherite-extraction.onyx.app",
+            "email": "david_liu@netherite-extraction.aethersearch.app",
         },
     },
     "marketing": {
         "ic": {
             "name": "Rahul Patel",
-            "email": "rahul_patel@netherite-extraction.onyx.app",
+            "email": "rahul_patel@netherite-extraction.aethersearch.app",
         },
         "manager": {
             "name": "Olivia Reed",
-            "email": "olivia_reed@netherite-extraction.onyx.app",
+            "email": "olivia_reed@netherite-extraction.aethersearch.app",
         },
     },
     "executives": {
         "ic": {
             "name": "Sarah Mitchell",
-            "email": "sarah_mitchell@netherite-extraction.onyx.app",
+            "email": "sarah_mitchell@netherite-extraction.aethersearch.app",
         },
         "manager": {
             "name": "Sarah Mitchell",
-            "email": "sarah_mitchell@netherite-extraction.onyx.app",
+            "email": "sarah_mitchell@netherite-extraction.aethersearch.app",
         },
     },
     "other": {
         "manager": {
             "name": "Ralf Schroeder",
-            "email": "ralf_schroeder@netherite-extraction.onyx.app",
+            "email": "ralf_schroeder@netherite-extraction.aethersearch.app",
         },
         "ic": {
             "name": "John Carpenter",
-            "email": "john_carpenter@netherite-extraction.onyx.app",
+            "email": "john_carpenter@netherite-extraction.aethersearch.app",
         },
     },
 }
@@ -84,55 +84,55 @@ PERSONA_MAPPING: dict[str, dict[str, PersonaInfo]] = {
 # Organization structure - maps managers to their direct reports
 ORGANIZATION_STRUCTURE: dict[str, dict[str, list[str]]] = {
     "engineering": {
-        "javier_morales@netherite-extraction.onyx.app": [
-            "tyler_jenkins@netherite-extraction.onyx.app",
-            "jiwon_kang@netherite-extraction.onyx.app",
-            "brooke_spencer@netherite-extraction.onyx.app",
-            "andre_robinson@netherite-extraction.onyx.app",
+        "javier_morales@netherite-extraction.aethersearch.app": [
+            "tyler_jenkins@netherite-extraction.aethersearch.app",
+            "jiwon_kang@netherite-extraction.aethersearch.app",
+            "brooke_spencer@netherite-extraction.aethersearch.app",
+            "andre_robinson@netherite-extraction.aethersearch.app",
         ],
-        "isabella_torres@netherite-extraction.onyx.app": [
-            "ryan_murphy@netherite-extraction.onyx.app",
-            "jason_morris@netherite-extraction.onyx.app",
-            "kevin_sullivan@netherite-extraction.onyx.app",
+        "isabella_torres@netherite-extraction.aethersearch.app": [
+            "ryan_murphy@netherite-extraction.aethersearch.app",
+            "jason_morris@netherite-extraction.aethersearch.app",
+            "kevin_sullivan@netherite-extraction.aethersearch.app",
         ],
     },
     "sales": {
-        "valeria_cruz@netherite-extraction.onyx.app": [
-            "megan_foster@netherite-extraction.onyx.app",
-            "mina_park@netherite-extraction.onyx.app",
-            "james_choi@netherite-extraction.onyx.app",
-            "camila_vega@netherite-extraction.onyx.app",
+        "valeria_cruz@netherite-extraction.aethersearch.app": [
+            "megan_foster@netherite-extraction.aethersearch.app",
+            "mina_park@netherite-extraction.aethersearch.app",
+            "james_choi@netherite-extraction.aethersearch.app",
+            "camila_vega@netherite-extraction.aethersearch.app",
         ],
-        "layla_farah@netherite-extraction.onyx.app": [
-            "arjun_mehta@netherite-extraction.onyx.app",
-            "sneha_reddy@netherite-extraction.onyx.app",
-            "irene_shen@netherite-extraction.onyx.app",
+        "layla_farah@netherite-extraction.aethersearch.app": [
+            "arjun_mehta@netherite-extraction.aethersearch.app",
+            "sneha_reddy@netherite-extraction.aethersearch.app",
+            "irene_shen@netherite-extraction.aethersearch.app",
         ],
     },
     "product": {
-        "david_liu@netherite-extraction.onyx.app": [
-            "michael_anderson@netherite-extraction.onyx.app",
-            "kenji_watanabe@netherite-extraction.onyx.app",
-            "sofia_ramirez@netherite-extraction.onyx.app",
+        "david_liu@netherite-extraction.aethersearch.app": [
+            "michael_anderson@netherite-extraction.aethersearch.app",
+            "kenji_watanabe@netherite-extraction.aethersearch.app",
+            "sofia_ramirez@netherite-extraction.aethersearch.app",
         ],
     },
     "marketing": {
-        "olivia_reed@netherite-extraction.onyx.app": [
-            "rahul_patel@netherite-extraction.onyx.app",
-            "yuna_lee@netherite-extraction.onyx.app",
-            "peter_yamamoto@netherite-extraction.onyx.app",
+        "olivia_reed@netherite-extraction.aethersearch.app": [
+            "rahul_patel@netherite-extraction.aethersearch.app",
+            "yuna_lee@netherite-extraction.aethersearch.app",
+            "peter_yamamoto@netherite-extraction.aethersearch.app",
         ],
     },
     "executives": {
-        "sarah_mitchell@netherite-extraction.onyx.app": [
-            "daniel_hughes@netherite-extraction.onyx.app",
-            "amanda_brooks@netherite-extraction.onyx.app",
-            "ananya_gupta@netherite-extraction.onyx.app",
+        "sarah_mitchell@netherite-extraction.aethersearch.app": [
+            "daniel_hughes@netherite-extraction.aethersearch.app",
+            "amanda_brooks@netherite-extraction.aethersearch.app",
+            "ananya_gupta@netherite-extraction.aethersearch.app",
         ],
     },
     "other": {
-        "ralf_schroeder@netherite-extraction.onyx.app": [
-            "john_carpenter@netherite-extraction.onyx.app",
+        "ralf_schroeder@netherite-extraction.aethersearch.app": [
+            "john_carpenter@netherite-extraction.aethersearch.app",
         ],
     },
 }

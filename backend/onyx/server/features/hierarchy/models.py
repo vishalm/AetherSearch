@@ -3,8 +3,8 @@ from enum import Enum
 
 from pydantic import BaseModel
 
-from onyx.configs.constants import DocumentSource
-from onyx.server.features.hierarchy.constants import DOCUMENT_PAGE_SIZE
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.server.features.hierarchy.constants import DOCUMENT_PAGE_SIZE
 
 
 class DocumentSortField(str, Enum):

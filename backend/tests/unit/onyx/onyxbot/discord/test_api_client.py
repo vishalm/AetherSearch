@@ -1,6 +1,6 @@
 """Unit tests for Discord bot API client.
 
-Tests for OnyxAPIClient class functionality.
+Tests for AetherSearchAPIClient class functionality.
 """
 
 from typing import Any
@@ -11,12 +11,12 @@ from unittest.mock import patch
 import aiohttp
 import pytest
 
-from onyx.chat.models import ChatFullResponse
-from onyx.onyxbot.discord.api_client import OnyxAPIClient
-from onyx.onyxbot.discord.constants import API_REQUEST_TIMEOUT
-from onyx.onyxbot.discord.exceptions import APIConnectionError
-from onyx.onyxbot.discord.exceptions import APIResponseError
-from onyx.onyxbot.discord.exceptions import APITimeoutError
+from aethersearch.chat.models import ChatFullResponse
+from aethersearch.aethersearchbot.discord.api_client import AetherSearchAPIClient
+from aethersearch.aethersearchbot.discord.constants import API_REQUEST_TIMEOUT
+from aethersearch.aethersearchbot.discord.exceptions import APIConnectionError
+from aethersearch.aethersearchbot.discord.exceptions import APIResponseError
+from aethersearch.aethersearchbot.discord.exceptions import APITimeoutError
 
 
 class MockAsyncContextManager:
@@ -43,7 +43,7 @@ class TestClientLifecycle:
     @pytest.mark.asyncio
     async def test_initialize_creates_session(self) -> None:
         """initialize() creates aiohttp session."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
         assert client._session is None
 
         with patch("aiohttp.ClientSession") as mock_session_class:
@@ -57,13 +57,13 @@ class TestClientLifecycle:
 
     def test_is_initialized_before_init(self) -> None:
         """is_initialized returns False before initialize()."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
         assert client.is_initialized is False
 
     @pytest.mark.asyncio
     async def test_is_initialized_after_init(self) -> None:
         """is_initialized returns True after initialize()."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
 
         with patch("aiohttp.ClientSession"):
             await client.initialize()
@@ -73,7 +73,7 @@ class TestClientLifecycle:
     @pytest.mark.asyncio
     async def test_close_closes_session(self) -> None:
         """close() closes session and resets is_initialized."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
 
         mock_session = AsyncMock()
         with patch("aiohttp.ClientSession", return_value=mock_session):
@@ -88,7 +88,7 @@ class TestClientLifecycle:
     @pytest.mark.asyncio
     async def test_send_message_not_initialized(self) -> None:
         """send_chat_message() before initialize() raises APIConnectionError."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
 
         with pytest.raises(APIConnectionError) as exc_info:
             await client.send_chat_message("test", "api_key")
@@ -102,7 +102,7 @@ class TestSendChatMessage:
     @pytest.mark.asyncio
     async def test_send_message_success(self) -> None:
         """Valid request returns ChatFullResponse."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
 
         response_data = {
             "answer": "Test response",
@@ -133,7 +133,7 @@ class TestSendChatMessage:
     @pytest.mark.asyncio
     async def test_send_message_with_persona(self) -> None:
         """persona_id is passed to API."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
 
         response_data = {"answer": "Response", "citations": [], "error_msg": None}
 
@@ -164,7 +164,7 @@ class TestSendChatMessage:
     @pytest.mark.asyncio
     async def test_send_message_401_error(self) -> None:
         """Invalid API key returns APIResponseError with 401."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
 
         mock_response = MagicMock()
         mock_response.status = 401
@@ -184,7 +184,7 @@ class TestSendChatMessage:
     @pytest.mark.asyncio
     async def test_send_message_403_error(self) -> None:
         """Persona not accessible returns APIResponseError with 403."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
 
         mock_response = MagicMock()
         mock_response.status = 403
@@ -204,7 +204,7 @@ class TestSendChatMessage:
     @pytest.mark.asyncio
     async def test_send_message_timeout(self) -> None:
         """Request timeout raises APITimeoutError."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
 
         mock_session = MagicMock()
         mock_session.post = MagicMock(
@@ -221,7 +221,7 @@ class TestSendChatMessage:
     @pytest.mark.asyncio
     async def test_send_message_connection_error(self) -> None:
         """Network failure raises APIConnectionError."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
 
         mock_session = MagicMock()
         mock_session.post = MagicMock(
@@ -240,7 +240,7 @@ class TestSendChatMessage:
     @pytest.mark.asyncio
     async def test_send_message_server_error(self) -> None:
         """500 response raises APIResponseError with 500."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
 
         mock_response = MagicMock()
         mock_response.status = 500
@@ -265,7 +265,7 @@ class TestHealthCheck:
     @pytest.mark.asyncio
     async def test_health_check_success(self) -> None:
         """Server healthy returns True."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
 
         mock_response = MagicMock()
         mock_response.status = 200
@@ -283,7 +283,7 @@ class TestHealthCheck:
     @pytest.mark.asyncio
     async def test_health_check_failure(self) -> None:
         """Server unhealthy returns False."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
 
         mock_response = MagicMock()
         mock_response.status = 503
@@ -301,7 +301,7 @@ class TestHealthCheck:
     @pytest.mark.asyncio
     async def test_health_check_timeout(self) -> None:
         """Request times out returns False."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
 
         mock_session = MagicMock()
         mock_session.get = MagicMock(
@@ -318,7 +318,7 @@ class TestHealthCheck:
     @pytest.mark.asyncio
     async def test_health_check_not_initialized(self) -> None:
         """Health check before initialize returns False."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
 
         result = await client.health_check()
         assert result is False
@@ -330,7 +330,7 @@ class TestResponseParsing:
     @pytest.mark.asyncio
     async def test_response_malformed_json(self) -> None:
         """API returns invalid JSON raises exception."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
 
         mock_response = MagicMock()
         mock_response.status = 200
@@ -349,7 +349,7 @@ class TestResponseParsing:
     @pytest.mark.asyncio
     async def test_response_with_error_msg(self) -> None:
         """200 status but error_msg present - warning logged, response returned."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
 
         response_data = {
             "answer": "Partial response",
@@ -381,7 +381,7 @@ class TestResponseParsing:
     @pytest.mark.asyncio
     async def test_response_empty_answer(self) -> None:
         """answer field is empty string - handled gracefully."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
 
         response_data = {
             "answer": "",
@@ -416,18 +416,18 @@ class TestClientConfiguration:
 
     def test_default_timeout(self) -> None:
         """Client uses API_REQUEST_TIMEOUT by default."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
         assert client._timeout == API_REQUEST_TIMEOUT
 
     def test_custom_timeout(self) -> None:
         """Client accepts custom timeout."""
-        client = OnyxAPIClient(timeout=60)
+        client = AetherSearchAPIClient(timeout=60)
         assert client._timeout == 60
 
     @pytest.mark.asyncio
     async def test_double_initialize_warning(self) -> None:
         """Calling initialize() twice logs warning but doesn't error."""
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
 
         with patch("aiohttp.ClientSession") as mock_session_class:
             mock_session = MagicMock()

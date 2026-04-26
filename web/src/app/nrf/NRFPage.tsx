@@ -38,7 +38,7 @@ import Spacer from "@/refresh-components/Spacer";
 import { DEFAULT_CONTEXT_TOKENS } from "@/lib/constants";
 import { SvgUser, SvgMenu, SvgAlertTriangle } from "@opal/icons";
 import { useAppBackground } from "@/providers/AppBackgroundProvider";
-import { MinimalOnyxDocument } from "@/lib/search/interfaces";
+import { MinimalAetherSearchDocument } from "@/lib/search/interfaces";
 import DocumentsSidebar from "@/sections/document-sidebar/DocumentsSidebar";
 import PreviewModal from "@/sections/modals/PreviewModal";
 import { personaIncludesRetrieval } from "@/app/app/services/lib";
@@ -59,7 +59,7 @@ interface NRFPageProps {
 const AVAILABLE_CONTEXT_TOKENS = Number(DEFAULT_CONTEXT_TOKENS) * 0.5;
 
 export default function NRFPage({ isSidePanel = false }: NRFPageProps) {
-  const { setUseOnyxAsNewTab } = useNRFPreferences();
+  const { setUseAetherSearchAsNewTab } = useNRFPreferences();
 
   const searchParams = useSearchParams();
   const filterManager = useFilters();
@@ -135,7 +135,7 @@ export default function NRFPage({ isSidePanel = false }: NRFPageProps) {
   const [tabReadingEnabled, setTabReadingEnabled] = useState<boolean>(false);
   const [currentTabUrl, setCurrentTabUrl] = useState<string | null>(null);
   const [presentingDocument, setPresentingDocument] =
-    useState<MinimalOnyxDocument | null>(null);
+    useState<MinimalAetherSearchDocument | null>(null);
 
   // Document sidebar state (from store)
   const documentSidebarVisible = useDocumentSidebarVisible();
@@ -237,18 +237,18 @@ export default function NRFPage({ isSidePanel = false }: NRFPageProps) {
     setSettingsOpen((prev) => !prev);
   };
 
-  // If user toggles the "Use Onyx" switch to off, prompt a modal
-  const handleUseOnyxToggle = (checked: boolean) => {
+  // If user toggles the "Use AetherSearch" switch to off, prompt a modal
+  const handleUseAetherSearchToggle = (checked: boolean) => {
     if (!checked) {
       setShowTurnOffModal(true);
     } else {
-      setUseOnyxAsNewTab(true);
+      setUseAetherSearchAsNewTab(true);
       sendSetDefaultNewTabMessage(true);
     }
   };
 
   const confirmTurnOff = () => {
-    setUseOnyxAsNewTab(false);
+    setUseAetherSearchAsNewTab(false);
     setShowTurnOffModal(false);
     sendSetDefaultNewTabMessage(false);
   };
@@ -412,7 +412,7 @@ export default function NRFPage({ isSidePanel = false }: NRFPageProps) {
 
   // Handle search result document click
   const handleSearchDocumentClick = useCallback(
-    (doc: MinimalOnyxDocument) => setPresentingDocument(doc),
+    (doc: MinimalAetherSearchDocument) => setPresentingDocument(doc),
     []
   );
 
@@ -606,15 +606,15 @@ export default function NRFPage({ isSidePanel = false }: NRFPageProps) {
           <SettingsPanel
             settingsOpen={settingsOpen}
             toggleSettings={toggleSettings}
-            handleUseOnyxToggle={handleUseOnyxToggle}
+            handleUseAetherSearchToggle={handleUseAetherSearchToggle}
           />
 
           <Modal open={showTurnOffModal} onOpenChange={setShowTurnOffModal}>
             <Modal.Content width="sm">
               <Modal.Header
                 icon={SvgAlertTriangle}
-                title="Turn off Onyx new tab page?"
-                description="You'll see your browser's default new tab page instead. You can turn it back on anytime in your Onyx settings."
+                title="Turn off AetherSearch new tab page?"
+                description="You'll see your browser's default new tab page instead. You can turn it back on anytime in your AetherSearch settings."
                 onClose={() => setShowTurnOffModal(false)}
               />
               <Modal.Footer>
@@ -636,7 +636,7 @@ export default function NRFPage({ isSidePanel = false }: NRFPageProps) {
       {!user && (
         <Modal open onOpenChange={() => {}}>
           <Modal.Content width="sm" height="sm">
-            <Modal.Header icon={SvgUser} title="Welcome to Onyx" />
+            <Modal.Header icon={SvgUser} title="Welcome to AetherSearch" />
             <Modal.Body>
               {authTypeMetadata.authType === AuthType.BASIC ? (
                 <LoginPage

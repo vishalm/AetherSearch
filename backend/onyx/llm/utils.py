@@ -9,30 +9,30 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import select
 
-from onyx.configs.app_configs import LITELLM_CUSTOM_ERROR_MESSAGE_MAPPINGS
-from onyx.configs.app_configs import MAX_TOKENS_FOR_FULL_INCLUSION
-from onyx.configs.app_configs import SEND_USER_METADATA_TO_LLM_PROVIDER
-from onyx.configs.app_configs import USE_CHUNK_SUMMARY
-from onyx.configs.app_configs import USE_DOCUMENT_SUMMARY
-from onyx.configs.model_configs import GEN_AI_MAX_TOKENS
-from onyx.configs.model_configs import GEN_AI_MODEL_FALLBACK_MAX_TOKENS
-from onyx.configs.model_configs import GEN_AI_NUM_RESERVED_OUTPUT_TOKENS
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import LLMModelFlowType
-from onyx.db.models import LLMProvider
-from onyx.db.models import ModelConfiguration
-from onyx.llm.constants import LlmProviderNames
-from onyx.llm.interfaces import LLM
-from onyx.llm.interfaces import LLMUserIdentity
-from onyx.llm.model_response import ModelResponse
-from onyx.llm.models import UserMessage
-from onyx.prompts.contextual_retrieval import CONTEXTUAL_RAG_TOKEN_ESTIMATE
-from onyx.prompts.contextual_retrieval import DOCUMENT_SUMMARY_TOKEN_ESTIMATE
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import LITELLM_CUSTOM_ERROR_MESSAGE_MAPPINGS
+from aethersearch.configs.app_configs import MAX_TOKENS_FOR_FULL_INCLUSION
+from aethersearch.configs.app_configs import SEND_USER_METADATA_TO_LLM_PROVIDER
+from aethersearch.configs.app_configs import USE_CHUNK_SUMMARY
+from aethersearch.configs.app_configs import USE_DOCUMENT_SUMMARY
+from aethersearch.configs.model_configs import GEN_AI_MAX_TOKENS
+from aethersearch.configs.model_configs import GEN_AI_MODEL_FALLBACK_MAX_TOKENS
+from aethersearch.configs.model_configs import GEN_AI_NUM_RESERVED_OUTPUT_TOKENS
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import LLMModelFlowType
+from aethersearch.db.models import LLMProvider
+from aethersearch.db.models import ModelConfiguration
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.llm.interfaces import LLM
+from aethersearch.llm.interfaces import LLMUserIdentity
+from aethersearch.llm.model_response import ModelResponse
+from aethersearch.llm.models import UserMessage
+from aethersearch.prompts.contextual_retrieval import CONTEXTUAL_RAG_TOKEN_ESTIMATE
+from aethersearch.prompts.contextual_retrieval import DOCUMENT_SUMMARY_TOKEN_ESTIMATE
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import DOC_EMBEDDING_CONTEXT_SIZE
 
 if TYPE_CHECKING:
-    from onyx.server.manage.llm.models import LLMProviderView
+    from aethersearch.server.manage.llm.models import LLMProviderView
 
 
 logger = setup_logger()
@@ -329,7 +329,7 @@ def check_number_of_tokens(
 
 # Substrings that mark a `custom_config` key as containing credential material.
 # Source of truth shared by:
-#   - response masking in `onyx.server.manage.llm.api`
+#   - response masking in `aethersearch.server.manage.llm.api`
 #   - error-message scrubbing in `scrub_sensitive_values` (below)
 SENSITIVE_CUSTOM_CONFIG_KEY_FRAGMENTS: frozenset[str] = frozenset(
     {
@@ -738,7 +738,7 @@ def get_bedrock_token_limit(model_id: str) -> int:
     3. Fall back to our hardcoded BEDROCK_MODEL_TOKEN_LIMITS mapping
     4. Default to 32000 if not found anywhere
     """
-    from onyx.llm.constants import BEDROCK_MODEL_TOKEN_LIMITS
+    from aethersearch.llm.constants import BEDROCK_MODEL_TOKEN_LIMITS
 
     model_id_lower = model_id.lower()
 

@@ -11,10 +11,10 @@ from pydantic import BaseModel
 from pydantic import Field
 from pydantic import model_validator
 
-from onyx.db.enums import MCPAuthenticationPerformer
-from onyx.db.enums import MCPAuthenticationType
-from onyx.db.enums import MCPServerStatus
-from onyx.db.enums import MCPTransport
+from aethersearch.db.enums import MCPAuthenticationPerformer
+from aethersearch.db.enums import MCPAuthenticationType
+from aethersearch.db.enums import MCPServerStatus
+from aethersearch.db.enums import MCPTransport
 
 
 # This should be updated along with MCPConnectionData

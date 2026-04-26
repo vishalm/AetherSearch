@@ -6,7 +6,7 @@ import {
   waitForUnifiedGreeting,
   openActionManagement,
 } from "@tests/e2e/utils/tools";
-import { OnyxApiClient } from "@tests/e2e/utils/onyxApiClient";
+import { AetherSearchApiClient } from "@tests/e2e/utils/aethersearchApiClient";
 
 /**
  * Locate the Switch toggle for a built-in tool by its display name.
@@ -48,7 +48,7 @@ test.describe("Chat Preferences Admin Page", () => {
     await page.context().clearCookies();
     await loginAs(page, "admin");
 
-    const apiClient = new OnyxApiClient(page.request);
+    const apiClient = new AetherSearchApiClient(page.request);
 
     // Create a connector so Internal Search tool becomes available
     testCcPairId = await apiClient.createFileConnector(
@@ -117,7 +117,7 @@ test.describe("Chat Preferences Admin Page", () => {
   });
 
   test.afterEach(async ({ page }) => {
-    const apiClient = new OnyxApiClient(page.request);
+    const apiClient = new AetherSearchApiClient(page.request);
 
     // Clean up the test connector
     if (testCcPairId !== null) {

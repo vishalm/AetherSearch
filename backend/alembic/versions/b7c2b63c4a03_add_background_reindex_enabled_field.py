@@ -9,7 +9,7 @@ Create Date: 2024-03-26 12:34:56.789012
 from alembic import op
 import sqlalchemy as sa
 
-from onyx.db.enums import EmbeddingPrecision
+from aethersearch.db.enums import EmbeddingPrecision
 
 
 # revision identifiers, used by Alembic.

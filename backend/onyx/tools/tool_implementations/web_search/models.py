@@ -6,7 +6,7 @@ from enum import Enum
 from pydantic import BaseModel
 from pydantic import field_validator
 
-from onyx.utils.url import normalize_url
+from aethersearch.utils.url import normalize_url
 
 # Fairly loose number but assuming LLMs can easily handle this amount of context
 # Approximately 2 pages of google search results

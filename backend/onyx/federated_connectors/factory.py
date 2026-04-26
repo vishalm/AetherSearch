@@ -4,10 +4,10 @@ import importlib
 from typing import Any
 from typing import Type
 
-from onyx.configs.constants import FederatedConnectorSource
-from onyx.federated_connectors.interfaces import FederatedConnector
-from onyx.federated_connectors.registry import FEDERATED_CONNECTOR_CLASS_MAP
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import FederatedConnectorSource
+from aethersearch.federated_connectors.interfaces import FederatedConnector
+from aethersearch.federated_connectors.registry import FEDERATED_CONNECTOR_CLASS_MAP
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

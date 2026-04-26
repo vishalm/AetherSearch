@@ -3,7 +3,7 @@
 from fastapi import HTTPException
 from starlette.status import HTTP_501_NOT_IMPLEMENTED
 
-from onyx.configs.app_configs import DISABLE_VECTOR_DB
+from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
 
 
 def require_vector_db() -> None:

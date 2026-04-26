@@ -19,27 +19,27 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import selectinload
 from sqlalchemy.orm import Session
 
-from onyx.configs.chat_configs import HARD_DELETE_CHATS
-from onyx.configs.constants import MessageType
-from onyx.context.search.models import InferenceSection
-from onyx.context.search.models import SavedSearchDoc
-from onyx.context.search.models import SearchDoc as ServerSearchDoc
-from onyx.db.models import ChatMessage
-from onyx.db.models import ChatMessage__SearchDoc
-from onyx.db.models import ChatSession
-from onyx.db.models import ChatSessionSharedStatus
-from onyx.db.models import Persona
-from onyx.db.models import SearchDoc as DBSearchDoc
-from onyx.db.models import ToolCall
-from onyx.db.models import User
-from onyx.db.persona import get_best_persona_id_for_user
-from onyx.file_store.file_store import get_default_file_store
-from onyx.file_store.models import FileDescriptor
-from onyx.llm.override_models import LLMOverride
-from onyx.llm.override_models import PromptOverride
-from onyx.server.query_and_chat.models import ChatMessageDetail
-from onyx.utils.logger import setup_logger
-from onyx.utils.postgres_sanitization import sanitize_string
+from aethersearch.configs.chat_configs import HARD_DELETE_CHATS
+from aethersearch.configs.constants import MessageType
+from aethersearch.context.search.models import InferenceSection
+from aethersearch.context.search.models import SavedSearchDoc
+from aethersearch.context.search.models import SearchDoc as ServerSearchDoc
+from aethersearch.db.models import ChatMessage
+from aethersearch.db.models import ChatMessage__SearchDoc
+from aethersearch.db.models import ChatSession
+from aethersearch.db.models import ChatSessionSharedStatus
+from aethersearch.db.models import Persona
+from aethersearch.db.models import SearchDoc as DBSearchDoc
+from aethersearch.db.models import ToolCall
+from aethersearch.db.models import User
+from aethersearch.db.persona import get_best_persona_id_for_user
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.file_store.models import FileDescriptor
+from aethersearch.llm.override_models import LLMOverride
+from aethersearch.llm.override_models import PromptOverride
+from aethersearch.server.query_and_chat.models import ChatMessageDetail
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.postgres_sanitization import sanitize_string
 
 logger = setup_logger()
 
@@ -105,12 +105,12 @@ def get_chat_sessions_by_slack_thread_id(
 
 
 # Retrieves chat sessions by user
-# Chat sessions do not include onyxbot flows
+# Chat sessions do not include aethersearchbot flows
 def get_chat_sessions_by_user(
     user_id: UUID | None,
     deleted: bool | None,
     db_session: Session,
-    include_onyxbot_flows: bool = False,
+    include_aethersearchbot_flows: bool = False,
     limit: int = 50,
     before: datetime | None = None,
     project_id: int | None = None,
@@ -119,8 +119,8 @@ def get_chat_sessions_by_user(
 ) -> list[ChatSession]:
     stmt = select(ChatSession).where(ChatSession.user_id == user_id)
 
-    if not include_onyxbot_flows:
-        stmt = stmt.where(ChatSession.onyxbot_flow.is_(False))
+    if not include_aethersearchbot_flows:
+        stmt = stmt.where(ChatSession.aethersearchbot_flow.is_(False))
 
     stmt = stmt.order_by(desc(ChatSession.time_updated))
 
@@ -224,7 +224,7 @@ def create_chat_session(
     persona_id: int | None,  # Can be none if temporary persona is used
     llm_override: LLMOverride | None = None,
     prompt_override: PromptOverride | None = None,
-    onyxbot_flow: bool = False,
+    aethersearchbot_flow: bool = False,
     slack_thread_id: str | None = None,
     project_id: int | None = None,
 ) -> ChatSession:
@@ -234,7 +234,7 @@ def create_chat_session(
         description=description,
         llm_override=llm_override,
         prompt_override=prompt_override,
-        onyxbot_flow=onyxbot_flow,
+        aethersearchbot_flow=aethersearchbot_flow,
         slack_thread_id=slack_thread_id,
         project_id=project_id,
     )
@@ -281,7 +281,7 @@ def duplicate_chat_session_for_user_from_slack(
         llm_override=chat_session.llm_override,
         prompt_override=chat_session.prompt_override,
         # Chat is in UI now so this is false
-        onyxbot_flow=False,
+        aethersearchbot_flow=False,
         # Maybe we want this in the future to track if it was created from Slack
         slack_thread_id=None,
     )
@@ -318,7 +318,7 @@ def delete_all_chat_sessions_for_user(
 
     chat_sessions = (
         db_session.query(ChatSession)
-        .filter(ChatSession.user_id == user_id, ChatSession.onyxbot_flow.is_(False))
+        .filter(ChatSession.user_id == user_id, ChatSession.aethersearchbot_flow.is_(False))
         .all()
     )
 
@@ -327,13 +327,13 @@ def delete_all_chat_sessions_for_user(
             delete_messages_and_files_from_chat_session(chat_session.id, db_session)
         db_session.execute(
             delete(ChatSession).where(
-                ChatSession.user_id == user_id, ChatSession.onyxbot_flow.is_(False)
+                ChatSession.user_id == user_id, ChatSession.aethersearchbot_flow.is_(False)
             )
         )
     else:
         db_session.execute(
             update(ChatSession)
-            .where(ChatSession.user_id == user_id, ChatSession.onyxbot_flow.is_(False))
+            .where(ChatSession.user_id == user_id, ChatSession.aethersearchbot_flow.is_(False))
             .values(deleted=True)
         )
 
@@ -525,7 +525,7 @@ def add_search_docs_to_tool_call(
         search_doc_ids: List of search document IDs to link
         db_session: The database session
     """
-    from onyx.db.models import ToolCall__SearchDoc
+    from aethersearch.db.models import ToolCall__SearchDoc
 
     for search_doc_id in search_doc_ids:
         tool_call_search_doc = ToolCall__SearchDoc(

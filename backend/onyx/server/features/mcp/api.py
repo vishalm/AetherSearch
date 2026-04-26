@@ -25,65 +25,65 @@ from pydantic import AnyUrl
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.auth.schemas import UserRole
-from onyx.auth.users import current_curator_or_admin_user
-from onyx.configs.app_configs import WEB_DOMAIN
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import MCPAuthenticationPerformer
-from onyx.db.enums import MCPAuthenticationType
-from onyx.db.enums import MCPServerStatus
-from onyx.db.enums import MCPTransport
-from onyx.db.enums import Permission
-from onyx.db.mcp import create_connection_config
-from onyx.db.mcp import create_mcp_server__no_commit
-from onyx.db.mcp import delete_all_user_connection_configs_for_server_no_commit
-from onyx.db.mcp import delete_connection_config
-from onyx.db.mcp import delete_mcp_server
-from onyx.db.mcp import delete_user_connection_configs_for_server
-from onyx.db.mcp import extract_connection_data
-from onyx.db.mcp import get_all_mcp_servers
-from onyx.db.mcp import get_connection_config_by_id
-from onyx.db.mcp import get_mcp_server_by_id
-from onyx.db.mcp import get_mcp_servers_for_persona
-from onyx.db.mcp import get_server_auth_template
-from onyx.db.mcp import get_user_connection_config
-from onyx.db.mcp import update_connection_config
-from onyx.db.mcp import update_mcp_server__no_commit
-from onyx.db.mcp import upsert_user_connection_config
-from onyx.db.models import MCPConnectionConfig
-from onyx.db.models import MCPServer as DbMCPServer
-from onyx.db.models import Tool
-from onyx.db.models import User
-from onyx.db.tools import create_tool__no_commit
-from onyx.db.tools import delete_tool__no_commit
-from onyx.db.tools import get_tools_by_mcp_server_id
-from onyx.redis.redis_pool import get_redis_client
-from onyx.server.features.mcp.models import MCPApiKeyResponse
-from onyx.server.features.mcp.models import MCPAuthTemplate
-from onyx.server.features.mcp.models import MCPConnectionData
-from onyx.server.features.mcp.models import MCPOAuthCallbackResponse
-from onyx.server.features.mcp.models import MCPOAuthKeys
-from onyx.server.features.mcp.models import MCPServer
-from onyx.server.features.mcp.models import MCPServerCreateResponse
-from onyx.server.features.mcp.models import MCPServerSimpleCreateRequest
-from onyx.server.features.mcp.models import MCPServerSimpleUpdateRequest
-from onyx.server.features.mcp.models import MCPServersResponse
-from onyx.server.features.mcp.models import MCPServerUpdateResponse
-from onyx.server.features.mcp.models import MCPToolCreateRequest
-from onyx.server.features.mcp.models import MCPToolListResponse
-from onyx.server.features.mcp.models import MCPToolUpdateRequest
-from onyx.server.features.mcp.models import MCPUserCredentialsRequest
-from onyx.server.features.mcp.models import MCPUserOAuthConnectRequest
-from onyx.server.features.mcp.models import MCPUserOAuthConnectResponse
-from onyx.server.features.tool.models import ToolSnapshot
-from onyx.tools.tool_implementations.mcp.mcp_client import discover_mcp_tools
-from onyx.tools.tool_implementations.mcp.mcp_client import initialize_mcp_client
-from onyx.tools.tool_implementations.mcp.mcp_client import log_exception_group
-from onyx.utils.encryption import mask_string
-from onyx.utils.encryption import reject_masked_credentials
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.schemas import UserRole
+from aethersearch.auth.users import current_curator_or_admin_user
+from aethersearch.configs.app_configs import WEB_DOMAIN
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import MCPAuthenticationPerformer
+from aethersearch.db.enums import MCPAuthenticationType
+from aethersearch.db.enums import MCPServerStatus
+from aethersearch.db.enums import MCPTransport
+from aethersearch.db.enums import Permission
+from aethersearch.db.mcp import create_connection_config
+from aethersearch.db.mcp import create_mcp_server__no_commit
+from aethersearch.db.mcp import delete_all_user_connection_configs_for_server_no_commit
+from aethersearch.db.mcp import delete_connection_config
+from aethersearch.db.mcp import delete_mcp_server
+from aethersearch.db.mcp import delete_user_connection_configs_for_server
+from aethersearch.db.mcp import extract_connection_data
+from aethersearch.db.mcp import get_all_mcp_servers
+from aethersearch.db.mcp import get_connection_config_by_id
+from aethersearch.db.mcp import get_mcp_server_by_id
+from aethersearch.db.mcp import get_mcp_servers_for_persona
+from aethersearch.db.mcp import get_server_auth_template
+from aethersearch.db.mcp import get_user_connection_config
+from aethersearch.db.mcp import update_connection_config
+from aethersearch.db.mcp import update_mcp_server__no_commit
+from aethersearch.db.mcp import upsert_user_connection_config
+from aethersearch.db.models import MCPConnectionConfig
+from aethersearch.db.models import MCPServer as DbMCPServer
+from aethersearch.db.models import Tool
+from aethersearch.db.models import User
+from aethersearch.db.tools import create_tool__no_commit
+from aethersearch.db.tools import delete_tool__no_commit
+from aethersearch.db.tools import get_tools_by_mcp_server_id
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.server.features.mcp.models import MCPApiKeyResponse
+from aethersearch.server.features.mcp.models import MCPAuthTemplate
+from aethersearch.server.features.mcp.models import MCPConnectionData
+from aethersearch.server.features.mcp.models import MCPOAuthCallbackResponse
+from aethersearch.server.features.mcp.models import MCPOAuthKeys
+from aethersearch.server.features.mcp.models import MCPServer
+from aethersearch.server.features.mcp.models import MCPServerCreateResponse
+from aethersearch.server.features.mcp.models import MCPServerSimpleCreateRequest
+from aethersearch.server.features.mcp.models import MCPServerSimpleUpdateRequest
+from aethersearch.server.features.mcp.models import MCPServersResponse
+from aethersearch.server.features.mcp.models import MCPServerUpdateResponse
+from aethersearch.server.features.mcp.models import MCPToolCreateRequest
+from aethersearch.server.features.mcp.models import MCPToolListResponse
+from aethersearch.server.features.mcp.models import MCPToolUpdateRequest
+from aethersearch.server.features.mcp.models import MCPUserCredentialsRequest
+from aethersearch.server.features.mcp.models import MCPUserOAuthConnectRequest
+from aethersearch.server.features.mcp.models import MCPUserOAuthConnectResponse
+from aethersearch.server.features.tool.models import ToolSnapshot
+from aethersearch.tools.tool_implementations.mcp.mcp_client import discover_mcp_tools
+from aethersearch.tools.tool_implementations.mcp.mcp_client import initialize_mcp_client
+from aethersearch.tools.tool_implementations.mcp.mcp_client import log_exception_group
+from aethersearch.utils.encryption import mask_string
+from aethersearch.utils.encryption import reject_masked_credentials
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -252,7 +252,7 @@ def key_client_info(user_id: str) -> str:
 REQUESTED_SCOPE: str | None = None
 
 
-class OnyxTokenStorage(TokenStorage):
+class AetherSearchTokenStorage(TokenStorage):
     """
     store auth info in a particular user's connection config in postgres
     """
@@ -399,13 +399,13 @@ def make_oauth_provider(
     return OAuthClientProvider(
         server_url=mcp_server.server_url,
         client_metadata=OAuthClientMetadata(
-            client_name=f"Onyx - {mcp_server.name}",
+            client_name=f"AetherSearch - {mcp_server.name}",
             redirect_uris=[AnyUrl(f"{WEB_DOMAIN}/mcp/oauth/callback")],
             grant_types=["authorization_code", "refresh_token"],
             response_types=["code"],
             scope=REQUESTED_SCOPE,  # TODO: do we need to pass this in? maybe make configurable
         ),
-        storage=OnyxTokenStorage(connection_config_id, admin_config_id),
+        storage=AetherSearchTokenStorage(connection_config_id, admin_config_id),
         redirect_handler=redirect_handler,
         callback_handler=callback_handler,
     )
@@ -1242,7 +1242,7 @@ def get_mcp_server_tools_snapshots(
 
     Returns: List of ToolSnapshot objects
     """
-    from onyx.db.tools import get_tools_by_mcp_server_id
+    from aethersearch.db.tools import get_tools_by_mcp_server_id
 
     try:
         # Verify the server exists
@@ -1760,7 +1760,7 @@ def get_all_mcp_tools(
     """Get all tools associated with MCP servers, including both enabled and disabled tools"""
     from sqlalchemy import select
 
-    from onyx.db.models import Tool
+    from aethersearch.db.models import Tool
 
     # Query MCP tools ordered by ID to maintain consistent ordering
     stmt = select(Tool).where(Tool.mcp_server_id.is_not(None)).order_by(Tool.id)

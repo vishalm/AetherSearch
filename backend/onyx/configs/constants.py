@@ -4,12 +4,12 @@ import socket
 from enum import auto
 from enum import Enum
 
-ONYX_DEFAULT_APPLICATION_NAME = "Onyx"
-ONYX_DISCORD_URL = "https://discord.gg/4NA5SbzrWb"
-ONYX_UTM_SOURCE = "onyx_app"
+AETHERSEARCH_DEFAULT_APPLICATION_NAME = "AetherSearch"
+AETHERSEARCH_DISCORD_URL = "https://discord.gg/4NA5SbzrWb"
+AETHERSEARCH_UTM_SOURCE = "aethersearch_app"
 SLACK_USER_TOKEN_PREFIX = "xoxp-"
 SLACK_BOT_TOKEN_PREFIX = "xoxb-"
-ONYX_EMAILABLE_LOGO_MAX_DIM = 512
+AETHERSEARCH_EMAILABLE_LOGO_MAX_DIM = 512
 
 # The mask_string() function in encryption.py uses "•" (U+2022 BULLET) to mask secrets.
 MASK_CREDENTIAL_CHAR = "\u2022"
@@ -34,17 +34,17 @@ PUBLIC_API_TAGS: list[str | Enum] = ["public"]
 FASTAPI_USERS_AUTH_COOKIE_NAME = (
     "fastapiusersauth"  # Currently a constant, but logic allows for configuration
 )
-TENANT_ID_COOKIE_NAME = "onyx_tid"  # tenant id - for workaround cases
-ANONYMOUS_USER_COOKIE_NAME = "onyx_anonymous_user"
+TENANT_ID_COOKIE_NAME = "aethersearch_tid"  # tenant id - for workaround cases
+ANONYMOUS_USER_COOKIE_NAME = "aethersearch_anonymous_user"
 
 # ID used in UserInfo API responses for anonymous users (not a UUID, just a string identifier)
 ANONYMOUS_USER_INFO_ID = "__anonymous_user__"
 # Placeholder user for migrating no-auth data to first registered user
 NO_AUTH_PLACEHOLDER_USER_UUID = "00000000-0000-0000-0000-000000000001"
-NO_AUTH_PLACEHOLDER_USER_EMAIL = "no-auth-placeholder@onyx.app"
+NO_AUTH_PLACEHOLDER_USER_EMAIL = "no-auth-placeholder@aethersearch.app"
 # Real anonymous user in DB for anonymous access feature
 ANONYMOUS_USER_UUID = "00000000-0000-0000-0000-000000000002"
-ANONYMOUS_USER_EMAIL = "anonymous@onyx.app"
+ANONYMOUS_USER_EMAIL = "anonymous@aethersearch.app"
 
 # For chunking/processing chunks
 RETURN_SEPARATOR = "\n\r\n"
@@ -53,13 +53,13 @@ SECTION_SEPARATOR = "\n\n"
 INDEX_SEPARATOR = "==="
 
 # For File Connector Metadata override file
-ONYX_METADATA_FILENAME = ".onyx_metadata.json"
+AETHERSEARCH_METADATA_FILENAME = ".aethersearch_metadata.json"
 
 # Messages
 DISABLED_GEN_AI_MSG = (
-    "Your System Admin has disabled the Generative AI functionalities of Onyx.\n"
+    "Your System Admin has disabled the Generative AI functionalities of AetherSearch.\n"
     "Please contact them if you wish to have this enabled.\n"
-    "You can still use Onyx as a search engine."
+    "You can still use AetherSearch as a search engine."
 )
 
 #####
@@ -99,7 +99,7 @@ POSTGRES_UNKNOWN_APP_NAME = "unknown"
 SSL_CERT_FILE = "bundle.pem"
 # API Keys
 DANSWER_API_KEY_PREFIX = "API_KEY__"
-DANSWER_API_KEY_DUMMY_EMAIL_DOMAIN = "onyxapikey.ai"
+DANSWER_API_KEY_DUMMY_EMAIL_DOMAIN = "aethersearchapikey.ai"
 UNNAMED_KEY_PLACEHOLDER = "Unnamed"
 DISCORD_SERVICE_API_KEY_NAME = "discord-bot-service"
 
@@ -116,10 +116,10 @@ KV_GMAIL_SERVICE_ACCOUNT_KEY = "gmail_service_account_key"
 KV_GOOGLE_DRIVE_CRED_KEY = "google_drive_app_credential"
 KV_GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY = "google_drive_service_account_key"
 KV_GEN_AI_KEY_CHECK_TIME = "genai_api_key_last_check_time"
-KV_SETTINGS_KEY = "onyx_settings"
+KV_SETTINGS_KEY = "aethersearch_settings"
 KV_CUSTOMER_UUID_KEY = "customer_uuid"
 KV_INSTANCE_DOMAIN_KEY = "instance_domain"
-KV_ENTERPRISE_SETTINGS_KEY = "onyx_enterprise_settings"
+KV_ENTERPRISE_SETTINGS_KEY = "aethersearch_enterprise_settings"
 KV_CUSTOM_ANALYTICS_SCRIPT_KEY = "__custom_analytics_script__"
 KV_KG_CONFIG_KEY = "kg_config"
 
@@ -202,7 +202,7 @@ TMP_DRALPHA_PERSONA_NAME = "KG Beta"
 
 
 class DocumentSource(str, Enum):
-    # Special case, document passed in via Onyx APIs without specifying a source type
+    # Special case, document passed in via AetherSearch APIs without specifying a source type
     INGESTION_API = "ingestion_api"
     SLACK = "slack"
     WEB = "web"
@@ -348,7 +348,7 @@ class MessageType(str, Enum):
     USER = "user"  # HumanMessage
     ASSISTANT = "assistant"  # AIMessage - Can include tool_calls field for parallel tool calling
     TOOL_CALL_RESPONSE = "tool_call_response"
-    USER_REMINDER = "user_reminder"  # Custom Onyx message type which is translated into a USER message when passed to the LLM
+    USER_REMINDER = "user_reminder"  # Custom AetherSearch message type which is translated into a USER message when passed to the LLM
 
 
 class ChatMessageSimpleType(str, Enum):
@@ -399,11 +399,11 @@ class MilestoneRecordType(str, Enum):
     USER_MESSAGE_SENT = "user_message_sent"
     MULTIPLE_ASSISTANTS = "multiple_assistants"
     CREATED_ASSISTANT = "created_assistant"
-    CREATED_ONYX_BOT = "created_onyx_bot"
+    CREATED_AETHERSEARCH_BOT = "created_aethersearch_bot"
     REQUESTED_CONNECTOR = "requested_connector"
 
 
-class OnyxCeleryQueues:
+class AetherSearchCeleryQueues:
     # "celery" is the default queue defined by celery and also the queue
     # we are running in the primary worker to run system tasks
     # Tasks running in this queue should be designed specifically to run quickly
@@ -440,7 +440,7 @@ class OnyxCeleryQueues:
     OPENSEARCH_MIGRATION = "opensearch_migration"
 
 
-class OnyxRedisLocks:
+class AetherSearchRedisLocks:
     PRIMARY_WORKER = "da_lock:primary_worker"
     CHECK_VESPA_SYNC_BEAT_LOCK = "da_lock:check_vespa_sync_beat"
     CHECK_CONNECTOR_DELETION_BEAT_LOCK = "da_lock:check_connector_deletion_beat"
@@ -502,7 +502,7 @@ class OnyxRedisLocks:
     SANDBOX_FILE_SYNC_LOCK_PREFIX = "da_lock:sandbox_file_sync"
 
 
-class OnyxRedisSignals:
+class AetherSearchRedisSignals:
     BLOCK_VALIDATE_INDEXING_FENCES = "signal:block_validate_indexing_fences"
     BLOCK_VALIDATE_EXTERNAL_GROUP_SYNC_FENCES = (
         "signal:block_validate_external_group_sync_fences"
@@ -518,11 +518,11 @@ class OnyxRedisSignals:
     )
 
 
-class OnyxRedisConstants:
+class AetherSearchRedisConstants:
     ACTIVE_FENCES = "active_fences"
 
 
-class OnyxCeleryPriority(int, Enum):
+class AetherSearchCeleryPriority(int, Enum):
     HIGHEST = 0
     HIGH = auto()
     MEDIUM = auto()
@@ -531,29 +531,29 @@ class OnyxCeleryPriority(int, Enum):
 
 
 # a prefix used to distinguish system wide tasks in the cloud
-ONYX_CLOUD_CELERY_TASK_PREFIX = "cloud"
+AETHERSEARCH_CLOUD_CELERY_TASK_PREFIX = "cloud"
 
 # the tenant id we use for system level redis operations
-ONYX_CLOUD_TENANT_ID = "cloud"
+AETHERSEARCH_CLOUD_TENANT_ID = "cloud"
 
 # the redis namespace for runtime variables
-ONYX_CLOUD_REDIS_RUNTIME = "runtime"
+AETHERSEARCH_CLOUD_REDIS_RUNTIME = "runtime"
 CLOUD_BUILD_FENCE_LOOKUP_TABLE_INTERVAL_DEFAULT = 600
 
 
-class OnyxCeleryTask:
+class AetherSearchCeleryTask:
     DEFAULT = "celery"
 
-    CLOUD_BEAT_TASK_GENERATOR = f"{ONYX_CLOUD_CELERY_TASK_PREFIX}_generate_beat_tasks"
-    CLOUD_MONITOR_ALEMBIC = f"{ONYX_CLOUD_CELERY_TASK_PREFIX}_monitor_alembic"
+    CLOUD_BEAT_TASK_GENERATOR = f"{AETHERSEARCH_CLOUD_CELERY_TASK_PREFIX}_generate_beat_tasks"
+    CLOUD_MONITOR_ALEMBIC = f"{AETHERSEARCH_CLOUD_CELERY_TASK_PREFIX}_monitor_alembic"
     CLOUD_MONITOR_CELERY_QUEUES = (
-        f"{ONYX_CLOUD_CELERY_TASK_PREFIX}_monitor_celery_queues"
+        f"{AETHERSEARCH_CLOUD_CELERY_TASK_PREFIX}_monitor_celery_queues"
     )
     CLOUD_CHECK_AVAILABLE_TENANTS = (
-        f"{ONYX_CLOUD_CELERY_TASK_PREFIX}_check_available_tenants"
+        f"{AETHERSEARCH_CLOUD_CELERY_TASK_PREFIX}_check_available_tenants"
     )
     CLOUD_MONITOR_CELERY_PIDBOX = (
-        f"{ONYX_CLOUD_CELERY_TASK_PREFIX}_monitor_celery_pidbox"
+        f"{AETHERSEARCH_CLOUD_CELERY_TASK_PREFIX}_monitor_celery_pidbox"
     )
 
     CHECK_FOR_CONNECTOR_DELETION = "check_for_connector_deletion_task"
@@ -639,7 +639,7 @@ class OnyxCeleryTask:
 
 
 # this needs to correspond to the matching entry in supervisord
-ONYX_CELERY_BEAT_HEARTBEAT_KEY = "onyx:celery:beat:heartbeat"
+AETHERSEARCH_CELERY_BEAT_HEARTBEAT_KEY = "aethersearch:celery:beat:heartbeat"
 
 REDIS_SOCKET_KEEPALIVE_OPTIONS = {}
 REDIS_SOCKET_KEEPALIVE_OPTIONS[socket.TCP_KEEPINTVL] = 15
@@ -656,7 +656,7 @@ else:
     REDIS_SOCKET_KEEPALIVE_OPTIONS[getattr(socket, "TCP_KEEPIDLE")] = 60
 
 
-class OnyxCallTypes(str, Enum):
+class AetherSearchCallTypes(str, Enum):
     FIREFLIES = "FIREFLIES"
     GONG = "GONG"
 
@@ -667,7 +667,7 @@ NUM_DAYS_TO_KEEP_INDEX_ATTEMPTS = NUM_DAYS_TO_KEEP_CHECKPOINTS + 1
 
 # TODO: this should be stored likely in database
 DocumentSourceDescription: dict[DocumentSource, str] = {
-    # Special case, document passed in via Onyx APIs without specifying a source type
+    # Special case, document passed in via AetherSearch APIs without specifying a source type
     DocumentSource.INGESTION_API: "ingestion_api",
     DocumentSource.SLACK: "slack channels for discussions and collaboration",
     DocumentSource.WEB: "indexed web pages",

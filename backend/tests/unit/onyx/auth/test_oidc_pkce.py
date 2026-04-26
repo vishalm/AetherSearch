@@ -15,13 +15,13 @@ from fastapi_users.jwt import generate_jwt
 from httpx_oauth.oauth2 import BaseOAuth2
 from httpx_oauth.oauth2 import GetAccessTokenError
 
-from onyx.auth.users import CSRF_TOKEN_COOKIE_NAME
-from onyx.auth.users import CSRF_TOKEN_KEY
-from onyx.auth.users import get_oauth_router
-from onyx.auth.users import get_pkce_cookie_name
-from onyx.auth.users import PKCE_COOKIE_NAME_PREFIX
-from onyx.auth.users import STATE_TOKEN_AUDIENCE
-from onyx.error_handling.exceptions import register_onyx_exception_handlers
+from aethersearch.auth.users import CSRF_TOKEN_COOKIE_NAME
+from aethersearch.auth.users import CSRF_TOKEN_KEY
+from aethersearch.auth.users import get_oauth_router
+from aethersearch.auth.users import get_pkce_cookie_name
+from aethersearch.auth.users import PKCE_COOKIE_NAME_PREFIX
+from aethersearch.auth.users import STATE_TOKEN_AUDIENCE
+from aethersearch.error_handling.exceptions import register_aethersearch_exception_handlers
 
 
 class _StubOAuthClient:
@@ -114,7 +114,7 @@ def _build_test_client(
     )
     app = FastAPI()
     app.include_router(router, prefix="/auth/oidc")
-    register_onyx_exception_handlers(app)
+    register_aethersearch_exception_handlers(app)
 
     client = TestClient(app, raise_server_exceptions=False)
     return client, oauth_client, user_manager
@@ -319,7 +319,7 @@ def test_oidc_callback_uses_code_verifier_when_pkce_enabled() -> None:
     state = _extract_state_from_authorize_response(authorize_response)
 
     with patch(
-        "onyx.auth.users.fetch_ee_implementation_or_noop",
+        "aethersearch.auth.users.fetch_ee_implementation_or_noop",
         return_value=lambda _email: "tenant_1",
     ):
         response = client.get(
@@ -341,7 +341,7 @@ def test_oidc_callback_works_without_pkce_when_flag_disabled() -> None:
     state = _extract_state_from_authorize_response(authorize_response)
 
     with patch(
-        "onyx.auth.users.fetch_ee_implementation_or_noop",
+        "aethersearch.auth.users.fetch_ee_implementation_or_noop",
         return_value=lambda _email: "tenant_1",
     ):
         response = client.get(
@@ -366,7 +366,7 @@ def test_oidc_callback_pkce_preserves_redirect_when_backend_login_is_non_redirec
     state = _extract_state_from_authorize_response(authorize_response)
 
     with patch(
-        "onyx.auth.users.fetch_ee_implementation_or_noop",
+        "aethersearch.auth.users.fetch_ee_implementation_or_noop",
         return_value=lambda _email: "tenant_1",
     ):
         response = client.get(

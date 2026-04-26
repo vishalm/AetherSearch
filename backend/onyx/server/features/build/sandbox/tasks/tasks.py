@@ -12,25 +12,25 @@ from redis.lock import Lock as RedisLock
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
 
-from onyx.background.celery.apps.app_base import task_logger
-from onyx.configs.constants import CELERY_SANDBOX_FILE_SYNC_LOCK_TIMEOUT
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import OnyxRedisLocks
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import SandboxStatus
-from onyx.redis.redis_pool import get_redis_client
-from onyx.redis.redis_tenant_work_gating import maybe_mark_tenant_active
-from onyx.server.features.build.configs import SANDBOX_BACKEND
-from onyx.server.features.build.configs import SANDBOX_IDLE_TIMEOUT_SECONDS
-from onyx.server.features.build.configs import SandboxBackend
-from onyx.server.features.build.configs import USER_LIBRARY_SOURCE_DIR
-from onyx.server.features.build.db.build_session import clear_nextjs_ports_for_user
-from onyx.server.features.build.db.build_session import (
+from aethersearch.background.celery.apps.app_base import task_logger
+from aethersearch.configs.constants import CELERY_SANDBOX_FILE_SYNC_LOCK_TIMEOUT
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import AetherSearchRedisLocks
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import SandboxStatus
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.redis.redis_tenant_work_gating import maybe_mark_tenant_active
+from aethersearch.server.features.build.configs import SANDBOX_BACKEND
+from aethersearch.server.features.build.configs import SANDBOX_IDLE_TIMEOUT_SECONDS
+from aethersearch.server.features.build.configs import SandboxBackend
+from aethersearch.server.features.build.configs import USER_LIBRARY_SOURCE_DIR
+from aethersearch.server.features.build.db.build_session import clear_nextjs_ports_for_user
+from aethersearch.server.features.build.db.build_session import (
     mark_user_sessions_idle__no_commit,
 )
-from onyx.server.features.build.db.sandbox import get_sandbox_by_user_id
-from onyx.server.features.build.sandbox.base import get_sandbox_manager
-from onyx.server.features.build.sandbox.kubernetes.kubernetes_sandbox_manager import (
+from aethersearch.server.features.build.db.sandbox import get_sandbox_by_user_id
+from aethersearch.server.features.build.sandbox.base import get_sandbox_manager
+from aethersearch.server.features.build.sandbox.kubernetes.kubernetes_sandbox_manager import (
     KubernetesSandboxManager,
 )
 
@@ -42,7 +42,7 @@ TIMEOUT_SECONDS = 6000
 
 
 @shared_task(
-    name=OnyxCeleryTask.CLEANUP_IDLE_SANDBOXES,
+    name=AetherSearchCeleryTask.CLEANUP_IDLE_SANDBOXES,
     soft_time_limit=TIMEOUT_SECONDS,
     bind=True,
     ignore_result=True,
@@ -74,7 +74,7 @@ def cleanup_idle_sandboxes_task(self: Task, *, tenant_id: str) -> None:  # noqa:
 
     redis_client = get_redis_client(tenant_id=tenant_id)
     lock: RedisLock = redis_client.lock(
-        OnyxRedisLocks.CLEANUP_IDLE_SANDBOXES_BEAT_LOCK,
+        AetherSearchRedisLocks.CLEANUP_IDLE_SANDBOXES_BEAT_LOCK,
         timeout=TIMEOUT_SECONDS,
     )
 
@@ -85,10 +85,10 @@ def cleanup_idle_sandboxes_task(self: Task, *, tenant_id: str) -> None:  # noqa:
 
     try:
         # Import here to avoid circular imports
-        from onyx.db.enums import SandboxStatus
-        from onyx.server.features.build.db.sandbox import create_snapshot__no_commit
-        from onyx.server.features.build.db.sandbox import get_idle_sandboxes
-        from onyx.server.features.build.db.sandbox import (
+        from aethersearch.db.enums import SandboxStatus
+        from aethersearch.server.features.build.db.sandbox import create_snapshot__no_commit
+        from aethersearch.server.features.build.db.sandbox import get_idle_sandboxes
+        from aethersearch.server.features.build.db.sandbox import (
             update_sandbox_status__no_commit,
         )
 
@@ -284,8 +284,8 @@ def _get_disabled_user_library_paths(db_session: "Session", user_id: str) -> lis
     """
     from uuid import UUID
 
-    from onyx.configs.constants import DocumentSource
-    from onyx.db.document import get_documents_by_source
+    from aethersearch.configs.constants import DocumentSource
+    from aethersearch.db.document import get_documents_by_source
 
     disabled_paths: list[str] = []
 
@@ -316,7 +316,7 @@ def _get_disabled_user_library_paths(db_session: "Session", user_id: str) -> lis
 
 
 @shared_task(
-    name=OnyxCeleryTask.SANDBOX_FILE_SYNC,
+    name=AetherSearchCeleryTask.SANDBOX_FILE_SYNC,
     soft_time_limit=TIMEOUT_SECONDS,
     bind=True,
     ignore_result=True,
@@ -358,7 +358,7 @@ def sync_sandbox_files(
     lock_timeout = CELERY_SANDBOX_FILE_SYNC_LOCK_TIMEOUT
     redis_client = get_redis_client(tenant_id=tenant_id)
     lock = redis_client.lock(
-        f"{OnyxRedisLocks.SANDBOX_FILE_SYNC_LOCK_PREFIX}:{user_id}",
+        f"{AetherSearchRedisLocks.SANDBOX_FILE_SYNC_LOCK_PREFIX}:{user_id}",
         timeout=lock_timeout,
     )
 
@@ -396,7 +396,7 @@ def sync_sandbox_files(
 
 # NOTE: in the future, may need to add this. For now, will do manual cleanup.
 # @shared_task(
-#     name=OnyxCeleryTask.CLEANUP_OLD_SNAPSHOTS,
+#     name=AetherSearchCeleryTask.CLEANUP_OLD_SNAPSHOTS,
 #     soft_time_limit=300,
 #     bind=True,
 #     ignore_result=True,
@@ -423,7 +423,7 @@ def sync_sandbox_files(
 
 #     redis_client = get_redis_client(tenant_id=tenant_id)
 #     lock: RedisLock = redis_client.lock(
-#         OnyxRedisLocks.CLEANUP_OLD_SNAPSHOTS_BEAT_LOCK,
+#         AetherSearchRedisLocks.CLEANUP_OLD_SNAPSHOTS_BEAT_LOCK,
 #         timeout=CELERY_GENERIC_BEAT_LOCK_TIMEOUT,
 #     )
 
@@ -433,7 +433,7 @@ def sync_sandbox_files(
 #         return
 
 #     try:
-#         from onyx.server.features.build.db.sandbox import delete_old_snapshots
+#         from aethersearch.server.features.build.db.sandbox import delete_old_snapshots
 
 #         with get_session_with_current_tenant() as db_session:
 #             deleted_count = delete_old_snapshots(

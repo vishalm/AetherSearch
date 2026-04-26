@@ -7,7 +7,7 @@ import os
 import pytest
 import requests
 
-from onyx.llm.constants import LlmProviderNames
+from aethersearch.llm.constants import LlmProviderNames
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.managers.llm_provider import LLMProviderManager
 from tests.integration.common_utils.managers.persona import PersonaManager

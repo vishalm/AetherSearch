@@ -29,7 +29,7 @@ Hey there! We are so excited that you're interested in AetherSearch.
 
 ## Contribution Opportunities
 
-The [GitHub Issues](https://github.com/vishalm/ai-enterprise-search-chat-onyx/issues) page is a great place to look for and share contribution ideas.
+The [GitHub Issues](https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/issues) page is a great place to look for and share contribution ideas.
 
 If you have your own feature that you would like to build, please create an issue and community members can provide feedback and upvote if they feel a common need.
 
@@ -135,7 +135,7 @@ nvm install 22 && nvm use 22
 node -v # verify your active version
 ```
 
-Navigate to `onyx/web` and run:
+Navigate to `aethersearch/web` and run:
 
 ```bash
 npm i
@@ -159,10 +159,10 @@ uv run ty check
 
 #### Frontend
 
-We use `prettier` for formatting. The desired version will be installed via `npm i` from the `onyx/web` directory. To run the formatter:
+We use `prettier` for formatting. The desired version will be installed via `npm i` from the `aethersearch/web` directory. To run the formatter:
 
 ```bash
-npx prettier --write .  # from onyx/web
+npx prettier --write .  # from aethersearch/web
 ```
 
 Pre-commit will also run prettier automatically on files you've recently touched. If re-formatted, your commit will fail. Re-stage your changes and commit again.
@@ -206,7 +206,7 @@ Before starting, make sure the Docker Daemon is running.
 
 You will need Docker installed to run these containers.
 
-Navigate to `onyx/deployment/docker_compose`, then start up Postgres/OpenSearch/Redis/MinIO with:
+Navigate to `aethersearch/deployment/docker_compose`, then start up Postgres/OpenSearch/Redis/MinIO with:
 
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d index relational_db cache minio
@@ -216,13 +216,13 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d index relat
 
 #### Running AetherSearch locally
 
-To start the frontend, navigate to `onyx/web` and run:
+To start the frontend, navigate to `aethersearch/web` and run:
 
 ```bash
 npm run dev
 ```
 
-Next, start the model server which runs the local NLP models. Navigate to `onyx/backend` and run:
+Next, start the model server which runs the local NLP models. Navigate to `aethersearch/backend` and run:
 
 ```bash
 uvicorn model_server.main:app --reload --port 9000
@@ -236,22 +236,22 @@ powershell -Command "uvicorn model_server.main:app --reload --port 9000"
 
 The first time running AetherSearch, you will need to run the DB migrations for Postgres. After the first time, this is no longer required unless the DB models change.
 
-Navigate to `onyx/backend` and with the venv active, run:
+Navigate to `aethersearch/backend` and with the venv active, run:
 
 ```bash
 alembic upgrade head
 ```
 
-Next, start the task queue which orchestrates the background jobs. Still in `onyx/backend`, run:
+Next, start the task queue which orchestrates the background jobs. Still in `aethersearch/backend`, run:
 
 ```bash
 python ./scripts/dev_run_background_jobs.py
 ```
 
-To run the backend API server, navigate back to `onyx/backend` and run:
+To run the backend API server, navigate back to `aethersearch/backend` and run:
 
 ```bash
-AUTH_TYPE=basic uvicorn onyx.main:app --reload --port 8080
+AUTH_TYPE=basic uvicorn aethersearch.main:app --reload --port 8080
 ```
 
 _For Windows (for compatibility with both PowerShell and Command Prompt):_
@@ -259,7 +259,7 @@ _For Windows (for compatibility with both PowerShell and Command Prompt):_
 ```bash
 powershell -Command "
     $env:AUTH_TYPE='basic'
-    uvicorn onyx.main:app --reload --port 8080
+    uvicorn aethersearch.main:app --reload --port 8080
 "
 ```
 
@@ -282,7 +282,7 @@ You've successfully set up a local AetherSearch instance!
 
 You can run the full AetherSearch application stack from pre-built images including all external software dependencies.
 
-Navigate to `onyx/deployment/docker_compose` and run:
+Navigate to `aethersearch/deployment/docker_compose` and run:
 
 ```bash
 docker compose up -d
@@ -494,7 +494,7 @@ You can see the containers [here](https://hub.docker.com/u/aethersearch).
 
 ## Getting Help
 
-We have support channels and generally interesting discussions on our [Discord](https://github.com/vishalm/ai-enterprise-search-chat-onyx/discussions).
+We have support channels and generally interesting discussions on our [Discord](https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/discussions).
 
 See you there!
 

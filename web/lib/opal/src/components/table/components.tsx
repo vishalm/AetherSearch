@@ -6,7 +6,7 @@ import "@opal/components/table/styles.css";
 import { useEffect, useMemo } from "react";
 import { flexRender } from "@tanstack/react-table";
 import useDataTable, {
-  toOnyxSortDirection,
+  toAetherSearchSortDirection,
 } from "@opal/components/table/hooks/useDataTable";
 import useColumnWidths from "@opal/components/table/hooks/useColumnWidths";
 import useDraggableRows from "@opal/components/table/hooks/useDraggableRows";
@@ -31,10 +31,10 @@ import { cn } from "@opal/utils";
 import type {
   DataTableProps as BaseDataTableProps,
   DataTableFooterConfig,
-  OnyxColumnDef,
-  OnyxDataColumn,
-  OnyxQualifierColumn,
-  OnyxActionsColumn,
+  AetherSearchColumnDef,
+  AetherSearchDataColumn,
+  AetherSearchQualifierColumn,
+  AetherSearchActionsColumn,
 } from "@opal/components/table/types";
 import type { TableSize } from "@opal/components/table/TableSizeContext";
 
@@ -56,21 +56,21 @@ export type DataTableProps<TData> = BaseDataTableProps<TData> & {
 interface ProcessedColumns<TData> {
   tanstackColumns: ColumnDef<TData, any>[];
   widthConfig: WidthConfig;
-  qualifierColumn: OnyxQualifierColumn<TData> | null;
-  /** Map from column ID → OnyxColumnDef for dispatch in render loops. */
-  columnKindMap: Map<string, OnyxColumnDef<TData>>;
+  qualifierColumn: AetherSearchQualifierColumn<TData> | null;
+  /** Map from column ID → AetherSearchColumnDef for dispatch in render loops. */
+  columnKindMap: Map<string, AetherSearchColumnDef<TData>>;
 }
 
 function processColumns<TData>(
-  columns: OnyxColumnDef<TData>[],
+  columns: AetherSearchColumnDef<TData>[],
   size: TableSize
 ): ProcessedColumns<TData> {
   const tanstackColumns: ColumnDef<TData, any>[] = [];
   const fixedColumnIds = new Set<string>();
   const columnWeights: Record<string, number> = {};
   const columnMinWidths: Record<string, number> = {};
-  const columnKindMap = new Map<string, OnyxColumnDef<TData>>();
-  let qualifierColumn: OnyxQualifierColumn<TData> | null = null;
+  const columnKindMap = new Map<string, AetherSearchColumnDef<TData>>();
+  let qualifierColumn: AetherSearchQualifierColumn<TData> | null = null;
   let firstDataColumnSeen = false;
 
   for (const col of columns) {
@@ -167,7 +167,7 @@ export function Table<TData>(props: DataTableProps<TData>) {
   // content !== "simple", always show it. If content === "simple" (or no
   // qualifier column defined), show only for multi-select (checkboxes).
   const qualifierColDef = columns.find(
-    (c): c is OnyxQualifierColumn<TData> => c.kind === "qualifier"
+    (c): c is AetherSearchQualifierColumn<TData> => c.kind === "qualifier"
   );
   const hasQualifierColumn =
     (qualifierColDef != null && qualifierColDef.content !== "simple") ||
@@ -407,7 +407,7 @@ export function Table<TData>(props: DataTableProps<TData>) {
 
                     // Actions header
                     if (colDef?.kind === "actions") {
-                      const actionsDef = colDef as OnyxActionsColumn<TData>;
+                      const actionsDef = colDef as AetherSearchActionsColumn<TData>;
                       return (
                         <ActionsContainer key={header.id} type="head">
                           {actionsDef.showColumnVisibility !== false && (
@@ -440,7 +440,7 @@ export function Table<TData>(props: DataTableProps<TData>) {
 
                     const dataCol =
                       colDef?.kind === "data"
-                        ? (colDef as OnyxDataColumn<TData>)
+                        ? (colDef as AetherSearchDataColumn<TData>)
                         : null;
 
                     return (
@@ -448,7 +448,7 @@ export function Table<TData>(props: DataTableProps<TData>) {
                         key={header.id}
                         width={columnWidths[header.id]}
                         sorted={
-                          canSort ? toOnyxSortDirection(sortDir) : undefined
+                          canSort ? toAetherSearchSortDirection(sortDir) : undefined
                         }
                         onSort={
                           canSort
@@ -534,7 +534,7 @@ export function Table<TData>(props: DataTableProps<TData>) {
 
                       // Qualifier cell
                       if (cellColDef?.kind === "qualifier") {
-                        const qDef = cellColDef as OnyxQualifierColumn<TData>;
+                        const qDef = cellColDef as AetherSearchQualifierColumn<TData>;
 
                         return (
                           <QualifierContainer

@@ -22,105 +22,105 @@ from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from onyx.auth.anonymous_user import fetch_anonymous_user_info
-from onyx.auth.email_utils import send_user_email_invite
-from onyx.auth.invited_users import get_invited_users
-from onyx.auth.invited_users import remove_user_from_invited_users
-from onyx.auth.invited_users import write_invited_users
-from onyx.auth.permissions import get_effective_permissions
-from onyx.auth.permissions import require_permission
-from onyx.auth.schemas import UserRole
-from onyx.auth.users import anonymous_user_enabled
-from onyx.auth.users import current_curator_or_admin_user
-from onyx.auth.users import enforce_seat_limit
-from onyx.auth.users import optional_user
-from onyx.configs.app_configs import AUTH_BACKEND
-from onyx.configs.app_configs import AUTH_TYPE
-from onyx.configs.app_configs import AuthBackend
-from onyx.configs.app_configs import DEV_MODE
-from onyx.configs.app_configs import EMAIL_CONFIGURED
-from onyx.configs.app_configs import ENABLE_EMAIL_INVITES
-from onyx.configs.app_configs import NUM_FREE_TRIAL_USER_INVITES
-from onyx.configs.app_configs import REDIS_AUTH_KEY_PREFIX
-from onyx.configs.app_configs import SESSION_EXPIRE_TIME_SECONDS
-from onyx.configs.app_configs import USER_AUTH_SECRET
-from onyx.configs.app_configs import USER_DIRECTORY_ADMIN_ONLY
-from onyx.configs.app_configs import VALID_EMAIL_DOMAINS
-from onyx.configs.constants import FASTAPI_USERS_AUTH_COOKIE_NAME
-from onyx.configs.constants import PUBLIC_API_TAGS
-from onyx.db.api_key import is_api_key_email_address
-from onyx.db.auth import get_live_users_count
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.engine.sql_engine import get_session_with_shared_schema
-from onyx.db.enums import AccountType
-from onyx.db.enums import Permission
-from onyx.db.enums import UserFileStatus
-from onyx.db.models import User
-from onyx.db.models import UserFile
-from onyx.db.tenant_invite_counter import release_trial_invites
-from onyx.db.tenant_invite_counter import reserve_trial_invites
-from onyx.db.user_preferences import activate_user
-from onyx.db.user_preferences import deactivate_user
-from onyx.db.user_preferences import get_all_user_assistant_specific_configs
-from onyx.db.user_preferences import get_latest_access_token_for_user
-from onyx.db.user_preferences import get_memories_for_user
-from onyx.db.user_preferences import update_assistant_preferences
-from onyx.db.user_preferences import update_user_assistant_visibility
-from onyx.db.user_preferences import update_user_auto_scroll
-from onyx.db.user_preferences import update_user_chat_background
-from onyx.db.user_preferences import update_user_default_app_mode
-from onyx.db.user_preferences import update_user_default_model
-from onyx.db.user_preferences import update_user_personalization
-from onyx.db.user_preferences import update_user_pinned_assistants
-from onyx.db.user_preferences import update_user_role
-from onyx.db.user_preferences import update_user_shortcut_enabled
-from onyx.db.user_preferences import update_user_temperature_override_enabled
-from onyx.db.user_preferences import update_user_theme_preference
-from onyx.db.users import batch_get_user_groups
-from onyx.db.users import delete_user_from_db
-from onyx.db.users import get_all_accepted_users
-from onyx.db.users import get_all_users
-from onyx.db.users import get_page_of_filtered_users
-from onyx.db.users import get_total_filtered_users_count
-from onyx.db.users import get_user_by_email
-from onyx.db.users import get_user_counts_by_role_and_status
-from onyx.db.users import validate_user_role_update
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.key_value_store.factory import get_kv_store
-from onyx.redis.redis_pool import get_raw_redis_client
-from onyx.redis.redis_pool import get_redis_client
-from onyx.server.documents.models import PaginatedReturn
-from onyx.server.features.projects.models import UserFileSnapshot
-from onyx.server.manage.invite_rate_limit import enforce_invite_rate_limit
-from onyx.server.manage.invite_rate_limit import enforce_remove_invited_rate_limit
-from onyx.server.manage.models import AllUsersResponse
-from onyx.server.manage.models import AutoScrollRequest
-from onyx.server.manage.models import BulkInviteResponse
-from onyx.server.manage.models import ChatBackgroundRequest
-from onyx.server.manage.models import DefaultAppModeRequest
-from onyx.server.manage.models import EmailInviteStatus
-from onyx.server.manage.models import MemoryItem
-from onyx.server.manage.models import PersonalizationUpdateRequest
-from onyx.server.manage.models import TenantInfo
-from onyx.server.manage.models import TenantSnapshot
-from onyx.server.manage.models import ThemePreferenceRequest
-from onyx.server.manage.models import UserByEmail
-from onyx.server.manage.models import UserInfo
-from onyx.server.manage.models import UserPreferences
-from onyx.server.manage.models import UserRoleResponse
-from onyx.server.manage.models import UserRoleUpdateRequest
-from onyx.server.manage.models import UserSpecificAssistantPreference
-from onyx.server.manage.models import UserSpecificAssistantPreferences
-from onyx.server.models import FullUserSnapshot
-from onyx.server.models import InvitedUserSnapshot
-from onyx.server.models import MinimalUserSnapshot
-from onyx.server.models import UserGroupInfo
-from onyx.server.usage_limits import is_tenant_on_trial_fn
-from onyx.server.utils import BasicAuthenticationError
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
-from onyx.utils.variable_functionality import (
+from aethersearch.auth.anonymous_user import fetch_anonymous_user_info
+from aethersearch.auth.email_utils import send_user_email_invite
+from aethersearch.auth.invited_users import get_invited_users
+from aethersearch.auth.invited_users import remove_user_from_invited_users
+from aethersearch.auth.invited_users import write_invited_users
+from aethersearch.auth.permissions import get_effective_permissions
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.schemas import UserRole
+from aethersearch.auth.users import anonymous_user_enabled
+from aethersearch.auth.users import current_curator_or_admin_user
+from aethersearch.auth.users import enforce_seat_limit
+from aethersearch.auth.users import optional_user
+from aethersearch.configs.app_configs import AUTH_BACKEND
+from aethersearch.configs.app_configs import AUTH_TYPE
+from aethersearch.configs.app_configs import AuthBackend
+from aethersearch.configs.app_configs import DEV_MODE
+from aethersearch.configs.app_configs import EMAIL_CONFIGURED
+from aethersearch.configs.app_configs import ENABLE_EMAIL_INVITES
+from aethersearch.configs.app_configs import NUM_FREE_TRIAL_USER_INVITES
+from aethersearch.configs.app_configs import REDIS_AUTH_KEY_PREFIX
+from aethersearch.configs.app_configs import SESSION_EXPIRE_TIME_SECONDS
+from aethersearch.configs.app_configs import USER_AUTH_SECRET
+from aethersearch.configs.app_configs import USER_DIRECTORY_ADMIN_ONLY
+from aethersearch.configs.app_configs import VALID_EMAIL_DOMAINS
+from aethersearch.configs.constants import FASTAPI_USERS_AUTH_COOKIE_NAME
+from aethersearch.configs.constants import PUBLIC_API_TAGS
+from aethersearch.db.api_key import is_api_key_email_address
+from aethersearch.db.auth import get_live_users_count
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.engine.sql_engine import get_session_with_shared_schema
+from aethersearch.db.enums import AccountType
+from aethersearch.db.enums import Permission
+from aethersearch.db.enums import UserFileStatus
+from aethersearch.db.models import User
+from aethersearch.db.models import UserFile
+from aethersearch.db.tenant_invite_counter import release_trial_invites
+from aethersearch.db.tenant_invite_counter import reserve_trial_invites
+from aethersearch.db.user_preferences import activate_user
+from aethersearch.db.user_preferences import deactivate_user
+from aethersearch.db.user_preferences import get_all_user_assistant_specific_configs
+from aethersearch.db.user_preferences import get_latest_access_token_for_user
+from aethersearch.db.user_preferences import get_memories_for_user
+from aethersearch.db.user_preferences import update_assistant_preferences
+from aethersearch.db.user_preferences import update_user_assistant_visibility
+from aethersearch.db.user_preferences import update_user_auto_scroll
+from aethersearch.db.user_preferences import update_user_chat_background
+from aethersearch.db.user_preferences import update_user_default_app_mode
+from aethersearch.db.user_preferences import update_user_default_model
+from aethersearch.db.user_preferences import update_user_personalization
+from aethersearch.db.user_preferences import update_user_pinned_assistants
+from aethersearch.db.user_preferences import update_user_role
+from aethersearch.db.user_preferences import update_user_shortcut_enabled
+from aethersearch.db.user_preferences import update_user_temperature_override_enabled
+from aethersearch.db.user_preferences import update_user_theme_preference
+from aethersearch.db.users import batch_get_user_groups
+from aethersearch.db.users import delete_user_from_db
+from aethersearch.db.users import get_all_accepted_users
+from aethersearch.db.users import get_all_users
+from aethersearch.db.users import get_page_of_filtered_users
+from aethersearch.db.users import get_total_filtered_users_count
+from aethersearch.db.users import get_user_by_email
+from aethersearch.db.users import get_user_counts_by_role_and_status
+from aethersearch.db.users import validate_user_role_update
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.key_value_store.factory import get_kv_store
+from aethersearch.redis.redis_pool import get_raw_redis_client
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.server.documents.models import PaginatedReturn
+from aethersearch.server.features.projects.models import UserFileSnapshot
+from aethersearch.server.manage.invite_rate_limit import enforce_invite_rate_limit
+from aethersearch.server.manage.invite_rate_limit import enforce_remove_invited_rate_limit
+from aethersearch.server.manage.models import AllUsersResponse
+from aethersearch.server.manage.models import AutoScrollRequest
+from aethersearch.server.manage.models import BulkInviteResponse
+from aethersearch.server.manage.models import ChatBackgroundRequest
+from aethersearch.server.manage.models import DefaultAppModeRequest
+from aethersearch.server.manage.models import EmailInviteStatus
+from aethersearch.server.manage.models import MemoryItem
+from aethersearch.server.manage.models import PersonalizationUpdateRequest
+from aethersearch.server.manage.models import TenantInfo
+from aethersearch.server.manage.models import TenantSnapshot
+from aethersearch.server.manage.models import ThemePreferenceRequest
+from aethersearch.server.manage.models import UserByEmail
+from aethersearch.server.manage.models import UserInfo
+from aethersearch.server.manage.models import UserPreferences
+from aethersearch.server.manage.models import UserRoleResponse
+from aethersearch.server.manage.models import UserRoleUpdateRequest
+from aethersearch.server.manage.models import UserSpecificAssistantPreference
+from aethersearch.server.manage.models import UserSpecificAssistantPreferences
+from aethersearch.server.models import FullUserSnapshot
+from aethersearch.server.models import InvitedUserSnapshot
+from aethersearch.server.models import MinimalUserSnapshot
+from aethersearch.server.models import UserGroupInfo
+from aethersearch.server.usage_limits import is_tenant_on_trial_fn
+from aethersearch.server.utils import BasicAuthenticationError
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import fetch_ee_implementation_or_noop
+from aethersearch.utils.variable_functionality import (
     fetch_versioned_implementation_with_fallback,
 )
 from shared_configs.configs import MULTI_TENANT
@@ -167,7 +167,7 @@ def set_user_role(
     if requested_role == UserRole.CURATOR:
         # Remove all curator db relationships before changing role
         fetch_ee_implementation_or_noop(
-            "onyx.db.user_group",
+            "aethersearch.db.user_group",
             "remove_curator_status__no_commit",
         )(db_session, user_to_update)
 
@@ -185,7 +185,7 @@ async def test_upsert_user(
 ) -> None | FullUserSnapshot:
     """Test endpoint for upsert_saml_user. Only used for integration testing."""
     user = await fetch_ee_implementation_or_noop(
-        "onyx.server.saml", "upsert_saml_user", None
+        "aethersearch.server.saml", "upsert_saml_user", None
     )(email=request.email)
     return FullUserSnapshot.from_user_model(user) if user else None
 
@@ -229,7 +229,7 @@ def list_accepted_users(
     # Batch-fetch SCIM mappings to mark synced users
     scim_synced_ids: set[UUID] = set()
     try:
-        from onyx.db.models import ScimUserMapping
+        from aethersearch.db.models import ScimUserMapping
 
         scim_mappings = db_session.scalars(
             select(ScimUserMapping.user_id).where(ScimUserMapping.user_id.in_(user_ids))
@@ -275,7 +275,7 @@ def list_all_accepted_users(
     # Batch-fetch SCIM mappings to mark synced users
     scim_synced_ids: set[UUID] = set()
     try:
-        from onyx.db.models import ScimUserMapping
+        from aethersearch.db.models import ScimUserMapping
 
         scim_mappings = db_session.scalars(
             select(ScimUserMapping.user_id).where(ScimUserMapping.user_id.in_(user_ids))
@@ -488,8 +488,8 @@ def bulk_invite_users(
                 )
                 if new_total > NUM_FREE_TRIAL_USER_INVITES:
                     shared_session.rollback()
-                    raise OnyxError(
-                        OnyxErrorCode.TRIAL_INVITE_LIMIT_EXCEEDED,
+                    raise AetherSearchError(
+                        AetherSearchErrorCode.TRIAL_INVITE_LIMIT_EXCEEDED,
                         "You have hit your invite limit. Please upgrade for unlimited invites.",
                     )
                 shared_session.commit()
@@ -504,7 +504,7 @@ def bulk_invite_users(
     if MULTI_TENANT:
         try:
             fetch_ee_implementation_or_noop(
-                "onyx.server.tenants.provisioning", "add_users_to_tenant", None
+                "aethersearch.server.tenants.provisioning", "add_users_to_tenant", None
             )(new_invited_emails, tenant_id)
 
         except Exception as e:
@@ -556,7 +556,7 @@ def bulk_invite_users(
         try:
             logger.info("Registering tenant users")
             fetch_ee_implementation_or_noop(
-                "onyx.server.tenants.billing", "register_tenant_users", None
+                "aethersearch.server.tenants.billing", "register_tenant_users", None
             )(tenant_id, get_live_users_count(db_session))
         except Exception as e:
             logger.error(f"Failed to register tenant users: {str(e)}")
@@ -566,7 +566,7 @@ def bulk_invite_users(
             try:
                 write_invited_users(initial_invited_users)  # Reset to original state
                 fetch_ee_implementation_or_noop(
-                    "onyx.server.tenants.user_mapping", "remove_users_from_tenant", None
+                    "aethersearch.server.tenants.user_mapping", "remove_users_from_tenant", None
                 )(new_invited_emails, tenant_id)
             finally:
                 # Release the counter reservation regardless of whether the KV /
@@ -612,14 +612,14 @@ def remove_invited_user(
         )
     if MULTI_TENANT:
         fetch_ee_implementation_or_noop(
-            "onyx.server.tenants.user_mapping", "remove_users_from_tenant", None
+            "aethersearch.server.tenants.user_mapping", "remove_users_from_tenant", None
         )([user_email.user_email], tenant_id)
     number_of_invited_users = remove_user_from_invited_users(user_email.user_email)
 
     try:
         if MULTI_TENANT and not DEV_MODE:
             fetch_ee_implementation_or_noop(
-                "onyx.server.tenants.billing", "register_tenant_users", None
+                "aethersearch.server.tenants.billing", "register_tenant_users", None
             )(tenant_id, get_live_users_count(db_session))
     except Exception:
         logger.error(
@@ -658,7 +658,7 @@ def deactivate_user_api(
     # Only for self-hosted (non-multi-tenant) deployments
     if not MULTI_TENANT:
         fetch_ee_implementation_or_noop(
-            "onyx.db.license", "invalidate_license_cache", None
+            "aethersearch.db.license", "invalidate_license_cache", None
         )()
 
 
@@ -688,7 +688,7 @@ async def delete_user(
     try:
         tenant_id = get_current_tenant_id()
         fetch_ee_implementation_or_noop(
-            "onyx.server.tenants.user_mapping", "remove_users_from_tenant", None
+            "aethersearch.server.tenants.user_mapping", "remove_users_from_tenant", None
         )([user_email.user_email], tenant_id)
         delete_user_from_db(user_to_delete, db_session)
         logger.info(f"Deleted user {user_to_delete.email}")
@@ -697,7 +697,7 @@ async def delete_user(
         # Only for self-hosted (non-multi-tenant) deployments
         if not MULTI_TENANT:
             fetch_ee_implementation_or_noop(
-                "onyx.db.license", "invalidate_license_cache", None
+                "aethersearch.db.license", "invalidate_license_cache", None
             )()
 
     except Exception as e:
@@ -732,7 +732,7 @@ def activate_user_api(
     # Only for self-hosted (non-multi-tenant) deployments
     if not MULTI_TENANT:
         fetch_ee_implementation_or_noop(
-            "onyx.db.license", "invalidate_license_cache", None
+            "aethersearch.db.license", "invalidate_license_cache", None
         )()
 
 
@@ -756,8 +756,8 @@ def list_all_users_basic_info(
         USER_DIRECTORY_ADMIN_ONLY
         and Permission.READ_USERS not in get_effective_permissions(user)
     ):
-        raise OnyxError(
-            OnyxErrorCode.INSUFFICIENT_PERMISSIONS,
+        raise AetherSearchError(
+            AetherSearchErrorCode.INSUFFICIENT_PERMISSIONS,
             "You do not have the required permissions for this action.",
         )
 
@@ -902,7 +902,7 @@ def verify_user_logged_in(
     token_created_at = _get_token_created_at(user, request, db_session)
 
     team_name = fetch_ee_implementation_or_noop(
-        "onyx.server.tenants.user_mapping", "get_tenant_id_for_email", None
+        "aethersearch.server.tenants.user_mapping", "get_tenant_id_for_email", None
     )(user.email)
 
     new_tenant: TenantSnapshot | None = None
@@ -911,18 +911,18 @@ def verify_user_logged_in(
     if MULTI_TENANT:
         if team_name != get_current_tenant_id():
             user_count = fetch_ee_implementation_or_noop(
-                "onyx.server.tenants.user_mapping", "get_tenant_count", None
+                "aethersearch.server.tenants.user_mapping", "get_tenant_count", None
             )(team_name)
             new_tenant = TenantSnapshot(tenant_id=team_name, number_of_users=user_count)
 
         tenant_invitation = fetch_ee_implementation_or_noop(
-            "onyx.server.tenants.user_mapping", "get_tenant_invitation", None
+            "aethersearch.server.tenants.user_mapping", "get_tenant_invitation", None
         )(user.email)
 
     super_users_list = cast(
         list[str],
         fetch_versioned_implementation_with_fallback(
-            "onyx.configs.app_configs",
+            "aethersearch.configs.app_configs",
             "SUPER_USERS",
             [],
         ),

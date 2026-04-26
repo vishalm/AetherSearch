@@ -30,22 +30,22 @@ from atlassian import Confluence
 from redis import Redis
 from requests import HTTPError
 
-from onyx.configs.app_configs import CONFLUENCE_CONNECTOR_USER_PROFILES_OVERRIDE
-from onyx.configs.app_configs import OAUTH_CONFLUENCE_CLOUD_CLIENT_ID
-from onyx.configs.app_configs import OAUTH_CONFLUENCE_CLOUD_CLIENT_SECRET
-from onyx.connectors.confluence.models import ConfluenceUser
-from onyx.connectors.confluence.user_profile_override import (
+from aethersearch.configs.app_configs import CONFLUENCE_CONNECTOR_USER_PROFILES_OVERRIDE
+from aethersearch.configs.app_configs import OAUTH_CONFLUENCE_CLOUD_CLIENT_ID
+from aethersearch.configs.app_configs import OAUTH_CONFLUENCE_CLOUD_CLIENT_SECRET
+from aethersearch.connectors.confluence.models import ConfluenceUser
+from aethersearch.connectors.confluence.user_profile_override import (
     process_confluence_user_profiles_override,
 )
-from onyx.connectors.confluence.utils import _handle_http_error
-from onyx.connectors.confluence.utils import confluence_refresh_tokens
-from onyx.connectors.confluence.utils import get_start_param_from_url
-from onyx.connectors.confluence.utils import update_param_in_path
-from onyx.connectors.cross_connector_utils.miscellaneous_utils import scoped_url
-from onyx.connectors.interfaces import CredentialsProviderInterface
-from onyx.file_processing.html_utils import format_document_soup
-from onyx.redis.redis_pool import get_redis_client
-from onyx.utils.logger import setup_logger
+from aethersearch.connectors.confluence.utils import _handle_http_error
+from aethersearch.connectors.confluence.utils import confluence_refresh_tokens
+from aethersearch.connectors.confluence.utils import get_start_param_from_url
+from aethersearch.connectors.confluence.utils import update_param_in_path
+from aethersearch.connectors.cross_connector_utils.miscellaneous_utils import scoped_url
+from aethersearch.connectors.interfaces import CredentialsProviderInterface
+from aethersearch.file_processing.html_utils import format_document_soup
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -73,7 +73,7 @@ class ConfluenceRateLimitError(Exception):
     pass
 
 
-class OnyxConfluence:
+class AetherSearchConfluence:
     """
     This is a custom Confluence class that:
 
@@ -389,7 +389,7 @@ class OnyxConfluence:
         if "confluence_refresh_token" in credentials:
             logger.info("Connecting to Confluence Cloud with OAuth Access Token.")
 
-            oauth2_dict: dict[str, Any] = OnyxConfluence._make_oauth2_dict(credentials)
+            oauth2_dict: dict[str, Any] = AetherSearchConfluence._make_oauth2_dict(credentials)
             url = f"https://api.atlassian.com/ex/confluence/{credentials['cloud_id']}"
             confluence = Confluence(url=url, oauth2=oauth2_dict, **kwargs)
         else:
@@ -989,7 +989,7 @@ class OnyxConfluence:
 
 
 def get_user_email_from_username__server(
-    confluence_client: OnyxConfluence, user_name: str
+    confluence_client: AetherSearchConfluence, user_name: str
 ) -> str | None:
     global _USER_EMAIL_CACHE
     if _USER_EMAIL_CACHE.get(user_name) is None:
@@ -1013,7 +1013,7 @@ def get_user_email_from_username__server(
     return _USER_EMAIL_CACHE[user_name]
 
 
-def _get_user(confluence_client: OnyxConfluence, user_id: str) -> str:
+def _get_user(confluence_client: AetherSearchConfluence, user_id: str) -> str:
     """Get Confluence Display Name based on the account-id or userkey value
 
     Args:
@@ -1051,7 +1051,7 @@ def sanitize_attachment_title(title: str) -> str:
 
 
 def extract_text_from_confluence_html(
-    confluence_client: OnyxConfluence,
+    confluence_client: AetherSearchConfluence,
     confluence_object: dict[str, Any],
     fetched_titles: set[str],
 ) -> str:

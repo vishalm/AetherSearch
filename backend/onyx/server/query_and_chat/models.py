@@ -6,18 +6,18 @@ from uuid import UUID
 from pydantic import BaseModel
 from pydantic import model_validator
 
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import MessageType
-from onyx.configs.constants import SessionType
-from onyx.context.search.models import BaseFilters
-from onyx.context.search.models import SavedSearchDoc
-from onyx.context.search.models import SearchDoc
-from onyx.context.search.models import Tag
-from onyx.db.enums import ChatSessionSharedStatus
-from onyx.db.models import ChatSession
-from onyx.file_store.models import FileDescriptor
-from onyx.llm.override_models import LLMOverride
-from onyx.server.query_and_chat.streaming_models import Packet
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import MessageType
+from aethersearch.configs.constants import SessionType
+from aethersearch.context.search.models import BaseFilters
+from aethersearch.context.search.models import SavedSearchDoc
+from aethersearch.context.search.models import SearchDoc
+from aethersearch.context.search.models import Tag
+from aethersearch.db.enums import ChatSessionSharedStatus
+from aethersearch.db.models import ChatSession
+from aethersearch.file_store.models import FileDescriptor
+from aethersearch.llm.override_models import LLMOverride
+from aethersearch.server.query_and_chat.streaming_models import Packet
 
 AUTO_PLACE_AFTER_LATEST_MESSAGE = -1
 
@@ -64,7 +64,7 @@ class TagResponse(BaseModel):
 
 
 class UpdateChatSessionThreadRequest(BaseModel):
-    # If not specified, use Onyx default persona
+    # If not specified, use AetherSearch default persona
     chat_session_id: UUID
     new_alternate_model: str
 
@@ -75,7 +75,7 @@ class UpdateChatSessionTemperatureRequest(BaseModel):
 
 
 class ChatSessionCreationRequest(BaseModel):
-    # If not specified, use Onyx default persona
+    # If not specified, use AetherSearch default persona
     persona_id: int = 0
     description: str | None = None
     project_id: int | None = None
@@ -94,7 +94,7 @@ class ChatFeedbackRequest(BaseModel):
         return self
 
 
-# NOTE: This model is used for the core flow of the Onyx application, any changes to it should be reviewed and approved by an
+# NOTE: This model is used for the core flow of the AetherSearch application, any changes to it should be reviewed and approved by an
 # experienced team member. It is very important to 1. avoid bloat and 2. that this remains backwards compatible across versions.
 class SendMessageRequest(BaseModel):
     message: str

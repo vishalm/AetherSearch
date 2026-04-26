@@ -19,7 +19,7 @@ export enum ThemePreference {
 }
 
 interface UserPreferences {
-  // TODO: rename to agent — https://linear.app/onyx-app/issue/ENG-3766
+  // TODO: rename to agent — https://linear.app/aethersearch-app/issue/ENG-3766
   chosen_assistants: number[] | null;
   visible_assistants: number[];
   hidden_assistants: number[];
@@ -101,7 +101,7 @@ export const INVALID_ROLE_HOVER_TEXT: Partial<Record<UserRole, string>> = {
     "Global Curator users can perform admin actions for all groups they are a member of",
   [UserRole.CURATOR]: "Curator role must be assigned in the Groups tab",
   [UserRole.SLACK_USER]:
-    "This role is automatically assigned to users who only use Onyx via Slack",
+    "This role is automatically assigned to users who only use AetherSearch via Slack",
 };
 
 export interface User {

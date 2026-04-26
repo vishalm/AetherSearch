@@ -1,24 +1,24 @@
 from sqlalchemy.orm import Session
 
-from ee.onyx.db.external_perm import fetch_external_groups_for_user
-from ee.onyx.db.external_perm import fetch_public_external_group_ids
-from ee.onyx.db.user_group import fetch_user_groups_for_documents
-from ee.onyx.db.user_group import fetch_user_groups_for_user
-from ee.onyx.external_permissions.sync_params import get_source_perm_sync_config
-from onyx.access.access import (
+from ee.aethersearch.db.external_perm import fetch_external_groups_for_user
+from ee.aethersearch.db.external_perm import fetch_public_external_group_ids
+from ee.aethersearch.db.user_group import fetch_user_groups_for_documents
+from ee.aethersearch.db.user_group import fetch_user_groups_for_user
+from ee.aethersearch.external_permissions.sync_params import get_source_perm_sync_config
+from aethersearch.access.access import (
     _get_access_for_documents as get_access_for_documents_without_groups,
 )
-from onyx.access.access import _get_acl_for_user as get_acl_for_user_without_groups
-from onyx.access.access import collect_user_file_access
-from onyx.access.models import DocumentAccess
-from onyx.access.utils import prefix_external_group
-from onyx.access.utils import prefix_user_group
-from onyx.db.document import get_document_sources
-from onyx.db.document import get_documents_by_ids
-from onyx.db.models import User
-from onyx.db.models import UserFile
-from onyx.db.user_file import fetch_user_files_with_access_relationships
-from onyx.utils.logger import setup_logger
+from aethersearch.access.access import _get_acl_for_user as get_acl_for_user_without_groups
+from aethersearch.access.access import collect_user_file_access
+from aethersearch.access.models import DocumentAccess
+from aethersearch.access.utils import prefix_external_group
+from aethersearch.access.utils import prefix_user_group
+from aethersearch.db.document import get_document_sources
+from aethersearch.db.document import get_documents_by_ids
+from aethersearch.db.models import User
+from aethersearch.db.models import UserFile
+from aethersearch.db.user_file import fetch_user_files_with_access_relationships
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -97,7 +97,7 @@ def _get_access_for_documents(
         )
 
         # If the document is determined to be "public" externally (through a SYNC connector)
-        # then it's given the same access level as if it were marked public within Onyx
+        # then it's given the same access level as if it were marked public within AetherSearch
         # If its censored, then it's public anywhere during the search and then permissions are
         # applied after the search
         is_public_anywhere = (
@@ -140,7 +140,7 @@ def get_access_for_user_files_impl(
     Uses a single DB query (via fetch_user_files_with_access_relationships)
     that eagerly loads both the MIT-needed and EE-needed relationships.
 
-    NOTE: is imported in onyx.access.access by `fetch_versioned_implementation`
+    NOTE: is imported in aethersearch.access.access by `fetch_versioned_implementation`
     DO NOT REMOVE."""
     user_files = fetch_user_files_with_access_relationships(
         user_file_ids, db_session, eager_load_groups=True
@@ -154,7 +154,7 @@ def build_access_for_user_files_impl(
     """EE version: works on pre-loaded UserFile objects.
     Expects Persona.groups to be eagerly loaded.
 
-    NOTE: is imported in onyx.access.access by `fetch_versioned_implementation`
+    NOTE: is imported in aethersearch.access.access by `fetch_versioned_implementation`
     DO NOT REMOVE."""
     result: dict[str, DocumentAccess] = {}
     for user_file in user_files:
@@ -186,7 +186,7 @@ def _get_acl_for_user(user: User, db_session: Session) -> set[str]:
     user should have access to a document if at least one entry in the document's ACL
     matches one entry in the returned set.
 
-    NOTE: is imported in onyx.access.access by `fetch_versioned_implementation`
+    NOTE: is imported in aethersearch.access.access by `fetch_versioned_implementation`
     DO NOT REMOVE."""
     is_anonymous = user.is_anonymous
     db_user_groups = (

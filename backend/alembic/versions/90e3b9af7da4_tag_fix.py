@@ -16,11 +16,11 @@ from typing import Generator
 from alembic import op
 import sqlalchemy as sa
 
-from onyx.document_index.vespa_constants import DOCUMENT_ID_ENDPOINT
-from onyx.db.search_settings import SearchSettings
-from onyx.configs.app_configs import AUTH_TYPE
-from onyx.configs.constants import AuthType
-from onyx.document_index.vespa.shared_utils.utils import get_vespa_http_client
+from aethersearch.document_index.vespa_constants import DOCUMENT_ID_ENDPOINT
+from aethersearch.db.search_settings import SearchSettings
+from aethersearch.configs.app_configs import AUTH_TYPE
+from aethersearch.configs.constants import AuthType
+from aethersearch.document_index.vespa.shared_utils.utils import get_vespa_http_client
 
 logger = logging.getLogger("alembic.runtime.migration")
 

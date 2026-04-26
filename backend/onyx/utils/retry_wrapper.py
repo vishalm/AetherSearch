@@ -7,8 +7,8 @@ from typing import TypeVar
 import requests
 from retry import retry
 
-from onyx.configs.app_configs import REQUEST_TIMEOUT_SECONDS
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import REQUEST_TIMEOUT_SECONDS
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

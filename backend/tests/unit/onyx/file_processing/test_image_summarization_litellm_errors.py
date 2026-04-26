@@ -12,7 +12,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from onyx.file_processing.image_summarization import _summarize_image
+from aethersearch.file_processing.image_summarization import _summarize_image
 
 
 def _make_litellm_style_error(

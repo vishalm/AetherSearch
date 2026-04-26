@@ -3,18 +3,18 @@ from datetime import datetime
 from typing import Any
 from uuid import uuid4
 
-import generated.onyx_openapi_client.onyx_openapi_client as api  # ty: ignore[unresolved-import]
+import generated.aethersearch_openapi_client.aethersearch_openapi_client as api  # ty: ignore[unresolved-import]
 import requests
 
-from onyx.connectors.models import InputType
-from onyx.db.enums import AccessType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.server.documents.models import CCPairFullInfo
-from onyx.server.documents.models import ConnectorCredentialPairIdentifier
-from onyx.server.documents.models import ConnectorIndexingStatusLite
-from onyx.server.documents.models import ConnectorStatus
-from onyx.server.documents.models import DocumentSource
-from onyx.server.documents.models import DocumentSyncStatus
+from aethersearch.connectors.models import InputType
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.server.documents.models import CCPairFullInfo
+from aethersearch.server.documents.models import ConnectorCredentialPairIdentifier
+from aethersearch.server.documents.models import ConnectorIndexingStatusLite
+from aethersearch.server.documents.models import ConnectorStatus
+from aethersearch.server.documents.models import DocumentSource
+from aethersearch.server.documents.models import DocumentSyncStatus
 from tests.integration.common_utils.config import api_config
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.constants import MAX_DELAY

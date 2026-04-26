@@ -10,7 +10,7 @@ import { Button } from "@opal/components";
 
 import { SvgArrowExchange } from "@opal/icons";
 import { markdown } from "@opal/utils";
-import { SvgOnyxLogo } from "@opal/logos";
+import { SvgAetherSearchLogo } from "@opal/logos";
 import type { IconProps } from "@opal/types";
 
 export type WebProviderSetupModalProps = {
@@ -70,7 +70,7 @@ export const WebProviderSetupModal = memo(
             <SvgArrowExchange className="size-3 text-text-04" />
           </div>
           <div className="flex items-center justify-center size-7 p-0.5 shrink-0 overflow-clip">
-            <SvgOnyxLogo size={24} className="shrink-0" />
+            <SvgAetherSearchLogo size={24} className="shrink-0" />
           </div>
         </div>
       );

@@ -3,7 +3,7 @@ name: aethersearch
 description: A Helm chart for AetherSearch - Enterprise Search and Chat
 home: https://www.aethersearch.app/
 sources:
-  - "https://github.com/vishalm/ai-enterprise-search-chat-onyx"
+  - "https://github.com/vishalm/ai-enterprise-search-chat-aethersearch"
 type: application
 version: 0.4.48
 appVersion: latest
@@ -25,7 +25,7 @@ dependencies:
     alias: postgresql
   - name: vespa
     version: 0.2.25
-    repository: https://onyx-dot-app.github.io/vespa-helm-charts
+    repository: https://aethersearch-dot-app.github.io/vespa-helm-charts
     condition: vespa.enabled
   - name: opensearch
     version: 3.4.0
@@ -46,5 +46,5 @@ dependencies:
     condition: minio.enabled
   - name: code-interpreter
     version: 0.3.3
-    repository: https://onyx-dot-app.github.io/python-sandbox/
+    repository: https://aethersearch-dot-app.github.io/python-sandbox/
     condition: codeInterpreter.enabled

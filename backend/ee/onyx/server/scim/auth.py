@@ -1,14 +1,14 @@
 """SCIM bearer token authentication.
 
 SCIM endpoints are authenticated via bearer tokens that admins create in the
-Onyx UI. This module provides:
+AetherSearch UI. This module provides:
 
   - ``verify_scim_token``: FastAPI dependency that extracts, hashes, and
     validates the token from the Authorization header.
   - ``generate_scim_token``: Creates a new cryptographically random token
     and returns the raw value, its SHA-256 hash, and a display suffix.
 
-Token format: ``onyx_scim_<random>`` where ``<random>`` is 48 bytes of
+Token format: ``aethersearch_scim_<random>`` where ``<random>`` is 48 bytes of
 URL-safe base64 from ``secrets.token_urlsafe``.
 
 The hash is stored in the ``scim_token`` table; the raw value is shown to
@@ -22,10 +22,10 @@ from fastapi import Depends
 from fastapi import Request
 from sqlalchemy.orm import Session
 
-from ee.onyx.db.scim import ScimDAL
-from onyx.auth.utils import get_hashed_bearer_token_from_request
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.models import ScimToken
+from ee.aethersearch.db.scim import ScimDAL
+from aethersearch.auth.utils import get_hashed_bearer_token_from_request
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.models import ScimToken
 
 
 class ScimAuthError(Exception):
@@ -42,7 +42,7 @@ class ScimAuthError(Exception):
         super().__init__(detail)
 
 
-SCIM_TOKEN_PREFIX = "onyx_scim_"
+SCIM_TOKEN_PREFIX = "aethersearch_scim_"
 SCIM_TOKEN_LENGTH = 48
 
 

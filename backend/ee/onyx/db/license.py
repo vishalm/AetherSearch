@@ -7,16 +7,16 @@ from sqlalchemy import func
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from ee.onyx.server.license.models import LicenseMetadata
-from ee.onyx.server.license.models import LicensePayload
-from ee.onyx.server.license.models import LicenseSource
-from onyx.auth.schemas import UserRole
-from onyx.cache.factory import get_cache_backend
-from onyx.configs.constants import ANONYMOUS_USER_EMAIL
-from onyx.db.enums import AccountType
-from onyx.db.models import License
-from onyx.db.models import User
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.server.license.models import LicenseMetadata
+from ee.aethersearch.server.license.models import LicensePayload
+from ee.aethersearch.server.license.models import LicenseSource
+from aethersearch.auth.schemas import UserRole
+from aethersearch.cache.factory import get_cache_backend
+from aethersearch.configs.constants import ANONYMOUS_USER_EMAIL
+from aethersearch.db.enums import AccountType
+from aethersearch.db.models import License
+from aethersearch.db.models import User
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.contextvars import get_current_tenant_id
 
@@ -117,11 +117,11 @@ def get_used_seats(tenant_id: str | None = None) -> int:
     when they log in via web.
     """
     if MULTI_TENANT:
-        from ee.onyx.server.tenants.user_mapping import get_tenant_count
+        from ee.aethersearch.server.tenants.user_mapping import get_tenant_count
 
         return get_tenant_count(tenant_id or get_current_tenant_id())
     else:
-        from onyx.db.engine.sql_engine import get_session_with_current_tenant
+        from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
 
         with get_session_with_current_tenant() as db_session:
             result = db_session.execute(
@@ -206,7 +206,7 @@ def update_license_cache(
     Returns:
         The cached LicenseMetadata
     """
-    from ee.onyx.utils.license import get_license_status
+    from ee.aethersearch.utils.license import get_license_status
 
     tenant = tenant_id or get_current_tenant_id()
     cache = get_cache_backend(tenant_id=tenant_id)
@@ -252,7 +252,7 @@ def refresh_license_cache(
     Returns:
         LicenseMetadata if license exists, None otherwise
     """
-    from ee.onyx.utils.license import verify_license_signature
+    from ee.aethersearch.utils.license import verify_license_signature
 
     license_record = get_license(db_session)
     if not license_record:

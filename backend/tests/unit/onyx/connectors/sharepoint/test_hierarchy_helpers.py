@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from onyx.connectors.sharepoint.connector import SharepointConnector
+from aethersearch.connectors.sharepoint.connector import SharepointConnector
 
 
 def test_extract_folder_path_from_parent_reference_with_folder() -> None:

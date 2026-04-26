@@ -8,7 +8,7 @@ quotas are enforced cluster-wide.
 
 Check+increment is performed in a single Redis Lua script so two
 concurrent replicas cannot both pass the pre-check and both increment
-past the limit. When Redis is unavailable (e.g. Onyx Lite deployments
+past the limit. When Redis is unavailable (e.g. AetherSearch Lite deployments
 where Redis is an opt-in `--profile redis` service), the rate limiter
 fails open with a logged warning so core invite flows continue to work.
 """
@@ -21,9 +21,9 @@ from redis.exceptions import ConnectionError as RedisConnectionError
 from redis.exceptions import RedisError
 from redis.exceptions import TimeoutError as RedisTimeoutError
 
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.utils.logger import setup_logger
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -104,11 +104,11 @@ class _Bucket:
 
 
 def _run_atomic(redis_client: Redis, buckets: list[_Bucket]) -> None:
-    """Run the check+increment Lua script. Raise OnyxError on rejection.
+    """Run the check+increment Lua script. Raise AetherSearchError on rejection.
 
     On Redis connection / timeout errors the rate limiter fails open: the
     request is allowed through and the failure is logged. This keeps the
-    invite flow usable on Onyx Lite deployments (Redis is opt-in there)
+    invite flow usable on AetherSearch Lite deployments (Redis is opt-in there)
     and during transient Redis outages in full deployments.
     """
     if not buckets:
@@ -151,8 +151,8 @@ def _run_atomic(redis_client: Redis, buckets: list[_Bucket]) -> None:
         failed_bucket.increment,
         failed_bucket.limit,
     )
-    raise OnyxError(
-        OnyxErrorCode.RATE_LIMITED,
+    raise AetherSearchError(
+        AetherSearchErrorCode.RATE_LIMITED,
         f"Invite rate limit exceeded ({failed_bucket.scope}). Try again later.",
     )
 
@@ -170,7 +170,7 @@ def enforce_invite_rate_limit(
     single legitimate bulk call does not trip the burst guard while an
     attacker spamming single-email requests does).
 
-    Raises OnyxError(RATE_LIMITED) without recording if any tier would be
+    Raises AetherSearchError(RATE_LIMITED) without recording if any tier would be
     exceeded, so repeated rejected attempts do not consume budget.
     `num_invites` MUST be the count of new invites the request will send
     (not total emails in the body — deduplicate already-invited first).

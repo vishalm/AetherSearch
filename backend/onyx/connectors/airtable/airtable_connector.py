@@ -13,18 +13,18 @@ from pyairtable.api.types import RecordDict
 from pyairtable.models.schema import TableSchema
 from retry import retry
 
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.connectors.interfaces import GenerateDocumentsOutput
-from onyx.connectors.interfaces import LoadConnector
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import ImageSection
-from onyx.connectors.models import TextSection
-from onyx.file_processing.extract_file_text import extract_file_text
-from onyx.file_processing.extract_file_text import get_file_ext
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.connectors.interfaces import GenerateDocumentsOutput
+from aethersearch.connectors.interfaces import LoadConnector
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import ImageSection
+from aethersearch.connectors.models import TextSection
+from aethersearch.file_processing.extract_file_text import extract_file_text
+from aethersearch.file_processing.extract_file_text import get_file_ext
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

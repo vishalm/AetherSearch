@@ -12,7 +12,7 @@ import {
   openActionManagement,
   waitForUnifiedGreeting,
 } from "@tests/e2e/utils/tools";
-import { OnyxApiClient } from "@tests/e2e/utils/onyxApiClient";
+import { AetherSearchApiClient } from "@tests/e2e/utils/aethersearchApiClient";
 
 // Tool-related test selectors now imported from shared utils
 
@@ -29,7 +29,7 @@ test.describe("Default Agent Tests", () => {
     await adminPage.goto("http://localhost:3000/app");
     await adminPage.waitForLoadState("networkidle");
 
-    const apiClient = new OnyxApiClient(adminPage.request);
+    const apiClient = new AetherSearchApiClient(adminPage.request);
     try {
       imageGenConfigId = await apiClient.createImageGenerationConfig(
         `test-default-assistant-${Date.now()}`
@@ -51,7 +51,7 @@ test.describe("Default Agent Tests", () => {
       await adminPage.goto("http://localhost:3000/app");
       await adminPage.waitForLoadState("networkidle");
 
-      const apiClient = new OnyxApiClient(adminPage.request);
+      const apiClient = new AetherSearchApiClient(adminPage.request);
       await apiClient.deleteImageGenerationConfig(imageGenConfigId);
 
       await adminContext.close();
@@ -98,7 +98,7 @@ test.describe("Default Agent Tests", () => {
     test("greeting should only appear for default agent", async ({ page }) => {
       // First verify greeting appears for default agent
       const greetingElement = await page.waitForSelector(
-        '[data-testid="onyx-logo"]',
+        '[data-testid="aethersearch-logo"]',
         { timeout: 5000 }
       );
       expect(greetingElement).toBeTruthy();
@@ -122,16 +122,16 @@ test.describe("Default Agent Tests", () => {
       await verifyAgentIsChosen(page, "Custom Test Agent");
 
       // Greeting should NOT appear for custom agent
-      const customGreeting = await page.$('[data-testid="onyx-logo"]');
+      const customGreeting = await page.$('[data-testid="aethersearch-logo"]');
       expect(customGreeting).toBeNull();
     });
   });
 
   test.describe("Default Agent Branding", () => {
-    test("should display Onyx logo for default agent", async ({ page }) => {
-      // Look for Onyx logo
+    test("should display AetherSearch logo for default agent", async ({ page }) => {
+      // Look for AetherSearch logo
       const logoElement = await page.waitForSelector(
-        '[data-testid="onyx-logo"]',
+        '[data-testid="aethersearch-logo"]',
         { timeout: 5000 }
       );
       expect(logoElement).toBeTruthy();
@@ -164,7 +164,7 @@ test.describe("Default Agent Tests", () => {
       // Wait for agent to be created and selected
       await verifyAgentIsChosen(page, "Custom Agent");
 
-      // Should show agent name and icon, not Onyx logo
+      // Should show agent name and icon, not AetherSearch logo
       const agentNameElement = await page.waitForSelector(
         '[data-testid="agent-name-display"]',
         { timeout: 5000 }
@@ -172,8 +172,8 @@ test.describe("Default Agent Tests", () => {
       const nameText = await agentNameElement.textContent();
       expect(nameText).toContain("Custom Agent");
 
-      // Onyx logo should NOT be shown
-      const logoElement = await page.$('[data-testid="onyx-logo"]');
+      // AetherSearch logo should NOT be shown
+      const logoElement = await page.$('[data-testid="aethersearch-logo"]');
       expect(logoElement).toBeNull();
     });
   });
@@ -230,7 +230,7 @@ test.describe("Default Agent Tests", () => {
 
   test.describe("Agent Selection", () => {
     test("default agent should be selected for new chats", async ({ page }) => {
-      // Verify the input placeholder indicates default agent (Onyx)
+      // Verify the input placeholder indicates default agent (AetherSearch)
       await verifyDefaultAgentIsChosen(page);
     });
 
@@ -307,7 +307,7 @@ test.describe("Default Agent Tests", () => {
       await adminPage.goto("http://localhost:3000/app");
       await adminPage.waitForLoadState("networkidle");
 
-      const apiClient = new OnyxApiClient(adminPage.request);
+      const apiClient = new AetherSearchApiClient(adminPage.request);
       try {
         imageGenConfigId = await apiClient.createImageGenerationConfig(
           `test-action-toggle-${Date.now()}`
@@ -329,7 +329,7 @@ test.describe("Default Agent Tests", () => {
         await adminPage.goto("http://localhost:3000/app");
         await adminPage.waitForLoadState("networkidle");
 
-        const apiClient = new OnyxApiClient(adminPage.request);
+        const apiClient = new AetherSearchApiClient(adminPage.request);
         await apiClient.deleteImageGenerationConfig(imageGenConfigId);
 
         await adminContext.close();
@@ -354,7 +354,7 @@ test.describe("Default Agent Tests", () => {
       await page.goto("/app");
       await page.waitForLoadState("domcontentloaded");
 
-      const apiClient = new OnyxApiClient(page.request);
+      const apiClient = new AetherSearchApiClient(page.request);
       let webSearchProviderId: number | null = null;
 
       try {
@@ -545,7 +545,7 @@ test.describe("End-to-End Default Agent Flow", () => {
     await adminPage.goto("http://localhost:3000/app");
     await adminPage.waitForLoadState("networkidle");
 
-    const apiClient = new OnyxApiClient(adminPage.request);
+    const apiClient = new AetherSearchApiClient(adminPage.request);
     try {
       imageGenConfigId = await apiClient.createImageGenerationConfig(
         `test-e2e-journey-${Date.now()}`
@@ -567,7 +567,7 @@ test.describe("End-to-End Default Agent Flow", () => {
       await adminPage.goto("http://localhost:3000/app");
       await adminPage.waitForLoadState("networkidle");
 
-      const apiClient = new OnyxApiClient(adminPage.request);
+      const apiClient = new AetherSearchApiClient(adminPage.request);
       await apiClient.deleteImageGenerationConfig(imageGenConfigId);
 
       await adminContext.close();
@@ -584,10 +584,10 @@ test.describe("End-to-End Default Agent Flow", () => {
     await page.waitForLoadState("networkidle");
 
     // Verify greeting message appears
-    await expect(page.locator('[data-testid="onyx-logo"]')).toBeVisible();
+    await expect(page.locator('[data-testid="aethersearch-logo"]')).toBeVisible();
 
-    // Verify Onyx logo is displayed
-    await expect(page.locator('[data-testid="onyx-logo"]')).toBeVisible();
+    // Verify AetherSearch logo is displayed
+    await expect(page.locator('[data-testid="aethersearch-logo"]')).toBeVisible();
 
     // Send a message using the chat input
     await sendMessage(page, "Hello, can you help me?");
@@ -602,6 +602,6 @@ test.describe("End-to-End Default Agent Flow", () => {
     await startNewChat(page);
 
     // Verify we're back to default agent with greeting
-    await expect(page.locator('[data-testid="onyx-logo"]')).toBeVisible();
+    await expect(page.locator('[data-testid="aethersearch-logo"]')).toBeVisible();
   });
 });

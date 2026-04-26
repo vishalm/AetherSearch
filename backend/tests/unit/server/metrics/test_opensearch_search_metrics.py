@@ -2,13 +2,13 @@
 
 from unittest.mock import patch
 
-from onyx.document_index.opensearch.constants import OpenSearchSearchType
-from onyx.server.metrics.opensearch_search import _client_duration
-from onyx.server.metrics.opensearch_search import _search_total
-from onyx.server.metrics.opensearch_search import _searches_in_progress
-from onyx.server.metrics.opensearch_search import _server_duration
-from onyx.server.metrics.opensearch_search import observe_opensearch_search
-from onyx.server.metrics.opensearch_search import track_opensearch_search_in_progress
+from aethersearch.document_index.opensearch.constants import OpenSearchSearchType
+from aethersearch.server.metrics.opensearch_search import _client_duration
+from aethersearch.server.metrics.opensearch_search import _search_total
+from aethersearch.server.metrics.opensearch_search import _searches_in_progress
+from aethersearch.server.metrics.opensearch_search import _server_duration
+from aethersearch.server.metrics.opensearch_search import observe_opensearch_search
+from aethersearch.server.metrics.opensearch_search import track_opensearch_search_in_progress
 
 
 class TestObserveOpenSearchSearch:

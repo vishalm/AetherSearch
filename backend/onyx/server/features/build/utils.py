@@ -5,16 +5,16 @@ from pathlib import Path
 
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import NotificationType
-from onyx.db.models import User
-from onyx.db.notification import create_notification
-from onyx.feature_flags.factory import get_default_feature_flag_provider
-from onyx.feature_flags.interface import NoOpFeatureFlagProvider
-from onyx.file_processing.file_types import OnyxFileExtensions
-from onyx.file_processing.file_types import OnyxMimeTypes
-from onyx.server.features.build.configs import ENABLE_CRAFT
-from onyx.server.features.build.configs import MAX_UPLOAD_FILE_SIZE_BYTES
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import NotificationType
+from aethersearch.db.models import User
+from aethersearch.db.notification import create_notification
+from aethersearch.feature_flags.factory import get_default_feature_flag_provider
+from aethersearch.feature_flags.interface import NoOpFeatureFlagProvider
+from aethersearch.file_processing.file_types import AetherSearchFileExtensions
+from aethersearch.file_processing.file_types import AetherSearchMimeTypes
+from aethersearch.server.features.build.configs import ENABLE_CRAFT
+from aethersearch.server.features.build.configs import MAX_UPLOAD_FILE_SIZE_BYTES
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -71,13 +71,13 @@ CODE_MIME_TYPES: set[str] = {
     "application/octet-stream",  # Generic (for code files with unknown type)
 }
 
-# Combine base Onyx extensions with code file extensions
+# Combine base AetherSearch extensions with code file extensions
 ALLOWED_EXTENSIONS: set[str] = (
-    OnyxFileExtensions.ALL_ALLOWED_EXTENSIONS | CODE_FILE_EXTENSIONS
+    AetherSearchFileExtensions.ALL_ALLOWED_EXTENSIONS | CODE_FILE_EXTENSIONS
 )
 
-# Combine base Onyx MIME types with code MIME types
-ALLOWED_MIME_TYPES: set[str] = OnyxMimeTypes.ALLOWED_MIME_TYPES | CODE_MIME_TYPES
+# Combine base AetherSearch MIME types with code MIME types
+ALLOWED_MIME_TYPES: set[str] = AetherSearchMimeTypes.ALLOWED_MIME_TYPES | CODE_MIME_TYPES
 
 # Blocked extensions (executable/dangerous files)
 BLOCKED_EXTENSIONS: set[str] = {
@@ -264,9 +264,9 @@ def validate_file(
 # Build Mode Feature Announcements
 # =============================================================================
 
-# PostHog feature flag key for enabling Onyx Craft (cloud rollout control)
+# PostHog feature flag key for enabling AetherSearch Craft (cloud rollout control)
 # Flag logic: True = enabled, False/null/not found = disabled
-ONYX_CRAFT_ENABLED_FLAG = "onyx-craft-enabled"
+AETHERSEARCH_CRAFT_ENABLED_FLAG = "aethersearch-craft-enabled"
 
 # PostHog feature flag key for controlling whether a user has usage limits
 # Flag logic: True = user has usage limits (rate limits apply), False/null/not found = no limits (unlimited usage)
@@ -276,14 +276,14 @@ CRAFT_HAS_USAGE_LIMITS = "craft-has-usage-limits"
 BUILD_MODE_FEATURE_ID = "build_mode"
 
 
-def is_onyx_craft_enabled(user: User) -> bool:
+def is_aethersearch_craft_enabled(user: User) -> bool:
     """
-    Check if Onyx Craft (Build Mode) is enabled for the user.
+    Check if AetherSearch Craft (Build Mode) is enabled for the user.
 
-    Flag logic for "onyx-craft-enabled":
-    - Flag = True → enabled (Onyx Craft is available)
-    - Flag = False → disabled (Onyx Craft is not available)
-    - Flag = null/not found → disabled (Onyx Craft is not available)
+    Flag logic for "aethersearch-craft-enabled":
+    - Flag = True → enabled (AetherSearch Craft is available)
+    - Flag = False → disabled (AetherSearch Craft is not available)
+    - Flag = null/not found → disabled (AetherSearch Craft is not available)
 
     Only explicit True enables the feature.
     """
@@ -295,15 +295,15 @@ def is_onyx_craft_enabled(user: User) -> bool:
 
     # Use the feature flag provider
     is_enabled = feature_flag_provider.feature_enabled(
-        ONYX_CRAFT_ENABLED_FLAG,
+        AETHERSEARCH_CRAFT_ENABLED_FLAG,
         user.id,
     )
 
     if is_enabled:
-        logger.debug("Onyx Craft enabled via PostHog feature flag")
+        logger.debug("AetherSearch Craft enabled via PostHog feature flag")
         return True
     else:
-        logger.debug("Onyx Craft disabled via PostHog feature flag")
+        logger.debug("AetherSearch Craft disabled via PostHog feature flag")
         return False
 
 
@@ -314,8 +314,8 @@ def ensure_build_mode_intro_notification(user: User, db_session: Session) -> Non
     Called from /api/notifications endpoint. Uses notification deduplication
     to ensure each user only gets one notification.
     """
-    # PostHog feature flag check - only show notification if Onyx Craft is enabled
-    if not is_onyx_craft_enabled(user):
+    # PostHog feature flag check - only show notification if AetherSearch Craft is enabled
+    if not is_aethersearch_craft_enabled(user):
         return
 
     # Create notification (will be skipped if already exists due to deduplication)
@@ -323,7 +323,7 @@ def ensure_build_mode_intro_notification(user: User, db_session: Session) -> Non
         user_id=user.id,
         notif_type=NotificationType.FEATURE_ANNOUNCEMENT,
         db_session=db_session,
-        title="Introducing Onyx Craft",
-        description="Unleash Onyx to create dashboards, slides, documents, and more with your connected data.",
+        title="Introducing AetherSearch Craft",
+        description="Unleash AetherSearch to create dashboards, slides, documents, and more with your connected data.",
         additional_data={"feature": BUILD_MODE_FEATURE_ID},
     )

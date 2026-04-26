@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/onyx-dot-app/onyx/cli/cmd"
-	"github.com/onyx-dot-app/onyx/cli/internal/exitcodes"
+	"github.com/aethersearch-dot-app/aethersearch/cli/cmd"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/exitcodes"
 )
 
 var (

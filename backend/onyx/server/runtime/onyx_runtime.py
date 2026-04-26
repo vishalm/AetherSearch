@@ -3,25 +3,25 @@ from typing import cast
 
 from PIL import Image
 
-from onyx.background.celery.tasks.beat_schedule import CLOUD_BEAT_MULTIPLIER_DEFAULT
-from onyx.background.celery.tasks.beat_schedule import (
+from aethersearch.background.celery.tasks.beat_schedule import CLOUD_BEAT_MULTIPLIER_DEFAULT
+from aethersearch.background.celery.tasks.beat_schedule import (
     CLOUD_DOC_PERMISSION_SYNC_MULTIPLIER_DEFAULT,
 )
-from onyx.configs.app_configs import ENABLE_TENANT_WORK_GATING
-from onyx.configs.app_configs import TENANT_WORK_GATING_FULL_FANOUT_INTERVAL_SECONDS
-from onyx.configs.app_configs import TENANT_WORK_GATING_TTL_SECONDS
-from onyx.configs.constants import CLOUD_BUILD_FENCE_LOOKUP_TABLE_INTERVAL_DEFAULT
-from onyx.configs.constants import ONYX_CLOUD_REDIS_RUNTIME
-from onyx.configs.constants import ONYX_CLOUD_TENANT_ID
-from onyx.configs.constants import ONYX_EMAILABLE_LOGO_MAX_DIM
-from onyx.file_store.file_store import get_default_file_store
-from onyx.redis.redis_pool import get_redis_replica_client
-from onyx.utils.file import FileWithMimeType
-from onyx.utils.file import OnyxStaticFileManager
-from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
+from aethersearch.configs.app_configs import ENABLE_TENANT_WORK_GATING
+from aethersearch.configs.app_configs import TENANT_WORK_GATING_FULL_FANOUT_INTERVAL_SECONDS
+from aethersearch.configs.app_configs import TENANT_WORK_GATING_TTL_SECONDS
+from aethersearch.configs.constants import CLOUD_BUILD_FENCE_LOOKUP_TABLE_INTERVAL_DEFAULT
+from aethersearch.configs.constants import AETHERSEARCH_CLOUD_REDIS_RUNTIME
+from aethersearch.configs.constants import AETHERSEARCH_CLOUD_TENANT_ID
+from aethersearch.configs.constants import AETHERSEARCH_EMAILABLE_LOGO_MAX_DIM
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.redis.redis_pool import get_redis_replica_client
+from aethersearch.utils.file import FileWithMimeType
+from aethersearch.utils.file import AetherSearchStaticFileManager
+from aethersearch.utils.variable_functionality import fetch_ee_implementation_or_noop
 
 
-class OnyxRuntime:
+class AetherSearchRuntime:
     """Used by the application to get the final runtime value of a setting.
 
     Rationale: Settings and overrides may be persisted in multiple places, including the
@@ -37,64 +37,64 @@ class OnyxRuntime:
     def _get_with_static_fallback(
         db_filename: str | None, static_filename: str
     ) -> FileWithMimeType:
-        onyx_file: FileWithMimeType | None = None
+        aethersearch_file: FileWithMimeType | None = None
 
         if db_filename:
             file_store = get_default_file_store()
-            onyx_file = file_store.get_file_with_mime_type(db_filename)
+            aethersearch_file = file_store.get_file_with_mime_type(db_filename)
 
-        if not onyx_file:
-            onyx_file = OnyxStaticFileManager.get_static(static_filename)
+        if not aethersearch_file:
+            aethersearch_file = AetherSearchStaticFileManager.get_static(static_filename)
 
-        if not onyx_file:
+        if not aethersearch_file:
             raise RuntimeError(
                 f"Resource not found: db={db_filename} static={static_filename}"
             )
 
-        return onyx_file
+        return aethersearch_file
 
     @staticmethod
     def get_logo() -> FileWithMimeType:
         STATIC_FILENAME = "static/images/logo.png"
 
         db_filename: str | None = fetch_ee_implementation_or_noop(
-            "onyx.server.enterprise_settings.store", "get_logo_filename", None
+            "aethersearch.server.enterprise_settings.store", "get_logo_filename", None
         )
 
-        return OnyxRuntime._get_with_static_fallback(db_filename, STATIC_FILENAME)
+        return AetherSearchRuntime._get_with_static_fallback(db_filename, STATIC_FILENAME)
 
     @staticmethod
     def get_emailable_logo() -> FileWithMimeType:
-        onyx_file = OnyxRuntime.get_logo()
+        aethersearch_file = AetherSearchRuntime.get_logo()
 
         # check dimensions and resize downwards if necessary or if not PNG
-        image = Image.open(io.BytesIO(onyx_file.data))
+        image = Image.open(io.BytesIO(aethersearch_file.data))
         if (
-            image.size[0] > ONYX_EMAILABLE_LOGO_MAX_DIM
-            or image.size[1] > ONYX_EMAILABLE_LOGO_MAX_DIM
+            image.size[0] > AETHERSEARCH_EMAILABLE_LOGO_MAX_DIM
+            or image.size[1] > AETHERSEARCH_EMAILABLE_LOGO_MAX_DIM
             or image.format != "PNG"
         ):
             image.thumbnail(
-                (ONYX_EMAILABLE_LOGO_MAX_DIM, ONYX_EMAILABLE_LOGO_MAX_DIM),
+                (AETHERSEARCH_EMAILABLE_LOGO_MAX_DIM, AETHERSEARCH_EMAILABLE_LOGO_MAX_DIM),
                 Image.LANCZOS,
             )  # maintains aspect ratio
             output_buffer = io.BytesIO()
             image.save(output_buffer, format="PNG")
-            onyx_file = FileWithMimeType(
+            aethersearch_file = FileWithMimeType(
                 data=output_buffer.getvalue(), mime_type="image/png"
             )
 
-        return onyx_file
+        return aethersearch_file
 
     @staticmethod
     def get_logotype() -> FileWithMimeType:
         STATIC_FILENAME = "static/images/logotype.png"
 
         db_filename: str | None = fetch_ee_implementation_or_noop(
-            "onyx.server.enterprise_settings.store", "get_logotype_filename", None
+            "aethersearch.server.enterprise_settings.store", "get_logotype_filename", None
         )
 
-        return OnyxRuntime._get_with_static_fallback(db_filename, STATIC_FILENAME)
+        return AetherSearchRuntime._get_with_static_fallback(db_filename, STATIC_FILENAME)
 
     @staticmethod
     def get_beat_multiplier() -> float:
@@ -104,9 +104,9 @@ class OnyxRuntime:
 
         beat_multiplier: float = CLOUD_BEAT_MULTIPLIER_DEFAULT
 
-        r = get_redis_replica_client(tenant_id=ONYX_CLOUD_TENANT_ID)
+        r = get_redis_replica_client(tenant_id=AETHERSEARCH_CLOUD_TENANT_ID)
 
-        beat_multiplier_raw = r.get(f"{ONYX_CLOUD_REDIS_RUNTIME}:beat_multiplier")
+        beat_multiplier_raw = r.get(f"{AETHERSEARCH_CLOUD_REDIS_RUNTIME}:beat_multiplier")
         if beat_multiplier_raw is not None:
             try:
                 beat_multiplier_bytes = cast(bytes, beat_multiplier_raw)
@@ -125,9 +125,9 @@ class OnyxRuntime:
 
         value: float = CLOUD_DOC_PERMISSION_SYNC_MULTIPLIER_DEFAULT
 
-        r = get_redis_replica_client(tenant_id=ONYX_CLOUD_TENANT_ID)
+        r = get_redis_replica_client(tenant_id=AETHERSEARCH_CLOUD_TENANT_ID)
 
-        value_raw = r.get(f"{ONYX_CLOUD_REDIS_RUNTIME}:doc_permission_sync_multiplier")
+        value_raw = r.get(f"{AETHERSEARCH_CLOUD_REDIS_RUNTIME}:doc_permission_sync_multiplier")
         if value_raw is not None:
             try:
                 value_bytes = cast(bytes, value_raw)
@@ -146,8 +146,8 @@ class OnyxRuntime:
         it as a bool. Returns `default` if the key is absent or unparseable.
         `axis` is either `enabled` (compute the gate) or `enforce` (actually
         skip)."""
-        r = get_redis_replica_client(tenant_id=ONYX_CLOUD_TENANT_ID)
-        raw = r.get(f"{ONYX_CLOUD_REDIS_RUNTIME}:tenant_work_gating:{axis}")
+        r = get_redis_replica_client(tenant_id=AETHERSEARCH_CLOUD_TENANT_ID)
+        raw = r.get(f"{AETHERSEARCH_CLOUD_REDIS_RUNTIME}:tenant_work_gating:{axis}")
         if raw is None:
             return default
 
@@ -162,7 +162,7 @@ class OnyxRuntime:
         many tenants would be skipped). Env-var `ENABLE_TENANT_WORK_GATING`
         is the fallback default when no Redis override is set — it acts as
         the master switch that turns the feature on in shadow mode."""
-        return OnyxRuntime._read_tenant_work_gating_flag(
+        return AetherSearchRuntime._read_tenant_work_gating_flag(
             "enabled", default=ENABLE_TENANT_WORK_GATING
         )
 
@@ -177,7 +177,7 @@ class OnyxRuntime:
         accidentally skip real tenant traffic by flipping an env flag. Only
         meaningful when `get_tenant_work_gating_enabled()` is also True.
         """
-        return OnyxRuntime._read_tenant_work_gating_flag("enforce", default=False)
+        return AetherSearchRuntime._read_tenant_work_gating_flag("enforce", default=False)
 
     @staticmethod
     def get_tenant_work_gating_ttl_seconds() -> int:
@@ -187,8 +187,8 @@ class OnyxRuntime:
         has time to refresh memberships before they expire."""
         default = TENANT_WORK_GATING_TTL_SECONDS
 
-        r = get_redis_replica_client(tenant_id=ONYX_CLOUD_TENANT_ID)
-        raw = r.get(f"{ONYX_CLOUD_REDIS_RUNTIME}:tenant_work_gating:ttl_seconds")
+        r = get_redis_replica_client(tenant_id=AETHERSEARCH_CLOUD_TENANT_ID)
+        raw = r.get(f"{AETHERSEARCH_CLOUD_REDIS_RUNTIME}:tenant_work_gating:ttl_seconds")
         if raw is None:
             return default
 
@@ -208,9 +208,9 @@ class OnyxRuntime:
         self-heal cadence."""
         default = TENANT_WORK_GATING_FULL_FANOUT_INTERVAL_SECONDS
 
-        r = get_redis_replica_client(tenant_id=ONYX_CLOUD_TENANT_ID)
+        r = get_redis_replica_client(tenant_id=AETHERSEARCH_CLOUD_TENANT_ID)
         raw = r.get(
-            f"{ONYX_CLOUD_REDIS_RUNTIME}:tenant_work_gating:full_fanout_interval_seconds"
+            f"{AETHERSEARCH_CLOUD_REDIS_RUNTIME}:tenant_work_gating:full_fanout_interval_seconds"
         )
         if raw is None:
             return default
@@ -229,10 +229,10 @@ class OnyxRuntime:
 
         interval: int = CLOUD_BUILD_FENCE_LOOKUP_TABLE_INTERVAL_DEFAULT
 
-        r = get_redis_replica_client(tenant_id=ONYX_CLOUD_TENANT_ID)
+        r = get_redis_replica_client(tenant_id=AETHERSEARCH_CLOUD_TENANT_ID)
 
         interval_raw = r.get(
-            f"{ONYX_CLOUD_REDIS_RUNTIME}:build_fence_lookup_table_interval"
+            f"{AETHERSEARCH_CLOUD_REDIS_RUNTIME}:build_fence_lookup_table_interval"
         )
         if interval_raw is not None:
             try:

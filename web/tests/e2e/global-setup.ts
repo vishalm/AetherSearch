@@ -5,7 +5,7 @@ import {
   WORKER_USER_POOL_SIZE,
   workerUserCredentials,
 } from "@tests/e2e/constants";
-import { OnyxApiClient } from "@tests/e2e/utils/onyxApiClient";
+import { AetherSearchApiClient } from "@tests/e2e/utils/aethersearchApiClient";
 
 const PREFLIGHT_TIMEOUT_MS = 60_000;
 const PREFLIGHT_POLL_INTERVAL_MS = 2_000;
@@ -50,7 +50,7 @@ async function waitForServer(baseURL: string): Promise<void> {
   }
 
   throw new Error(
-    `Onyx is not running at ${baseURL}. ` +
+    `AetherSearch is not running at ${baseURL}. ` +
       `Timed out after ${
         PREFLIGHT_TIMEOUT_MS / 1000
       }s waiting for ${healthURL} to return 200. ` +
@@ -244,7 +244,7 @@ async function globalSetup(config: FullConfig) {
     storageState: "admin_auth.json",
   });
   try {
-    const client = new OnyxApiClient(adminCtx, baseURL);
+    const client = new AetherSearchApiClient(adminCtx, baseURL);
     await client.ensurePublicProvider();
   } finally {
     await adminCtx.dispose();

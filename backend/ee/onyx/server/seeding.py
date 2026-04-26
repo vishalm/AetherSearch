@@ -7,25 +7,25 @@ from typing import Optional
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from ee.onyx.db.standard_answer import create_initial_default_standard_answer_category
-from ee.onyx.server.enterprise_settings.models import AnalyticsScriptUpload
-from ee.onyx.server.enterprise_settings.models import EnterpriseSettings
-from ee.onyx.server.enterprise_settings.models import NavigationItem
-from ee.onyx.server.enterprise_settings.store import store_analytics_script
-from ee.onyx.server.enterprise_settings.store import store_settings as store_ee_settings
-from ee.onyx.server.enterprise_settings.store import upload_logo
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.llm import fetch_existing_llm_provider
-from onyx.db.llm import update_default_provider
-from onyx.db.llm import upsert_llm_provider
-from onyx.db.models import Tool
-from onyx.db.persona import upsert_persona
-from onyx.server.features.persona.models import PersonaUpsertRequest
-from onyx.server.manage.llm.models import LLMProviderUpsertRequest
-from onyx.server.manage.llm.models import LLMProviderView
-from onyx.server.settings.models import Settings
-from onyx.server.settings.store import store_settings as store_base_settings
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.db.standard_answer import create_initial_default_standard_answer_category
+from ee.aethersearch.server.enterprise_settings.models import AnalyticsScriptUpload
+from ee.aethersearch.server.enterprise_settings.models import EnterpriseSettings
+from ee.aethersearch.server.enterprise_settings.models import NavigationItem
+from ee.aethersearch.server.enterprise_settings.store import store_analytics_script
+from ee.aethersearch.server.enterprise_settings.store import store_settings as store_ee_settings
+from ee.aethersearch.server.enterprise_settings.store import upload_logo
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.llm import fetch_existing_llm_provider
+from aethersearch.db.llm import update_default_provider
+from aethersearch.db.llm import upsert_llm_provider
+from aethersearch.db.models import Tool
+from aethersearch.db.persona import upsert_persona
+from aethersearch.server.features.persona.models import PersonaUpsertRequest
+from aethersearch.server.manage.llm.models import LLMProviderUpsertRequest
+from aethersearch.server.manage.llm.models import LLMProviderView
+from aethersearch.server.settings.models import Settings
+from aethersearch.server.settings.store import store_settings as store_base_settings
+from aethersearch.utils.logger import setup_logger
 
 
 class CustomToolSeed(BaseModel):

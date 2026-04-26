@@ -8,9 +8,9 @@ import pytest
 from httpx import AsyncClient
 from litellm.exceptions import RateLimitError
 
-from onyx.llm.constants import LlmProviderNames
-from onyx.natural_language_processing.search_nlp_models import CloudEmbedding
-from onyx.natural_language_processing.search_nlp_models import EmbeddingModel
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.natural_language_processing.search_nlp_models import CloudEmbedding
+from aethersearch.natural_language_processing.search_nlp_models import EmbeddingModel
 from shared_configs.enums import EmbeddingProvider
 from shared_configs.enums import EmbedTextType
 from shared_configs.model_server_models import EmbedRequest
@@ -72,7 +72,7 @@ async def test_openai_embedding(
 @pytest.mark.asyncio
 async def test_rate_limit_handling() -> None:
     with patch(
-        "onyx.natural_language_processing.search_nlp_models.CloudEmbedding.embed"
+        "aethersearch.natural_language_processing.search_nlp_models.CloudEmbedding.embed"
     ) as mock_embed:
         mock_embed.side_effect = RateLimitError(
             "Rate limit exceeded",
@@ -97,7 +97,7 @@ async def test_rate_limit_handling() -> None:
 # caller contexts both work.
 # ------------------------------------------------------------------------------
 
-_SEARCH_NLP_MODULE = "onyx.natural_language_processing.search_nlp_models"
+_SEARCH_NLP_MODULE = "aethersearch.natural_language_processing.search_nlp_models"
 
 
 def _text_for_idx(i: int) -> str:

@@ -9,12 +9,12 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.cache.interface import CacheBackend
-from onyx.cache.interface import CacheLock
-from onyx.federated_connectors.oauth_utils import generate_oauth_state
-from onyx.federated_connectors.oauth_utils import OAUTH_STATE_TTL
-from onyx.federated_connectors.oauth_utils import OAuthSession
-from onyx.federated_connectors.oauth_utils import verify_oauth_state
+from aethersearch.cache.interface import CacheBackend
+from aethersearch.cache.interface import CacheLock
+from aethersearch.federated_connectors.oauth_utils import generate_oauth_state
+from aethersearch.federated_connectors.oauth_utils import OAUTH_STATE_TTL
+from aethersearch.federated_connectors.oauth_utils import OAuthSession
+from aethersearch.federated_connectors.oauth_utils import verify_oauth_state
 
 
 class _MemoryCacheBackend(CacheBackend):
@@ -63,7 +63,7 @@ class _MemoryCacheBackend(CacheBackend):
 
 def _patched(cache: _MemoryCacheBackend):
     return patch(
-        "onyx.federated_connectors.oauth_utils.get_cache_backend",
+        "aethersearch.federated_connectors.oauth_utils.get_cache_backend",
         return_value=cache,
     )
 

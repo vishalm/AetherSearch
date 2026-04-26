@@ -4,11 +4,11 @@ from urllib.parse import unquote
 
 from posthog import Posthog
 
-from ee.onyx.configs.app_configs import MARKETING_POSTHOG_API_KEY
-from ee.onyx.configs.app_configs import POSTHOG_API_KEY
-from ee.onyx.configs.app_configs import POSTHOG_DEBUG_LOGS_ENABLED
-from ee.onyx.configs.app_configs import POSTHOG_HOST
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.configs.app_configs import MARKETING_POSTHOG_API_KEY
+from ee.aethersearch.configs.app_configs import POSTHOG_API_KEY
+from ee.aethersearch.configs.app_configs import POSTHOG_DEBUG_LOGS_ENABLED
+from ee.aethersearch.configs.app_configs import POSTHOG_HOST
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()
@@ -33,7 +33,7 @@ elif MULTI_TENANT:
         "PostHog telemetry and feature flags will be disabled"
     )
 
-# For cross referencing between cloud and www Onyx sites
+# For cross referencing between cloud and www AetherSearch sites
 # NOTE: These clients are separate because they are separate posthog projects.
 # We should eventually unify them into a single posthog project,
 # which would no longer require this workaround
@@ -68,9 +68,9 @@ def capture_and_sync_with_alternate_posthog(
         logger.error(f"Error capturing marketing posthog event: {e}")
 
     try:
-        if posthog and (cloud_user_id := props.get("onyx_cloud_user_id")):
+        if posthog and (cloud_user_id := props.get("aethersearch_cloud_user_id")):
             cloud_props = props.copy()
-            cloud_props.pop("onyx_cloud_user_id", None)
+            cloud_props.pop("aethersearch_cloud_user_id", None)
 
             posthog.identify(
                 distinct_id=cloud_user_id,  # ty: ignore[possibly-unresolved-reference]
@@ -113,7 +113,7 @@ def get_anon_id_from_request(request: Any) -> str | None:
 def get_marketing_posthog_cookie_name() -> str | None:
     if not MARKETING_POSTHOG_API_KEY:
         return None
-    return f"onyx_custom_ph_{MARKETING_POSTHOG_API_KEY}_posthog"
+    return f"aethersearch_custom_ph_{MARKETING_POSTHOG_API_KEY}_posthog"
 
 
 def parse_posthog_cookie(cookie_value: str) -> dict[str, Any] | None:

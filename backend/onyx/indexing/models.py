@@ -7,21 +7,21 @@ from typing import TYPE_CHECKING
 from pydantic import BaseModel
 from pydantic import Field
 
-from onyx.access.models import DocumentAccess
-from onyx.connectors.models import Document
-from onyx.db.enums import EmbeddingPrecision
-from onyx.db.enums import SwitchoverType
-from onyx.utils.logger import setup_logger
-from onyx.utils.pydantic_util import shallow_model_dump
+from aethersearch.access.models import DocumentAccess
+from aethersearch.connectors.models import Document
+from aethersearch.db.enums import EmbeddingPrecision
+from aethersearch.db.enums import SwitchoverType
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.pydantic_util import shallow_model_dump
 from shared_configs.enums import EmbeddingProvider
 from shared_configs.model_server_models import Embedding
 
 if TYPE_CHECKING:
-    from onyx.indexing.indexing_pipeline import DocumentBatchPrepareContext
+    from aethersearch.indexing.indexing_pipeline import DocumentBatchPrepareContext
 from sqlalchemy.engine.util import TransactionalContext
 
 if TYPE_CHECKING:
-    from onyx.db.models import SearchSettings
+    from aethersearch.db.models import SearchSettings
 
 
 logger = setup_logger()
@@ -191,7 +191,7 @@ class IndexingSetting(EmbeddingModelDetail):
     multipass_indexing: bool
     # Defaults to FLOAT (float32). OpenSearch ignores embedding_precision and
     # stores vectors as float32 regardless — see
-    # onyx/document_index/opensearch/opensearch_document_index.py. BFLOAT16
+    # aethersearch/document_index/opensearch/opensearch_document_index.py. BFLOAT16
     # still works for existing Vespa deployments.
     embedding_precision: EmbeddingPrecision = EmbeddingPrecision.FLOAT
     reduced_dimension: int | None = None

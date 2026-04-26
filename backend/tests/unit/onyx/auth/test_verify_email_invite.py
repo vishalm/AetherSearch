@@ -1,9 +1,9 @@
 import pytest
 
-import onyx.auth.users as users
-from onyx.auth.users import verify_email_is_invited
-from onyx.configs.constants import AuthType
-from onyx.error_handling.exceptions import OnyxError
+import aethersearch.auth.users as users
+from aethersearch.auth.users import verify_email_is_invited
+from aethersearch.configs.constants import AuthType
+from aethersearch.error_handling.exceptions import AetherSearchError
 
 
 @pytest.mark.parametrize("auth_type", [AuthType.SAML, AuthType.OIDC])
@@ -35,7 +35,7 @@ def test_verify_email_is_invited_enforced_for_basic_auth(
         raising=False,
     )
 
-    with pytest.raises(OnyxError) as exc:
+    with pytest.raises(AetherSearchError) as exc:
         verify_email_is_invited("newuser@example.com")
     assert exc.value.status_code == 403
 

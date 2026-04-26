@@ -20,12 +20,12 @@ from functools import lru_cache
 
 from pydantic import BaseModel
 
-from onyx.llm.constants import AGGREGATOR_PROVIDERS
-from onyx.llm.constants import HYPHENATED_MODEL_NAMES
-from onyx.llm.constants import LlmProviderNames
-from onyx.llm.constants import MODEL_PREFIX_TO_VENDOR
-from onyx.llm.constants import PROVIDER_DISPLAY_NAMES
-from onyx.llm.constants import VENDOR_BRAND_NAMES
+from aethersearch.llm.constants import AGGREGATOR_PROVIDERS
+from aethersearch.llm.constants import HYPHENATED_MODEL_NAMES
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.llm.constants import MODEL_PREFIX_TO_VENDOR
+from aethersearch.llm.constants import PROVIDER_DISPLAY_NAMES
+from aethersearch.llm.constants import VENDOR_BRAND_NAMES
 
 
 class ParsedModelName(BaseModel):
@@ -42,7 +42,7 @@ class ParsedModelName(BaseModel):
 
 def _get_model_info(model_key: str) -> dict:
     """Get model info from litellm.model_cost."""
-    from onyx.llm.litellm_singleton import litellm
+    from aethersearch.llm.litellm_singleton import litellm
 
     # Try exact key first
     info = litellm.model_cost.get(model_key)
@@ -58,7 +58,7 @@ def _get_model_info(model_key: str) -> dict:
 
 def _extract_provider(model_key: str) -> str:
     """Extract provider from model key prefix."""
-    from onyx.llm.litellm_singleton import litellm
+    from aethersearch.llm.litellm_singleton import litellm
 
     if "/" in model_key:
         return model_key.split("/")[0]

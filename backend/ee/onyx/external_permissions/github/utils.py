@@ -15,12 +15,12 @@ from github.Repository import Repository
 from github.Team import Team
 from pydantic import BaseModel
 
-from ee.onyx.db.external_perm import ExternalUserGroup
-from onyx.access.models import ExternalAccess
-from onyx.access.utils import build_ext_group_name_for_onyx
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.github.rate_limit_utils import sleep_after_rate_limit_exception
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.db.external_perm import ExternalUserGroup
+from aethersearch.access.models import ExternalAccess
+from aethersearch.access.utils import build_ext_group_name_for_aethersearch
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.github.rate_limit_utils import sleep_after_rate_limit_exception
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -340,11 +340,11 @@ def get_external_access_permission(
         collaborators_group_id = form_collaborators_group_id(repo.id)
         outside_collaborators_group_id = form_outside_collaborators_group_id(repo.id)
         if add_prefix:
-            collaborators_group_id = build_ext_group_name_for_onyx(
+            collaborators_group_id = build_ext_group_name_for_aethersearch(
                 source=DocumentSource.GITHUB,
                 ext_group_name=collaborators_group_id,
             )
-            outside_collaborators_group_id = build_ext_group_name_for_onyx(
+            outside_collaborators_group_id = build_ext_group_name_for_aethersearch(
                 source=DocumentSource.GITHUB,
                 ext_group_name=outside_collaborators_group_id,
             )
@@ -353,7 +353,7 @@ def get_external_access_permission(
         team_slugs = fetch_repository_team_slugs(repo, github_client)
         if add_prefix:
             team_slugs = [
-                build_ext_group_name_for_onyx(
+                build_ext_group_name_for_aethersearch(
                     source=DocumentSource.GITHUB,
                     ext_group_name=slug,
                 )
@@ -374,7 +374,7 @@ def get_external_access_permission(
         )
         org_group_id = form_organization_group_id(repo.organization.id)
         if add_prefix:
-            org_group_id = build_ext_group_name_for_onyx(
+            org_group_id = build_ext_group_name_for_aethersearch(
                 source=DocumentSource.GITHUB,
                 ext_group_name=org_group_id,
             )

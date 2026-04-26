@@ -14,14 +14,14 @@ from unittest.mock import patch
 import pytest
 from sqlalchemy.orm import Session
 
-TOOL_MODULE = "onyx.tools.tool_implementations.python.python_tool"
-CLIENT_MODULE = "onyx.tools.tool_implementations.python.code_interpreter_client"
+TOOL_MODULE = "aethersearch.tools.tool_implementations.python.python_tool"
+CLIENT_MODULE = "aethersearch.tools.tool_implementations.python.code_interpreter_client"
 
 
 @pytest.fixture(autouse=True)
 def _clear_health_cache() -> None:
     """Reset the health check cache before every test."""
-    import onyx.tools.tool_implementations.python.code_interpreter_client as mod
+    import aethersearch.tools.tool_implementations.python.code_interpreter_client as mod
 
     mod._health_cache = {}
 
@@ -33,7 +33,7 @@ def _clear_health_cache() -> None:
 
 @patch(f"{TOOL_MODULE}.CODE_INTERPRETER_BASE_URL", None)
 def test_python_tool_unavailable_without_base_url() -> None:
-    from onyx.tools.tool_implementations.python.python_tool import PythonTool
+    from aethersearch.tools.tool_implementations.python.python_tool import PythonTool
 
     db_session = MagicMock(spec=Session)
     assert PythonTool.is_available(db_session) is False
@@ -41,7 +41,7 @@ def test_python_tool_unavailable_without_base_url() -> None:
 
 @patch(f"{TOOL_MODULE}.CODE_INTERPRETER_BASE_URL", "")
 def test_python_tool_unavailable_with_empty_base_url() -> None:
-    from onyx.tools.tool_implementations.python.python_tool import PythonTool
+    from aethersearch.tools.tool_implementations.python.python_tool import PythonTool
 
     db_session = MagicMock(spec=Session)
     assert PythonTool.is_available(db_session) is False
@@ -57,7 +57,7 @@ def test_python_tool_unavailable_with_empty_base_url() -> None:
 def test_python_tool_unavailable_when_server_disabled(
     mock_fetch: MagicMock,
 ) -> None:
-    from onyx.tools.tool_implementations.python.python_tool import PythonTool
+    from aethersearch.tools.tool_implementations.python.python_tool import PythonTool
 
     mock_server = MagicMock()
     mock_server.server_enabled = False
@@ -79,7 +79,7 @@ def test_python_tool_available_when_health_check_passes(
     mock_client_cls: MagicMock,
     mock_fetch: MagicMock,
 ) -> None:
-    from onyx.tools.tool_implementations.python.python_tool import PythonTool
+    from aethersearch.tools.tool_implementations.python.python_tool import PythonTool
 
     mock_server = MagicMock()
     mock_server.server_enabled = True
@@ -102,7 +102,7 @@ def test_python_tool_unavailable_when_health_check_fails(
     mock_client_cls: MagicMock,
     mock_fetch: MagicMock,
 ) -> None:
-    from onyx.tools.tool_implementations.python.python_tool import PythonTool
+    from aethersearch.tools.tool_implementations.python.python_tool import PythonTool
 
     mock_server = MagicMock()
     mock_server.server_enabled = True
@@ -130,7 +130,7 @@ def test_health_check_not_called_when_server_disabled(
     mock_client_cls: MagicMock,
     mock_fetch: MagicMock,
 ) -> None:
-    from onyx.tools.tool_implementations.python.python_tool import PythonTool
+    from aethersearch.tools.tool_implementations.python.python_tool import PythonTool
 
     mock_server = MagicMock()
     mock_server.server_enabled = False
@@ -147,7 +147,7 @@ def test_health_check_not_called_when_server_disabled(
 
 
 def test_health_check_cached_on_second_call() -> None:
-    from onyx.tools.tool_implementations.python.code_interpreter_client import (
+    from aethersearch.tools.tool_implementations.python.code_interpreter_client import (
         CodeInterpreterClient,
     )
 
@@ -164,10 +164,10 @@ def test_health_check_cached_on_second_call() -> None:
 
 @patch(f"{CLIENT_MODULE}.time")
 def test_health_check_refreshed_after_ttl_expires(mock_time: MagicMock) -> None:
-    from onyx.tools.tool_implementations.python.code_interpreter_client import (
+    from aethersearch.tools.tool_implementations.python.code_interpreter_client import (
         _HEALTH_CACHE_TTL_SECONDS,
     )
-    from onyx.tools.tool_implementations.python.code_interpreter_client import (
+    from aethersearch.tools.tool_implementations.python.code_interpreter_client import (
         CodeInterpreterClient,
     )
 
@@ -193,7 +193,7 @@ def test_health_check_refreshed_after_ttl_expires(mock_time: MagicMock) -> None:
 
 
 def test_health_check_no_cache_by_default() -> None:
-    from onyx.tools.tool_implementations.python.code_interpreter_client import (
+    from aethersearch.tools.tool_implementations.python.code_interpreter_client import (
         CodeInterpreterClient,
     )
 

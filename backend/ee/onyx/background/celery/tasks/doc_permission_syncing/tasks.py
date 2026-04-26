@@ -21,75 +21,75 @@ from tenacity import retry_if_exception
 from tenacity import stop_after_delay
 from tenacity import wait_random_exponential
 
-from ee.onyx.db.connector_credential_pair import get_all_auto_sync_cc_pairs
-from ee.onyx.db.document import upsert_document_external_perms
-from ee.onyx.external_permissions.sync_params import get_source_perm_sync_config
-from onyx.access.models import DocExternalAccess
-from onyx.access.models import ElementExternalAccess
-from onyx.background.celery.apps.app_base import task_logger
-from onyx.background.celery.celery_redis import celery_find_task
-from onyx.background.celery.celery_redis import celery_get_broker_client
-from onyx.background.celery.celery_redis import celery_get_queue_length
-from onyx.background.celery.celery_redis import celery_get_queued_task_ids
-from onyx.background.celery.celery_redis import celery_get_unacked_task_ids
-from onyx.background.celery.tasks.beat_schedule import CLOUD_BEAT_MULTIPLIER_DEFAULT
-from onyx.configs.app_configs import JOB_TIMEOUT
-from onyx.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
-from onyx.configs.constants import CELERY_PERMISSIONS_SYNC_LOCK_TIMEOUT
-from onyx.configs.constants import CELERY_TASK_WAIT_FOR_FENCE_TIMEOUT
-from onyx.configs.constants import DANSWER_REDIS_FUNCTION_LOCK_PREFIX
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import OnyxRedisConstants
-from onyx.configs.constants import OnyxRedisLocks
-from onyx.configs.constants import OnyxRedisSignals
-from onyx.connectors.factory import validate_ccpair_for_user
-from onyx.db.connector import mark_cc_pair_as_permissions_synced
-from onyx.db.connector_credential_pair import get_connector_credential_pair_from_id
-from onyx.db.document import get_document_ids_for_connector_credential_pair
-from onyx.db.document import get_documents_for_connector_credential_pair_limited_columns
-from onyx.db.document import upsert_document_by_connector_credential_pair
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.engine.sql_engine import get_session_with_tenant
-from onyx.db.enums import AccessType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import SyncStatus
-from onyx.db.enums import SyncType
-from onyx.db.hierarchy import (
+from ee.aethersearch.db.connector_credential_pair import get_all_auto_sync_cc_pairs
+from ee.aethersearch.db.document import upsert_document_external_perms
+from ee.aethersearch.external_permissions.sync_params import get_source_perm_sync_config
+from aethersearch.access.models import DocExternalAccess
+from aethersearch.access.models import ElementExternalAccess
+from aethersearch.background.celery.apps.app_base import task_logger
+from aethersearch.background.celery.celery_redis import celery_find_task
+from aethersearch.background.celery.celery_redis import celery_get_broker_client
+from aethersearch.background.celery.celery_redis import celery_get_queue_length
+from aethersearch.background.celery.celery_redis import celery_get_queued_task_ids
+from aethersearch.background.celery.celery_redis import celery_get_unacked_task_ids
+from aethersearch.background.celery.tasks.beat_schedule import CLOUD_BEAT_MULTIPLIER_DEFAULT
+from aethersearch.configs.app_configs import JOB_TIMEOUT
+from aethersearch.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
+from aethersearch.configs.constants import CELERY_PERMISSIONS_SYNC_LOCK_TIMEOUT
+from aethersearch.configs.constants import CELERY_TASK_WAIT_FOR_FENCE_TIMEOUT
+from aethersearch.configs.constants import DANSWER_REDIS_FUNCTION_LOCK_PREFIX
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import AetherSearchRedisConstants
+from aethersearch.configs.constants import AetherSearchRedisLocks
+from aethersearch.configs.constants import AetherSearchRedisSignals
+from aethersearch.connectors.factory import validate_ccpair_for_user
+from aethersearch.db.connector import mark_cc_pair_as_permissions_synced
+from aethersearch.db.connector_credential_pair import get_connector_credential_pair_from_id
+from aethersearch.db.document import get_document_ids_for_connector_credential_pair
+from aethersearch.db.document import get_documents_for_connector_credential_pair_limited_columns
+from aethersearch.db.document import upsert_document_by_connector_credential_pair
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.engine.sql_engine import get_session_with_tenant
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import SyncStatus
+from aethersearch.db.enums import SyncType
+from aethersearch.db.hierarchy import (
     update_hierarchy_node_permissions as db_update_hierarchy_node_permissions,
 )
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.permission_sync_attempt import complete_doc_permission_sync_attempt
-from onyx.db.permission_sync_attempt import create_doc_permission_sync_attempt
-from onyx.db.permission_sync_attempt import mark_doc_permission_sync_attempt_failed
-from onyx.db.permission_sync_attempt import mark_doc_permission_sync_attempt_in_progress
-from onyx.db.sync_record import insert_sync_record
-from onyx.db.sync_record import update_sync_record_status
-from onyx.db.users import batch_add_ext_perm_user_if_not_exists
-from onyx.db.utils import DocumentRow
-from onyx.db.utils import is_retryable_sqlalchemy_error
-from onyx.db.utils import SortOrder
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.redis.redis_connector import RedisConnector
-from onyx.redis.redis_connector_doc_perm_sync import RedisConnectorPermissionSync
-from onyx.redis.redis_connector_doc_perm_sync import RedisConnectorPermissionSyncPayload
-from onyx.redis.redis_pool import get_redis_client
-from onyx.redis.redis_pool import get_redis_replica_client
-from onyx.redis.redis_pool import redis_lock_dump
-from onyx.redis.redis_tenant_work_gating import maybe_mark_tenant_active
-from onyx.server.metrics.perm_sync_metrics import inc_doc_perm_sync_docs_processed
-from onyx.server.metrics.perm_sync_metrics import inc_doc_perm_sync_errors
-from onyx.server.metrics.perm_sync_metrics import observe_doc_perm_sync_duration
-from onyx.server.runtime.onyx_runtime import OnyxRuntime
-from onyx.server.utils import make_short_id
-from onyx.utils.logger import doc_permission_sync_ctx
-from onyx.utils.logger import format_error_for_logging
-from onyx.utils.logger import LoggerContextVars
-from onyx.utils.logger import setup_logger
-from onyx.utils.telemetry import optional_telemetry
-from onyx.utils.telemetry import RecordType
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.permission_sync_attempt import complete_doc_permission_sync_attempt
+from aethersearch.db.permission_sync_attempt import create_doc_permission_sync_attempt
+from aethersearch.db.permission_sync_attempt import mark_doc_permission_sync_attempt_failed
+from aethersearch.db.permission_sync_attempt import mark_doc_permission_sync_attempt_in_progress
+from aethersearch.db.sync_record import insert_sync_record
+from aethersearch.db.sync_record import update_sync_record_status
+from aethersearch.db.users import batch_add_ext_perm_user_if_not_exists
+from aethersearch.db.utils import DocumentRow
+from aethersearch.db.utils import is_retryable_sqlalchemy_error
+from aethersearch.db.utils import SortOrder
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.redis.redis_connector import RedisConnector
+from aethersearch.redis.redis_connector_doc_perm_sync import RedisConnectorPermissionSync
+from aethersearch.redis.redis_connector_doc_perm_sync import RedisConnectorPermissionSyncPayload
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.redis.redis_pool import get_redis_replica_client
+from aethersearch.redis.redis_pool import redis_lock_dump
+from aethersearch.redis.redis_tenant_work_gating import maybe_mark_tenant_active
+from aethersearch.server.metrics.perm_sync_metrics import inc_doc_perm_sync_docs_processed
+from aethersearch.server.metrics.perm_sync_metrics import inc_doc_perm_sync_errors
+from aethersearch.server.metrics.perm_sync_metrics import observe_doc_perm_sync_duration
+from aethersearch.server.runtime.aethersearch_runtime import AetherSearchRuntime
+from aethersearch.server.utils import make_short_id
+from aethersearch.utils.logger import doc_permission_sync_ctx
+from aethersearch.utils.logger import format_error_for_logging
+from aethersearch.utils.logger import LoggerContextVars
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.telemetry import optional_telemetry
+from aethersearch.utils.telemetry import RecordType
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()
@@ -116,7 +116,7 @@ def _get_fence_validation_block_expiration() -> int:
         return base_expiration
 
     try:
-        beat_multiplier = OnyxRuntime.get_beat_multiplier()
+        beat_multiplier = AetherSearchRuntime.get_beat_multiplier()
     except Exception:
         beat_multiplier = CLOUD_BEAT_MULTIPLIER_DEFAULT
 
@@ -167,7 +167,7 @@ def _is_external_doc_permissions_sync_due(cc_pair: ConnectorCredentialPair) -> b
         return True
 
     source_sync_period = sync_config.doc_sync_config.doc_sync_frequency
-    source_sync_period *= int(OnyxRuntime.get_doc_permission_sync_multiplier())
+    source_sync_period *= int(AetherSearchRuntime.get_doc_permission_sync_multiplier())
 
     # If the last sync is greater than the full fetch period, we run the sync
     next_sync = last_perm_sync + timedelta(seconds=source_sync_period)
@@ -178,7 +178,7 @@ def _is_external_doc_permissions_sync_due(cc_pair: ConnectorCredentialPair) -> b
 
 
 @shared_task(
-    name=OnyxCeleryTask.CHECK_FOR_DOC_PERMISSIONS_SYNC,
+    name=AetherSearchCeleryTask.CHECK_FOR_DOC_PERMISSIONS_SYNC,
     ignore_result=True,
     soft_time_limit=JOB_TIMEOUT,
     bind=True,
@@ -192,7 +192,7 @@ def check_for_doc_permissions_sync(self: Task, *, tenant_id: str) -> bool | None
     r_replica = get_redis_replica_client()
 
     lock_beat: RedisLock = r.lock(
-        OnyxRedisLocks.CHECK_CONNECTOR_DOC_PERMISSIONS_SYNC_BEAT_LOCK,
+        AetherSearchRedisLocks.CHECK_CONNECTOR_DOC_PERMISSIONS_SYNC_BEAT_LOCK,
         timeout=CELERY_GENERIC_BEAT_LOCK_TIMEOUT,
     )
 
@@ -229,7 +229,7 @@ def check_for_doc_permissions_sync(self: Task, *, tenant_id: str) -> bool | None
 
         # we want to run this less frequently than the overall task
         lock_beat.reacquire()
-        if not r.exists(OnyxRedisSignals.BLOCK_VALIDATE_PERMISSION_SYNC_FENCES):
+        if not r.exists(AetherSearchRedisSignals.BLOCK_VALIDATE_PERMISSION_SYNC_FENCES):
             # clear any permission fences that don't have associated celery tasks in progress
             # tasks can be in the queue in redis, in reserved tasks (prefetched by the worker),
             # or be currently executing
@@ -244,7 +244,7 @@ def check_for_doc_permissions_sync(self: Task, *, tenant_id: str) -> bool | None
                 )
 
             r.set(
-                OnyxRedisSignals.BLOCK_VALIDATE_PERMISSION_SYNC_FENCES,
+                AetherSearchRedisSignals.BLOCK_VALIDATE_PERMISSION_SYNC_FENCES,
                 1,
                 ex=_get_fence_validation_block_expiration(),
             )
@@ -252,12 +252,12 @@ def check_for_doc_permissions_sync(self: Task, *, tenant_id: str) -> bool | None
         # use a lookup table to find active fences. We still have to verify the fence
         # exists since it is an optimization and not the source of truth.
         lock_beat.reacquire()
-        keys = cast(set[Any], r_replica.smembers(OnyxRedisConstants.ACTIVE_FENCES))
+        keys = cast(set[Any], r_replica.smembers(AetherSearchRedisConstants.ACTIVE_FENCES))
         for key in keys:
             key_bytes = cast(bytes, key)
 
             if not r.exists(key_bytes):
-                r.srem(OnyxRedisConstants.ACTIVE_FENCES, key_bytes)
+                r.srem(AetherSearchRedisConstants.ACTIVE_FENCES, key_bytes)
                 continue
 
             key_str = key_bytes.decode("utf-8")
@@ -347,14 +347,14 @@ def try_creating_permissions_sync_task(
         redis_connector.permissions.set_fence(payload)
 
         result = app.send_task(
-            OnyxCeleryTask.CONNECTOR_PERMISSION_SYNC_GENERATOR_TASK,
+            AetherSearchCeleryTask.CONNECTOR_PERMISSION_SYNC_GENERATOR_TASK,
             kwargs=dict(
                 cc_pair_id=cc_pair_id,
                 tenant_id=tenant_id,
             ),
-            queue=OnyxCeleryQueues.CONNECTOR_DOC_PERMISSIONS_SYNC,
+            queue=AetherSearchCeleryQueues.CONNECTOR_DOC_PERMISSIONS_SYNC,
             task_id=custom_task_id,
-            priority=OnyxCeleryPriority.MEDIUM,
+            priority=AetherSearchCeleryPriority.MEDIUM,
         )
 
         # fill in the celery task id
@@ -379,7 +379,7 @@ def try_creating_permissions_sync_task(
 
 
 @shared_task(
-    name=OnyxCeleryTask.CONNECTOR_PERMISSION_SYNC_GENERATOR_TASK,
+    name=AetherSearchCeleryTask.CONNECTOR_PERMISSION_SYNC_GENERATOR_TASK,
     acks_late=False,
     soft_time_limit=JOB_TIMEOUT,
     track_started=True,
@@ -461,7 +461,7 @@ def connector_permission_sync_generator_task(
         break
 
     lock: RedisLock = r.lock(
-        OnyxRedisLocks.CONNECTOR_DOC_PERMISSIONS_SYNC_LOCK_PREFIX
+        AetherSearchRedisLocks.CONNECTOR_DOC_PERMISSIONS_SYNC_LOCK_PREFIX
         + f"_{redis_connector.cc_pair_id}",
         timeout=CELERY_PERMISSIONS_SYNC_LOCK_TIMEOUT,
         thread_local=False,
@@ -756,21 +756,21 @@ def validate_permission_sync_fences(
     PERMISSION_SYNC_VALIDATION_MAX_QUEUE_LEN = 1024
 
     queue_len = celery_get_queue_length(
-        OnyxCeleryQueues.DOC_PERMISSIONS_UPSERT, r_celery
+        AetherSearchCeleryQueues.DOC_PERMISSIONS_UPSERT, r_celery
     )
     if queue_len > PERMISSION_SYNC_VALIDATION_MAX_QUEUE_LEN:
         return
 
     queued_upsert_tasks = celery_get_queued_task_ids(
-        OnyxCeleryQueues.DOC_PERMISSIONS_UPSERT, r_celery
+        AetherSearchCeleryQueues.DOC_PERMISSIONS_UPSERT, r_celery
     )
     reserved_generator_tasks = celery_get_unacked_task_ids(
-        OnyxCeleryQueues.CONNECTOR_DOC_PERMISSIONS_SYNC, r_celery
+        AetherSearchCeleryQueues.CONNECTOR_DOC_PERMISSIONS_SYNC, r_celery
     )
 
     # validate all existing permission sync jobs
     lock_beat.reacquire()
-    keys = cast(set[Any], r_replica.smembers(OnyxRedisConstants.ACTIVE_FENCES))
+    keys = cast(set[Any], r_replica.smembers(AetherSearchRedisConstants.ACTIVE_FENCES))
     for key in keys:
         key_bytes = cast(bytes, key)
         key_str = key_bytes.decode("utf-8")
@@ -869,7 +869,7 @@ def validate_permission_sync_fence(
     # either the generator task must be in flight or its subtasks must be
     found = celery_find_task(
         payload.celery_task_id,
-        OnyxCeleryQueues.CONNECTOR_DOC_PERMISSIONS_SYNC,
+        AetherSearchCeleryQueues.CONNECTOR_DOC_PERMISSIONS_SYNC,
         r_celery,
     )
     if found:

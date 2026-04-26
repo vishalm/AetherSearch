@@ -1,11 +1,11 @@
 import pytest
 
-from onyx.auth.email_utils import build_user_email_invite
-from onyx.auth.email_utils import send_email
-from onyx.configs.constants import AuthType
-from onyx.configs.constants import ONYX_DEFAULT_APPLICATION_NAME
-from onyx.db.engine.sql_engine import SqlEngine
-from onyx.server.runtime.onyx_runtime import OnyxRuntime
+from aethersearch.auth.email_utils import build_user_email_invite
+from aethersearch.auth.email_utils import send_email
+from aethersearch.configs.constants import AuthType
+from aethersearch.configs.constants import AETHERSEARCH_DEFAULT_APPLICATION_NAME
+from aethersearch.db.engine.sql_engine import SqlEngine
+from aethersearch.server.runtime.aethersearch_runtime import AetherSearchRuntime
 
 
 @pytest.mark.skip(
@@ -14,16 +14,16 @@ from onyx.server.runtime.onyx_runtime import OnyxRuntime
 def test_send_user_email_invite() -> None:
     SqlEngine.init_engine(pool_size=20, max_overflow=5)
 
-    application_name = ONYX_DEFAULT_APPLICATION_NAME
+    application_name = AETHERSEARCH_DEFAULT_APPLICATION_NAME
 
-    onyx_file = OnyxRuntime.get_emailable_logo()
+    aethersearch_file = AetherSearchRuntime.get_emailable_logo()
 
     subject = f"Invitation to Join {application_name} Organization"
 
-    FROM_EMAIL = "noreply@onyx.app"
-    TO_EMAIL = "support@onyx.app"
+    FROM_EMAIL = "noreply@aethersearch.app"
+    TO_EMAIL = "support@aethersearch.app"
     text_content, html_content = build_user_email_invite(
-        FROM_EMAIL, TO_EMAIL, ONYX_DEFAULT_APPLICATION_NAME, AuthType.CLOUD
+        FROM_EMAIL, TO_EMAIL, AETHERSEARCH_DEFAULT_APPLICATION_NAME, AuthType.CLOUD
     )
 
     send_email(
@@ -32,5 +32,5 @@ def test_send_user_email_invite() -> None:
         html_content,
         text_content,
         mail_from=FROM_EMAIL,
-        inline_png=("logo.png", onyx_file.data),
+        inline_png=("logo.png", aethersearch_file.data),
     )

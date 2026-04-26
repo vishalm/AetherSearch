@@ -8,13 +8,13 @@ from typing import TYPE_CHECKING
 
 from pydantic import BaseModel
 
-from onyx.image_gen.exceptions import ImageProviderCredentialsError
-from onyx.image_gen.interfaces import ImageGenerationProvider
-from onyx.image_gen.interfaces import ImageGenerationProviderCredentials
-from onyx.image_gen.interfaces import ReferenceImage
+from aethersearch.image_gen.exceptions import ImageProviderCredentialsError
+from aethersearch.image_gen.interfaces import ImageGenerationProvider
+from aethersearch.image_gen.interfaces import ImageGenerationProviderCredentials
+from aethersearch.image_gen.interfaces import ReferenceImage
 
 if TYPE_CHECKING:
-    from onyx.image_gen.interfaces import ImageGenerationResponse
+    from aethersearch.image_gen.interfaces import ImageGenerationResponse
 
 
 class VertexCredentials(BaseModel):

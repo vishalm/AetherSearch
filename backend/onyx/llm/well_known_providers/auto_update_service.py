@@ -13,12 +13,12 @@ from datetime import datetime
 import httpx
 from sqlalchemy.orm import Session
 
-from onyx.cache.factory import get_cache_backend
-from onyx.configs.app_configs import AUTO_LLM_CONFIG_URL
-from onyx.db.llm import fetch_auto_mode_providers
-from onyx.db.llm import sync_auto_mode_models
-from onyx.llm.well_known_providers.auto_update_models import LLMRecommendations
-from onyx.utils.logger import setup_logger
+from aethersearch.cache.factory import get_cache_backend
+from aethersearch.configs.app_configs import AUTO_LLM_CONFIG_URL
+from aethersearch.db.llm import fetch_auto_mode_providers
+from aethersearch.db.llm import sync_auto_mode_models
+from aethersearch.llm.well_known_providers.auto_update_models import LLMRecommendations
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

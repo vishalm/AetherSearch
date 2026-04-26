@@ -10,8 +10,8 @@ from typing import Union
 import requests
 from pydantic import BaseModel
 
-from onyx.configs.app_configs import CODE_INTERPRETER_BASE_URL
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import CODE_INTERPRETER_BASE_URL
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

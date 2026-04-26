@@ -11,10 +11,10 @@ from uuid import uuid4
 import pytest
 from sqlalchemy.orm import Session
 
-from ee.onyx.db.hierarchy import _get_accessible_hierarchy_nodes_for_source
-from onyx.configs.constants import DocumentSource
-from onyx.db.enums import HierarchyNodeType
-from onyx.db.models import HierarchyNode
+from ee.aethersearch.db.hierarchy import _get_accessible_hierarchy_nodes_for_source
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.db.enums import HierarchyNodeType
+from aethersearch.db.models import HierarchyNode
 
 
 def _make_node(

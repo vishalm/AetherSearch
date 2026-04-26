@@ -2,13 +2,13 @@ package api
 
 import "fmt"
 
-// OnyxAPIError is returned when an Onyx API call fails.
-type OnyxAPIError struct {
+// AetherSearchAPIError is returned when an AetherSearch API call fails.
+type AetherSearchAPIError struct {
 	StatusCode int
 	Detail     string
 }
 
-func (e *OnyxAPIError) Error() string {
+func (e *AetherSearchAPIError) Error() string {
 	return fmt.Sprintf("HTTP %d: %s", e.StatusCode, e.Detail)
 }
 

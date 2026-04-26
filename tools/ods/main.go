@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/onyx-dot-app/onyx/tools/ods/cmd"
+	"github.com/aethersearch-dot-app/aethersearch/tools/ods/cmd"
 )
 
 var (

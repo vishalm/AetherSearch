@@ -13,16 +13,16 @@ from fastapi import WebSocket
 from fastapi import WebSocketDisconnect
 from sqlalchemy.orm import Session
 
-from onyx.auth.users import current_user_from_websocket
-from onyx.db.engine.sql_engine import get_sqlalchemy_engine
-from onyx.db.models import User
-from onyx.db.voice import fetch_default_stt_provider
-from onyx.db.voice import fetch_default_tts_provider
-from onyx.utils.logger import setup_logger
-from onyx.voice.factory import get_voice_provider
-from onyx.voice.interface import StreamingSynthesizerProtocol
-from onyx.voice.interface import StreamingTranscriberProtocol
-from onyx.voice.interface import TranscriptResult
+from aethersearch.auth.users import current_user_from_websocket
+from aethersearch.db.engine.sql_engine import get_sqlalchemy_engine
+from aethersearch.db.models import User
+from aethersearch.db.voice import fetch_default_stt_provider
+from aethersearch.db.voice import fetch_default_tts_provider
+from aethersearch.utils.logger import setup_logger
+from aethersearch.voice.factory import get_voice_provider
+from aethersearch.voice.interface import StreamingSynthesizerProtocol
+from aethersearch.voice.interface import StreamingTranscriberProtocol
+from aethersearch.voice.interface import TranscriptResult
 
 logger = setup_logger()
 

@@ -5,19 +5,19 @@ import os
 from typing import Any
 from typing import TypeVar
 
-from onyx.configs.app_configs import API_SERVER_HOST
-from onyx.configs.app_configs import API_SERVER_PROTOCOL
-from onyx.configs.app_configs import API_SERVER_URL_OVERRIDE_FOR_HTTP_REQUESTS
-from onyx.configs.app_configs import APP_API_PREFIX
-from onyx.configs.app_configs import APP_PORT
-from onyx.configs.app_configs import DEV_MODE
-from onyx.configs.app_configs import ENTERPRISE_EDITION_ENABLED
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import API_SERVER_HOST
+from aethersearch.configs.app_configs import API_SERVER_PROTOCOL
+from aethersearch.configs.app_configs import API_SERVER_URL_OVERRIDE_FOR_HTTP_REQUESTS
+from aethersearch.configs.app_configs import APP_API_PREFIX
+from aethersearch.configs.app_configs import APP_PORT
+from aethersearch.configs.app_configs import DEV_MODE
+from aethersearch.configs.app_configs import ENTERPRISE_EDITION_ENABLED
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
 
-class OnyxVersion:
+class AetherSearchVersion:
     def __init__(self) -> None:
         self._is_ee = False
 
@@ -31,7 +31,7 @@ class OnyxVersion:
         return self._is_ee
 
 
-global_version = OnyxVersion()
+global_version = AetherSearchVersion()
 
 # Read LICENSE_ENFORCEMENT_ENABLED directly since it's in EE configs
 # This allows EE code to load when license enforcement is enabled,
@@ -105,8 +105,8 @@ def fetch_versioned_implementation(module: str, attribute: str) -> Any:
         )
 
         if is_ee:
-            if "ee.onyx" not in str(e):
-                # If it's a non Onyx related import failure, this is likely because
+            if "ee.aethersearch" not in str(e):
+                # If it's a non AetherSearch related import failure, this is likely because
                 # a dependent library has not been installed. Should raise this failure
                 # instead of letting the server start up
                 raise e

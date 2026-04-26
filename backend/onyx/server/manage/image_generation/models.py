@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from pydantic import BaseModel
 
 if TYPE_CHECKING:
-    from onyx.db.models import ImageGenerationConfig as ImageGenerationConfigModel
+    from aethersearch.db.models import ImageGenerationConfig as ImageGenerationConfigModel
 
 
 def _mask_api_key(api_key: str | None) -> str | None:

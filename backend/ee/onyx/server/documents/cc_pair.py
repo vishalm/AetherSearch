@@ -6,23 +6,23 @@ from fastapi import Depends
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from ee.onyx.background.celery.tasks.doc_permission_syncing.tasks import (
+from ee.aethersearch.background.celery.tasks.doc_permission_syncing.tasks import (
     try_creating_permissions_sync_task,
 )
-from ee.onyx.background.celery.tasks.external_group_syncing.tasks import (
+from ee.aethersearch.background.celery.tasks.external_group_syncing.tasks import (
     try_creating_external_group_sync_task,
 )
-from onyx.auth.users import current_curator_or_admin_user
-from onyx.background.celery.versioned_apps.client import app as client_app
-from onyx.db.connector_credential_pair import (
+from aethersearch.auth.users import current_curator_or_admin_user
+from aethersearch.background.celery.versioned_apps.client import app as client_app
+from aethersearch.db.connector_credential_pair import (
     get_connector_credential_pair_from_id_for_user,
 )
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.models import User
-from onyx.redis.redis_connector import RedisConnector
-from onyx.redis.redis_pool import get_redis_client
-from onyx.server.models import StatusResponse
-from onyx.utils.logger import setup_logger
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.models import User
+from aethersearch.redis.redis_connector import RedisConnector
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.server.models import StatusResponse
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()

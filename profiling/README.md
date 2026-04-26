@@ -43,4 +43,4 @@ Override defaults with a `.env` file in this directory or by setting them in you
 
 ## Editing dashboards
 
-`allowUiUpdates: true` is set in the provisioning config, so you can edit dashboards in the Grafana UI. However, **changes don't persist** across `docker compose down` — to keep edits, export the dashboard JSON and overwrite the file in `grafana/dashboards/onyx/`.
+`allowUiUpdates: true` is set in the provisioning config, so you can edit dashboards in the Grafana UI. However, **changes don't persist** across `docker compose down` — to keep edits, export the dashboard JSON and overwrite the file in `grafana/dashboards/aethersearch/`.

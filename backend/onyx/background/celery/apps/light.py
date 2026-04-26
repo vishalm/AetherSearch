@@ -9,26 +9,26 @@ from celery.signals import worker_init
 from celery.signals import worker_ready
 from celery.signals import worker_shutdown
 
-import onyx.background.celery.apps.app_base as app_base
-from onyx.background.celery.celery_utils import httpx_init_vespa_pool
-from onyx.configs.app_configs import MANAGED_VESPA
-from onyx.configs.app_configs import VESPA_CLOUD_CERT_PATH
-from onyx.configs.app_configs import VESPA_CLOUD_KEY_PATH
-from onyx.configs.constants import POSTGRES_CELERY_WORKER_LIGHT_APP_NAME
-from onyx.db.engine.sql_engine import SqlEngine
-from onyx.server.metrics.celery_task_metrics import on_celery_task_postrun
-from onyx.server.metrics.celery_task_metrics import on_celery_task_prerun
-from onyx.server.metrics.celery_task_metrics import on_celery_task_rejected
-from onyx.server.metrics.celery_task_metrics import on_celery_task_retry
-from onyx.server.metrics.celery_task_metrics import on_celery_task_revoked
-from onyx.server.metrics.metrics_server import start_metrics_server
-from onyx.utils.logger import setup_logger
+import aethersearch.background.celery.apps.app_base as app_base
+from aethersearch.background.celery.celery_utils import httpx_init_vespa_pool
+from aethersearch.configs.app_configs import MANAGED_VESPA
+from aethersearch.configs.app_configs import VESPA_CLOUD_CERT_PATH
+from aethersearch.configs.app_configs import VESPA_CLOUD_KEY_PATH
+from aethersearch.configs.constants import POSTGRES_CELERY_WORKER_LIGHT_APP_NAME
+from aethersearch.db.engine.sql_engine import SqlEngine
+from aethersearch.server.metrics.celery_task_metrics import on_celery_task_postrun
+from aethersearch.server.metrics.celery_task_metrics import on_celery_task_prerun
+from aethersearch.server.metrics.celery_task_metrics import on_celery_task_rejected
+from aethersearch.server.metrics.celery_task_metrics import on_celery_task_retry
+from aethersearch.server.metrics.celery_task_metrics import on_celery_task_revoked
+from aethersearch.server.metrics.metrics_server import start_metrics_server
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()
 
 celery_app = Celery(__name__)
-celery_app.config_from_object("onyx.background.celery.configs.light")
+celery_app.config_from_object("aethersearch.background.celery.configs.light")
 celery_app.Task = app_base.TenantAwareTask  # ty: ignore[invalid-assignment]
 
 
@@ -152,14 +152,14 @@ for bootstep in base_bootsteps:
 celery_app.autodiscover_tasks(
     app_base.filter_task_modules(
         [
-            "onyx.background.celery.tasks.shared",
-            "onyx.background.celery.tasks.vespa",
-            "onyx.background.celery.tasks.connector_deletion",
-            "onyx.background.celery.tasks.doc_permission_syncing",
-            "onyx.background.celery.tasks.docprocessing",
-            "onyx.background.celery.tasks.opensearch_migration",
+            "aethersearch.background.celery.tasks.shared",
+            "aethersearch.background.celery.tasks.vespa",
+            "aethersearch.background.celery.tasks.connector_deletion",
+            "aethersearch.background.celery.tasks.doc_permission_syncing",
+            "aethersearch.background.celery.tasks.docprocessing",
+            "aethersearch.background.celery.tasks.opensearch_migration",
             # Sandbox cleanup tasks (isolated in build feature)
-            "onyx.server.features.build.sandbox.tasks",
+            "aethersearch.server.features.build.sandbox.tasks",
         ]
     )
 )

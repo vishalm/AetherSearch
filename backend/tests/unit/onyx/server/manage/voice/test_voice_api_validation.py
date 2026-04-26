@@ -1,11 +1,11 @@
 import pytest
 
-from onyx.error_handling.exceptions import OnyxError
-from onyx.server.manage.voice.api import _validate_voice_api_base
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.server.manage.voice.api import _validate_voice_api_base
 
 
 def test_validate_voice_api_base_blocks_private_for_non_azure() -> None:
-    with pytest.raises(OnyxError, match="Invalid target URI"):
+    with pytest.raises(AetherSearchError, match="Invalid target URI"):
         _validate_voice_api_base("openai", "http://127.0.0.1:11434")
 
 
@@ -15,7 +15,7 @@ def test_validate_voice_api_base_allows_private_for_azure() -> None:
 
 
 def test_validate_voice_api_base_blocks_metadata_for_azure() -> None:
-    with pytest.raises(OnyxError, match="Invalid target URI"):
+    with pytest.raises(AetherSearchError, match="Invalid target URI"):
         _validate_voice_api_base("azure", "http://metadata.google.internal/")
 
 

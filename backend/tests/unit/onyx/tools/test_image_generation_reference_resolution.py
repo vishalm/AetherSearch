@@ -13,11 +13,11 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.tools.models import ToolCallException
-from onyx.tools.tool_implementations.images.image_generation_tool import (
+from aethersearch.tools.models import ToolCallException
+from aethersearch.tools.tool_implementations.images.image_generation_tool import (
     ImageGenerationTool,
 )
-from onyx.tools.tool_implementations.images.image_generation_tool import (
+from aethersearch.tools.tool_implementations.images.image_generation_tool import (
     REFERENCE_IMAGE_FILE_IDS_FIELD,
 )
 
@@ -28,7 +28,7 @@ def _make_tool(
 ) -> ImageGenerationTool:
     """Construct a tool with a mock provider so no credentials/network are needed."""
     with patch(
-        "onyx.tools.tool_implementations.images.image_generation_tool.get_image_generation_provider"
+        "aethersearch.tools.tool_implementations.images.image_generation_tool.get_image_generation_provider"
     ) as mock_get_provider:
         mock_provider = MagicMock()
         mock_provider.supports_reference_images = supports_reference_images

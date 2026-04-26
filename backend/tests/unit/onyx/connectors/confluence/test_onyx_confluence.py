@@ -6,10 +6,10 @@ import pytest
 import requests
 from requests import HTTPError
 
-from onyx.connectors.confluence.onyx_confluence import _DEFAULT_PAGINATION_LIMIT
-from onyx.connectors.confluence.onyx_confluence import _MINIMUM_PAGINATION_LIMIT
-from onyx.connectors.confluence.onyx_confluence import OnyxConfluence
-from onyx.connectors.interfaces import CredentialsProviderInterface
+from aethersearch.connectors.confluence.aethersearch_confluence import _DEFAULT_PAGINATION_LIMIT
+from aethersearch.connectors.confluence.aethersearch_confluence import _MINIMUM_PAGINATION_LIMIT
+from aethersearch.connectors.confluence.aethersearch_confluence import AetherSearchConfluence
+from aethersearch.connectors.interfaces import CredentialsProviderInterface
 
 
 # Helper to create mock responses
@@ -56,8 +56,8 @@ def mock_credentials_provider() -> mock.Mock:
 
 
 @pytest.fixture
-def confluence_server_client(mock_credentials_provider: mock.Mock) -> OnyxConfluence:
-    confluence = OnyxConfluence(
+def confluence_server_client(mock_credentials_provider: mock.Mock) -> AetherSearchConfluence:
+    confluence = AetherSearchConfluence(
         is_cloud=False,
         url="http://fake-confluence.com",
         credentials_provider=mock_credentials_provider,
@@ -75,7 +75,7 @@ def confluence_server_client(mock_credentials_provider: mock.Mock) -> OnyxConflu
 
 
 def test_cql_paginate_all_expansions_handles_internal_pagination_error(
-    confluence_server_client: OnyxConfluence, caplog: pytest.LogCaptureFixture
+    confluence_server_client: AetherSearchConfluence, caplog: pytest.LogCaptureFixture
 ) -> None:
     """
     Tests that cql_paginate_all_expansions correctly handles HTTP 500 errors
@@ -380,7 +380,7 @@ def test_cql_paginate_all_expansions_handles_internal_pagination_error(
 
 
 def test_paginated_cql_retrieval_handles_pagination_error(
-    confluence_server_client: OnyxConfluence, caplog: pytest.LogCaptureFixture
+    confluence_server_client: AetherSearchConfluence, caplog: pytest.LogCaptureFixture
 ) -> None:
     """
     Tests that paginated_cql_retrieval correctly handles HTTP 500 errors
@@ -579,7 +579,7 @@ def test_paginated_cql_retrieval_handles_pagination_error(
 
 
 def test_paginated_cql_retrieval_skips_completely_failing_page(
-    confluence_server_client: OnyxConfluence, caplog: pytest.LogCaptureFixture
+    confluence_server_client: AetherSearchConfluence, caplog: pytest.LogCaptureFixture
 ) -> None:
     """
     Tests that paginated_cql_retrieval skips an entire page if the initial
@@ -714,7 +714,7 @@ def test_paginated_cql_retrieval_cloud_reduces_limit_on_error(
     progressively halves the limit on server errors (500/504) and eventually
     raises once the limit floor is reached.
     """
-    confluence_cloud_client = OnyxConfluence(
+    confluence_cloud_client = AetherSearchConfluence(
         is_cloud=True,
         url="https://fake-cloud.atlassian.net",
         credentials_provider=mock_credentials_provider,
@@ -784,7 +784,7 @@ def test_paginate_url_reduces_limit_on_504_cloud(
     succeeds at the reduced limit, pagination continues at that limit and
     yields all results.
     """
-    client = OnyxConfluence(
+    client = AetherSearchConfluence(
         is_cloud=True,
         url="https://fake-cloud.atlassian.net",
         credentials_provider=mock_credentials_provider,
@@ -846,7 +846,7 @@ def test_paginate_url_reduces_limit_on_504_cloud(
 
 
 def test_paginate_url_reduces_limit_on_500_server(
-    confluence_server_client: OnyxConfluence,
+    confluence_server_client: AetherSearchConfluence,
 ) -> None:
     """
     On Server, a 500 triggers limit halving first. If the reduced limit
@@ -893,7 +893,7 @@ def test_paginate_url_reduces_limit_on_500_server(
 
 
 def test_paginate_url_server_falls_back_to_one_by_one_after_limit_floor(
-    confluence_server_client: OnyxConfluence,
+    confluence_server_client: AetherSearchConfluence,
     caplog: pytest.LogCaptureFixture,
 ) -> None:
     """
@@ -963,7 +963,7 @@ def test_paginate_url_504_halves_multiple_times(
     Verifies that the limit is halved repeatedly on consecutive 504s until
     the request finally succeeds at a smaller limit.
     """
-    client = OnyxConfluence(
+    client = AetherSearchConfluence(
         is_cloud=True,
         url="https://fake-cloud.atlassian.net",
         credentials_provider=mock_credentials_provider,

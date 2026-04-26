@@ -5,11 +5,11 @@ from collections.abc import Callable
 from typing import Any
 from typing import TypeVar
 
-from onyx.connectors.cross_connector_utils.rate_limit_wrapper import rate_limit_builder
-from onyx.connectors.cross_connector_utils.rate_limit_wrapper import (
+from aethersearch.connectors.cross_connector_utils.rate_limit_wrapper import rate_limit_builder
+from aethersearch.connectors.cross_connector_utils.rate_limit_wrapper import (
     RateLimitTriedTooManyTimesError,
 )
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

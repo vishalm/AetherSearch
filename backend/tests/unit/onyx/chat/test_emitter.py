@@ -6,11 +6,11 @@ code path — no standalone bus.
 
 import queue
 
-from onyx.chat.emitter import Emitter
-from onyx.server.query_and_chat.placement import Placement
-from onyx.server.query_and_chat.streaming_models import OverallStop
-from onyx.server.query_and_chat.streaming_models import Packet
-from onyx.server.query_and_chat.streaming_models import ReasoningStart
+from aethersearch.chat.emitter import Emitter
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.server.query_and_chat.streaming_models import OverallStop
+from aethersearch.server.query_and_chat.streaming_models import Packet
+from aethersearch.server.query_and_chat.streaming_models import ReasoningStart
 
 # ---------------------------------------------------------------------------
 # Helpers

@@ -1,19 +1,19 @@
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from onyx.background.celery.tasks.hierarchyfetching.tasks import (
+from aethersearch.background.celery.tasks.hierarchyfetching.tasks import (
     _connector_supports_hierarchy_fetching,
 )
-from onyx.background.celery.tasks.hierarchyfetching.tasks import (
+from aethersearch.background.celery.tasks.hierarchyfetching.tasks import (
     check_for_hierarchy_fetching,
 )
-from onyx.connectors.factory import ConnectorMissingException
-from onyx.connectors.interfaces import BaseConnector
-from onyx.connectors.interfaces import HierarchyConnector
-from onyx.connectors.interfaces import HierarchyOutput
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.factory import ConnectorMissingException
+from aethersearch.connectors.interfaces import BaseConnector
+from aethersearch.connectors.interfaces import HierarchyConnector
+from aethersearch.connectors.interfaces import HierarchyOutput
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
 
-TASKS_MODULE = "onyx.background.celery.tasks.hierarchyfetching.tasks"
+TASKS_MODULE = "aethersearch.background.celery.tasks.hierarchyfetching.tasks"
 
 
 class _NonHierarchyConnector(BaseConnector):

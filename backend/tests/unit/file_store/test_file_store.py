@@ -18,9 +18,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func
 
-from onyx.configs.constants import FileOrigin
-from onyx.file_store.file_store import get_default_file_store
-from onyx.file_store.file_store import S3BackedFileStore
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.file_store.file_store import S3BackedFileStore
 
 
 class DBBaseTest(DeclarativeBase):
@@ -80,7 +80,7 @@ class TestExternalStorageFileStore:
 
     def test_get_default_file_store_s3(self) -> None:
         """Test that S3 file store is returned when backend is s3"""
-        with patch("onyx.configs.app_configs.FILE_STORE_BACKEND", "s3"):
+        with patch("aethersearch.configs.app_configs.FILE_STORE_BACKEND", "s3"):
             file_store = get_default_file_store()
             assert isinstance(file_store, S3BackedFileStore)
 
@@ -133,7 +133,7 @@ class TestExternalStorageFileStore:
     def test_s3_bucket_name_configuration(self) -> None:
         """Test S3 bucket name configuration"""
         with patch(
-            "onyx.file_store.file_store.S3_FILE_STORE_BUCKET_NAME", "my-test-bucket"
+            "aethersearch.file_store.file_store.S3_FILE_STORE_BUCKET_NAME", "my-test-bucket"
         ):
             file_store = S3BackedFileStore(bucket_name="my-test-bucket")
             bucket_name: str = file_store._get_bucket_name()
@@ -142,22 +142,22 @@ class TestExternalStorageFileStore:
     def test_s3_key_generation_default_prefix(self) -> None:
         """Test S3 key generation with default prefix"""
         with (
-            patch("onyx.file_store.file_store.S3_FILE_STORE_PREFIX", "onyx-files"),
+            patch("aethersearch.file_store.file_store.S3_FILE_STORE_PREFIX", "aethersearch-files"),
             patch(
-                "onyx.file_store.file_store.get_current_tenant_id",
+                "aethersearch.file_store.file_store.get_current_tenant_id",
                 return_value="test-tenant",
             ),
         ):
             file_store = S3BackedFileStore(bucket_name="test-bucket")
             s3_key: str = file_store._get_s3_key("test-file.txt")
-            assert s3_key == "onyx-files/test-tenant/test-file.txt"
+            assert s3_key == "aethersearch-files/test-tenant/test-file.txt"
 
     def test_s3_key_generation_custom_prefix(self) -> None:
         """Test S3 key generation with custom prefix"""
         with (
-            patch("onyx.file_store.file_store.S3_FILE_STORE_PREFIX", "custom-prefix"),
+            patch("aethersearch.file_store.file_store.S3_FILE_STORE_PREFIX", "custom-prefix"),
             patch(
-                "onyx.file_store.file_store.get_current_tenant_id",
+                "aethersearch.file_store.file_store.get_current_tenant_id",
                 return_value="test-tenant",
             ),
         ):
@@ -169,32 +169,32 @@ class TestExternalStorageFileStore:
 
     def test_s3_key_generation_with_different_tenant_ids(self) -> None:
         """Test S3 key generation with different tenant IDs"""
-        with patch("onyx.file_store.file_store.S3_FILE_STORE_PREFIX", "onyx-files"):
+        with patch("aethersearch.file_store.file_store.S3_FILE_STORE_PREFIX", "aethersearch-files"):
             file_store = S3BackedFileStore(bucket_name="test-bucket")
 
             # Test with tenant ID "tenant-1"
             with patch(
-                "onyx.file_store.file_store.get_current_tenant_id",
+                "aethersearch.file_store.file_store.get_current_tenant_id",
                 return_value="tenant-1",
             ):
                 s3_key = file_store._get_s3_key("document.pdf")
-                assert s3_key == "onyx-files/tenant-1/document.pdf"
+                assert s3_key == "aethersearch-files/tenant-1/document.pdf"
 
             # Test with tenant ID "tenant-2"
             with patch(
-                "onyx.file_store.file_store.get_current_tenant_id",
+                "aethersearch.file_store.file_store.get_current_tenant_id",
                 return_value="tenant-2",
             ):
                 s3_key = file_store._get_s3_key("document.pdf")
-                assert s3_key == "onyx-files/tenant-2/document.pdf"
+                assert s3_key == "aethersearch-files/tenant-2/document.pdf"
 
             # Test with default tenant (public)
             with patch(
-                "onyx.file_store.file_store.get_current_tenant_id",
+                "aethersearch.file_store.file_store.get_current_tenant_id",
                 return_value="public",
             ):
                 s3_key = file_store._get_s3_key("document.pdf")
-                assert s3_key == "onyx-files/public/document.pdf"
+                assert s3_key == "aethersearch-files/public/document.pdf"
 
     @patch("boto3.client")
     def test_s3_save_file_mock(
@@ -215,14 +215,14 @@ class TestExternalStorageFileStore:
 
         with (
             patch(
-                "onyx.file_store.file_store.S3_FILE_STORE_BUCKET_NAME", "test-bucket"
+                "aethersearch.file_store.file_store.S3_FILE_STORE_BUCKET_NAME", "test-bucket"
             ),
-            patch("onyx.file_store.file_store.S3_FILE_STORE_PREFIX", "onyx-files"),
-            patch("onyx.file_store.file_store.S3_AWS_ACCESS_KEY_ID", "test-key"),
-            patch("onyx.file_store.file_store.S3_AWS_SECRET_ACCESS_KEY", "test-secret"),
+            patch("aethersearch.file_store.file_store.S3_FILE_STORE_PREFIX", "aethersearch-files"),
+            patch("aethersearch.file_store.file_store.S3_AWS_ACCESS_KEY_ID", "test-key"),
+            patch("aethersearch.file_store.file_store.S3_AWS_SECRET_ACCESS_KEY", "test-secret"),
         ):
             # Mock the database operation to avoid SQLAlchemy issues
-            with patch("onyx.db.file_record.upsert_filerecord") as mock_upsert:
+            with patch("aethersearch.db.file_record.upsert_filerecord") as mock_upsert:
                 mock_upsert.return_value = Mock()
 
                 file_store = S3BackedFileStore(bucket_name="test-bucket")
@@ -241,7 +241,7 @@ class TestExternalStorageFileStore:
                 mock_s3_client.put_object.assert_called_once()
                 call_args = mock_s3_client.put_object.call_args
                 assert call_args[1]["Bucket"] == "test-bucket"
-                assert call_args[1]["Key"] == "onyx-files/public/test-file.txt"
+                assert call_args[1]["Key"] == "aethersearch-files/public/test-file.txt"
                 assert call_args[1]["ContentType"] == "text/plain"
 
     def test_minio_client_initialization(self) -> None:
@@ -320,15 +320,15 @@ class TestFileStoreInterface:
 
     def test_file_store_s3_when_configured(self) -> None:
         """Test that S3 file store is returned when configured"""
-        with patch("onyx.configs.app_configs.FILE_STORE_BACKEND", "s3"):
+        with patch("aethersearch.configs.app_configs.FILE_STORE_BACKEND", "s3"):
             file_store = get_default_file_store()
             assert isinstance(file_store, S3BackedFileStore)
 
     def test_file_store_postgres_when_configured(self) -> None:
         """Test that Postgres file store is returned when configured"""
-        from onyx.file_store.postgres_file_store import PostgresBackedFileStore
+        from aethersearch.file_store.postgres_file_store import PostgresBackedFileStore
 
-        with patch("onyx.configs.app_configs.FILE_STORE_BACKEND", "postgres"):
+        with patch("aethersearch.configs.app_configs.FILE_STORE_BACKEND", "postgres"):
             file_store = get_default_file_store()
             assert isinstance(file_store, PostgresBackedFileStore)
 

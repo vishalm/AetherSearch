@@ -21,10 +21,10 @@ import (
 	"github.com/charmbracelet/wish/bubbletea"
 	"github.com/charmbracelet/wish/logging"
 	"github.com/charmbracelet/wish/ratelimiter"
-	"github.com/onyx-dot-app/onyx/cli/internal/api"
-	"github.com/onyx-dot-app/onyx/cli/internal/config"
-	"github.com/onyx-dot-app/onyx/cli/internal/exitcodes"
-	"github.com/onyx-dot-app/onyx/cli/internal/tui"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/api"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/config"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/exitcodes"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/tui"
 	"github.com/spf13/cobra"
 	"golang.org/x/time/rate"
 )
@@ -56,7 +56,7 @@ func validateAPIKey(serverURL string, apiKey string) error {
 		return fmt.Errorf("API key is too long (max %d characters)", maxAPIKeyLength)
 	}
 
-	cfg := config.OnyxCliConfig{
+	cfg := config.AetherSearchCliConfig{
 		ServerURL: serverURL,
 		APIKey:    trimmedKey,
 	}
@@ -182,8 +182,8 @@ func (m authModel) View() string {
 	b.WriteString("  \x1b[4;34m" + settingsURL + "\x1b[0m\n")
 	b.WriteString("\n")
 	b.WriteString("  \x1b[90mTip: skip this prompt by passing your key via SSH:\x1b[0m\n")
-	b.WriteString("  \x1b[90m  export ONYX_API_KEY=<key>\x1b[0m\n")
-	b.WriteString("  \x1b[90m  ssh -o SendEnv=ONYX_API_KEY <host> -p <port>\x1b[0m\n")
+	b.WriteString("  \x1b[90m  export AETHERSEARCH_API_KEY=<key>\x1b[0m\n")
+	b.WriteString("  \x1b[90m  ssh -o SendEnv=AETHERSEARCH_API_KEY <host> -p <port>\x1b[0m\n")
 	b.WriteString("\n")
 
 	if m.errMsg != "" {
@@ -208,12 +208,12 @@ type serveModel struct {
 	auth      authModel
 	tui       tea.Model
 	authed    bool
-	serverCfg config.OnyxCliConfig
+	serverCfg config.AetherSearchCliConfig
 	width     int
 	height    int
 }
 
-func newServeModel(serverCfg config.OnyxCliConfig, initialErr string) serveModel {
+func newServeModel(serverCfg config.AetherSearchCliConfig, initialErr string) serveModel {
 	return serveModel{
 		auth:      newAuthModel(serverCfg.ServerURL, initialErr),
 		serverCfg: serverCfg,
@@ -238,7 +238,7 @@ func (m serveModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		}
 		if m.auth.apiKey != "" {
-			cfg := config.OnyxCliConfig{
+			cfg := config.AetherSearchCliConfig{
 				ServerURL:      m.serverCfg.ServerURL,
 				APIKey:         m.auth.apiKey,
 				DefaultAgentID: m.serverCfg.DefaultAgentID,
@@ -289,13 +289,13 @@ func newServeCmd() *cobra.Command {
 connecting clients. Each SSH session gets its own independent TUI instance.
 
 Clients are prompted for their AetherSearch API key on connect. The key can also be
-provided via the ONYX_API_KEY environment variable to skip the prompt:
+provided via the AETHERSEARCH_API_KEY environment variable to skip the prompt:
 
-  ssh -o SendEnv=ONYX_API_KEY host -p port
+  ssh -o SendEnv=AETHERSEARCH_API_KEY host -p port
 
 The server URL is taken from the server operator's config. The server
 auto-generates an Ed25519 host key on first run if the key file does not
-already exist. The host key path can also be set via the ONYX_SSH_HOST_KEY
+already exist. The host key path can also be set via the AETHERSEARCH_SSH_HOST_KEY
 environment variable (the --host-key flag takes precedence).`,
 		Example: `  aethersearch-cli serve --port 2222
   ssh localhost -p 2222
@@ -334,14 +334,14 @@ environment variable (the --host-key flag takes precedence).`,
 
 				if apiKey != "" {
 					if err := validateAPIKey(serverCfg.ServerURL, apiKey); err != nil {
-						envErr = fmt.Sprintf("ONYX_API_KEY from SSH environment is invalid: %s", err.Error())
+						envErr = fmt.Sprintf("AETHERSEARCH_API_KEY from SSH environment is invalid: %s", err.Error())
 						apiKey = ""
 					}
 				}
 
 				if apiKey != "" {
 					// Env key is valid — go straight to the TUI.
-					cfg := config.OnyxCliConfig{
+					cfg := config.AetherSearchCliConfig{
 						ServerURL:      serverCfg.ServerURL,
 						APIKey:         apiKey,
 						DefaultAgentID: serverCfg.DefaultAgentID,

@@ -13,32 +13,32 @@ from fastapi.responses import RedirectResponse
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import optional_user
-from onyx.configs.constants import DocumentSource
-from onyx.db.connector_credential_pair import get_connector_credential_pairs_for_user
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import IndexingStatus
-from onyx.db.enums import Permission
-from onyx.db.enums import ProcessingMode
-from onyx.db.enums import SharingScope
-from onyx.db.index_attempt import get_latest_index_attempt_for_cc_pair_id
-from onyx.db.models import BuildSession
-from onyx.db.models import User
-from onyx.server.features.build.api.messages_api import router as messages_router
-from onyx.server.features.build.api.models import BuildConnectorInfo
-from onyx.server.features.build.api.models import BuildConnectorListResponse
-from onyx.server.features.build.api.models import BuildConnectorStatus
-from onyx.server.features.build.api.models import RateLimitResponse
-from onyx.server.features.build.api.rate_limit import get_user_rate_limit_status
-from onyx.server.features.build.api.sessions_api import router as sessions_router
-from onyx.server.features.build.api.user_library import router as user_library_router
-from onyx.server.features.build.db.sandbox import get_sandbox_by_user_id
-from onyx.server.features.build.sandbox import get_sandbox_manager
-from onyx.server.features.build.session.manager import SessionManager
-from onyx.server.features.build.utils import is_onyx_craft_enabled
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import optional_user
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.db.connector_credential_pair import get_connector_credential_pairs_for_user
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import IndexingStatus
+from aethersearch.db.enums import Permission
+from aethersearch.db.enums import ProcessingMode
+from aethersearch.db.enums import SharingScope
+from aethersearch.db.index_attempt import get_latest_index_attempt_for_cc_pair_id
+from aethersearch.db.models import BuildSession
+from aethersearch.db.models import User
+from aethersearch.server.features.build.api.messages_api import router as messages_router
+from aethersearch.server.features.build.api.models import BuildConnectorInfo
+from aethersearch.server.features.build.api.models import BuildConnectorListResponse
+from aethersearch.server.features.build.api.models import BuildConnectorStatus
+from aethersearch.server.features.build.api.models import RateLimitResponse
+from aethersearch.server.features.build.api.rate_limit import get_user_rate_limit_status
+from aethersearch.server.features.build.api.sessions_api import router as sessions_router
+from aethersearch.server.features.build.api.user_library import router as user_library_router
+from aethersearch.server.features.build.db.sandbox import get_sandbox_by_user_id
+from aethersearch.server.features.build.sandbox import get_sandbox_manager
+from aethersearch.server.features.build.session.manager import SessionManager
+from aethersearch.server.features.build.utils import is_aethersearch_craft_enabled
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -46,22 +46,22 @@ _TEMPLATES_DIR = Path(__file__).parent / "templates"
 _WEBAPP_HMR_FIXER_TEMPLATE = (_TEMPLATES_DIR / "webapp_hmr_fixer.js").read_text()
 
 
-def require_onyx_craft_enabled(
+def require_aethersearch_craft_enabled(
     user: User = Depends(require_permission(Permission.BASIC_ACCESS)),
 ) -> User:
     """
-    Dependency that checks if Onyx Craft is enabled for the user.
-    Raises HTTP 403 if Onyx Craft is disabled via feature flag.
+    Dependency that checks if AetherSearch Craft is enabled for the user.
+    Raises HTTP 403 if AetherSearch Craft is disabled via feature flag.
     """
-    if not is_onyx_craft_enabled(user):
+    if not is_aethersearch_craft_enabled(user):
         raise HTTPException(
             status_code=403,
-            detail="Onyx Craft is not available",
+            detail="AetherSearch Craft is not available",
         )
     return user
 
 
-router = APIRouter(prefix="/build", dependencies=[Depends(require_onyx_craft_enabled)])
+router = APIRouter(prefix="/build", dependencies=[Depends(require_aethersearch_craft_enabled)])
 
 # Include sub-routers for sessions, messages, and user library
 router.include_router(sessions_router, tags=["build"])
@@ -230,7 +230,7 @@ def get_build_connectors(
 
 # Headers to skip when proxying.
 # Hop-by-hop headers must not be forwarded, and set-cookie is stripped to
-# prevent LLM-generated apps from setting cookies on the parent Onyx domain.
+# prevent LLM-generated apps from setting cookies on the parent AetherSearch domain.
 EXCLUDED_HEADERS = {
     "content-encoding",
     "content-length",

@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from onyx.db.models import TenantAnonymousUserPath
+from aethersearch.db.models import TenantAnonymousUserPath
 
 
 def get_anonymous_user_path(tenant_id: str, db_session: Session) -> str | None:

@@ -1,7 +1,7 @@
-from onyx.db.enums import HookPoint
-from onyx.hooks.points.base import HookPointSpec
-from onyx.hooks.points.document_ingestion import DocumentIngestionSpec
-from onyx.hooks.points.query_processing import QueryProcessingSpec
+from aethersearch.db.enums import HookPoint
+from aethersearch.hooks.points.base import HookPointSpec
+from aethersearch.hooks.points.document_ingestion import DocumentIngestionSpec
+from aethersearch.hooks.points.query_processing import QueryProcessingSpec
 
 # Internal: use `monkeypatch.setattr(registry_module, "_REGISTRY", {...})` to override in tests.
 _REGISTRY: dict[HookPoint, HookPointSpec] = {
@@ -20,7 +20,7 @@ def validate_registry() -> None:
     if missing:
         raise RuntimeError(
             f"Hook point(s) have no registered spec: {missing}. "
-            "Add an entry to onyx.hooks.registry._REGISTRY."
+            "Add an entry to aethersearch.hooks.registry._REGISTRY."
         )
 
 
@@ -36,7 +36,7 @@ def get_hook_point_spec(hook_point: HookPoint) -> HookPointSpec:
     except KeyError:
         raise ValueError(
             f"No spec registered for hook point {hook_point!r}. "
-            "Add an entry to onyx.hooks.registry._REGISTRY."
+            "Add an entry to aethersearch.hooks.registry._REGISTRY."
         )
 
 

@@ -116,7 +116,7 @@ export default function ScimModal({
                     prominence="secondary"
                     icon={SvgDownload}
                     onClick={() =>
-                      downloadFile(`onyx-scim-token-${Date.now()}.txt`, {
+                      downloadFile(`aethersearch-scim-token-${Date.now()}.txt`, {
                         content: view.rawToken,
                       })
                     }

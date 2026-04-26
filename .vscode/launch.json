@@ -13,7 +13,7 @@
       }
     },
     {
-      "name": "Run All Onyx Services",
+      "name": "Run All AetherSearch Services",
       "configurations": [
         "Web Server",
         "Model Server",
@@ -113,7 +113,7 @@
         "LOG_LEVEL": "DEBUG",
         "PYTHONUNBUFFERED": "1"
       },
-      "args": ["onyx.main:app", "--reload", "--port", "8080"],
+      "args": ["aethersearch.main:app", "--reload", "--port", "8080"],
       "presentation": {
         "group": "2"
       },
@@ -125,7 +125,7 @@
       "consoleName": "Slack Bot",
       "type": "debugpy",
       "request": "launch",
-      "program": "onyx/onyxbot/slack/listener.py",
+      "program": "aethersearch/aethersearchbot/slack/listener.py",
       "cwd": "${workspaceFolder}/backend",
       "envFile": "${workspaceFolder}/.vscode/.env",
       "env": {
@@ -143,7 +143,7 @@
       "consoleName": "Discord Bot",
       "type": "debugpy",
       "request": "launch",
-      "program": "onyx/onyxbot/discord/client.py",
+      "program": "aethersearch/aethersearchbot/discord/client.py",
       "cwd": "${workspaceFolder}/backend",
       "envFile": "${workspaceFolder}/.vscode/.env",
       "env": {
@@ -172,7 +172,7 @@
         "PYTHONUNBUFFERED": "1"
       },
       "args": [
-        "onyx.mcp_server.api:mcp_app",
+        "aethersearch.mcp_server.api:mcp_app",
         "--reload",
         "--port",
         "8090",
@@ -198,7 +198,7 @@
       },
       "args": [
         "-A",
-        "onyx.background.celery.versioned_apps.primary",
+        "aethersearch.background.celery.versioned_apps.primary",
         "worker",
         "--pool=threads",
         "--concurrency=4",
@@ -227,7 +227,7 @@
       },
       "args": [
         "-A",
-        "onyx.background.celery.versioned_apps.light",
+        "aethersearch.background.celery.versioned_apps.light",
         "worker",
         "--pool=threads",
         "--concurrency=64",
@@ -256,7 +256,7 @@
       },
       "args": [
         "-A",
-        "onyx.background.celery.versioned_apps.heavy",
+        "aethersearch.background.celery.versioned_apps.heavy",
         "worker",
         "--pool=threads",
         "--concurrency=4",
@@ -286,7 +286,7 @@
       },
       "args": [
         "-A",
-        "onyx.background.celery.versioned_apps.kg_processing",
+        "aethersearch.background.celery.versioned_apps.kg_processing",
         "worker",
         "--pool=threads",
         "--concurrency=2",
@@ -315,7 +315,7 @@
       },
       "args": [
         "-A",
-        "onyx.background.celery.versioned_apps.monitoring",
+        "aethersearch.background.celery.versioned_apps.monitoring",
         "worker",
         "--pool=threads",
         "--concurrency=1",
@@ -344,7 +344,7 @@
       },
       "args": [
         "-A",
-        "onyx.background.celery.versioned_apps.user_file_processing",
+        "aethersearch.background.celery.versioned_apps.user_file_processing",
         "worker",
         "--pool=threads",
         "--concurrency=2",
@@ -374,7 +374,7 @@
       },
       "args": [
         "-A",
-        "onyx.background.celery.versioned_apps.docfetching",
+        "aethersearch.background.celery.versioned_apps.docfetching",
         "worker",
         "--pool=threads",
         "--prefetch-multiplier=1",
@@ -404,7 +404,7 @@
       },
       "args": [
         "-A",
-        "onyx.background.celery.versioned_apps.docprocessing",
+        "aethersearch.background.celery.versioned_apps.docprocessing",
         "worker",
         "--pool=threads",
         "--prefetch-multiplier=1",
@@ -433,7 +433,7 @@
       },
       "args": [
         "-A",
-        "onyx.background.celery.versioned_apps.beat",
+        "aethersearch.background.celery.versioned_apps.beat",
         "beat",
         "--loglevel=INFO"
       ],
@@ -458,7 +458,7 @@
       "args": [
         "-v"
         // Specify a specific module/test to run or provide nothing to run all tests
-        // "tests/unit/onyx/llm/answering/test_prune_and_merge.py"
+        // "tests/unit/aethersearch/llm/answering/test_prune_and_merge.py"
       ],
       "presentation": {
         "group": "2"
@@ -505,7 +505,7 @@
       "name": "Eval CLI",
       "type": "debugpy",
       "request": "launch",
-      "program": "${workspaceFolder}/backend/onyx/evals/eval_cli.py",
+      "program": "${workspaceFolder}/backend/aethersearch/evals/eval_cli.py",
       "cwd": "${workspaceFolder}/backend",
       "console": "integratedTerminal",
       "justMyCode": false,
@@ -555,7 +555,7 @@
       "name": "Build Sandbox Templates",
       "type": "debugpy",
       "request": "launch",
-      "module": "onyx.server.features.build.sandbox.build_templates",
+      "module": "aethersearch.server.features.build.sandbox.build_templates",
       "cwd": "${workspaceFolder}/backend",
       "envFile": "${workspaceFolder}/.vscode/.env",
       "env": {
@@ -586,7 +586,7 @@
       "runtimeArgs": [
         "run",
         "--with",
-        "onyx-devtools",
+        "aethersearch-devtools",
         "ods",
         "db",
         "restore",
@@ -607,7 +607,7 @@
       "runtimeArgs": [
         "run",
         "--with",
-        "onyx-devtools",
+        "aethersearch-devtools",
         "ods",
         "db",
         "restore",
@@ -629,7 +629,7 @@
       "runtimeArgs": [
         "run",
         "--with",
-        "onyx-devtools",
+        "aethersearch-devtools",
         "ods",
         "db",
         "dump",
@@ -649,7 +649,7 @@
       "runtimeArgs": [
         "run",
         "--with",
-        "onyx-devtools",
+        "aethersearch-devtools",
         "ods",
         "db",
         "restore",
@@ -671,7 +671,7 @@
       "runtimeArgs": [
         "run",
         "--with",
-        "onyx-devtools",
+        "aethersearch-devtools",
         "ods",
         "db",
         "upgrade"
@@ -684,10 +684,10 @@
     },
     {
       // script to generate the openapi schema
-      "name": "Onyx OpenAPI Schema Generator",
+      "name": "AetherSearch OpenAPI Schema Generator",
       "type": "debugpy",
       "request": "launch",
-      "program": "backend/scripts/onyx_openapi_schema.py",
+      "program": "backend/scripts/aethersearch_openapi_schema.py",
       "cwd": "${workspaceFolder}",
       "envFile": "${workspaceFolder}/.env",
       "env": {
@@ -698,10 +698,10 @@
     },
     {
       // script to debug multi tenant db issues
-      "name": "Onyx DB Manager (Top Chunks)",
+      "name": "AetherSearch DB Manager (Top Chunks)",
       "type": "debugpy",
       "request": "launch",
-      "program": "scripts/debugging/onyx_db.py",
+      "program": "scripts/debugging/aethersearch_db.py",
       "cwd": "${workspaceFolder}/backend",
       "envFile": "${workspaceFolder}/.env",
       "env": {

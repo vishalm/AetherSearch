@@ -12,17 +12,17 @@ from unittest.mock import patch
 
 from google.auth.exceptions import RefreshError
 
-from onyx.background.celery.celery_utils import extract_ids_from_runnable_connector
-from onyx.connectors.google_drive.connector import GoogleDriveConnector
-from onyx.connectors.google_drive.file_retrieval import DriveFileFieldType
-from onyx.connectors.google_drive.models import DriveRetrievalStage
-from onyx.connectors.google_drive.models import GoogleDriveCheckpoint
-from onyx.connectors.google_drive.models import StageCompletion
-from onyx.connectors.interfaces import SlimConnector
-from onyx.connectors.interfaces import SlimConnectorWithPermSync
-from onyx.connectors.models import SlimDocument
-from onyx.utils.threadpool_concurrency import ThreadSafeDict
-from onyx.utils.threadpool_concurrency import ThreadSafeSet
+from aethersearch.background.celery.celery_utils import extract_ids_from_runnable_connector
+from aethersearch.connectors.google_drive.connector import GoogleDriveConnector
+from aethersearch.connectors.google_drive.file_retrieval import DriveFileFieldType
+from aethersearch.connectors.google_drive.models import DriveRetrievalStage
+from aethersearch.connectors.google_drive.models import GoogleDriveCheckpoint
+from aethersearch.connectors.google_drive.models import StageCompletion
+from aethersearch.connectors.interfaces import SlimConnector
+from aethersearch.connectors.interfaces import SlimConnectorWithPermSync
+from aethersearch.connectors.models import SlimDocument
+from aethersearch.utils.threadpool_concurrency import ThreadSafeDict
+from aethersearch.utils.threadpool_concurrency import ThreadSafeSet
 
 
 def _make_done_checkpoint() -> GoogleDriveCheckpoint:
@@ -223,7 +223,7 @@ class TestFailedFolderIdsByEmail:
         )
 
         with patch(
-            "onyx.connectors.google_drive.connector.get_folder_metadata"
+            "aethersearch.connectors.google_drive.connector.get_folder_metadata"
         ) as mock_api:
             result = connector._get_folder_metadata(
                 folder_id="folder1",
@@ -244,11 +244,11 @@ class TestFailedFolderIdsByEmail:
 
         with (
             patch(
-                "onyx.connectors.google_drive.connector.get_drive_service",
+                "aethersearch.connectors.google_drive.connector.get_drive_service",
                 return_value=MagicMock(),
             ),
             patch(
-                "onyx.connectors.google_drive.connector.get_folder_metadata",
+                "aethersearch.connectors.google_drive.connector.get_folder_metadata",
                 return_value=folder_no_parents,
             ),
         ):
@@ -274,11 +274,11 @@ class TestFailedFolderIdsByEmail:
 
         with (
             patch(
-                "onyx.connectors.google_drive.connector.get_drive_service",
+                "aethersearch.connectors.google_drive.connector.get_drive_service",
                 return_value=MagicMock(),
             ),
             patch(
-                "onyx.connectors.google_drive.connector.get_folder_metadata",
+                "aethersearch.connectors.google_drive.connector.get_folder_metadata",
                 return_value=folder_with_parents,
             ),
         ):
@@ -332,11 +332,11 @@ class TestOrphanedPathBackfill:
 
         with (
             patch(
-                "onyx.connectors.google_drive.connector.get_drive_service",
+                "aethersearch.connectors.google_drive.connector.get_drive_service",
                 return_value=MagicMock(),
             ),
             patch(
-                "onyx.connectors.google_drive.connector.get_folder_metadata",
+                "aethersearch.connectors.google_drive.connector.get_folder_metadata",
                 side_effect=mock_get_folder,
             ),
         ):
@@ -375,11 +375,11 @@ class TestOrphanedPathBackfill:
 
         with (
             patch(
-                "onyx.connectors.google_drive.connector.get_drive_service",
+                "aethersearch.connectors.google_drive.connector.get_drive_service",
                 return_value=MagicMock(),
             ),
             patch(
-                "onyx.connectors.google_drive.connector.get_folder_metadata",
+                "aethersearch.connectors.google_drive.connector.get_folder_metadata",
                 side_effect=mock_get_folder,
             ),
         ):
@@ -412,11 +412,11 @@ class TestOrphanedPathBackfill:
 
         with (
             patch(
-                "onyx.connectors.google_drive.connector.get_drive_service",
+                "aethersearch.connectors.google_drive.connector.get_drive_service",
                 return_value=MagicMock(),
             ),
             patch(
-                "onyx.connectors.google_drive.connector.get_folder_metadata"
+                "aethersearch.connectors.google_drive.connector.get_folder_metadata"
             ) as mock_api,
         ):
             connector._get_new_ancestors_for_files(
@@ -461,15 +461,15 @@ class TestImpersonateUserRefreshError:
 
         with (
             patch(
-                "onyx.connectors.google_drive.connector.get_drive_service",
+                "aethersearch.connectors.google_drive.connector.get_drive_service",
                 return_value=MagicMock(),
             ),
             patch(
-                "onyx.connectors.google_drive.connector.get_root_folder_id",
+                "aethersearch.connectors.google_drive.connector.get_root_folder_id",
                 side_effect=refresh_error,
             ),
             patch(
-                "onyx.connectors.google_drive.connector.retry_builder",
+                "aethersearch.connectors.google_drive.connector.retry_builder",
                 return_value=lambda f: f,
             ),
             patch.object(
@@ -503,15 +503,15 @@ class TestImpersonateUserRefreshError:
 
         with (
             patch(
-                "onyx.connectors.google_drive.connector.get_drive_service",
+                "aethersearch.connectors.google_drive.connector.get_drive_service",
                 return_value=MagicMock(),
             ),
             patch(
-                "onyx.connectors.google_drive.connector.get_root_folder_id",
+                "aethersearch.connectors.google_drive.connector.get_root_folder_id",
                 side_effect=refresh_error,
             ),
             patch(
-                "onyx.connectors.google_drive.connector.retry_builder",
+                "aethersearch.connectors.google_drive.connector.retry_builder",
                 return_value=lambda f: f,
             ),
             patch.object(
@@ -550,15 +550,15 @@ class TestImpersonateUserRefreshError:
 
         with (
             patch(
-                "onyx.connectors.google_drive.connector.get_drive_service",
+                "aethersearch.connectors.google_drive.connector.get_drive_service",
                 return_value=MagicMock(),
             ),
             patch(
-                "onyx.connectors.google_drive.connector.get_root_folder_id",
+                "aethersearch.connectors.google_drive.connector.get_root_folder_id",
                 side_effect=refresh_error,
             ),
             patch(
-                "onyx.connectors.google_drive.connector.retry_builder",
+                "aethersearch.connectors.google_drive.connector.retry_builder",
                 return_value=lambda f: f,
             ),
             patch.object(

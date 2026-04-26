@@ -1,9 +1,9 @@
-"""Tool to generate all supported schema variations for Onyx Cloud's Vespa database.
+"""Tool to generate all supported schema variations for AetherSearch Cloud's Vespa database.
 
 Usage:
 
 ```
-PYTHONPATH=. python scripts/debugging/onyx_vespa_schemas.py
+PYTHONPATH=. python scripts/debugging/aethersearch_vespa_schemas.py
 ```
 
 Then, paste them into the existing vespa schema downloaded from the Vespa console,
@@ -16,9 +16,9 @@ from pathlib import Path
 
 import jinja2
 
-from onyx.configs.embedding_configs import SUPPORTED_EMBEDDING_MODELS
-from onyx.db.enums import EmbeddingPrecision
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.embedding_configs import SUPPORTED_EMBEDDING_MODELS
+from aethersearch.db.enums import EmbeddingPrecision
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -95,12 +95,12 @@ def main() -> None:
     parser.add_argument(
         "--template",
         help="The Jinja template to use for schemas",
-        default="onyx/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja",
+        default="aethersearch/document_index/vespa/app_config/schemas/danswer_chunk.sd.jinja",
     )
     parser.add_argument(
         "--cloud-services-template",
         help="The cloud-services.xml.jinja template path",
-        default="ee/onyx/document_index/vespa/app_config/cloud-services.xml.jinja",
+        default="ee/aethersearch/document_index/vespa/app_config/cloud-services.xml.jinja",
     )
     parser.add_argument(
         "--output-path",

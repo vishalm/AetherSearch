@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 from pydantic import BaseModel
 
-from onyx.image_gen.exceptions import ImageProviderCredentialsError
+from aethersearch.image_gen.exceptions import ImageProviderCredentialsError
 
 if TYPE_CHECKING:
     from litellm.types.utils import ImageResponse as ImageGenerationResponse

@@ -3,22 +3,22 @@ from fastapi import Depends
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.input_prompt import disable_input_prompt_for_user
-from onyx.db.input_prompt import fetch_input_prompt_by_id
-from onyx.db.input_prompt import fetch_input_prompts_by_user
-from onyx.db.input_prompt import insert_input_prompt
-from onyx.db.input_prompt import remove_input_prompt
-from onyx.db.input_prompt import remove_public_input_prompt
-from onyx.db.input_prompt import update_input_prompt
-from onyx.db.models import InputPrompt__User
-from onyx.db.models import User
-from onyx.server.features.input_prompt.models import CreateInputPromptRequest
-from onyx.server.features.input_prompt.models import InputPromptSnapshot
-from onyx.server.features.input_prompt.models import UpdateInputPromptRequest
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.permissions import require_permission
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.input_prompt import disable_input_prompt_for_user
+from aethersearch.db.input_prompt import fetch_input_prompt_by_id
+from aethersearch.db.input_prompt import fetch_input_prompts_by_user
+from aethersearch.db.input_prompt import insert_input_prompt
+from aethersearch.db.input_prompt import remove_input_prompt
+from aethersearch.db.input_prompt import remove_public_input_prompt
+from aethersearch.db.input_prompt import update_input_prompt
+from aethersearch.db.models import InputPrompt__User
+from aethersearch.db.models import User
+from aethersearch.server.features.input_prompt.models import CreateInputPromptRequest
+from aethersearch.server.features.input_prompt.models import InputPromptSnapshot
+from aethersearch.server.features.input_prompt.models import UpdateInputPromptRequest
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

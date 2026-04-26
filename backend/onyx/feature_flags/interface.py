@@ -2,7 +2,7 @@ import abc
 from typing import Any
 from uuid import UUID
 
-from onyx.db.models import User
+from aethersearch.db.models import User
 from shared_configs.configs import ENVIRONMENT
 
 
@@ -47,7 +47,7 @@ class FeatureFlagProvider(abc.ABC):
             user.id if user else UUID("caa1e0cd-6ee6-4550-b1ec-8affaef4bf83"),
             user_properties={
                 "tenant_id": tenant_id,
-                "email": user.email if user else "anonymous@onyx.app",
+                "email": user.email if user else "anonymous@aethersearch.app",
             },
         )
 

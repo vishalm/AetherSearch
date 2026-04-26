@@ -13,26 +13,26 @@ from sqlalchemy.orm import aliased
 from sqlalchemy.orm import selectinload
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import DISABLE_VECTOR_DB
-from onyx.db.connector_credential_pair import get_cc_pair_groups_for_ids
-from onyx.db.connector_credential_pair import get_connector_credential_pairs
-from onyx.db.enums import AccessType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.federated import create_federated_connector_document_set_mapping
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import Document
-from onyx.db.models import DocumentByConnectorCredentialPair
-from onyx.db.models import DocumentSet as DocumentSetDBModel
-from onyx.db.models import DocumentSet__ConnectorCredentialPair
-from onyx.db.models import DocumentSet__UserGroup
-from onyx.db.models import FederatedConnector__DocumentSet
-from onyx.db.models import User
-from onyx.db.models import User__UserGroup
-from onyx.db.models import UserRole
-from onyx.server.features.document_set.models import DocumentSetCreationRequest
-from onyx.server.features.document_set.models import DocumentSetUpdateRequest
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import fetch_versioned_implementation
+from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
+from aethersearch.db.connector_credential_pair import get_cc_pair_groups_for_ids
+from aethersearch.db.connector_credential_pair import get_connector_credential_pairs
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.federated import create_federated_connector_document_set_mapping
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import Document
+from aethersearch.db.models import DocumentByConnectorCredentialPair
+from aethersearch.db.models import DocumentSet as DocumentSetDBModel
+from aethersearch.db.models import DocumentSet__ConnectorCredentialPair
+from aethersearch.db.models import DocumentSet__UserGroup
+from aethersearch.db.models import FederatedConnector__DocumentSet
+from aethersearch.db.models import User
+from aethersearch.db.models import User__UserGroup
+from aethersearch.db.models import UserRole
+from aethersearch.server.features.document_set.models import DocumentSetCreationRequest
+from aethersearch.server.features.document_set.models import DocumentSetUpdateRequest
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import fetch_versioned_implementation
 
 logger = setup_logger()
 
@@ -114,7 +114,7 @@ def _mark_document_set_cc_pairs_as_outdated__no_commit(
 def delete_document_set_privacy__no_commit(
     document_set_id: int, db_session: Session
 ) -> None:
-    """No private document sets in Onyx MIT"""
+    """No private document sets in AetherSearch MIT"""
 
 
 def get_document_set_by_id_for_user(
@@ -196,7 +196,7 @@ def make_doc_set_private(
 ) -> None:
     # May cause error if someone switches down to MIT from EE
     if user_ids or group_ids:
-        raise NotImplementedError("Onyx MIT does not support private Document Sets")
+        raise NotImplementedError("AetherSearch MIT does not support private Document Sets")
 
 
 def _check_if_cc_pairs_are_owned_by_groups(
@@ -282,7 +282,7 @@ def insert_document_set(
         db_session.add_all(ds_cc_pairs)
 
         # Create federated connector mappings
-        from onyx.db.federated import create_federated_connector_document_set_mapping
+        from aethersearch.db.federated import create_federated_connector_document_set_mapping
 
         for fc_config in document_set_creation_request.federated_connectors:
             create_federated_connector_document_set_mapping(
@@ -293,7 +293,7 @@ def insert_document_set(
             )
 
         versioned_private_doc_set_fn = fetch_versioned_implementation(
-            "onyx.db.document_set", "make_doc_set_private"
+            "aethersearch.db.document_set", "make_doc_set_private"
         )
 
         # Private Document Sets
@@ -360,7 +360,7 @@ def update_document_set(
         document_set_row.is_public = document_set_update_request.is_public
         document_set_row.time_last_modified_by_user = func.now()
         versioned_private_doc_set_fn = fetch_versioned_implementation(
-            "onyx.db.document_set", "make_doc_set_private"
+            "aethersearch.db.document_set", "make_doc_set_private"
         )
 
         # Private Document Sets
@@ -477,7 +477,7 @@ def mark_document_set_as_to_be_deleted(
 
         # delete all private document set information
         versioned_delete_private_fn = fetch_versioned_implementation(
-            "onyx.db.document_set", "delete_document_set_privacy__no_commit"
+            "aethersearch.db.document_set", "delete_document_set_privacy__no_commit"
         )
         versioned_delete_private_fn(
             document_set_id=document_set_id, db_session=db_session

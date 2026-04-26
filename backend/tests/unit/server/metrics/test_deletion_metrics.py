@@ -2,16 +2,16 @@
 
 import pytest
 
-from onyx.server.metrics.deletion_metrics import DELETION_BLOCKED
-from onyx.server.metrics.deletion_metrics import DELETION_COMPLETED
-from onyx.server.metrics.deletion_metrics import DELETION_FENCE_RESET
-from onyx.server.metrics.deletion_metrics import DELETION_STARTED
-from onyx.server.metrics.deletion_metrics import DELETION_TASKSET_DURATION
-from onyx.server.metrics.deletion_metrics import inc_deletion_blocked
-from onyx.server.metrics.deletion_metrics import inc_deletion_completed
-from onyx.server.metrics.deletion_metrics import inc_deletion_fence_reset
-from onyx.server.metrics.deletion_metrics import inc_deletion_started
-from onyx.server.metrics.deletion_metrics import observe_deletion_taskset_duration
+from aethersearch.server.metrics.deletion_metrics import DELETION_BLOCKED
+from aethersearch.server.metrics.deletion_metrics import DELETION_COMPLETED
+from aethersearch.server.metrics.deletion_metrics import DELETION_FENCE_RESET
+from aethersearch.server.metrics.deletion_metrics import DELETION_STARTED
+from aethersearch.server.metrics.deletion_metrics import DELETION_TASKSET_DURATION
+from aethersearch.server.metrics.deletion_metrics import inc_deletion_blocked
+from aethersearch.server.metrics.deletion_metrics import inc_deletion_completed
+from aethersearch.server.metrics.deletion_metrics import inc_deletion_fence_reset
+from aethersearch.server.metrics.deletion_metrics import inc_deletion_started
+from aethersearch.server.metrics.deletion_metrics import observe_deletion_taskset_duration
 
 
 class TestIncDeletionStarted:

@@ -5,11 +5,11 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from onyx.background.celery.celery_utils import extract_ids_from_runnable_connector
-from onyx.connectors.interfaces import SlimConnector
-from onyx.connectors.models import SlimDocument
-from onyx.server.metrics.pruning_metrics import PRUNING_ENUMERATION_DURATION
-from onyx.server.metrics.pruning_metrics import PRUNING_RATE_LIMIT_ERRORS
+from aethersearch.background.celery.celery_utils import extract_ids_from_runnable_connector
+from aethersearch.connectors.interfaces import SlimConnector
+from aethersearch.connectors.models import SlimDocument
+from aethersearch.server.metrics.pruning_metrics import PRUNING_ENUMERATION_DURATION
+from aethersearch.server.metrics.pruning_metrics import PRUNING_RATE_LIMIT_ERRORS
 
 
 def _make_slim_connector(doc_ids: list[str]) -> SlimConnector:

@@ -2,12 +2,12 @@ from unittest.mock import Mock
 
 import pytest
 
-from onyx.chat import process_message
-from onyx.chat.models import AnswerStream
-from onyx.chat.models import StreamingError
-from onyx.configs import app_configs
-from onyx.server.query_and_chat.models import MessageResponseIDInfo
-from onyx.server.query_and_chat.models import SendMessageRequest
+from aethersearch.chat import process_message
+from aethersearch.chat.models import AnswerStream
+from aethersearch.chat.models import StreamingError
+from aethersearch.configs import app_configs
+from aethersearch.server.query_and_chat.models import MessageResponseIDInfo
+from aethersearch.server.query_and_chat.models import SendMessageRequest
 
 
 def test_mock_llm_response_requires_integration_mode() -> None:

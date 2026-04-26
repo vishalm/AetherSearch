@@ -3,25 +3,25 @@ import datetime
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
-from onyx.configs.onyxbot_configs import ONYX_BOT_FEEDBACK_REMINDER
-from onyx.configs.onyxbot_configs import ONYX_BOT_REACT_EMOJI
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import AccountType
-from onyx.db.models import SlackChannelConfig
-from onyx.db.user_preferences import activate_user
-from onyx.db.users import add_slack_user_if_not_exists
-from onyx.db.users import get_user_by_email
-from onyx.onyxbot.slack.blocks import get_feedback_reminder_blocks
-from onyx.onyxbot.slack.handlers.handle_regular_answer import handle_regular_answer
-from onyx.onyxbot.slack.handlers.handle_standard_answers import handle_standard_answers
-from onyx.onyxbot.slack.models import SlackMessageInfo
-from onyx.onyxbot.slack.utils import fetch_slack_user_ids_from_emails
-from onyx.onyxbot.slack.utils import fetch_user_ids_from_groups
-from onyx.onyxbot.slack.utils import respond_in_thread_or_channel
-from onyx.onyxbot.slack.utils import slack_usage_report
-from onyx.onyxbot.slack.utils import update_emote_react
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
+from aethersearch.configs.aethersearchbot_configs import AETHERSEARCH_BOT_FEEDBACK_REMINDER
+from aethersearch.configs.aethersearchbot_configs import AETHERSEARCH_BOT_REACT_EMOJI
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import AccountType
+from aethersearch.db.models import SlackChannelConfig
+from aethersearch.db.user_preferences import activate_user
+from aethersearch.db.users import add_slack_user_if_not_exists
+from aethersearch.db.users import get_user_by_email
+from aethersearch.aethersearchbot.slack.blocks import get_feedback_reminder_blocks
+from aethersearch.aethersearchbot.slack.handlers.handle_regular_answer import handle_regular_answer
+from aethersearch.aethersearchbot.slack.handlers.handle_standard_answers import handle_standard_answers
+from aethersearch.aethersearchbot.slack.models import SlackMessageInfo
+from aethersearch.aethersearchbot.slack.utils import fetch_slack_user_ids_from_emails
+from aethersearch.aethersearchbot.slack.utils import fetch_user_ids_from_groups
+from aethersearch.aethersearchbot.slack.utils import respond_in_thread_or_channel
+from aethersearch.aethersearchbot.slack.utils import slack_usage_report
+from aethersearch.aethersearchbot.slack.utils import update_emote_react
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import fetch_ee_implementation_or_noop
 from shared_configs.configs import SLACK_CHANNEL_ID
 
 logger_base = setup_logger()
@@ -39,7 +39,7 @@ def send_msg_ack_to_user(details: SlackMessageInfo, client: WebClient) -> None:
         return
 
     update_emote_react(
-        emoji=ONYX_BOT_REACT_EMOJI,
+        emoji=AETHERSEARCH_BOT_REACT_EMOJI,
         channel=details.channel_to_respond,
         message_ts=details.msg_to_respond,
         remove=False,
@@ -52,7 +52,7 @@ def schedule_feedback_reminder(
 ) -> str | None:
     logger = setup_logger(extra={SLACK_CHANNEL_ID: details.channel_to_respond})
 
-    if not ONYX_BOT_FEEDBACK_REMINDER:
+    if not AETHERSEARCH_BOT_FEEDBACK_REMINDER:
         logger.info("Scheduled feedback reminder disabled...")
         return None
 
@@ -66,7 +66,7 @@ def schedule_feedback_reminder(
         return None
 
     now = datetime.datetime.now()
-    future = now + datetime.timedelta(minutes=ONYX_BOT_FEEDBACK_REMINDER)
+    future = now + datetime.timedelta(minutes=AETHERSEARCH_BOT_FEEDBACK_REMINDER)
 
     try:
         response = client.chat_scheduleMessage(
@@ -120,7 +120,7 @@ def handle_message(
     Returns True if need to respond with an additional message to the user(s) after this
     function is finished. True indicates an unexpected failure that needs to be communicated
     Query thrown out by filters due to config does not count as a failure that should be notified
-    Onyx failing to answer/retrieve docs does count and should be notified
+    AetherSearch failing to answer/retrieve docs does count and should be notified
     """
     channel = message_info.channel_to_respond
 
@@ -176,12 +176,12 @@ def handle_message(
     # Only default config can be disabled.
     # If channel config is disabled, bot should not respond to this message (including DMs)
     if slack_channel_config.channel_config.get("disabled"):
-        logger.info("Skipping message: OnyxBot is disabled for this channel")
+        logger.info("Skipping message: AetherSearchBot is disabled for this channel")
         return False
 
     # If bot should only respond to tags and is not tagged nor in a DM, skip message
     if respond_tag_only and not bypass_filters and not is_bot_dm:
-        logger.info("Skipping message: OnyxBot only responds to tags in this channel")
+        logger.info("Skipping message: AetherSearchBot only responds to tags in this channel")
         return False
 
     # List of user id to send message to, if None, send to everyone in channel
@@ -198,7 +198,7 @@ def handle_message(
         if missing_users:
             logger.warning(f"Failed to find these users/groups: {missing_users}")
 
-    # If configured to respond to team members only, then cannot be used with a /OnyxBot command
+    # If configured to respond to team members only, then cannot be used with a /AetherSearchBot command
     # which would just respond to the sender
     if send_to and is_slash_command:
         if sender_id:
@@ -206,7 +206,7 @@ def handle_message(
                 client=client,
                 channel=channel,
                 receiver_ids=[sender_id],
-                text="The OnyxBot slash command is not enabled for this channel",
+                text="The AetherSearchBot slash command is not enabled for this channel",
                 thread_ts=None,
             )
 
@@ -221,7 +221,7 @@ def handle_message(
             if existing_user is None:
                 # New user — check seat availability before creating
                 check_seat_fn = fetch_ee_implementation_or_noop(
-                    "onyx.db.license",
+                    "aethersearch.db.license",
                     "check_seat_availability",
                     None,
                 )
@@ -240,7 +240,7 @@ def handle_message(
                             "has reached its user seat limit. Since this is your "
                             "first time interacting with the bot, a new account "
                             "could not be created for you. Please contact your "
-                            "Onyx administrator to add more seats."
+                            "AetherSearch administrator to add more seats."
                         ),
                     )
                     return False
@@ -250,7 +250,7 @@ def handle_message(
                 and existing_user.account_type == AccountType.BOT
             ):
                 check_seat_fn = fetch_ee_implementation_or_noop(
-                    "onyx.db.license",
+                    "aethersearch.db.license",
                     "check_seat_availability",
                     None,
                 )
@@ -268,14 +268,14 @@ def handle_message(
                             "has reached its user seat limit. Your account is "
                             "currently deactivated and cannot be reactivated "
                             "until more seats are available. Please contact "
-                            "your Onyx administrator."
+                            "your AetherSearch administrator."
                         ),
                     )
                     return False
 
                 activate_user(existing_user, db_session)
                 invalidate_license_cache_fn = fetch_ee_implementation_or_noop(
-                    "onyx.db.license",
+                    "aethersearch.db.license",
                     "invalidate_license_cache",
                     None,
                 )

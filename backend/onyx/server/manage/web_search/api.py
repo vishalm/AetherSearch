@@ -7,46 +7,46 @@ from fastapi import Response
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import InternetContentProvider
-from onyx.db.models import InternetSearchProvider
-from onyx.db.models import User
-from onyx.db.web_search import deactivate_web_content_provider
-from onyx.db.web_search import deactivate_web_search_provider
-from onyx.db.web_search import delete_web_content_provider
-from onyx.db.web_search import delete_web_search_provider
-from onyx.db.web_search import fetch_web_content_provider_by_name
-from onyx.db.web_search import fetch_web_content_provider_by_type
-from onyx.db.web_search import fetch_web_content_providers
-from onyx.db.web_search import fetch_web_search_provider_by_name
-from onyx.db.web_search import fetch_web_search_provider_by_type
-from onyx.db.web_search import fetch_web_search_providers
-from onyx.db.web_search import set_active_web_content_provider
-from onyx.db.web_search import set_active_web_search_provider
-from onyx.db.web_search import upsert_web_content_provider
-from onyx.db.web_search import upsert_web_search_provider
-from onyx.server.manage.web_search.models import WebContentProviderTestRequest
-from onyx.server.manage.web_search.models import WebContentProviderUpsertRequest
-from onyx.server.manage.web_search.models import WebContentProviderView
-from onyx.server.manage.web_search.models import WebSearchProviderTestRequest
-from onyx.server.manage.web_search.models import WebSearchProviderUpsertRequest
-from onyx.server.manage.web_search.models import WebSearchProviderView
-from onyx.tools.tool_implementations.open_url.utils import (
+from aethersearch.auth.permissions import require_permission
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import InternetContentProvider
+from aethersearch.db.models import InternetSearchProvider
+from aethersearch.db.models import User
+from aethersearch.db.web_search import deactivate_web_content_provider
+from aethersearch.db.web_search import deactivate_web_search_provider
+from aethersearch.db.web_search import delete_web_content_provider
+from aethersearch.db.web_search import delete_web_search_provider
+from aethersearch.db.web_search import fetch_web_content_provider_by_name
+from aethersearch.db.web_search import fetch_web_content_provider_by_type
+from aethersearch.db.web_search import fetch_web_content_providers
+from aethersearch.db.web_search import fetch_web_search_provider_by_name
+from aethersearch.db.web_search import fetch_web_search_provider_by_type
+from aethersearch.db.web_search import fetch_web_search_providers
+from aethersearch.db.web_search import set_active_web_content_provider
+from aethersearch.db.web_search import set_active_web_search_provider
+from aethersearch.db.web_search import upsert_web_content_provider
+from aethersearch.db.web_search import upsert_web_search_provider
+from aethersearch.server.manage.web_search.models import WebContentProviderTestRequest
+from aethersearch.server.manage.web_search.models import WebContentProviderUpsertRequest
+from aethersearch.server.manage.web_search.models import WebContentProviderView
+from aethersearch.server.manage.web_search.models import WebSearchProviderTestRequest
+from aethersearch.server.manage.web_search.models import WebSearchProviderUpsertRequest
+from aethersearch.server.manage.web_search.models import WebSearchProviderView
+from aethersearch.tools.tool_implementations.open_url.utils import (
     filter_web_contents_with_no_title_or_content,
 )
-from onyx.tools.tool_implementations.web_search.models import WebContentProviderConfig
-from onyx.tools.tool_implementations.web_search.providers import (
+from aethersearch.tools.tool_implementations.web_search.models import WebContentProviderConfig
+from aethersearch.tools.tool_implementations.web_search.providers import (
     build_content_provider_from_config,
 )
-from onyx.tools.tool_implementations.web_search.providers import (
+from aethersearch.tools.tool_implementations.web_search.providers import (
     build_search_provider_from_config,
 )
-from onyx.tools.tool_implementations.web_search.providers import (
+from aethersearch.tools.tool_implementations.web_search.providers import (
     provider_requires_api_key,
 )
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.enums import WebContentProviderType
 from shared_configs.enums import WebSearchProviderType

@@ -407,7 +407,7 @@ export default function CustomModal({
           <Content
             title="Environment Variables"
             description={markdown(
-              "Add extra properties as needed by the model provider. These are passed to LiteLLM's `completion()` call as [environment variables](https://docs.litellm.ai/docs/set_keys#environment-variables). See [documentation](https://docs.onyx.app/admins/ai_models/custom_inference_provider) for more instructions."
+              "Add extra properties as needed by the model provider. These are passed to LiteLLM's `completion()` call as [environment variables](https://docs.litellm.ai/docs/set_keys#environment-variables). See [documentation](https://docs.aethersearch.app/admins/ai_models/custom_inference_provider) for more instructions."
             )}
             width="full"
             variant="section"

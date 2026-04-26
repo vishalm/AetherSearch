@@ -5,18 +5,18 @@ LLM providers. It supports both implicit caching (automatic provider-side cachin
 and explicit caching (with cache metadata management).
 """
 
-from onyx.llm.prompt_cache.cache_manager import CacheManager
-from onyx.llm.prompt_cache.cache_manager import generate_cache_key_hash
-from onyx.llm.prompt_cache.models import CacheMetadata
-from onyx.llm.prompt_cache.processor import process_with_prompt_cache
-from onyx.llm.prompt_cache.providers.anthropic import AnthropicPromptCacheProvider
-from onyx.llm.prompt_cache.providers.base import PromptCacheProvider
-from onyx.llm.prompt_cache.providers.factory import get_provider_adapter
-from onyx.llm.prompt_cache.providers.noop import NoOpPromptCacheProvider
-from onyx.llm.prompt_cache.providers.openai import OpenAIPromptCacheProvider
-from onyx.llm.prompt_cache.providers.vertex import VertexAIPromptCacheProvider
-from onyx.llm.prompt_cache.utils import combine_messages_with_continuation
-from onyx.llm.prompt_cache.utils import prepare_messages_with_cacheable_transform
+from aethersearch.llm.prompt_cache.cache_manager import CacheManager
+from aethersearch.llm.prompt_cache.cache_manager import generate_cache_key_hash
+from aethersearch.llm.prompt_cache.models import CacheMetadata
+from aethersearch.llm.prompt_cache.processor import process_with_prompt_cache
+from aethersearch.llm.prompt_cache.providers.anthropic import AnthropicPromptCacheProvider
+from aethersearch.llm.prompt_cache.providers.base import PromptCacheProvider
+from aethersearch.llm.prompt_cache.providers.factory import get_provider_adapter
+from aethersearch.llm.prompt_cache.providers.noop import NoOpPromptCacheProvider
+from aethersearch.llm.prompt_cache.providers.openai import OpenAIPromptCacheProvider
+from aethersearch.llm.prompt_cache.providers.vertex import VertexAIPromptCacheProvider
+from aethersearch.llm.prompt_cache.utils import combine_messages_with_continuation
+from aethersearch.llm.prompt_cache.utils import prepare_messages_with_cacheable_transform
 
 __all__ = [
     "AnthropicPromptCacheProvider",

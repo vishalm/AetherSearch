@@ -2,11 +2,11 @@ from collections.abc import Generator
 
 from github import Repository
 
-from ee.onyx.db.external_perm import ExternalUserGroup
-from ee.onyx.external_permissions.github.utils import get_external_user_group
-from onyx.connectors.github.connector import GithubConnector
-from onyx.db.models import ConnectorCredentialPair
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.db.external_perm import ExternalUserGroup
+from ee.aethersearch.external_permissions.github.utils import get_external_user_group
+from aethersearch.connectors.github.connector import GithubConnector
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

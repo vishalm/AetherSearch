@@ -3,24 +3,24 @@ from __future__ import annotations
 from collections.abc import Sequence
 from concurrent.futures import ThreadPoolExecutor
 
-from onyx.file_processing.html_utils import ParsedHTML
-from onyx.file_processing.html_utils import web_html_cleanup
-from onyx.tools.tool_implementations.open_url.models import WebContent
-from onyx.tools.tool_implementations.open_url.models import WebContentProvider
-from onyx.utils.logger import setup_logger
-from onyx.utils.url import ssrf_safe_get
-from onyx.utils.url import SSRFException
-from onyx.utils.web_content import decode_html_bytes
-from onyx.utils.web_content import extract_pdf_text
-from onyx.utils.web_content import is_pdf_resource
-from onyx.utils.web_content import title_from_pdf_metadata
-from onyx.utils.web_content import title_from_url
+from aethersearch.file_processing.html_utils import ParsedHTML
+from aethersearch.file_processing.html_utils import web_html_cleanup
+from aethersearch.tools.tool_implementations.open_url.models import WebContent
+from aethersearch.tools.tool_implementations.open_url.models import WebContentProvider
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.url import ssrf_safe_get
+from aethersearch.utils.url import SSRFException
+from aethersearch.utils.web_content import decode_html_bytes
+from aethersearch.utils.web_content import extract_pdf_text
+from aethersearch.utils.web_content import is_pdf_resource
+from aethersearch.utils.web_content import title_from_pdf_metadata
+from aethersearch.utils.web_content import title_from_url
 
 logger = setup_logger()
 
 DEFAULT_READ_TIMEOUT_SECONDS = 15
 DEFAULT_CONNECT_TIMEOUT_SECONDS = 5
-DEFAULT_USER_AGENT = "OnyxWebCrawler/1.0 (+https://www.onyx.app)"
+DEFAULT_USER_AGENT = "AetherSearchWebCrawler/1.0 (+https://www.aethersearch.app)"
 DEFAULT_MAX_PDF_SIZE_BYTES = 50 * 1024 * 1024  # 50 MB
 DEFAULT_MAX_HTML_SIZE_BYTES = 20 * 1024 * 1024  # 20 MB
 DEFAULT_MAX_WORKERS = 5
@@ -36,7 +36,7 @@ def _failed_result(url: str) -> WebContent:
     )
 
 
-class OnyxWebCrawler(WebContentProvider):
+class AetherSearchWebCrawler(WebContentProvider):
     """
     Lightweight built-in crawler that fetches HTML directly and extracts readable text.
     Acts as the default content provider when no external crawler (e.g. Firecrawl) is
@@ -75,7 +75,7 @@ class OnyxWebCrawler(WebContentProvider):
             return self._fetch_url(url)
         except Exception as exc:
             logger.warning(
-                "Onyx crawler unexpected error for %s (%s)",
+                "AetherSearch crawler unexpected error for %s (%s)",
                 url,
                 exc.__class__.__name__,
             )
@@ -97,14 +97,14 @@ class OnyxWebCrawler(WebContentProvider):
             return _failed_result(url)
         except Exception as exc:
             logger.warning(
-                "Onyx crawler failed to fetch %s (%s)",
+                "AetherSearch crawler failed to fetch %s (%s)",
                 url,
                 exc.__class__.__name__,
             )
             return _failed_result(url)
 
         if response.status_code >= 400:
-            logger.warning("Onyx crawler received %s for %s", response.status_code, url)
+            logger.warning("AetherSearch crawler received %s for %s", response.status_code, url)
             return _failed_result(url)
 
         content_type = response.headers.get("Content-Type", "")
@@ -156,7 +156,7 @@ class OnyxWebCrawler(WebContentProvider):
             title = parsed.title or ""
         except Exception as exc:
             logger.warning(
-                "Onyx crawler failed to parse %s (%s)", url, exc.__class__.__name__
+                "AetherSearch crawler failed to parse %s (%s)", url, exc.__class__.__name__
             )
             text_content = ""
             title = ""

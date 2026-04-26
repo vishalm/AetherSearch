@@ -13,20 +13,20 @@ from sqlalchemy import select
 from sqlalchemy.orm import aliased
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import MessageType
-from onyx.configs.constants import SearchFeedbackType
-from onyx.db.chat import get_chat_message
-from onyx.db.enums import AccessType
-from onyx.db.models import ChatMessageFeedback
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import Document as DbDocument
-from onyx.db.models import DocumentByConnectorCredentialPair
-from onyx.db.models import DocumentRetrievalFeedback
-from onyx.db.models import User
-from onyx.db.models import User__UserGroup
-from onyx.db.models import UserGroup__ConnectorCredentialPair
-from onyx.db.models import UserRole
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import MessageType
+from aethersearch.configs.constants import SearchFeedbackType
+from aethersearch.db.chat import get_chat_message
+from aethersearch.db.enums import AccessType
+from aethersearch.db.models import ChatMessageFeedback
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import Document as DbDocument
+from aethersearch.db.models import DocumentByConnectorCredentialPair
+from aethersearch.db.models import DocumentRetrievalFeedback
+from aethersearch.db.models import User
+from aethersearch.db.models import User__UserGroup
+from aethersearch.db.models import UserGroup__ConnectorCredentialPair
+from aethersearch.db.models import UserRole
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

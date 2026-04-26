@@ -1,6 +1,6 @@
 import pytest
 
-from onyx.auth.users import _is_same_origin
+from aethersearch.auth.users import _is_same_origin
 
 
 class TestExactMatch:

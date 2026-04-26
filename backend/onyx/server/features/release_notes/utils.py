@@ -7,19 +7,19 @@ from datetime import timezone
 import httpx
 from sqlalchemy.orm import Session
 
-from onyx import __version__
-from onyx.cache.factory import get_shared_cache_backend
-from onyx.configs.app_configs import INSTANCE_TYPE
-from onyx.configs.constants import OnyxRedisLocks
-from onyx.db.release_notes import create_release_notifications_for_versions
-from onyx.server.features.release_notes.constants import AUTO_REFRESH_THRESHOLD_SECONDS
-from onyx.server.features.release_notes.constants import FETCH_TIMEOUT
-from onyx.server.features.release_notes.constants import GITHUB_CHANGELOG_RAW_URL
-from onyx.server.features.release_notes.constants import REDIS_CACHE_TTL
-from onyx.server.features.release_notes.constants import REDIS_KEY_ETAG
-from onyx.server.features.release_notes.constants import REDIS_KEY_FETCHED_AT
-from onyx.server.features.release_notes.models import ReleaseNoteEntry
-from onyx.utils.logger import setup_logger
+from aethersearch import __version__
+from aethersearch.cache.factory import get_shared_cache_backend
+from aethersearch.configs.app_configs import INSTANCE_TYPE
+from aethersearch.configs.constants import AetherSearchRedisLocks
+from aethersearch.db.release_notes import create_release_notifications_for_versions
+from aethersearch.server.features.release_notes.constants import AUTO_REFRESH_THRESHOLD_SECONDS
+from aethersearch.server.features.release_notes.constants import FETCH_TIMEOUT
+from aethersearch.server.features.release_notes.constants import GITHUB_CHANGELOG_RAW_URL
+from aethersearch.server.features.release_notes.constants import REDIS_CACHE_TTL
+from aethersearch.server.features.release_notes.constants import REDIS_KEY_ETAG
+from aethersearch.server.features.release_notes.constants import REDIS_KEY_FETCHED_AT
+from aethersearch.server.features.release_notes.models import ReleaseNoteEntry
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -76,7 +76,7 @@ def parse_mdx_to_release_note_entries(mdx_content: str) -> list[ReleaseNoteEntry
                 ReleaseNoteEntry(
                     version=version,
                     date=date,
-                    title=f"Onyx {version} is available!",
+                    title=f"AetherSearch {version} is available!",
                 )
             )
 
@@ -184,7 +184,7 @@ def ensure_release_notes_fresh_and_notify(db_session: Session) -> None:
 
     cache = get_shared_cache_backend()
     lock = cache.lock(
-        OnyxRedisLocks.RELEASE_NOTES_FETCH_LOCK,
+        AetherSearchRedisLocks.RELEASE_NOTES_FETCH_LOCK,
         timeout=90,
     )
 

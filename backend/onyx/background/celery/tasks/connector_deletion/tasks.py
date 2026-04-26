@@ -13,62 +13,62 @@ from redis import Redis
 from redis.lock import Lock as RedisLock
 from sqlalchemy.orm import Session
 
-from onyx.background.celery.apps.app_base import task_logger
-from onyx.background.celery.celery_redis import celery_get_broker_client
-from onyx.background.celery.celery_redis import celery_get_queue_length
-from onyx.background.celery.celery_redis import celery_get_queued_task_ids
-from onyx.configs.app_configs import JOB_TIMEOUT
-from onyx.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import OnyxRedisConstants
-from onyx.configs.constants import OnyxRedisLocks
-from onyx.configs.constants import OnyxRedisSignals
-from onyx.db.connector import fetch_connector_by_id
-from onyx.db.connector_credential_pair import add_deletion_failure_message
-from onyx.db.connector_credential_pair import (
+from aethersearch.background.celery.apps.app_base import task_logger
+from aethersearch.background.celery.celery_redis import celery_get_broker_client
+from aethersearch.background.celery.celery_redis import celery_get_queue_length
+from aethersearch.background.celery.celery_redis import celery_get_queued_task_ids
+from aethersearch.configs.app_configs import JOB_TIMEOUT
+from aethersearch.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import AetherSearchRedisConstants
+from aethersearch.configs.constants import AetherSearchRedisLocks
+from aethersearch.configs.constants import AetherSearchRedisSignals
+from aethersearch.db.connector import fetch_connector_by_id
+from aethersearch.db.connector_credential_pair import add_deletion_failure_message
+from aethersearch.db.connector_credential_pair import (
     delete_connector_credential_pair__no_commit,
 )
-from onyx.db.connector_credential_pair import get_connector_credential_pair_from_id
-from onyx.db.connector_credential_pair import get_connector_credential_pairs
-from onyx.db.document import (
+from aethersearch.db.connector_credential_pair import get_connector_credential_pair_from_id
+from aethersearch.db.connector_credential_pair import get_connector_credential_pairs
+from aethersearch.db.document import (
     delete_all_documents_by_connector_credential_pair__no_commit,
 )
-from onyx.db.document import get_document_ids_for_connector_credential_pair
-from onyx.db.document_set import delete_document_set_cc_pair_relationship__no_commit
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import IndexingStatus
-from onyx.db.enums import SyncStatus
-from onyx.db.enums import SyncType
-from onyx.db.index_attempt import delete_index_attempts
-from onyx.db.index_attempt import get_recent_attempts_for_cc_pair
-from onyx.db.permission_sync_attempt import (
+from aethersearch.db.document import get_document_ids_for_connector_credential_pair
+from aethersearch.db.document_set import delete_document_set_cc_pair_relationship__no_commit
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import IndexingStatus
+from aethersearch.db.enums import SyncStatus
+from aethersearch.db.enums import SyncType
+from aethersearch.db.index_attempt import delete_index_attempts
+from aethersearch.db.index_attempt import get_recent_attempts_for_cc_pair
+from aethersearch.db.permission_sync_attempt import (
     delete_doc_permission_sync_attempts__no_commit,
 )
-from onyx.db.permission_sync_attempt import (
+from aethersearch.db.permission_sync_attempt import (
     delete_external_group_permission_sync_attempts__no_commit,
 )
-from onyx.db.search_settings import get_all_search_settings
-from onyx.db.sync_record import cleanup_sync_records
-from onyx.db.sync_record import insert_sync_record
-from onyx.db.sync_record import update_sync_record_status
-from onyx.db.tag import delete_orphan_tags__no_commit
-from onyx.redis.redis_connector import RedisConnector
-from onyx.redis.redis_connector_delete import RedisConnectorDelete
-from onyx.redis.redis_connector_delete import RedisConnectorDeletePayload
-from onyx.redis.redis_pool import get_redis_client
-from onyx.redis.redis_pool import get_redis_replica_client
-from onyx.redis.redis_tenant_work_gating import maybe_mark_tenant_active
-from onyx.server.metrics.deletion_metrics import inc_deletion_blocked
-from onyx.server.metrics.deletion_metrics import inc_deletion_completed
-from onyx.server.metrics.deletion_metrics import inc_deletion_fence_reset
-from onyx.server.metrics.deletion_metrics import inc_deletion_started
-from onyx.server.metrics.deletion_metrics import observe_deletion_taskset_duration
-from onyx.utils.variable_functionality import (
+from aethersearch.db.search_settings import get_all_search_settings
+from aethersearch.db.sync_record import cleanup_sync_records
+from aethersearch.db.sync_record import insert_sync_record
+from aethersearch.db.sync_record import update_sync_record_status
+from aethersearch.db.tag import delete_orphan_tags__no_commit
+from aethersearch.redis.redis_connector import RedisConnector
+from aethersearch.redis.redis_connector_delete import RedisConnectorDelete
+from aethersearch.redis.redis_connector_delete import RedisConnectorDeletePayload
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.redis.redis_pool import get_redis_replica_client
+from aethersearch.redis.redis_tenant_work_gating import maybe_mark_tenant_active
+from aethersearch.server.metrics.deletion_metrics import inc_deletion_blocked
+from aethersearch.server.metrics.deletion_metrics import inc_deletion_completed
+from aethersearch.server.metrics.deletion_metrics import inc_deletion_fence_reset
+from aethersearch.server.metrics.deletion_metrics import inc_deletion_started
+from aethersearch.server.metrics.deletion_metrics import observe_deletion_taskset_duration
+from aethersearch.utils.variable_functionality import (
     fetch_versioned_implementation_with_fallback,
 )
-from onyx.utils.variable_functionality import noop_fallback
+from aethersearch.utils.variable_functionality import noop_fallback
 
 
 class TaskDependencyError(RuntimeError):
@@ -130,7 +130,7 @@ def revoke_tasks_blocking_deletion(
 
 
 @shared_task(
-    name=OnyxCeleryTask.CHECK_FOR_CONNECTOR_DELETION,
+    name=AetherSearchCeleryTask.CHECK_FOR_CONNECTOR_DELETION,
     ignore_result=True,
     soft_time_limit=JOB_TIMEOUT,
     trail=False,
@@ -141,7 +141,7 @@ def check_for_connector_deletion_task(self: Task, *, tenant_id: str) -> bool | N
     r_replica = get_redis_replica_client()
 
     lock_beat: RedisLock = r.lock(
-        OnyxRedisLocks.CHECK_CONNECTOR_DELETION_BEAT_LOCK,
+        AetherSearchRedisLocks.CHECK_CONNECTOR_DELETION_BEAT_LOCK,
         timeout=CELERY_GENERIC_BEAT_LOCK_TIMEOUT,
     )
 
@@ -152,7 +152,7 @@ def check_for_connector_deletion_task(self: Task, *, tenant_id: str) -> bool | N
     try:
         # we want to run this less frequently than the overall task
         lock_beat.reacquire()
-        if not r.exists(OnyxRedisSignals.BLOCK_VALIDATE_CONNECTOR_DELETION_FENCES):
+        if not r.exists(AetherSearchRedisSignals.BLOCK_VALIDATE_CONNECTOR_DELETION_FENCES):
             # clear fences that don't have associated celery tasks in progress
             try:
                 r_celery = celery_get_broker_client(self.app)
@@ -164,7 +164,7 @@ def check_for_connector_deletion_task(self: Task, *, tenant_id: str) -> bool | N
                     "Exception while validating connector deletion fences"
                 )
 
-            r.set(OnyxRedisSignals.BLOCK_VALIDATE_CONNECTOR_DELETION_FENCES, 1, ex=300)
+            r.set(AetherSearchRedisSignals.BLOCK_VALIDATE_CONNECTOR_DELETION_FENCES, 1, ex=300)
 
         # collect cc_pair_ids and note whether any are in DELETING status
         cc_pair_ids: list[int] = []
@@ -225,12 +225,12 @@ def check_for_connector_deletion_task(self: Task, *, tenant_id: str) -> bool | N
                     redis_connector.stop.set_fence(False)
 
         lock_beat.reacquire()
-        keys = cast(set[Any], r_replica.smembers(OnyxRedisConstants.ACTIVE_FENCES))
+        keys = cast(set[Any], r_replica.smembers(AetherSearchRedisConstants.ACTIVE_FENCES))
         for key in keys:
             key_bytes = cast(bytes, key)
 
             if not r.exists(key_bytes):
-                r.srem(OnyxRedisConstants.ACTIVE_FENCES, key_bytes)
+                r.srem(AetherSearchRedisConstants.ACTIVE_FENCES, key_bytes)
                 continue
 
             key_str = key_bytes.decode("utf-8")
@@ -486,7 +486,7 @@ def monitor_connector_deletion_taskset(
 
             # user groups
             cleanup_user_groups = fetch_versioned_implementation_with_fallback(
-                "onyx.db.user_group",
+                "aethersearch.db.user_group",
                 "delete_user_group_cc_pair_relationship__no_commit",
                 noop_fallback,
             )
@@ -600,17 +600,17 @@ def validate_connector_deletion_fences(
     # validating until the queue is small
     CONNECTION_DELETION_VALIDATION_MAX_QUEUE_LEN = 1024
 
-    queue_len = celery_get_queue_length(OnyxCeleryQueues.CONNECTOR_DELETION, r_celery)
+    queue_len = celery_get_queue_length(AetherSearchCeleryQueues.CONNECTOR_DELETION, r_celery)
     if queue_len > CONNECTION_DELETION_VALIDATION_MAX_QUEUE_LEN:
         return
 
     queued_upsert_tasks = celery_get_queued_task_ids(
-        OnyxCeleryQueues.CONNECTOR_DELETION, r_celery
+        AetherSearchCeleryQueues.CONNECTOR_DELETION, r_celery
     )
 
     # validate all existing connector deletion jobs
     lock_beat.reacquire()
-    keys = cast(set[Any], r_replica.smembers(OnyxRedisConstants.ACTIVE_FENCES))
+    keys = cast(set[Any], r_replica.smembers(AetherSearchRedisConstants.ACTIVE_FENCES))
     for key in keys:
         key_bytes = cast(bytes, key)
         key_str = key_bytes.decode("utf-8")

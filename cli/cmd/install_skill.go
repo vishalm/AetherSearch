@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/onyx-dot-app/onyx/cli/internal/embedded"
-	"github.com/onyx-dot-app/onyx/cli/internal/fsutil"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/embedded"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/fsutil"
 	"github.com/spf13/cobra"
 )
 

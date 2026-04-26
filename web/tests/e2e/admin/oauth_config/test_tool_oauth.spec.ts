@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { Page, Browser } from "@playwright/test";
 import { loginAs } from "@tests/e2e/utils/auth";
-import { OnyxApiClient } from "@tests/e2e/utils/onyxApiClient";
+import { AetherSearchApiClient } from "@tests/e2e/utils/aethersearchApiClient";
 
 // --- Locator Helper Functions ---
 const getAuthorizationUrlInput = (page: Page) =>
@@ -57,7 +57,7 @@ test.afterAll(async ({ browser }: { browser: Browser }) => {
     storageState: "admin_auth.json",
   });
   const page = await context.newPage();
-  const client = new OnyxApiClient(page.request);
+  const client = new AetherSearchApiClient(page.request);
 
   // Delete the assistant first (it references the tool)
   if (createdAssistantId !== null) {

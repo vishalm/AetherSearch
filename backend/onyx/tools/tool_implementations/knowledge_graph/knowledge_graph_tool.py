@@ -2,12 +2,12 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from onyx.chat.emitter import Emitter
-from onyx.db.kg_config import get_kg_config_settings
-from onyx.server.query_and_chat.placement import Placement
-from onyx.tools.interface import Tool
-from onyx.tools.models import ToolResponse
-from onyx.utils.logger import setup_logger
+from aethersearch.chat.emitter import Emitter
+from aethersearch.db.kg_config import get_kg_config_settings
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.tools.interface import Tool
+from aethersearch.tools.models import ToolResponse
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

@@ -15,7 +15,7 @@ import { FilterManager, LlmManager, useFederatedConnectors } from "@/lib/hooks";
 import usePromptShortcuts from "@/hooks/usePromptShortcuts";
 import useFilter from "@/hooks/useFilter";
 import useCCPairs from "@/hooks/useCCPairs";
-import { MinimalOnyxDocument } from "@/lib/search/interfaces";
+import { MinimalAetherSearchDocument } from "@/lib/search/interfaces";
 import { ChatState } from "@/app/app/interfaces";
 import { useForcedTools } from "@/lib/hooks/useForcedTools";
 import useAppFocus from "@/hooks/useAppFocus";
@@ -89,7 +89,7 @@ export interface AppInputBarProps {
   handleFileUpload: (files: File[]) => void;
   filterManager: FilterManager;
   deepResearchEnabled: boolean;
-  setPresentingDocument?: (document: MinimalOnyxDocument) => void;
+  setPresentingDocument?: (document: MinimalAetherSearchDocument) => void;
   toggleDeepResearch: () => void;
   isMultiModelActive?: boolean;
   disabled: boolean;
@@ -252,12 +252,12 @@ const AppInputBar = React.memo(
       );
     }, [currentMessageFiles]);
 
-    // Convert ProjectFile to MinimalOnyxDocument format for viewing
+    // Convert ProjectFile to MinimalAetherSearchDocument format for viewing
     const handleFileClick = useCallback(
       (file: ProjectFile) => {
         if (!setPresentingDocument) return;
 
-        const documentForViewer: MinimalOnyxDocument = {
+        const documentForViewer: MinimalAetherSearchDocument = {
           document_id: `project_file__${file.file_id}`,
           semantic_identifier: file.name,
         };
@@ -479,7 +479,7 @@ const AppInputBar = React.memo(
       const isProjectWorkflow = currentProjectId !== null;
 
       // TODO(@yuhong): Re-enable Deep Research in Projects workflow once it is fully supported.
-      // https://linear.app/onyx-app/issue/ENG-3818/re-enable-deep-research-in-projects
+      // https://linear.app/aethersearch-app/issue/ENG-3818/re-enable-deep-research-in-projects
       return (
         !isProjectWorkflow &&
         deepResearchGloballyEnabled &&
@@ -698,7 +698,7 @@ const AppInputBar = React.memo(
               hasUploadingFiles ||
               isClassifying
             }
-            id="onyx-chat-input-send-button"
+            id="aethersearch-chat-input-send-button"
             icon={
               isClassifying
                 ? SimpleLoader
@@ -743,7 +743,7 @@ const AppInputBar = React.memo(
         <Disabled disabled={disabled} allowClick>
           <div
             ref={containerRef}
-            id="onyx-chat-input"
+            id="aethersearch-chat-input"
             className={cn(
               "relative w-full flex flex-col shadow-01 bg-background-neutral-00 rounded-16"
               // # Note (from @raunakab):
@@ -820,7 +820,7 @@ const AppInputBar = React.memo(
                     className="px-3 py-2 flex-1 flex h-[2.75rem]"
                   >
                     <textarea
-                      id="onyx-chat-input-textarea"
+                      id="aethersearch-chat-input-textarea"
                       role="textarea"
                       ref={textAreaRef}
                       onPaste={handlePaste}
@@ -841,7 +841,7 @@ const AppInputBar = React.memo(
                           : isRecording
                             ? "Listening..."
                             : isVoicePlaybackActive
-                              ? "Onyx is speaking..."
+                              ? "AetherSearch is speaking..."
                               : isSearchMode
                                 ? "Search connected sources"
                                 : "How can I help you today?"
@@ -1000,7 +1000,7 @@ const AppInputBar = React.memo(
                   />
                   <Button
                     disabled={!message || isClassifying || hasUploadingFiles}
-                    id="onyx-chat-input-send-button"
+                    id="aethersearch-chat-input-send-button"
                     icon={isClassifying ? SimpleLoader : SvgSearch}
                     onClick={() => {
                       if (chatState == "streaming") {

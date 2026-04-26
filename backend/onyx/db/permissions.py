@@ -1,10 +1,10 @@
 """
 DB operations for recomputing user effective_permissions.
 
-These live in onyx/db/ (not onyx/auth/) because they are pure DB operations
+These live in aethersearch/db/ (not aethersearch/auth/) because they are pure DB operations
 that query PermissionGrant rows and update the User.effective_permissions
 JSONB column.  Keeping them here avoids circular imports when called from
-other onyx/db/ modules such as users.py.
+other aethersearch/db/ modules such as users.py.
 """
 
 from collections import defaultdict
@@ -14,9 +14,9 @@ from sqlalchemy import select
 from sqlalchemy import update
 from sqlalchemy.orm import Session
 
-from onyx.db.models import PermissionGrant
-from onyx.db.models import User
-from onyx.db.models import User__UserGroup
+from aethersearch.db.models import PermissionGrant
+from aethersearch.db.models import User
+from aethersearch.db.models import User__UserGroup
 
 
 def recompute_user_permissions__no_commit(

@@ -2,21 +2,21 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.configs.app_configs import ONYX_DISABLE_VESPA
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.db.opensearch_migration import get_opensearch_migration_state
-from onyx.db.opensearch_migration import get_opensearch_retrieval_state
-from onyx.db.opensearch_migration import set_enable_opensearch_retrieval_with_commit
-from onyx.server.manage.opensearch_migration.models import (
+from aethersearch.auth.permissions import require_permission
+from aethersearch.configs.app_configs import AETHERSEARCH_DISABLE_VESPA
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.db.opensearch_migration import get_opensearch_migration_state
+from aethersearch.db.opensearch_migration import get_opensearch_retrieval_state
+from aethersearch.db.opensearch_migration import set_enable_opensearch_retrieval_with_commit
+from aethersearch.server.manage.opensearch_migration.models import (
     OpenSearchMigrationStatusResponse,
 )
-from onyx.server.manage.opensearch_migration.models import (
+from aethersearch.server.manage.opensearch_migration.models import (
     OpenSearchRetrievalStatusRequest,
 )
-from onyx.server.manage.opensearch_migration.models import (
+from aethersearch.server.manage.opensearch_migration.models import (
     OpenSearchRetrievalStatusResponse,
 )
 
@@ -50,7 +50,7 @@ def get_opensearch_retrieval_status(
     enable_opensearch_retrieval = get_opensearch_retrieval_state(db_session)
     return OpenSearchRetrievalStatusResponse(
         enable_opensearch_retrieval=enable_opensearch_retrieval,
-        toggling_retrieval_is_disabled=ONYX_DISABLE_VESPA,
+        toggling_retrieval_is_disabled=AETHERSEARCH_DISABLE_VESPA,
     )
 
 
@@ -65,5 +65,5 @@ def set_opensearch_retrieval_status(
     )
     return OpenSearchRetrievalStatusResponse(
         enable_opensearch_retrieval=request.enable_opensearch_retrieval,
-        toggling_retrieval_is_disabled=ONYX_DISABLE_VESPA,
+        toggling_retrieval_is_disabled=AETHERSEARCH_DISABLE_VESPA,
     )

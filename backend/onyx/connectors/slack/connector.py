@@ -28,47 +28,47 @@ from slack_sdk.http_retry.builtin_interval_calculators import (
 )
 from typing_extensions import override
 
-from onyx.access.models import ExternalAccess
-from onyx.configs.app_configs import ENABLE_EXPENSIVE_EXPERT_CALLS
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.app_configs import SLACK_NUM_THREADS
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.connectors.exceptions import CredentialExpiredError
-from onyx.connectors.exceptions import InsufficientPermissionsError
-from onyx.connectors.exceptions import UnexpectedValidationError
-from onyx.connectors.interfaces import CheckpointedConnectorWithPermSync
-from onyx.connectors.interfaces import CheckpointOutput
-from onyx.connectors.interfaces import CredentialsConnector
-from onyx.connectors.interfaces import CredentialsProviderInterface
-from onyx.connectors.interfaces import GenerateSlimDocumentOutput
-from onyx.connectors.interfaces import NormalizationResult
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.interfaces import SlimConnectorWithPermSync
-from onyx.connectors.models import BasicExpertInfo
-from onyx.connectors.models import ConnectorCheckpoint
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import ConnectorMissingCredentialError
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentFailure
-from onyx.connectors.models import EntityFailure
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import SlimDocument
-from onyx.connectors.models import TextSection
-from onyx.connectors.slack.access import get_channel_access
-from onyx.connectors.slack.models import ChannelType
-from onyx.connectors.slack.models import MessageType
-from onyx.connectors.slack.models import ThreadType
-from onyx.connectors.slack.onyx_retry_handler import OnyxRedisSlackRetryHandler
-from onyx.connectors.slack.onyx_slack_web_client import OnyxSlackWebClient
-from onyx.connectors.slack.utils import expert_info_from_slack_id
-from onyx.connectors.slack.utils import get_message_link
-from onyx.connectors.slack.utils import make_paginated_slack_api_call
-from onyx.connectors.slack.utils import SlackTextCleaner
-from onyx.db.enums import HierarchyNodeType
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.redis.redis_pool import get_redis_client
-from onyx.utils.logger import setup_logger
+from aethersearch.access.models import ExternalAccess
+from aethersearch.configs.app_configs import ENABLE_EXPENSIVE_EXPERT_CALLS
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.app_configs import SLACK_NUM_THREADS
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.connectors.exceptions import CredentialExpiredError
+from aethersearch.connectors.exceptions import InsufficientPermissionsError
+from aethersearch.connectors.exceptions import UnexpectedValidationError
+from aethersearch.connectors.interfaces import CheckpointedConnectorWithPermSync
+from aethersearch.connectors.interfaces import CheckpointOutput
+from aethersearch.connectors.interfaces import CredentialsConnector
+from aethersearch.connectors.interfaces import CredentialsProviderInterface
+from aethersearch.connectors.interfaces import GenerateSlimDocumentOutput
+from aethersearch.connectors.interfaces import NormalizationResult
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.interfaces import SlimConnectorWithPermSync
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.connectors.models import ConnectorCheckpoint
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import ConnectorMissingCredentialError
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentFailure
+from aethersearch.connectors.models import EntityFailure
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import SlimDocument
+from aethersearch.connectors.models import TextSection
+from aethersearch.connectors.slack.access import get_channel_access
+from aethersearch.connectors.slack.models import ChannelType
+from aethersearch.connectors.slack.models import MessageType
+from aethersearch.connectors.slack.models import ThreadType
+from aethersearch.connectors.slack.aethersearch_retry_handler import AetherSearchRedisSlackRetryHandler
+from aethersearch.connectors.slack.aethersearch_slack_web_client import AetherSearchSlackWebClient
+from aethersearch.connectors.slack.utils import expert_info_from_slack_id
+from aethersearch.connectors.slack.utils import get_message_link
+from aethersearch.connectors.slack.utils import make_paginated_slack_api_call
+from aethersearch.connectors.slack.utils import SlackTextCleaner
+from aethersearch.db.enums import HierarchyNodeType
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -753,7 +753,7 @@ class SlackConnector(
         delay_key = SlackConnector.make_delay_key(prefix)
 
         # NOTE: slack has a built in RateLimitErrorRetryHandler, but it isn't designed
-        # for concurrent workers. We've extended it with OnyxRedisSlackRetryHandler.
+        # for concurrent workers. We've extended it with AetherSearchRedisSlackRetryHandler.
         connection_error_retry_handler = ConnectionErrorRetryHandler(
             max_retry_count=max_retry_count,
             interval_calculator=FixedValueRetryIntervalCalculator(),
@@ -765,17 +765,17 @@ class SlackConnector(
             ],
         )
 
-        onyx_rate_limit_error_retry_handler = OnyxRedisSlackRetryHandler(
+        aethersearch_rate_limit_error_retry_handler = AetherSearchRedisSlackRetryHandler(
             max_retry_count=max_retry_count,
             delay_key=delay_key,
             r=r,
         )
         custom_retry_handlers: list[RetryHandler] = [
             connection_error_retry_handler,
-            onyx_rate_limit_error_retry_handler,
+            aethersearch_rate_limit_error_retry_handler,
         ]
 
-        client = OnyxSlackWebClient(
+        client = AetherSearchSlackWebClient(
             delay_lock=delay_lock,
             delay_key=delay_key,
             r=r,
@@ -1273,7 +1273,7 @@ if __name__ == "__main__":
     import os
     import time
 
-    from onyx.connectors.credentials_provider import OnyxStaticCredentialsProvider
+    from aethersearch.connectors.credentials_provider import AetherSearchStaticCredentialsProvider
     from shared_configs.contextvars import get_current_tenant_id
 
     slack_channel = os.environ.get("SLACK_CHANNEL")
@@ -1281,7 +1281,7 @@ if __name__ == "__main__":
         channels=[slack_channel] if slack_channel else None,
     )
 
-    provider = OnyxStaticCredentialsProvider(
+    provider = AetherSearchStaticCredentialsProvider(
         tenant_id=get_current_tenant_id(),
         connector_name="slack",
         credential_json={

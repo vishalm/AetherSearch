@@ -1,4 +1,4 @@
-// Package tui implements the Bubble Tea TUI for Onyx CLI.
+// Package tui implements the Bubble Tea TUI for AetherSearch CLI.
 package tui
 
 import (
@@ -10,14 +10,14 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/onyx-dot-app/onyx/cli/internal/api"
-	"github.com/onyx-dot-app/onyx/cli/internal/config"
-	"github.com/onyx-dot-app/onyx/cli/internal/models"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/api"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/config"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/models"
 )
 
 // Model is the root Bubble Tea model.
 type Model struct {
-	config config.OnyxCliConfig
+	config config.AetherSearchCliConfig
 	client *api.Client
 
 	viewport *viewport
@@ -48,7 +48,7 @@ type Model struct {
 }
 
 // NewModel creates a new TUI model.
-func NewModel(cfg config.OnyxCliConfig) Model {
+func NewModel(cfg config.AetherSearchCliConfig) Model {
 	client := api.NewClient(cfg)
 	parentID := -1
 

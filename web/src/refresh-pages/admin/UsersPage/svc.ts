@@ -153,7 +153,7 @@ export async function downloadUsersCsv(): Promise<void> {
   const a = document.createElement("a");
   a.href = url;
   const ts = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
-  a.download = `onyx_users_${ts}.csv`;
+  a.download = `aethersearch_users_${ts}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }

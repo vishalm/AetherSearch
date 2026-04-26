@@ -9,14 +9,14 @@ import httpx
 import pytest
 from pydantic import BaseModel
 
-from ee.onyx.hooks.executor import _execute_hook_impl as execute_hook
-from onyx.db.enums import HookFailStrategy
-from onyx.db.enums import HookPoint
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.hooks.executor import HookSkipped
-from onyx.hooks.executor import HookSoftFailed
-from onyx.hooks.points.query_processing import QueryProcessingResponse
+from ee.aethersearch.hooks.executor import _execute_hook_impl as execute_hook
+from aethersearch.db.enums import HookFailStrategy
+from aethersearch.db.enums import HookPoint
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.hooks.executor import HookSkipped
+from aethersearch.hooks.executor import HookSoftFailed
+from aethersearch.hooks.points.query_processing import QueryProcessingResponse
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -133,14 +133,14 @@ def test_early_exit_returns_skipped_with_no_db_writes(
     hook: MagicMock | None,
 ) -> None:
     with (
-        patch("ee.onyx.hooks.executor.MULTI_TENANT", multi_tenant),
+        patch("ee.aethersearch.hooks.executor.MULTI_TENANT", multi_tenant),
         patch(
-            "ee.onyx.hooks.executor.get_non_deleted_hook_by_hook_point",
+            "ee.aethersearch.hooks.executor.get_non_deleted_hook_by_hook_point",
             return_value=hook,
         ),
-        patch("ee.onyx.hooks.executor.update_hook__no_commit") as mock_update,
+        patch("ee.aethersearch.hooks.executor.update_hook__no_commit") as mock_update,
         patch(
-            "ee.onyx.hooks.executor.create_hook_execution_log__no_commit"
+            "ee.aethersearch.hooks.executor.create_hook_execution_log__no_commit"
         ) as mock_log,
     ):
         result = execute_hook(
@@ -166,15 +166,15 @@ def test_success_returns_validated_model_and_sets_reachable(
     hook = _make_hook()
 
     with (
-        patch("ee.onyx.hooks.executor.MULTI_TENANT", False),
+        patch("ee.aethersearch.hooks.executor.MULTI_TENANT", False),
         patch(
-            "ee.onyx.hooks.executor.get_non_deleted_hook_by_hook_point",
+            "ee.aethersearch.hooks.executor.get_non_deleted_hook_by_hook_point",
             return_value=hook,
         ),
-        patch("ee.onyx.hooks.executor.get_session_with_current_tenant"),
-        patch("ee.onyx.hooks.executor.update_hook__no_commit") as mock_update,
+        patch("ee.aethersearch.hooks.executor.get_session_with_current_tenant"),
+        patch("ee.aethersearch.hooks.executor.update_hook__no_commit") as mock_update,
         patch(
-            "ee.onyx.hooks.executor.create_hook_execution_log__no_commit"
+            "ee.aethersearch.hooks.executor.create_hook_execution_log__no_commit"
         ) as mock_log,
         patch("httpx.Client") as mock_client_cls,
     ):
@@ -199,14 +199,14 @@ def test_success_skips_reachable_write_when_already_true(db_session: MagicMock) 
     hook = _make_hook(is_reachable=True)
 
     with (
-        patch("ee.onyx.hooks.executor.MULTI_TENANT", False),
+        patch("ee.aethersearch.hooks.executor.MULTI_TENANT", False),
         patch(
-            "ee.onyx.hooks.executor.get_non_deleted_hook_by_hook_point",
+            "ee.aethersearch.hooks.executor.get_non_deleted_hook_by_hook_point",
             return_value=hook,
         ),
-        patch("ee.onyx.hooks.executor.get_session_with_current_tenant"),
-        patch("ee.onyx.hooks.executor.update_hook__no_commit") as mock_update,
-        patch("ee.onyx.hooks.executor.create_hook_execution_log__no_commit"),
+        patch("ee.aethersearch.hooks.executor.get_session_with_current_tenant"),
+        patch("ee.aethersearch.hooks.executor.update_hook__no_commit") as mock_update,
+        patch("ee.aethersearch.hooks.executor.create_hook_execution_log__no_commit"),
         patch("httpx.Client") as mock_client_cls,
     ):
         _setup_client(mock_client_cls, response=_make_response())
@@ -228,15 +228,15 @@ def test_non_dict_json_response_is_a_failure(db_session: MagicMock) -> None:
     hook = _make_hook(fail_strategy=HookFailStrategy.SOFT)
 
     with (
-        patch("ee.onyx.hooks.executor.MULTI_TENANT", False),
+        patch("ee.aethersearch.hooks.executor.MULTI_TENANT", False),
         patch(
-            "ee.onyx.hooks.executor.get_non_deleted_hook_by_hook_point",
+            "ee.aethersearch.hooks.executor.get_non_deleted_hook_by_hook_point",
             return_value=hook,
         ),
-        patch("ee.onyx.hooks.executor.get_session_with_current_tenant"),
-        patch("ee.onyx.hooks.executor.update_hook__no_commit") as mock_update,
+        patch("ee.aethersearch.hooks.executor.get_session_with_current_tenant"),
+        patch("ee.aethersearch.hooks.executor.update_hook__no_commit") as mock_update,
         patch(
-            "ee.onyx.hooks.executor.create_hook_execution_log__no_commit"
+            "ee.aethersearch.hooks.executor.create_hook_execution_log__no_commit"
         ) as mock_log,
         patch("httpx.Client") as mock_client_cls,
     ):
@@ -264,15 +264,15 @@ def test_json_decode_failure_is_a_failure(db_session: MagicMock) -> None:
     hook = _make_hook(fail_strategy=HookFailStrategy.SOFT)
 
     with (
-        patch("ee.onyx.hooks.executor.MULTI_TENANT", False),
+        patch("ee.aethersearch.hooks.executor.MULTI_TENANT", False),
         patch(
-            "ee.onyx.hooks.executor.get_non_deleted_hook_by_hook_point",
+            "ee.aethersearch.hooks.executor.get_non_deleted_hook_by_hook_point",
             return_value=hook,
         ),
-        patch("ee.onyx.hooks.executor.get_session_with_current_tenant"),
-        patch("ee.onyx.hooks.executor.update_hook__no_commit") as mock_update,
+        patch("ee.aethersearch.hooks.executor.get_session_with_current_tenant"),
+        patch("ee.aethersearch.hooks.executor.update_hook__no_commit") as mock_update,
         patch(
-            "ee.onyx.hooks.executor.create_hook_execution_log__no_commit"
+            "ee.aethersearch.hooks.executor.create_hook_execution_log__no_commit"
         ) as mock_log,
         patch("httpx.Client") as mock_client_cls,
     ):
@@ -315,7 +315,7 @@ def test_json_decode_failure_is_a_failure(db_session: MagicMock) -> None:
         pytest.param(
             httpx.ConnectError("refused"),
             HookFailStrategy.HARD,
-            OnyxError,
+            AetherSearchError,
             False,
             id="connect_error_hard",
         ),
@@ -338,7 +338,7 @@ def test_json_decode_failure_is_a_failure(db_session: MagicMock) -> None:
                 response=MagicMock(status_code=403, text="Forbidden"),
             ),
             HookFailStrategy.HARD,
-            OnyxError,
+            AetherSearchError,
             False,
             id="auth_403_hard",
         ),
@@ -353,7 +353,7 @@ def test_json_decode_failure_is_a_failure(db_session: MagicMock) -> None:
         pytest.param(
             httpx.TimeoutException("timeout"),
             HookFailStrategy.HARD,
-            OnyxError,
+            AetherSearchError,
             None,
             id="timeout_hard",
         ),
@@ -376,7 +376,7 @@ def test_json_decode_failure_is_a_failure(db_session: MagicMock) -> None:
                 response=MagicMock(status_code=500, text="error"),
             ),
             HookFailStrategy.HARD,
-            OnyxError,
+            AetherSearchError,
             None,
             id="http_status_error_hard",
         ),
@@ -392,27 +392,27 @@ def test_http_failure_paths(
     hook = _make_hook(fail_strategy=fail_strategy)
 
     with (
-        patch("ee.onyx.hooks.executor.MULTI_TENANT", False),
+        patch("ee.aethersearch.hooks.executor.MULTI_TENANT", False),
         patch(
-            "ee.onyx.hooks.executor.get_non_deleted_hook_by_hook_point",
+            "ee.aethersearch.hooks.executor.get_non_deleted_hook_by_hook_point",
             return_value=hook,
         ),
-        patch("ee.onyx.hooks.executor.get_session_with_current_tenant"),
-        patch("ee.onyx.hooks.executor.update_hook__no_commit") as mock_update,
-        patch("ee.onyx.hooks.executor.create_hook_execution_log__no_commit"),
+        patch("ee.aethersearch.hooks.executor.get_session_with_current_tenant"),
+        patch("ee.aethersearch.hooks.executor.update_hook__no_commit") as mock_update,
+        patch("ee.aethersearch.hooks.executor.create_hook_execution_log__no_commit"),
         patch("httpx.Client") as mock_client_cls,
     ):
         _setup_client(mock_client_cls, side_effect=exception)
 
-        if expected_type is OnyxError:
-            with pytest.raises(OnyxError) as exc_info:
+        if expected_type is AetherSearchError:
+            with pytest.raises(AetherSearchError) as exc_info:
                 execute_hook(
                     db_session=db_session,
                     hook_point=HookPoint.QUERY_PROCESSING,
                     payload=_PAYLOAD,
                     response_type=QueryProcessingResponse,
                 )
-            assert exc_info.value.error_code is OnyxErrorCode.HOOK_EXECUTION_FAILED
+            assert exc_info.value.error_code is AetherSearchErrorCode.HOOK_EXECUTION_FAILED
         else:
             result = execute_hook(
                 db_session=db_session,
@@ -451,14 +451,14 @@ def test_authorization_header(
     hook = _make_hook(api_key=api_key)
 
     with (
-        patch("ee.onyx.hooks.executor.MULTI_TENANT", False),
+        patch("ee.aethersearch.hooks.executor.MULTI_TENANT", False),
         patch(
-            "ee.onyx.hooks.executor.get_non_deleted_hook_by_hook_point",
+            "ee.aethersearch.hooks.executor.get_non_deleted_hook_by_hook_point",
             return_value=hook,
         ),
-        patch("ee.onyx.hooks.executor.get_session_with_current_tenant"),
-        patch("ee.onyx.hooks.executor.update_hook__no_commit"),
-        patch("ee.onyx.hooks.executor.create_hook_execution_log__no_commit"),
+        patch("ee.aethersearch.hooks.executor.get_session_with_current_tenant"),
+        patch("ee.aethersearch.hooks.executor.update_hook__no_commit"),
+        patch("ee.aethersearch.hooks.executor.create_hook_execution_log__no_commit"),
         patch("httpx.Client") as mock_client_cls,
     ):
         mock_client = _setup_client(mock_client_cls, response=_make_response())
@@ -482,7 +482,7 @@ def test_authorization_header(
 
 
 @pytest.mark.parametrize(
-    "http_exception,expect_onyx_error",
+    "http_exception,expect_aethersearch_error",
     [
         pytest.param(None, False, id="success_path"),
         pytest.param(httpx.ConnectError("refused"), True, id="hard_fail_path"),
@@ -491,19 +491,19 @@ def test_authorization_header(
 def test_persist_session_failure_is_swallowed(
     db_session: MagicMock,
     http_exception: Exception | None,
-    expect_onyx_error: bool,
+    expect_aethersearch_error: bool,
 ) -> None:
-    """DB session failure in _persist_result must not mask the real return value or OnyxError."""
+    """DB session failure in _persist_result must not mask the real return value or AetherSearchError."""
     hook = _make_hook(fail_strategy=HookFailStrategy.HARD)
 
     with (
-        patch("ee.onyx.hooks.executor.MULTI_TENANT", False),
+        patch("ee.aethersearch.hooks.executor.MULTI_TENANT", False),
         patch(
-            "ee.onyx.hooks.executor.get_non_deleted_hook_by_hook_point",
+            "ee.aethersearch.hooks.executor.get_non_deleted_hook_by_hook_point",
             return_value=hook,
         ),
         patch(
-            "ee.onyx.hooks.executor.get_session_with_current_tenant",
+            "ee.aethersearch.hooks.executor.get_session_with_current_tenant",
             side_effect=RuntimeError("DB unavailable"),
         ),
         patch("httpx.Client") as mock_client_cls,
@@ -514,15 +514,15 @@ def test_persist_session_failure_is_swallowed(
             side_effect=http_exception,
         )
 
-        if expect_onyx_error:
-            with pytest.raises(OnyxError) as exc_info:
+        if expect_aethersearch_error:
+            with pytest.raises(AetherSearchError) as exc_info:
                 execute_hook(
                     db_session=db_session,
                     hook_point=HookPoint.QUERY_PROCESSING,
                     payload=_PAYLOAD,
                     response_type=QueryProcessingResponse,
                 )
-            assert exc_info.value.error_code is OnyxErrorCode.HOOK_EXECUTION_FAILED
+            assert exc_info.value.error_code is AetherSearchErrorCode.HOOK_EXECUTION_FAILED
         else:
             result = execute_hook(
                 db_session=db_session,
@@ -551,7 +551,7 @@ class _StrictResponse(BaseModel):
         pytest.param(
             HookFailStrategy.SOFT, HookSoftFailed, id="validation_failure_soft"
         ),
-        pytest.param(HookFailStrategy.HARD, OnyxError, id="validation_failure_hard"),
+        pytest.param(HookFailStrategy.HARD, AetherSearchError, id="validation_failure_hard"),
     ],
 )
 def test_response_validation_failure_respects_fail_strategy(
@@ -564,30 +564,30 @@ def test_response_validation_failure_respects_fail_strategy(
     hook = _make_hook(fail_strategy=fail_strategy)
 
     with (
-        patch("ee.onyx.hooks.executor.MULTI_TENANT", False),
+        patch("ee.aethersearch.hooks.executor.MULTI_TENANT", False),
         patch(
-            "ee.onyx.hooks.executor.get_non_deleted_hook_by_hook_point",
+            "ee.aethersearch.hooks.executor.get_non_deleted_hook_by_hook_point",
             return_value=hook,
         ),
-        patch("ee.onyx.hooks.executor.get_session_with_current_tenant"),
-        patch("ee.onyx.hooks.executor.update_hook__no_commit") as mock_update,
+        patch("ee.aethersearch.hooks.executor.get_session_with_current_tenant"),
+        patch("ee.aethersearch.hooks.executor.update_hook__no_commit") as mock_update,
         patch(
-            "ee.onyx.hooks.executor.create_hook_execution_log__no_commit"
+            "ee.aethersearch.hooks.executor.create_hook_execution_log__no_commit"
         ) as mock_log,
         patch("httpx.Client") as mock_client_cls,
     ):
         # Response payload is missing required_field → ValidationError
         _setup_client(mock_client_cls, response=_make_response(json_return={}))
 
-        if expected_type is OnyxError:
-            with pytest.raises(OnyxError) as exc_info:
+        if expected_type is AetherSearchError:
+            with pytest.raises(AetherSearchError) as exc_info:
                 execute_hook(
                     db_session=db_session,
                     hook_point=HookPoint.QUERY_PROCESSING,
                     payload=_PAYLOAD,
                     response_type=_StrictResponse,
                 )
-            assert exc_info.value.error_code is OnyxErrorCode.HOOK_EXECUTION_FAILED
+            assert exc_info.value.error_code is AetherSearchErrorCode.HOOK_EXECUTION_FAILED
         else:
             result = execute_hook(
                 db_session=db_session,
@@ -623,19 +623,19 @@ def test_unexpected_exception_in_inner_respects_fail_strategy(
     fail_strategy: HookFailStrategy,
     expected_type: type,
 ) -> None:
-    """An unexpected exception raised by _execute_hook_inner (not an OnyxError from
+    """An unexpected exception raised by _execute_hook_inner (not an AetherSearchError from
     HARD fail — e.g. a bug or an assertion error) must be swallowed and return
     HookSoftFailed for SOFT strategy, or re-raised for HARD strategy."""
     hook = _make_hook(fail_strategy=fail_strategy)
 
     with (
-        patch("ee.onyx.hooks.executor.MULTI_TENANT", False),
+        patch("ee.aethersearch.hooks.executor.MULTI_TENANT", False),
         patch(
-            "ee.onyx.hooks.executor.get_non_deleted_hook_by_hook_point",
+            "ee.aethersearch.hooks.executor.get_non_deleted_hook_by_hook_point",
             return_value=hook,
         ),
         patch(
-            "ee.onyx.hooks.executor._execute_hook_inner",
+            "ee.aethersearch.hooks.executor._execute_hook_inner",
             side_effect=ValueError("unexpected bug"),
         ),
     ):
@@ -662,24 +662,24 @@ def test_is_reachable_failure_does_not_prevent_log(db_session: MagicMock) -> Non
     prevent the execution log from being written.
 
     Simulates the production failure path: update_hook__no_commit raises
-    OnyxError(NOT_FOUND) as it would if the hook was concurrently deleted
+    AetherSearchError(NOT_FOUND) as it would if the hook was concurrently deleted
     between the initial lookup and the reachable update.
     """
     hook = _make_hook(fail_strategy=HookFailStrategy.SOFT)
 
     with (
-        patch("ee.onyx.hooks.executor.MULTI_TENANT", False),
+        patch("ee.aethersearch.hooks.executor.MULTI_TENANT", False),
         patch(
-            "ee.onyx.hooks.executor.get_non_deleted_hook_by_hook_point",
+            "ee.aethersearch.hooks.executor.get_non_deleted_hook_by_hook_point",
             return_value=hook,
         ),
-        patch("ee.onyx.hooks.executor.get_session_with_current_tenant"),
+        patch("ee.aethersearch.hooks.executor.get_session_with_current_tenant"),
         patch(
-            "ee.onyx.hooks.executor.update_hook__no_commit",
-            side_effect=OnyxError(OnyxErrorCode.NOT_FOUND, "hook deleted"),
+            "ee.aethersearch.hooks.executor.update_hook__no_commit",
+            side_effect=AetherSearchError(AetherSearchErrorCode.NOT_FOUND, "hook deleted"),
         ),
         patch(
-            "ee.onyx.hooks.executor.create_hook_execution_log__no_commit"
+            "ee.aethersearch.hooks.executor.create_hook_execution_log__no_commit"
         ) as mock_log,
         patch("httpx.Client") as mock_client_cls,
     ):

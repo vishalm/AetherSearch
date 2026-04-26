@@ -1,9 +1,9 @@
-"""Unit tests for is_limited_user() in onyx.db.users."""
+"""Unit tests for is_limited_user() in aethersearch.db.users."""
 
 from unittest.mock import MagicMock
 
-from onyx.db.enums import AccountType
-from onyx.db.users import is_limited_user
+from aethersearch.db.enums import AccountType
+from aethersearch.db.users import is_limited_user
 
 
 class TestIsLimitedUser:

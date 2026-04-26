@@ -8,39 +8,39 @@ from fastapi import Depends
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import current_curator_or_admin_user
-from onyx.background.celery.versioned_apps.client import app as client_app
-from onyx.background.indexing.models import IndexAttemptErrorPydantic
-from onyx.configs.app_configs import GENERATIVE_MODEL_ACCESS_CHECK_FREQ
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import KV_GEN_AI_KEY_CHECK_TIME
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import PUBLIC_API_TAGS
-from onyx.db.connector_credential_pair import get_connector_credential_pair_for_user
-from onyx.db.connector_credential_pair import update_connector_credential_pair_from_id
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import Permission
-from onyx.db.feedback import fetch_docs_ranked_by_boost_for_user
-from onyx.db.feedback import update_document_boost_for_user
-from onyx.db.feedback import update_document_hidden_for_user
-from onyx.db.index_attempt import cancel_indexing_attempts_for_ccpair
-from onyx.db.index_attempt import get_index_attempt_errors_across_connectors
-from onyx.db.models import User
-from onyx.file_store.file_store import get_default_file_store
-from onyx.key_value_store.factory import get_kv_store
-from onyx.key_value_store.interface import KvKeyNotFoundError
-from onyx.llm.factory import get_default_llm
-from onyx.llm.utils import test_llm
-from onyx.server.documents.models import ConnectorCredentialPairIdentifier
-from onyx.server.documents.models import PaginatedReturn
-from onyx.server.manage.models import BoostDoc
-from onyx.server.manage.models import BoostUpdateRequest
-from onyx.server.manage.models import HiddenUpdateRequest
-from onyx.server.models import StatusResponse
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import current_curator_or_admin_user
+from aethersearch.background.celery.versioned_apps.client import app as client_app
+from aethersearch.background.indexing.models import IndexAttemptErrorPydantic
+from aethersearch.configs.app_configs import GENERATIVE_MODEL_ACCESS_CHECK_FREQ
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import KV_GEN_AI_KEY_CHECK_TIME
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import PUBLIC_API_TAGS
+from aethersearch.db.connector_credential_pair import get_connector_credential_pair_for_user
+from aethersearch.db.connector_credential_pair import update_connector_credential_pair_from_id
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import Permission
+from aethersearch.db.feedback import fetch_docs_ranked_by_boost_for_user
+from aethersearch.db.feedback import update_document_boost_for_user
+from aethersearch.db.feedback import update_document_hidden_for_user
+from aethersearch.db.index_attempt import cancel_indexing_attempts_for_ccpair
+from aethersearch.db.index_attempt import get_index_attempt_errors_across_connectors
+from aethersearch.db.models import User
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.key_value_store.factory import get_kv_store
+from aethersearch.key_value_store.interface import KvKeyNotFoundError
+from aethersearch.llm.factory import get_default_llm
+from aethersearch.llm.utils import test_llm
+from aethersearch.server.documents.models import ConnectorCredentialPairIdentifier
+from aethersearch.server.documents.models import PaginatedReturn
+from aethersearch.server.manage.models import BoostDoc
+from aethersearch.server.manage.models import BoostUpdateRequest
+from aethersearch.server.manage.models import HiddenUpdateRequest
+from aethersearch.server.models import StatusResponse
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 router = APIRouter(prefix="/manage")
@@ -193,8 +193,8 @@ def create_deletion_attempt_for_connector_id(
 
     # run the beat task to pick up this deletion from the db immediately
     client_app.send_task(
-        OnyxCeleryTask.CHECK_FOR_CONNECTOR_DELETION,
-        priority=OnyxCeleryPriority.HIGH,
+        AetherSearchCeleryTask.CHECK_FOR_CONNECTOR_DELETION,
+        priority=AetherSearchCeleryPriority.HIGH,
         kwargs={"tenant_id": tenant_id},
     )
 

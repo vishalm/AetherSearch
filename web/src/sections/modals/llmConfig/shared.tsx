@@ -32,7 +32,7 @@ import {
 import {
   SvgArrowExchange,
   SvgChevronDown,
-  SvgOnyxOctagon,
+  SvgAetherSearchOctagon,
   SvgOrganization,
   SvgPlusCircle,
   SvgRefreshCw,
@@ -41,7 +41,7 @@ import {
   SvgUsers,
   SvgX,
 } from "@opal/icons";
-import SvgOnyxLogo from "@opal/logos/onyx-logo";
+import SvgAetherSearchLogo from "@opal/logos/aethersearch-logo";
 import { Card, EmptyMessageCard } from "@opal/components";
 import { ContentAction } from "@opal/layouts";
 import AgentAvatar from "@/refresh-components/avatars/AgentAvatar";
@@ -351,7 +351,7 @@ export function ModelAccessField() {
             ) : (
               <div className="w-full p-2">
                 <Content
-                  icon={SvgOnyxOctagon}
+                  icon={SvgAetherSearchOctagon}
                   title="No agents added"
                   description="This provider will not be used by any agents."
                   variant="section"
@@ -739,7 +739,7 @@ function ModalWrapperInner({
           <Modal.Header
             icon={providerIcon}
             moreIcon1={SvgArrowExchange}
-            moreIcon2={SvgOnyxLogo}
+            moreIcon2={SvgAetherSearchLogo}
             title={title}
             description={description}
             onClose={onClose}

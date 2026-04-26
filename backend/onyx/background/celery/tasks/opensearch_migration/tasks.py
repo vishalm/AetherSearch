@@ -7,52 +7,52 @@ from celery import shared_task
 from celery import Task
 from redis.lock import Lock as RedisLock
 
-from onyx.background.celery.apps.app_base import task_logger
-from onyx.background.celery.tasks.opensearch_migration.constants import (
+from aethersearch.background.celery.apps.app_base import task_logger
+from aethersearch.background.celery.tasks.opensearch_migration.constants import (
     FINISHED_VISITING_SLICE_CONTINUATION_TOKEN,
 )
-from onyx.background.celery.tasks.opensearch_migration.constants import (
+from aethersearch.background.celery.tasks.opensearch_migration.constants import (
     GET_VESPA_CHUNKS_PAGE_SIZE,
 )
-from onyx.background.celery.tasks.opensearch_migration.constants import (
+from aethersearch.background.celery.tasks.opensearch_migration.constants import (
     MIGRATION_TASK_LOCK_BLOCKING_TIMEOUT_S,
 )
-from onyx.background.celery.tasks.opensearch_migration.constants import (
+from aethersearch.background.celery.tasks.opensearch_migration.constants import (
     MIGRATION_TASK_LOCK_TIMEOUT_S,
 )
-from onyx.background.celery.tasks.opensearch_migration.constants import (
+from aethersearch.background.celery.tasks.opensearch_migration.constants import (
     MIGRATION_TASK_SOFT_TIME_LIMIT_S,
 )
-from onyx.background.celery.tasks.opensearch_migration.constants import (
+from aethersearch.background.celery.tasks.opensearch_migration.constants import (
     MIGRATION_TASK_TIME_LIMIT_S,
 )
-from onyx.background.celery.tasks.opensearch_migration.transformer import (
+from aethersearch.background.celery.tasks.opensearch_migration.transformer import (
     transform_vespa_chunks_to_opensearch_chunks,
 )
-from onyx.configs.app_configs import ENABLE_OPENSEARCH_INDEXING_FOR_ONYX
-from onyx.configs.app_configs import VESPA_MIGRATION_REQUEST_TIMEOUT_S
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import OnyxRedisLocks
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.opensearch_migration import build_sanitized_to_original_doc_id_mapping
-from onyx.db.opensearch_migration import get_vespa_visit_state
-from onyx.db.opensearch_migration import is_migration_completed
-from onyx.db.opensearch_migration import (
+from aethersearch.configs.app_configs import ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH
+from aethersearch.configs.app_configs import VESPA_MIGRATION_REQUEST_TIMEOUT_S
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import AetherSearchRedisLocks
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.opensearch_migration import build_sanitized_to_original_doc_id_mapping
+from aethersearch.db.opensearch_migration import get_vespa_visit_state
+from aethersearch.db.opensearch_migration import is_migration_completed
+from aethersearch.db.opensearch_migration import (
     mark_migration_completed_time_if_not_set_with_commit,
 )
-from onyx.db.opensearch_migration import (
+from aethersearch.db.opensearch_migration import (
     try_insert_opensearch_tenant_migration_record_with_commit,
 )
-from onyx.db.opensearch_migration import update_vespa_visit_progress_with_commit
-from onyx.db.search_settings import get_current_search_settings
-from onyx.document_index.interfaces_new import TenantState
-from onyx.document_index.opensearch.opensearch_document_index import (
+from aethersearch.db.opensearch_migration import update_vespa_visit_progress_with_commit
+from aethersearch.db.search_settings import get_current_search_settings
+from aethersearch.document_index.interfaces_new import TenantState
+from aethersearch.document_index.opensearch.opensearch_document_index import (
     OpenSearchDocumentIndex,
 )
-from onyx.document_index.vespa.shared_utils.utils import get_vespa_http_client
-from onyx.document_index.vespa.vespa_document_index import VespaDocumentIndex
-from onyx.indexing.models import IndexingSetting
-from onyx.redis.redis_pool import get_redis_client
+from aethersearch.document_index.vespa.shared_utils.utils import get_vespa_http_client
+from aethersearch.document_index.vespa.vespa_document_index import VespaDocumentIndex
+from aethersearch.indexing.models import IndexingSetting
+from aethersearch.redis.redis_pool import get_redis_client
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.contextvars import get_current_tenant_id
 
@@ -68,7 +68,7 @@ def is_continuation_token_done_for_all_slices(
 
 # shared_task allows this task to be shared across celery app instances.
 @shared_task(
-    name=OnyxCeleryTask.MIGRATE_CHUNKS_FROM_VESPA_TO_OPENSEARCH_TASK,
+    name=AetherSearchCeleryTask.MIGRATE_CHUNKS_FROM_VESPA_TO_OPENSEARCH_TASK,
     # Does not store the task's return value in the result backend.
     ignore_result=True,
     # WARNING: This is here just for rigor but since we use threads for Celery
@@ -109,7 +109,7 @@ def migrate_chunks_from_vespa_to_opensearch_task(
     """
     # 1. Check if we should run the task.
     # 1.a. If OpenSearch indexing is disabled, we don't run the task.
-    if not ENABLE_OPENSEARCH_INDEXING_FOR_ONYX:
+    if not ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH:
         task_logger.warning(
             "OpenSearch migration is not enabled, skipping chunk migration task."
         )
@@ -122,7 +122,7 @@ def migrate_chunks_from_vespa_to_opensearch_task(
     # has one and we exit.
     r = get_redis_client()
     lock: RedisLock = r.lock(
-        name=OnyxRedisLocks.OPENSEARCH_MIGRATION_BEAT_LOCK,
+        name=AetherSearchRedisLocks.OPENSEARCH_MIGRATION_BEAT_LOCK,
         # The maximum time the lock can be held for. Will automatically be
         # released after this time.
         timeout=MIGRATION_TASK_LOCK_TIMEOUT_S,

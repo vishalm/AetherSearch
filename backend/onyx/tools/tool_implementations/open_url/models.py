@@ -6,7 +6,7 @@ from datetime import datetime
 from pydantic import BaseModel
 from pydantic import field_validator
 
-from onyx.utils.url import normalize_url
+from aethersearch.utils.url import normalize_url
 
 
 class WebContent(BaseModel):

@@ -7,16 +7,16 @@ from uuid import uuid4
 
 import pytest
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.google_utils.resources import GoogleDriveService
-from onyx.connectors.google_utils.shared_constants import (
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.google_utils.resources import GoogleDriveService
+from aethersearch.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_DICT_SERVICE_ACCOUNT_KEY,
 )
-from onyx.connectors.google_utils.shared_constants import (
+from aethersearch.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_PRIMARY_ADMIN_KEY,
 )
-from onyx.connectors.models import InputType
-from onyx.db.enums import AccessType
+from aethersearch.connectors.models import InputType
+from aethersearch.db.enums import AccessType
 from tests.integration.common_utils.managers.cc_pair import CCPairManager
 from tests.integration.common_utils.managers.connector import ConnectorManager
 from tests.integration.common_utils.managers.credential import CredentialManager
@@ -67,7 +67,7 @@ def google_drive_test_env_setup() -> Generator[
             drive_service, admin_user.email, test_id
         )
 
-        # Setup Onyx infrastructure
+        # Setup AetherSearch infrastructure
         LLMProviderManager.create(user_performing_action=admin_user)
 
         before = datetime.now(timezone.utc)

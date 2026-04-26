@@ -2,8 +2,8 @@ from uuid import uuid4
 
 import requests
 
-from onyx.db.models import UserRole
-from onyx.server.api_key.models import APIKeyArgs
+from aethersearch.db.models import UserRole
+from aethersearch.server.api_key.models import APIKeyArgs
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.constants import GENERAL_HEADERS
 from tests.integration.common_utils.test_models import DATestAPIKey

@@ -11,19 +11,19 @@ import httpx
 import pytest
 from fastapi import HTTPException
 
-from ee.onyx.server.license.models import LicensePayload
-from ee.onyx.server.license.models import PlanType
-from ee.onyx.server.tenants.proxy import _check_license_enforcement_enabled
-from ee.onyx.server.tenants.proxy import _extract_license_from_header
-from ee.onyx.server.tenants.proxy import forward_to_control_plane
-from ee.onyx.server.tenants.proxy import get_license_payload
-from ee.onyx.server.tenants.proxy import get_license_payload_allow_expired
-from ee.onyx.server.tenants.proxy import get_optional_license_payload
-from ee.onyx.server.tenants.proxy import verify_license_auth
+from ee.aethersearch.server.license.models import LicensePayload
+from ee.aethersearch.server.license.models import PlanType
+from ee.aethersearch.server.tenants.proxy import _check_license_enforcement_enabled
+from ee.aethersearch.server.tenants.proxy import _extract_license_from_header
+from ee.aethersearch.server.tenants.proxy import forward_to_control_plane
+from ee.aethersearch.server.tenants.proxy import get_license_payload
+from ee.aethersearch.server.tenants.proxy import get_license_payload_allow_expired
+from ee.aethersearch.server.tenants.proxy import get_optional_license_payload
+from ee.aethersearch.server.tenants.proxy import verify_license_auth
 
 # All tests that use license auth need LICENSE_ENFORCEMENT_ENABLED=True
 LICENSE_ENABLED_PATCH = patch(
-    "ee.onyx.server.tenants.proxy.LICENSE_ENFORCEMENT_ENABLED", True
+    "ee.aethersearch.server.tenants.proxy.LICENSE_ENFORCEMENT_ENABLED", True
 )
 
 
@@ -54,7 +54,7 @@ class TestLicenseEnforcementCheck:
 
     def test_raises_when_disabled(self) -> None:
         """Test that 501 is raised when LICENSE_ENFORCEMENT_ENABLED=False."""
-        with patch("ee.onyx.server.tenants.proxy.LICENSE_ENFORCEMENT_ENABLED", False):
+        with patch("ee.aethersearch.server.tenants.proxy.LICENSE_ENFORCEMENT_ENABLED", False):
             with pytest.raises(HTTPException) as exc_info:
                 _check_license_enforcement_enabled()
 
@@ -63,7 +63,7 @@ class TestLicenseEnforcementCheck:
 
     def test_passes_when_enabled(self) -> None:
         """Test that no exception is raised when LICENSE_ENFORCEMENT_ENABLED=True."""
-        with patch("ee.onyx.server.tenants.proxy.LICENSE_ENFORCEMENT_ENABLED", True):
+        with patch("ee.aethersearch.server.tenants.proxy.LICENSE_ENFORCEMENT_ENABLED", True):
             _check_license_enforcement_enabled()  # Should not raise
 
 
@@ -119,7 +119,7 @@ class TestVerifyLicenseAuth:
         with (
             LICENSE_ENABLED_PATCH,
             patch(
-                "ee.onyx.server.tenants.proxy.verify_license_signature"
+                "ee.aethersearch.server.tenants.proxy.verify_license_signature"
             ) as mock_verify,
         ):
             mock_verify.return_value = payload
@@ -134,7 +134,7 @@ class TestVerifyLicenseAuth:
         with (
             LICENSE_ENABLED_PATCH,
             patch(
-                "ee.onyx.server.tenants.proxy.verify_license_signature"
+                "ee.aethersearch.server.tenants.proxy.verify_license_signature"
             ) as mock_verify,
         ):
             mock_verify.side_effect = ValueError("Invalid signature")
@@ -152,9 +152,9 @@ class TestVerifyLicenseAuth:
         with (
             LICENSE_ENABLED_PATCH,
             patch(
-                "ee.onyx.server.tenants.proxy.verify_license_signature"
+                "ee.aethersearch.server.tenants.proxy.verify_license_signature"
             ) as mock_verify,
-            patch("ee.onyx.server.tenants.proxy.is_license_valid") as mock_valid,
+            patch("ee.aethersearch.server.tenants.proxy.is_license_valid") as mock_valid,
         ):
             mock_verify.return_value = payload
             mock_valid.return_value = False
@@ -172,9 +172,9 @@ class TestVerifyLicenseAuth:
         with (
             LICENSE_ENABLED_PATCH,
             patch(
-                "ee.onyx.server.tenants.proxy.verify_license_signature"
+                "ee.aethersearch.server.tenants.proxy.verify_license_signature"
             ) as mock_verify,
-            patch("ee.onyx.server.tenants.proxy.is_license_valid") as mock_valid,
+            patch("ee.aethersearch.server.tenants.proxy.is_license_valid") as mock_valid,
         ):
             mock_verify.return_value = payload
             mock_valid.return_value = False
@@ -185,7 +185,7 @@ class TestVerifyLicenseAuth:
 
     def test_raises_501_when_enforcement_disabled(self) -> None:
         """Test that 501 is raised when LICENSE_ENFORCEMENT_ENABLED=False."""
-        with patch("ee.onyx.server.tenants.proxy.LICENSE_ENFORCEMENT_ENABLED", False):
+        with patch("ee.aethersearch.server.tenants.proxy.LICENSE_ENFORCEMENT_ENABLED", False):
             with pytest.raises(HTTPException) as exc_info:
                 verify_license_auth("any_license", allow_expired=False)
 
@@ -203,9 +203,9 @@ class TestGetLicensePayload:
         with (
             LICENSE_ENABLED_PATCH,
             patch(
-                "ee.onyx.server.tenants.proxy.verify_license_signature"
+                "ee.aethersearch.server.tenants.proxy.verify_license_signature"
             ) as mock_verify,
-            patch("ee.onyx.server.tenants.proxy.is_license_valid") as mock_valid,
+            patch("ee.aethersearch.server.tenants.proxy.is_license_valid") as mock_valid,
         ):
             mock_verify.return_value = payload
             mock_valid.return_value = True
@@ -247,7 +247,7 @@ class TestGetLicensePayloadAllowExpired:
         with (
             LICENSE_ENABLED_PATCH,
             patch(
-                "ee.onyx.server.tenants.proxy.verify_license_signature"
+                "ee.aethersearch.server.tenants.proxy.verify_license_signature"
             ) as mock_verify,
         ):
             mock_verify.return_value = payload
@@ -291,7 +291,7 @@ class TestGetOptionalLicensePayload:
         with (
             LICENSE_ENABLED_PATCH,
             patch(
-                "ee.onyx.server.tenants.proxy.verify_license_signature"
+                "ee.aethersearch.server.tenants.proxy.verify_license_signature"
             ) as mock_verify,
         ):
             mock_verify.return_value = payload
@@ -303,7 +303,7 @@ class TestGetOptionalLicensePayload:
     @pytest.mark.asyncio
     async def test_raises_501_when_enforcement_disabled(self) -> None:
         """Test that 501 is raised when LICENSE_ENFORCEMENT_ENABLED=False."""
-        with patch("ee.onyx.server.tenants.proxy.LICENSE_ENFORCEMENT_ENABLED", False):
+        with patch("ee.aethersearch.server.tenants.proxy.LICENSE_ENFORCEMENT_ENABLED", False):
             with pytest.raises(HTTPException) as exc_info:
                 await get_optional_license_payload(None)
 
@@ -322,11 +322,11 @@ class TestForwardToControlPlane:
 
         with (
             patch(
-                "ee.onyx.server.tenants.proxy.generate_data_plane_token"
+                "ee.aethersearch.server.tenants.proxy.generate_data_plane_token"
             ) as mock_token,
-            patch("ee.onyx.server.tenants.proxy.httpx.AsyncClient") as mock_client,
+            patch("ee.aethersearch.server.tenants.proxy.httpx.AsyncClient") as mock_client,
             patch(
-                "ee.onyx.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL",
+                "ee.aethersearch.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL",
                 "https://control.example.com",
             ),
         ):
@@ -350,11 +350,11 @@ class TestForwardToControlPlane:
 
         with (
             patch(
-                "ee.onyx.server.tenants.proxy.generate_data_plane_token"
+                "ee.aethersearch.server.tenants.proxy.generate_data_plane_token"
             ) as mock_token,
-            patch("ee.onyx.server.tenants.proxy.httpx.AsyncClient") as mock_client,
+            patch("ee.aethersearch.server.tenants.proxy.httpx.AsyncClient") as mock_client,
             patch(
-                "ee.onyx.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL",
+                "ee.aethersearch.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL",
                 "https://control.example.com",
             ),
         ):
@@ -383,11 +383,11 @@ class TestForwardToControlPlane:
 
         with (
             patch(
-                "ee.onyx.server.tenants.proxy.generate_data_plane_token"
+                "ee.aethersearch.server.tenants.proxy.generate_data_plane_token"
             ) as mock_token,
-            patch("ee.onyx.server.tenants.proxy.httpx.AsyncClient") as mock_client,
+            patch("ee.aethersearch.server.tenants.proxy.httpx.AsyncClient") as mock_client,
             patch(
-                "ee.onyx.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL",
+                "ee.aethersearch.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL",
                 "https://control.example.com",
             ),
         ):
@@ -407,11 +407,11 @@ class TestForwardToControlPlane:
         """Test connection error handling."""
         with (
             patch(
-                "ee.onyx.server.tenants.proxy.generate_data_plane_token"
+                "ee.aethersearch.server.tenants.proxy.generate_data_plane_token"
             ) as mock_token,
-            patch("ee.onyx.server.tenants.proxy.httpx.AsyncClient") as mock_client,
+            patch("ee.aethersearch.server.tenants.proxy.httpx.AsyncClient") as mock_client,
             patch(
-                "ee.onyx.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL",
+                "ee.aethersearch.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL",
                 "https://control.example.com",
             ),
         ):
@@ -440,11 +440,11 @@ class TestForwardToControlPlane:
 
         with (
             patch(
-                "ee.onyx.server.tenants.proxy.generate_data_plane_token"
+                "ee.aethersearch.server.tenants.proxy.generate_data_plane_token"
             ) as mock_token,
-            patch("ee.onyx.server.tenants.proxy.httpx.AsyncClient") as mock_client,
+            patch("ee.aethersearch.server.tenants.proxy.httpx.AsyncClient") as mock_client,
             patch(
-                "ee.onyx.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL",
+                "ee.aethersearch.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL",
                 "http://control.example.com",
             ),
         ):
@@ -462,11 +462,11 @@ class TestForwardToControlPlane:
         """Test that unsupported HTTP methods raise ValueError."""
         with (
             patch(
-                "ee.onyx.server.tenants.proxy.generate_data_plane_token"
+                "ee.aethersearch.server.tenants.proxy.generate_data_plane_token"
             ) as mock_token,
-            patch("ee.onyx.server.tenants.proxy.httpx.AsyncClient"),
+            patch("ee.aethersearch.server.tenants.proxy.httpx.AsyncClient"),
             patch(
-                "ee.onyx.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL",
+                "ee.aethersearch.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL",
                 "https://control.example.com",
             ),
         ):
@@ -482,8 +482,8 @@ class TestProxyCheckoutSessionWithSeats:
     @pytest.mark.asyncio
     async def test_includes_seats_in_body_when_provided(self) -> None:
         """Should include seats in request body when provided."""
-        from ee.onyx.server.tenants.proxy import CreateCheckoutSessionRequest
-        from ee.onyx.server.tenants.proxy import proxy_create_checkout_session
+        from ee.aethersearch.server.tenants.proxy import CreateCheckoutSessionRequest
+        from ee.aethersearch.server.tenants.proxy import proxy_create_checkout_session
 
         mock_response = MagicMock()
         mock_response.json.return_value = {"url": "https://checkout.stripe.com/session"}
@@ -494,11 +494,11 @@ class TestProxyCheckoutSessionWithSeats:
         with (
             LICENSE_ENABLED_PATCH,
             patch(
-                "ee.onyx.server.tenants.proxy.generate_data_plane_token"
+                "ee.aethersearch.server.tenants.proxy.generate_data_plane_token"
             ) as mock_token,
-            patch("ee.onyx.server.tenants.proxy.httpx.AsyncClient") as mock_client,
+            patch("ee.aethersearch.server.tenants.proxy.httpx.AsyncClient") as mock_client,
             patch(
-                "ee.onyx.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL",
+                "ee.aethersearch.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL",
                 "https://control.example.com",
             ),
         ):
@@ -527,8 +527,8 @@ class TestProxyCheckoutSessionWithSeats:
     @pytest.mark.asyncio
     async def test_excludes_seats_when_not_provided(self) -> None:
         """Should not include seats in request body when not provided."""
-        from ee.onyx.server.tenants.proxy import CreateCheckoutSessionRequest
-        from ee.onyx.server.tenants.proxy import proxy_create_checkout_session
+        from ee.aethersearch.server.tenants.proxy import CreateCheckoutSessionRequest
+        from ee.aethersearch.server.tenants.proxy import proxy_create_checkout_session
 
         mock_response = MagicMock()
         mock_response.json.return_value = {"url": "https://checkout.stripe.com/session"}
@@ -539,11 +539,11 @@ class TestProxyCheckoutSessionWithSeats:
         with (
             LICENSE_ENABLED_PATCH,
             patch(
-                "ee.onyx.server.tenants.proxy.generate_data_plane_token"
+                "ee.aethersearch.server.tenants.proxy.generate_data_plane_token"
             ) as mock_token,
-            patch("ee.onyx.server.tenants.proxy.httpx.AsyncClient") as mock_client,
+            patch("ee.aethersearch.server.tenants.proxy.httpx.AsyncClient") as mock_client,
             patch(
-                "ee.onyx.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL",
+                "ee.aethersearch.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL",
                 "https://control.example.com",
             ),
         ):
@@ -566,8 +566,8 @@ class TestProxyCheckoutSessionWithSeats:
     @pytest.mark.asyncio
     async def test_includes_seats_for_new_customer(self) -> None:
         """Should include seats for new customer without license."""
-        from ee.onyx.server.tenants.proxy import CreateCheckoutSessionRequest
-        from ee.onyx.server.tenants.proxy import proxy_create_checkout_session
+        from ee.aethersearch.server.tenants.proxy import CreateCheckoutSessionRequest
+        from ee.aethersearch.server.tenants.proxy import proxy_create_checkout_session
 
         mock_response = MagicMock()
         mock_response.json.return_value = {"url": "https://checkout.stripe.com/session"}
@@ -576,11 +576,11 @@ class TestProxyCheckoutSessionWithSeats:
         with (
             LICENSE_ENABLED_PATCH,
             patch(
-                "ee.onyx.server.tenants.proxy.generate_data_plane_token"
+                "ee.aethersearch.server.tenants.proxy.generate_data_plane_token"
             ) as mock_token,
-            patch("ee.onyx.server.tenants.proxy.httpx.AsyncClient") as mock_client,
+            patch("ee.aethersearch.server.tenants.proxy.httpx.AsyncClient") as mock_client,
             patch(
-                "ee.onyx.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL",
+                "ee.aethersearch.server.tenants.proxy.CONTROL_PLANE_API_BASE_URL",
                 "https://control.example.com",
             ),
         ):

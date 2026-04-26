@@ -9,44 +9,44 @@ from google.oauth2.credentials import Credentials as OAuthCredentials
 from google.oauth2.service_account import Credentials as ServiceAccountCredentials
 from googleapiclient.errors import HttpError
 
-from onyx.access.models import ExternalAccess
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
-from onyx.connectors.google_utils.google_auth import get_google_creds
-from onyx.connectors.google_utils.google_utils import execute_paginated_retrieval
-from onyx.connectors.google_utils.google_utils import (
+from aethersearch.access.models import ExternalAccess
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
+from aethersearch.connectors.google_utils.google_auth import get_google_creds
+from aethersearch.connectors.google_utils.google_utils import execute_paginated_retrieval
+from aethersearch.connectors.google_utils.google_utils import (
     execute_paginated_retrieval_with_max_pages,
 )
-from onyx.connectors.google_utils.google_utils import execute_single_retrieval
-from onyx.connectors.google_utils.google_utils import PAGE_TOKEN_KEY
-from onyx.connectors.google_utils.resources import get_admin_service
-from onyx.connectors.google_utils.resources import get_gmail_service
-from onyx.connectors.google_utils.resources import GmailService
-from onyx.connectors.google_utils.shared_constants import (
+from aethersearch.connectors.google_utils.google_utils import execute_single_retrieval
+from aethersearch.connectors.google_utils.google_utils import PAGE_TOKEN_KEY
+from aethersearch.connectors.google_utils.resources import get_admin_service
+from aethersearch.connectors.google_utils.resources import get_gmail_service
+from aethersearch.connectors.google_utils.resources import GmailService
+from aethersearch.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_PRIMARY_ADMIN_KEY,
 )
-from onyx.connectors.google_utils.shared_constants import MISSING_SCOPES_ERROR_STR
-from onyx.connectors.google_utils.shared_constants import ONYX_SCOPE_INSTRUCTIONS
-from onyx.connectors.google_utils.shared_constants import SLIM_BATCH_SIZE
-from onyx.connectors.google_utils.shared_constants import USER_FIELDS
-from onyx.connectors.interfaces import CheckpointedConnectorWithPermSync
-from onyx.connectors.interfaces import CheckpointOutput
-from onyx.connectors.interfaces import ConnectorFailure
-from onyx.connectors.interfaces import GenerateSlimDocumentOutput
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.interfaces import SlimConnectorWithPermSync
-from onyx.connectors.models import BasicExpertInfo
-from onyx.connectors.models import ConnectorCheckpoint
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentFailure
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import ImageSection
-from onyx.connectors.models import SlimDocument
-from onyx.connectors.models import TextSection
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.utils.logger import setup_logger
-from onyx.utils.retry_wrapper import retry_builder
+from aethersearch.connectors.google_utils.shared_constants import MISSING_SCOPES_ERROR_STR
+from aethersearch.connectors.google_utils.shared_constants import AETHERSEARCH_SCOPE_INSTRUCTIONS
+from aethersearch.connectors.google_utils.shared_constants import SLIM_BATCH_SIZE
+from aethersearch.connectors.google_utils.shared_constants import USER_FIELDS
+from aethersearch.connectors.interfaces import CheckpointedConnectorWithPermSync
+from aethersearch.connectors.interfaces import CheckpointOutput
+from aethersearch.connectors.interfaces import ConnectorFailure
+from aethersearch.connectors.interfaces import GenerateSlimDocumentOutput
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.interfaces import SlimConnectorWithPermSync
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.connectors.models import ConnectorCheckpoint
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentFailure
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import ImageSection
+from aethersearch.connectors.models import SlimDocument
+from aethersearch.connectors.models import TextSection
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.retry_wrapper import retry_builder
 
 logger = setup_logger()
 
@@ -581,7 +581,7 @@ class GmailConnector(
             return checkpoint
         except Exception as e:
             if MISSING_SCOPES_ERROR_STR in str(e):
-                raise PermissionError(ONYX_SCOPE_INSTRUCTIONS) from e
+                raise PermissionError(AETHERSEARCH_SCOPE_INSTRUCTIONS) from e
             raise e
 
     def load_from_checkpoint(
@@ -633,7 +633,7 @@ class GmailConnector(
                 )
         except Exception as e:
             if MISSING_SCOPES_ERROR_STR in str(e):
-                raise PermissionError(ONYX_SCOPE_INSTRUCTIONS) from e
+                raise PermissionError(AETHERSEARCH_SCOPE_INSTRUCTIONS) from e
             raise e
 
     def build_dummy_checkpoint(self) -> GmailCheckpoint:

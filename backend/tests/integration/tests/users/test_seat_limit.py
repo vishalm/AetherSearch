@@ -11,13 +11,13 @@ from datetime import timezone
 import redis
 import requests
 
-from ee.onyx.server.license.models import LicenseMetadata
-from ee.onyx.server.license.models import LicenseSource
-from ee.onyx.server.license.models import PlanType
-from onyx.configs.app_configs import REDIS_DB_NUMBER
-from onyx.configs.app_configs import REDIS_HOST
-from onyx.configs.app_configs import REDIS_PORT
-from onyx.server.settings.models import ApplicationStatus
+from ee.aethersearch.server.license.models import LicenseMetadata
+from ee.aethersearch.server.license.models import LicenseSource
+from ee.aethersearch.server.license.models import PlanType
+from aethersearch.configs.app_configs import REDIS_DB_NUMBER
+from aethersearch.configs.app_configs import REDIS_HOST
+from aethersearch.configs.app_configs import REDIS_PORT
+from aethersearch.server.settings.models import ApplicationStatus
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.constants import GENERAL_HEADERS
 from tests.integration.common_utils.managers.user import UserManager

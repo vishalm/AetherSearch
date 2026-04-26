@@ -4,41 +4,41 @@ from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from ee.onyx.db.persona import update_persona_access
-from ee.onyx.db.user_group import add_users_to_user_group
-from ee.onyx.db.user_group import delete_user_group as db_delete_user_group
-from ee.onyx.db.user_group import fetch_user_group
-from ee.onyx.db.user_group import fetch_user_groups
-from ee.onyx.db.user_group import fetch_user_groups_for_user
-from ee.onyx.db.user_group import insert_user_group
-from ee.onyx.db.user_group import prepare_user_group_for_deletion
-from ee.onyx.db.user_group import rename_user_group
-from ee.onyx.db.user_group import set_group_permission__no_commit
-from ee.onyx.db.user_group import update_user_curator_relationship
-from ee.onyx.db.user_group import update_user_group
-from ee.onyx.server.user_group.models import AddUsersToUserGroupRequest
-from ee.onyx.server.user_group.models import MinimalUserGroupSnapshot
-from ee.onyx.server.user_group.models import SetCuratorRequest
-from ee.onyx.server.user_group.models import SetPermissionRequest
-from ee.onyx.server.user_group.models import SetPermissionResponse
-from ee.onyx.server.user_group.models import UpdateGroupAgentsRequest
-from ee.onyx.server.user_group.models import UserGroup
-from ee.onyx.server.user_group.models import UserGroupCreate
-from ee.onyx.server.user_group.models import UserGroupRename
-from ee.onyx.server.user_group.models import UserGroupUpdate
-from onyx.auth.permissions import NON_TOGGLEABLE_PERMISSIONS
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import current_curator_or_admin_user
-from onyx.configs.app_configs import DISABLE_VECTOR_DB
-from onyx.configs.constants import PUBLIC_API_TAGS
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.db.models import UserRole
-from onyx.db.persona import get_persona_by_id
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.db.persona import update_persona_access
+from ee.aethersearch.db.user_group import add_users_to_user_group
+from ee.aethersearch.db.user_group import delete_user_group as db_delete_user_group
+from ee.aethersearch.db.user_group import fetch_user_group
+from ee.aethersearch.db.user_group import fetch_user_groups
+from ee.aethersearch.db.user_group import fetch_user_groups_for_user
+from ee.aethersearch.db.user_group import insert_user_group
+from ee.aethersearch.db.user_group import prepare_user_group_for_deletion
+from ee.aethersearch.db.user_group import rename_user_group
+from ee.aethersearch.db.user_group import set_group_permission__no_commit
+from ee.aethersearch.db.user_group import update_user_curator_relationship
+from ee.aethersearch.db.user_group import update_user_group
+from ee.aethersearch.server.user_group.models import AddUsersToUserGroupRequest
+from ee.aethersearch.server.user_group.models import MinimalUserGroupSnapshot
+from ee.aethersearch.server.user_group.models import SetCuratorRequest
+from ee.aethersearch.server.user_group.models import SetPermissionRequest
+from ee.aethersearch.server.user_group.models import SetPermissionResponse
+from ee.aethersearch.server.user_group.models import UpdateGroupAgentsRequest
+from ee.aethersearch.server.user_group.models import UserGroup
+from ee.aethersearch.server.user_group.models import UserGroupCreate
+from ee.aethersearch.server.user_group.models import UserGroupRename
+from ee.aethersearch.server.user_group.models import UserGroupUpdate
+from aethersearch.auth.permissions import NON_TOGGLEABLE_PERMISSIONS
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import current_curator_or_admin_user
+from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
+from aethersearch.configs.constants import PUBLIC_API_TAGS
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.db.models import UserRole
+from aethersearch.db.persona import get_persona_by_id
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -100,7 +100,7 @@ def get_user_group_permissions(
 ) -> list[Permission]:
     group = fetch_user_group(db_session, user_group_id)
     if group is None:
-        raise OnyxError(OnyxErrorCode.NOT_FOUND, "User group not found")
+        raise AetherSearchError(AetherSearchErrorCode.NOT_FOUND, "User group not found")
     return [
         grant.permission for grant in group.permission_grants if not grant.is_deleted
     ]
@@ -115,11 +115,11 @@ def set_user_group_permission(
 ) -> SetPermissionResponse:
     group = fetch_user_group(db_session, user_group_id)
     if group is None:
-        raise OnyxError(OnyxErrorCode.NOT_FOUND, "User group not found")
+        raise AetherSearchError(AetherSearchErrorCode.NOT_FOUND, "User group not found")
 
     if request.permission in NON_TOGGLEABLE_PERMISSIONS:
-        raise OnyxError(
-            OnyxErrorCode.INVALID_INPUT,
+        raise AetherSearchError(
+            AetherSearchErrorCode.INVALID_INPUT,
             f"Permission '{request.permission}' cannot be toggled via this endpoint",
         )
 
@@ -160,7 +160,7 @@ def rename_user_group_endpoint(
 ) -> UserGroup:
     group = fetch_user_group(db_session, rename_request.id)
     if group and group.is_default:
-        raise OnyxError(OnyxErrorCode.CONFLICT, "Cannot rename a default system group.")
+        raise AetherSearchError(AetherSearchErrorCode.CONFLICT, "Cannot rename a default system group.")
     try:
         return UserGroup.from_model(
             rename_user_group(
@@ -170,15 +170,15 @@ def rename_user_group_endpoint(
             )
         )
     except IntegrityError:
-        raise OnyxError(
-            OnyxErrorCode.DUPLICATE_RESOURCE,
+        raise AetherSearchError(
+            AetherSearchErrorCode.DUPLICATE_RESOURCE,
             f"User group with name '{rename_request.name}' already exists.",
         )
     except ValueError as e:
         msg = str(e)
         if "not found" in msg.lower():
-            raise OnyxError(OnyxErrorCode.NOT_FOUND, msg)
-        raise OnyxError(OnyxErrorCode.CONFLICT, msg)
+            raise AetherSearchError(AetherSearchErrorCode.NOT_FOUND, msg)
+        raise AetherSearchError(AetherSearchErrorCode.CONFLICT, msg)
 
 
 @router.patch("/admin/user-group/{user_group_id}")
@@ -248,7 +248,7 @@ def delete_user_group(
 ) -> None:
     group = fetch_user_group(db_session, user_group_id)
     if group and group.is_default:
-        raise OnyxError(OnyxErrorCode.CONFLICT, "Cannot delete a default system group.")
+        raise AetherSearchError(AetherSearchErrorCode.CONFLICT, "Cannot delete a default system group.")
     try:
         prepare_user_group_for_deletion(db_session, user_group_id)
     except ValueError as e:

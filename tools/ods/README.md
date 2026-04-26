@@ -1,15 +1,15 @@
 # AetherSearch Developer Script
 
-[![Deploy Status](https://github.com/vishalm/ai-enterprise-search-chat-onyx/actions/workflows/release-devtools.yml/badge.svg)](https://github.com/vishalm/ai-enterprise-search-chat-onyx/actions/workflows/release-devtools.yml)
+[![Deploy Status](https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/actions/workflows/release-devtools.yml/badge.svg)](https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/actions/workflows/release-devtools.yml)
 [![PyPI](https://img.shields.io/pypi/v/aethersearch-devtools.svg)](https://pypi.org/project/aethersearch-devtools/)
 
-`ods` is [AetherSearch](https://github.com/vishalm/ai-enterprise-search-chat-onyx)'s devtools utility script.
+`ods` is [AetherSearch](https://github.com/vishalm/ai-enterprise-search-chat-aethersearch)'s devtools utility script.
 It is packaged as a python [wheel](https://packaging.python.org/en/latest/discussions/package-formats/) and available from [PyPI](https://pypi.org/project/aethersearch-devtools/).
 
 ## Installation
 
-A stable version of `ods` is provided in the default [python venv](https://github.com/vishalm/ai-enterprise-search-chat-onyx/blob/main/CONTRIBUTING.md#backend-python-requirements)
-which is synced automatically if you have [pre-commit](https://github.com/vishalm/ai-enterprise-search-chat-onyx/blob/main/CONTRIBUTING.md#formatting-and-linting)
+A stable version of `ods` is provided in the default [python venv](https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/blob/main/CONTRIBUTING.md#backend-python-requirements)
+which is synced automatically if you have [pre-commit](https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/blob/main/CONTRIBUTING.md#formatting-and-linting)
 hooks installed.
 
 While inside the AetherSearch repository, activate the root project's venv,
@@ -188,7 +188,7 @@ ods backend <subcommand>
 
 **Subcommands:**
 
-- `api` - Start the FastAPI backend server (`uvicorn onyx.main:app --reload`)
+- `api` - Start the FastAPI backend server (`uvicorn aethersearch.main:app --reload`)
 - `model_server` - Start the model server (`uvicorn model_server.main:app --reload`)
 
 **Flags:**
@@ -393,12 +393,12 @@ When set, the following defaults are applied:
 
 | Flag | Default |
 |------|---------|
-| `--baseline` | `s3://onyx-playwright-artifacts/baselines/<project>/<rev>/` |
+| `--baseline` | `s3://aethersearch-playwright-artifacts/baselines/<project>/<rev>/` |
 | `--current` | `web/output/screenshots/` |
 | `--output` | `web/output/screenshot-diff/<project>/index.html` |
 | `--rev` | `main` |
 
-The S3 bucket defaults to `onyx-playwright-artifacts` and can be overridden with the
+The S3 bucket defaults to `aethersearch-playwright-artifacts` and can be overridden with the
 `PLAYWRIGHT_S3_BUCKET` environment variable.
 
 **`compare` Flags:**
@@ -501,7 +501,7 @@ ods trace
 ods trace 12345678
 
 # Full GitHub Actions URL
-ods trace https://github.com/vishalm/ai-enterprise-search-chat-onyx/actions/runs/12345678
+ods trace https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/actions/runs/12345678
 
 # Latest run for a PR
 ods trace --pr 9500
@@ -528,7 +528,7 @@ ods cherry-pick abc123 --release 2.5 --dry-run
 
 ## Upgrading
 
-To upgrade the stable version, upgrade it as you would any other [requirement](https://github.com/vishalm/ai-enterprise-search-chat-onyx/tree/main/backend/requirements#readme).
+To upgrade the stable version, upgrade it as you would any other [requirement](https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/tree/main/backend/requirements#readme).
 
 ## Building from source
 
@@ -563,7 +563,7 @@ uv pip install .
 
 ## Deploy
 
-Releases are deployed automatically when git tags prefaced with `ods/` are pushed to [GitHub](https://github.com/vishalm/ai-enterprise-search-chat-onyx/tags).
+Releases are deployed automatically when git tags prefaced with `ods/` are pushed to [GitHub](https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/tags).
 
 The [release-tag](https://pypi.org/project/release-tag/) package can be used to calculate and push the next tag automatically,
 
@@ -571,4 +571,4 @@ The [release-tag](https://pypi.org/project/release-tag/) package can be used to 
 tag --prefix ods
 ```
 
-See also, [`.github/workflows/release-devtools.yml`](https://github.com/vishalm/ai-enterprise-search-chat-onyx/blob/main/.github/workflows/release-devtools.yml).
+See also, [`.github/workflows/release-devtools.yml`](https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/blob/main/.github/workflows/release-devtools.yml).

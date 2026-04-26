@@ -34,11 +34,11 @@ from xml.sax.saxutils import quoteattr
 
 import aiohttp
 
-from onyx.utils.logger import setup_logger
-from onyx.voice.interface import StreamingSynthesizerProtocol
-from onyx.voice.interface import StreamingTranscriberProtocol
-from onyx.voice.interface import TranscriptResult
-from onyx.voice.interface import VoiceProviderInterface
+from aethersearch.utils.logger import setup_logger
+from aethersearch.voice.interface import StreamingSynthesizerProtocol
+from aethersearch.voice.interface import StreamingTranscriberProtocol
+from aethersearch.voice.interface import TranscriptResult
+from aethersearch.voice.interface import VoiceProviderInterface
 
 # SSML namespace — W3C standard for Speech Synthesis Markup Language.
 # This is a fixed W3C specification and will not change.
@@ -520,7 +520,7 @@ class AzureVoiceProvider(VoiceProviderInterface):
             "Ocp-Apim-Subscription-Key": self.api_key,
             "Content-Type": "application/ssml+xml",
             "X-Microsoft-OutputFormat": "audio-16khz-128kbitrate-mono-mp3",
-            "User-Agent": "Onyx",
+            "User-Agent": "AetherSearch",
         }
 
         async with aiohttp.ClientSession() as session:

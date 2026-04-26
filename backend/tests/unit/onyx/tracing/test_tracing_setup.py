@@ -4,8 +4,8 @@ import importlib
 import os
 from unittest.mock import patch
 
-from onyx.configs import app_configs
-from onyx.tracing import setup as tracing_setup
+from aethersearch.configs import app_configs
+from aethersearch.tracing import setup as tracing_setup
 
 
 def test_setup_tracing_with_no_creds() -> None:

@@ -1,6 +1,6 @@
 from cryptography.hazmat.primitives.serialization import pkcs12
 
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

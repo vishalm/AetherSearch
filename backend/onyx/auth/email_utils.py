@@ -19,22 +19,22 @@ from sendgrid.helpers.mail import FileType
 from sendgrid.helpers.mail import Mail
 from sendgrid.helpers.mail import To
 
-from onyx.configs.app_configs import EMAIL_CONFIGURED
-from onyx.configs.app_configs import EMAIL_FROM
-from onyx.configs.app_configs import SENDGRID_API_KEY
-from onyx.configs.app_configs import SMTP_PASS
-from onyx.configs.app_configs import SMTP_PORT
-from onyx.configs.app_configs import SMTP_SERVER
-from onyx.configs.app_configs import SMTP_USER
-from onyx.configs.app_configs import WEB_DOMAIN
-from onyx.configs.constants import AuthType
-from onyx.configs.constants import ONYX_DEFAULT_APPLICATION_NAME
-from onyx.configs.constants import ONYX_DISCORD_URL
-from onyx.db.models import User
-from onyx.server.runtime.onyx_runtime import OnyxRuntime
-from onyx.utils.logger import setup_logger
-from onyx.utils.url import add_url_params
-from onyx.utils.variable_functionality import fetch_versioned_implementation
+from aethersearch.configs.app_configs import EMAIL_CONFIGURED
+from aethersearch.configs.app_configs import EMAIL_FROM
+from aethersearch.configs.app_configs import SENDGRID_API_KEY
+from aethersearch.configs.app_configs import SMTP_PASS
+from aethersearch.configs.app_configs import SMTP_PORT
+from aethersearch.configs.app_configs import SMTP_SERVER
+from aethersearch.configs.app_configs import SMTP_USER
+from aethersearch.configs.app_configs import WEB_DOMAIN
+from aethersearch.configs.constants import AuthType
+from aethersearch.configs.constants import AETHERSEARCH_DEFAULT_APPLICATION_NAME
+from aethersearch.configs.constants import AETHERSEARCH_DISCORD_URL
+from aethersearch.db.models import User
+from aethersearch.server.runtime.aethersearch_runtime import AetherSearchRuntime
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.url import add_url_params
+from aethersearch.utils.variable_functionality import fetch_versioned_implementation
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()
@@ -162,8 +162,8 @@ def build_html_email(
     cta_link: str | None = None,
 ) -> str:
     community_link_fragment = ""
-    if application_name == ONYX_DEFAULT_APPLICATION_NAME:
-        community_link_fragment = f'<br>Have questions? Join our Discord community <a href="{ONYX_DISCORD_URL}">here</a>.'
+    if application_name == AETHERSEARCH_DEFAULT_APPLICATION_NAME:
+        community_link_fragment = f'<br>Have questions? Join our Discord community <a href="{AETHERSEARCH_DISCORD_URL}">here</a>.'
 
     if cta_text and cta_link:
         cta_block = f'<a class="cta-button" href="{cta_link}">{cta_text}</a>'
@@ -210,7 +210,7 @@ def send_email_with_sendgrid(
     mail_from: str = EMAIL_FROM,
     inline_png: tuple[str, bytes] | None = None,
 ) -> None:
-    from_email = Email(mail_from) if mail_from else Email("noreply@onyx.app")
+    from_email = Email(mail_from) if mail_from else Email("noreply@aethersearch.app")
     to_email = To(user_email)
 
     mail = Mail(
@@ -262,7 +262,7 @@ def send_email_with_smtplib(
     if mail_from:
         msg["From"] = mail_from
     msg["Date"] = formatdate(localtime=True)
-    msg["Message-ID"] = make_msgid(domain="onyx.app")
+    msg["Message-ID"] = make_msgid(domain="aethersearch.app")
 
     # Add text part first (lowest priority)
     text_part = MIMEText(text_body, "plain")
@@ -301,14 +301,14 @@ def send_subscription_cancellation_email(user_email: str) -> None:
     # Example usage of the reusable HTML
     try:
         load_runtime_settings_fn = fetch_versioned_implementation(
-            "onyx.server.enterprise_settings.store", "load_runtime_settings"
+            "aethersearch.server.enterprise_settings.store", "load_runtime_settings"
         )
         settings = load_runtime_settings_fn()
         application_name = settings.application_name
     except ModuleNotFoundError:
-        application_name = ONYX_DEFAULT_APPLICATION_NAME
+        application_name = AETHERSEARCH_DEFAULT_APPLICATION_NAME
 
-    onyx_file = OnyxRuntime.get_emailable_logo()
+    aethersearch_file = AetherSearchRuntime.get_emailable_logo()
 
     subject = f"Your {application_name} Subscription Has Been Canceled"
     heading = "Subscription Canceled"
@@ -318,7 +318,7 @@ def send_subscription_cancellation_email(user_email: str) -> None:
         "<p>If you change your mind, you can always come back!</p>"
     )
     cta_text = "Renew Subscription"
-    cta_link = "https://www.onyx.app/pricing"
+    cta_link = "https://www.aethersearch.app/pricing"
     html_content = build_html_email(
         application_name,
         heading,
@@ -329,14 +329,14 @@ def send_subscription_cancellation_email(user_email: str) -> None:
     text_content = (
         "We're sorry to see you go.\n"
         "Your subscription has been canceled and will end on your next billing date.\n"
-        "If you change your mind, visit https://www.onyx.app/pricing"
+        "If you change your mind, visit https://www.aethersearch.app/pricing"
     )
     send_email(
         user_email,
         subject,
         html_content,
         text_content,
-        inline_png=("logo.png", onyx_file.data),
+        inline_png=("logo.png", aethersearch_file.data),
     )
 
 
@@ -390,14 +390,14 @@ def send_user_email_invite(
 ) -> None:
     try:
         load_runtime_settings_fn = fetch_versioned_implementation(
-            "onyx.server.enterprise_settings.store", "load_runtime_settings"
+            "aethersearch.server.enterprise_settings.store", "load_runtime_settings"
         )
         settings = load_runtime_settings_fn()
         application_name = settings.application_name
     except ModuleNotFoundError:
-        application_name = ONYX_DEFAULT_APPLICATION_NAME
+        application_name = AETHERSEARCH_DEFAULT_APPLICATION_NAME
 
-    onyx_file = OnyxRuntime.get_emailable_logo()
+    aethersearch_file = AetherSearchRuntime.get_emailable_logo()
 
     subject = f"Invitation to Join {application_name} Organization"
 
@@ -410,7 +410,7 @@ def send_user_email_invite(
         subject,
         html_content,
         text_content,
-        inline_png=("logo.png", onyx_file.data),
+        inline_png=("logo.png", aethersearch_file.data),
     )
 
 
@@ -423,14 +423,14 @@ def send_forgot_password_email(
     # Builds a forgot password email with or without fancy HTML
     try:
         load_runtime_settings_fn = fetch_versioned_implementation(
-            "onyx.server.enterprise_settings.store", "load_runtime_settings"
+            "aethersearch.server.enterprise_settings.store", "load_runtime_settings"
         )
         settings = load_runtime_settings_fn()
         application_name = settings.application_name
     except ModuleNotFoundError:
-        application_name = ONYX_DEFAULT_APPLICATION_NAME
+        application_name = AETHERSEARCH_DEFAULT_APPLICATION_NAME
 
-    onyx_file = OnyxRuntime.get_emailable_logo()
+    aethersearch_file = AetherSearchRuntime.get_emailable_logo()
 
     subject = f"Reset Your {application_name} Password"
     heading = "Reset Your Password"
@@ -455,7 +455,7 @@ def send_forgot_password_email(
         html_content,
         text_content,
         mail_from,
-        inline_png=("logo.png", onyx_file.data),
+        inline_png=("logo.png", aethersearch_file.data),
     )
 
 
@@ -468,14 +468,14 @@ def send_user_verification_email(
     # Builds a verification email
     try:
         load_runtime_settings_fn = fetch_versioned_implementation(
-            "onyx.server.enterprise_settings.store", "load_runtime_settings"
+            "aethersearch.server.enterprise_settings.store", "load_runtime_settings"
         )
         settings = load_runtime_settings_fn()
         application_name = settings.application_name
     except ModuleNotFoundError:
-        application_name = ONYX_DEFAULT_APPLICATION_NAME
+        application_name = AETHERSEARCH_DEFAULT_APPLICATION_NAME
 
-    onyx_file = OnyxRuntime.get_emailable_logo()
+    aethersearch_file = AetherSearchRuntime.get_emailable_logo()
 
     subject = f"{application_name} Email Verification"
     link = f"{WEB_DOMAIN}/auth/verify-email?token={token}"
@@ -496,5 +496,5 @@ def send_user_verification_email(
         html_content,
         text_content,
         mail_from,
-        inline_png=("logo.png", onyx_file.data),
+        inline_png=("logo.png", aethersearch_file.data),
     )

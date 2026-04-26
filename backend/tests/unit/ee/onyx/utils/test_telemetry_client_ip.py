@@ -1,9 +1,9 @@
-"""Unit tests for the client-IP enrichment in ee.onyx.utils.telemetry."""
+"""Unit tests for the client-IP enrichment in ee.aethersearch.utils.telemetry."""
 
 from unittest.mock import MagicMock
 
-from ee.onyx.utils import telemetry as ee_telemetry
-from onyx.utils import client_ip as client_ip_mod
+from ee.aethersearch.utils import telemetry as ee_telemetry
+from aethersearch.utils import client_ip as client_ip_mod
 
 
 def test_event_telemetry_reads_client_ip_from_contextvar(monkeypatch):  # type: ignore[no-untyped-def]

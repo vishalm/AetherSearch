@@ -17,7 +17,7 @@ def jira_connector_config() -> dict[str, Any]:
 
 @pytest.fixture
 def jira_credential_json() -> dict[str, Any]:
-    user_email = os.environ.get("JIRA_ADMIN_USER_EMAIL", "chris@onyx.app")
+    user_email = os.environ.get("JIRA_ADMIN_USER_EMAIL", "chris@aethersearch.app")
     api_token = os.environ.get("JIRA_ADMIN_API_TOKEN")
 
     assert user_email, "JIRA_ADMIN_USER_EMAIL environment variable is required"

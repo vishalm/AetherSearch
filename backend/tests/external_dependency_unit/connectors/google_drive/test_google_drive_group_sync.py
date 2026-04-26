@@ -5,23 +5,23 @@ from unittest.mock import patch
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from ee.onyx.background.celery.tasks.external_group_syncing.tasks import (
+from ee.aethersearch.background.celery.tasks.external_group_syncing.tasks import (
     _perform_external_group_sync,
 )
-from ee.onyx.db.external_perm import ExternalUserGroup
-from onyx.access.utils import build_ext_group_name_for_onyx
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.models import InputType
-from onyx.db.enums import AccessType
-from onyx.db.enums import AccountType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.models import Connector
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import Credential
-from onyx.db.models import PublicExternalUserGroup
-from onyx.db.models import User
-from onyx.db.models import User__ExternalUserGroupId
-from onyx.db.models import UserRole
+from ee.aethersearch.db.external_perm import ExternalUserGroup
+from aethersearch.access.utils import build_ext_group_name_for_aethersearch
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.models import InputType
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import AccountType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.models import Connector
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import Credential
+from aethersearch.db.models import PublicExternalUserGroup
+from aethersearch.db.models import User
+from aethersearch.db.models import User__ExternalUserGroupId
+from aethersearch.db.models import UserRole
 from tests.external_dependency_unit.conftest import create_test_user
 from tests.external_dependency_unit.constants import TEST_TENANT_ID
 
@@ -139,7 +139,7 @@ class TestPerformExternalGroupSync:
         assert len(_get_public_external_groups(db_session, cc_pair.id)) == 0
 
         with patch(
-            "ee.onyx.background.celery.tasks.external_group_syncing.tasks.get_source_perm_sync_config"
+            "ee.aethersearch.background.celery.tasks.external_group_syncing.tasks.get_source_perm_sync_config"
         ) as mock_config:
             # Mock sync config
             mock_group_config = Mock()
@@ -160,13 +160,13 @@ class TestPerformExternalGroupSync:
             )  # user1+2 in group1, user2+3 in group2, user1 in public_group
 
             # Verify group names are properly prefixed
-            expected_group1_id = build_ext_group_name_for_onyx(
+            expected_group1_id = build_ext_group_name_for_aethersearch(
                 "group1", DocumentSource.GOOGLE_DRIVE
             )
-            expected_group2_id = build_ext_group_name_for_onyx(
+            expected_group2_id = build_ext_group_name_for_aethersearch(
                 "group2", DocumentSource.GOOGLE_DRIVE
             )
-            expected_public_group_id = build_ext_group_name_for_onyx(
+            expected_public_group_id = build_ext_group_name_for_aethersearch(
                 "public_group", DocumentSource.GOOGLE_DRIVE
             )
 
@@ -205,7 +205,7 @@ class TestPerformExternalGroupSync:
         assert len(_get_user_external_groups(db_session, cc_pair.id)) == 0
 
         with patch(
-            "ee.onyx.background.celery.tasks.external_group_syncing.tasks.get_source_perm_sync_config"
+            "ee.aethersearch.background.celery.tasks.external_group_syncing.tasks.get_source_perm_sync_config"
         ) as mock_config:
             # Mock sync config
             mock_group_config = Mock()
@@ -252,10 +252,10 @@ class TestPerformExternalGroupSync:
             )  # user1+user3 in group1, user1+user2+user3 in group2
 
             # Verify specific user-group mappings
-            expected_group1_id = build_ext_group_name_for_onyx(
+            expected_group1_id = build_ext_group_name_for_aethersearch(
                 "group1", DocumentSource.GOOGLE_DRIVE
             )
-            expected_group2_id = build_ext_group_name_for_onyx(
+            expected_group2_id = build_ext_group_name_for_aethersearch(
                 "group2", DocumentSource.GOOGLE_DRIVE
             )
 
@@ -304,7 +304,7 @@ class TestPerformExternalGroupSync:
         assert len(_get_public_external_groups(db_session, cc_pair.id)) == 0
 
         with patch(
-            "ee.onyx.background.celery.tasks.external_group_syncing.tasks.get_source_perm_sync_config"
+            "ee.aethersearch.background.celery.tasks.external_group_syncing.tasks.get_source_perm_sync_config"
         ) as mock_config:
             # Mock sync config
             mock_group_config = Mock()
@@ -350,7 +350,7 @@ class TestPerformExternalGroupSync:
             assert len(updated_public_groups) == 0  # Public group was removed
 
             # Verify only group1 exists
-            expected_group1_id = build_ext_group_name_for_onyx(
+            expected_group1_id = build_ext_group_name_for_aethersearch(
                 "group1", DocumentSource.GOOGLE_DRIVE
             )
             group_ids = {ug.external_user_group_id for ug in updated_user_groups}
@@ -381,7 +381,7 @@ class TestPerformExternalGroupSync:
             yield ExternalUserGroup(id="group1", user_emails=[user1.email])
 
         with patch(
-            "ee.onyx.background.celery.tasks.external_group_syncing.tasks.get_source_perm_sync_config"
+            "ee.aethersearch.background.celery.tasks.external_group_syncing.tasks.get_source_perm_sync_config"
         ) as mock_config:
             # Mock sync config
             mock_group_config = Mock()
@@ -440,7 +440,7 @@ class TestPerformExternalGroupSync:
             )
 
         with patch(
-            "ee.onyx.background.celery.tasks.external_group_syncing.tasks.get_source_perm_sync_config"
+            "ee.aethersearch.background.celery.tasks.external_group_syncing.tasks.get_source_perm_sync_config"
         ) as mock_config:
             # Mock sync config
             mock_group_config = Mock()
@@ -486,7 +486,7 @@ class TestPerformExternalGroupSync:
             )
 
         with patch(
-            "ee.onyx.background.celery.tasks.external_group_syncing.tasks.get_source_perm_sync_config"
+            "ee.aethersearch.background.celery.tasks.external_group_syncing.tasks.get_source_perm_sync_config"
         ) as mock_config:
             # Mock sync config
             mock_group_config = Mock()
@@ -502,10 +502,10 @@ class TestPerformExternalGroupSync:
 
             # Verify user groups
             user_groups = _get_user_external_groups(db_session, cc_pair.id)
-            expected_regular_group_id = build_ext_group_name_for_onyx(
+            expected_regular_group_id = build_ext_group_name_for_aethersearch(
                 "regular_group", DocumentSource.GOOGLE_DRIVE
             )
-            expected_public_group1_id = build_ext_group_name_for_onyx(
+            expected_public_group1_id = build_ext_group_name_for_aethersearch(
                 "public_group1", DocumentSource.GOOGLE_DRIVE
             )
 
@@ -531,7 +531,7 @@ class TestPerformExternalGroupSync:
             assert len(public_groups) == 2  # public_group1 and public_group2
 
             public_group_ids = {pg.external_user_group_id for pg in public_groups}
-            expected_public_group2_id = build_ext_group_name_for_onyx(
+            expected_public_group2_id = build_ext_group_name_for_aethersearch(
                 "public_group2", DocumentSource.GOOGLE_DRIVE
             )
             assert expected_public_group1_id in public_group_ids

@@ -6,16 +6,16 @@ from datetime import timezone
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from ee.onyx.db.license import check_seat_availability
-from ee.onyx.db.license import delete_license
-from ee.onyx.db.license import get_license
-from ee.onyx.db.license import get_used_seats
-from ee.onyx.db.license import upsert_license
-from ee.onyx.server.license.models import LicenseMetadata
-from ee.onyx.server.license.models import LicenseSource
-from ee.onyx.server.license.models import PlanType
-from onyx.db.models import License
-from onyx.server.settings.models import ApplicationStatus
+from ee.aethersearch.db.license import check_seat_availability
+from ee.aethersearch.db.license import delete_license
+from ee.aethersearch.db.license import get_license
+from ee.aethersearch.db.license import get_used_seats
+from ee.aethersearch.db.license import upsert_license
+from ee.aethersearch.server.license.models import LicenseMetadata
+from ee.aethersearch.server.license.models import LicenseSource
+from ee.aethersearch.server.license.models import PlanType
+from aethersearch.db.models import License
+from aethersearch.server.settings.models import ApplicationStatus
 
 
 class TestGetLicense:
@@ -129,20 +129,20 @@ def _make_license_metadata(seats: int = 10) -> LicenseMetadata:
 class TestCheckSeatAvailabilitySelfHosted:
     """Seat checks for self-hosted (MULTI_TENANT=False)."""
 
-    @patch("ee.onyx.db.license.get_license_metadata", return_value=None)
+    @patch("ee.aethersearch.db.license.get_license_metadata", return_value=None)
     def test_no_license_means_unlimited(self, _mock_meta: MagicMock) -> None:
         result = check_seat_availability(MagicMock(), seats_needed=1)
         assert result.available is True
 
-    @patch("ee.onyx.db.license.get_used_seats", return_value=5)
-    @patch("ee.onyx.db.license.get_license_metadata")
+    @patch("ee.aethersearch.db.license.get_used_seats", return_value=5)
+    @patch("ee.aethersearch.db.license.get_license_metadata")
     def test_seats_available(self, mock_meta: MagicMock, _mock_used: MagicMock) -> None:
         mock_meta.return_value = _make_license_metadata(seats=10)
         result = check_seat_availability(MagicMock(), seats_needed=1)
         assert result.available is True
 
-    @patch("ee.onyx.db.license.get_used_seats", return_value=10)
-    @patch("ee.onyx.db.license.get_license_metadata")
+    @patch("ee.aethersearch.db.license.get_used_seats", return_value=10)
+    @patch("ee.aethersearch.db.license.get_license_metadata")
     def test_seats_full_blocks_creation(
         self, mock_meta: MagicMock, _mock_used: MagicMock
     ) -> None:
@@ -152,8 +152,8 @@ class TestCheckSeatAvailabilitySelfHosted:
         assert result.error_message is not None
         assert "10 of 10" in result.error_message
 
-    @patch("ee.onyx.db.license.get_used_seats", return_value=10)
-    @patch("ee.onyx.db.license.get_license_metadata")
+    @patch("ee.aethersearch.db.license.get_used_seats", return_value=10)
+    @patch("ee.aethersearch.db.license.get_license_metadata")
     def test_exactly_at_capacity_allows_no_more(
         self, mock_meta: MagicMock, _mock_used: MagicMock
     ) -> None:
@@ -162,8 +162,8 @@ class TestCheckSeatAvailabilitySelfHosted:
         result = check_seat_availability(MagicMock(), seats_needed=1)
         assert result.available is False
 
-    @patch("ee.onyx.db.license.get_used_seats", return_value=9)
-    @patch("ee.onyx.db.license.get_license_metadata")
+    @patch("ee.aethersearch.db.license.get_used_seats", return_value=9)
+    @patch("ee.aethersearch.db.license.get_license_metadata")
     def test_filling_to_capacity_is_allowed(
         self, mock_meta: MagicMock, _mock_used: MagicMock
     ) -> None:
@@ -179,12 +179,12 @@ class TestCheckSeatAvailabilityMultiTenant:
     and delegates to get_tenant_count.
     """
 
-    @patch("ee.onyx.db.license.MULTI_TENANT", True)
+    @patch("ee.aethersearch.db.license.MULTI_TENANT", True)
     @patch(
-        "ee.onyx.server.tenants.user_mapping.get_tenant_count",
+        "ee.aethersearch.server.tenants.user_mapping.get_tenant_count",
         return_value=5,
     )
-    @patch("ee.onyx.db.license.get_license_metadata")
+    @patch("ee.aethersearch.db.license.get_license_metadata")
     def test_seats_available_multi_tenant(
         self,
         mock_meta: MagicMock,
@@ -197,12 +197,12 @@ class TestCheckSeatAvailabilityMultiTenant:
         assert result.available is True
         mock_tenant_count.assert_called_once_with("tenant-abc")
 
-    @patch("ee.onyx.db.license.MULTI_TENANT", True)
+    @patch("ee.aethersearch.db.license.MULTI_TENANT", True)
     @patch(
-        "ee.onyx.server.tenants.user_mapping.get_tenant_count",
+        "ee.aethersearch.server.tenants.user_mapping.get_tenant_count",
         return_value=10,
     )
-    @patch("ee.onyx.db.license.get_license_metadata")
+    @patch("ee.aethersearch.db.license.get_license_metadata")
     def test_seats_full_multi_tenant(
         self,
         mock_meta: MagicMock,
@@ -220,8 +220,8 @@ class TestCheckSeatAvailabilityMultiTenant:
 class TestGetUsedSeatsAccountTypeFiltering:
     """Verify get_used_seats query excludes SERVICE_ACCOUNT but includes BOT."""
 
-    @patch("ee.onyx.db.license.MULTI_TENANT", False)
-    @patch("onyx.db.engine.sql_engine.get_session_with_current_tenant")
+    @patch("ee.aethersearch.db.license.MULTI_TENANT", False)
+    @patch("aethersearch.db.engine.sql_engine.get_session_with_current_tenant")
     def test_excludes_service_accounts(self, mock_get_session: MagicMock) -> None:
         """SERVICE_ACCOUNT users should not count toward seats."""
         mock_session = MagicMock()
@@ -240,8 +240,8 @@ class TestGetUsedSeatsAccountTypeFiltering:
         # BOT should NOT be excluded
         assert "BOT" not in compiled
 
-    @patch("ee.onyx.db.license.MULTI_TENANT", False)
-    @patch("onyx.db.engine.sql_engine.get_session_with_current_tenant")
+    @patch("ee.aethersearch.db.license.MULTI_TENANT", False)
+    @patch("aethersearch.db.engine.sql_engine.get_session_with_current_tenant")
     def test_still_excludes_ext_perm_user(self, mock_get_session: MagicMock) -> None:
         """EXT_PERM_USER exclusion should still be present."""
         mock_session = MagicMock()

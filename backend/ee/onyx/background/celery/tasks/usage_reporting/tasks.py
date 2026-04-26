@@ -4,17 +4,17 @@ from uuid import UUID
 from celery import shared_task
 from celery import Task
 
-from ee.onyx.server.reporting.usage_export_generation import create_new_usage_report
-from onyx.configs.app_configs import JOB_TIMEOUT
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.server.reporting.usage_export_generation import create_new_usage_report
+from aethersearch.configs.app_configs import JOB_TIMEOUT
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
 
 @shared_task(
-    name=OnyxCeleryTask.GENERATE_USAGE_REPORT_TASK,
+    name=AetherSearchCeleryTask.GENERATE_USAGE_REPORT_TASK,
     ignore_result=True,
     soft_time_limit=JOB_TIMEOUT,
     bind=True,

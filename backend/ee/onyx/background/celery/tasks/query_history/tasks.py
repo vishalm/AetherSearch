@@ -5,28 +5,28 @@ from datetime import datetime
 from celery import shared_task
 from celery import Task
 
-from ee.onyx.server.query_history.api import fetch_and_process_chat_session_history
-from ee.onyx.server.query_history.api import ONYX_ANONYMIZED_EMAIL
-from ee.onyx.server.query_history.models import QuestionAnswerPairSnapshot
-from onyx.background.task_utils import construct_query_history_report_name
-from onyx.configs.app_configs import JOB_TIMEOUT
-from onyx.configs.constants import FileOrigin
-from onyx.configs.constants import FileType
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import QueryHistoryType
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.tasks import delete_task_with_id
-from onyx.db.tasks import mark_task_as_finished_with_id
-from onyx.db.tasks import mark_task_as_started_with_id
-from onyx.file_store.file_store import get_default_file_store
-from onyx.server.settings.store import load_settings
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.server.query_history.api import fetch_and_process_chat_session_history
+from ee.aethersearch.server.query_history.api import AETHERSEARCH_ANONYMIZED_EMAIL
+from ee.aethersearch.server.query_history.models import QuestionAnswerPairSnapshot
+from aethersearch.background.task_utils import construct_query_history_report_name
+from aethersearch.configs.app_configs import JOB_TIMEOUT
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.configs.constants import FileType
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import QueryHistoryType
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.tasks import delete_task_with_id
+from aethersearch.db.tasks import mark_task_as_finished_with_id
+from aethersearch.db.tasks import mark_task_as_started_with_id
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.server.settings.store import load_settings
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
 
 @shared_task(
-    name=OnyxCeleryTask.EXPORT_QUERY_HISTORY_TASK,
+    name=AetherSearchCeleryTask.EXPORT_QUERY_HISTORY_TASK,
     ignore_result=True,
     soft_time_limit=JOB_TIMEOUT,
     bind=True,
@@ -68,7 +68,7 @@ def export_query_history_task(
             query_history_type = load_settings().query_history_type
             for snapshot in snapshot_generator:
                 if query_history_type == QueryHistoryType.ANONYMIZED:
-                    snapshot.user_email = ONYX_ANONYMIZED_EMAIL
+                    snapshot.user_email = AETHERSEARCH_ANONYMIZED_EMAIL
 
                 writer.writerows(
                     qa_pair.to_json()

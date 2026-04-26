@@ -2,9 +2,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
-import onyx.auth.users as users
-from onyx.auth.users import verify_auth_setting
-from onyx.configs.constants import AuthType
+import aethersearch.auth.users as users
+from aethersearch.auth.users import verify_auth_setting
+from aethersearch.configs.constants import AuthType
 
 
 def test_verify_auth_setting_raises_for_cloud(

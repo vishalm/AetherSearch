@@ -2,9 +2,9 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
 
-from onyx.db.enums import HookFailStrategy
-from onyx.db.enums import HookPoint
-from onyx.hooks.points.base import HookPointSpec
+from aethersearch.db.enums import HookFailStrategy
+from aethersearch.db.enums import HookPoint
+from aethersearch.hooks.points.base import HookPointSpec
 
 
 class QueryProcessingPayload(BaseModel):
@@ -38,7 +38,7 @@ class QueryProcessingSpec(HookPointSpec):
     """Hook point that runs on every user query before it enters the pipeline.
 
     Call site: inside handle_stream_message_objects() in
-    backend/onyx/chat/process_message.py, immediately after message_text is
+    backend/aethersearch/chat/process_message.py, immediately after message_text is
     assigned from the request and before create_new_chat_message() saves it.
 
     This is the earliest possible point in the query pipeline:
@@ -66,7 +66,7 @@ class QueryProcessingSpec(HookPointSpec):
     )
     default_fail_strategy = HookFailStrategy.HARD
     docs_url = (
-        "https://docs.onyx.app/admins/advanced_configs/hook_extensions#query-processing"
+        "https://docs.aethersearch.app/admins/advanced_configs/hook_extensions#query-processing"
     )
 
     payload_model = QueryProcessingPayload

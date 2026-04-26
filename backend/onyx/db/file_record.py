@@ -3,10 +3,10 @@ from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
-from onyx.background.task_utils import QUERY_REPORT_NAME_PREFIX
-from onyx.configs.constants import FileOrigin
-from onyx.configs.constants import FileType
-from onyx.db.models import FileRecord
+from aethersearch.background.task_utils import QUERY_REPORT_NAME_PREFIX
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.configs.constants import FileType
+from aethersearch.db.models import FileRecord
 
 
 def get_query_history_export_files(

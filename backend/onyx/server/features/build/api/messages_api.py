@@ -9,20 +9,20 @@ from fastapi import HTTPException
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.configs.constants import PUBLIC_API_TAGS
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.server.features.build.api.models import MessageListResponse
-from onyx.server.features.build.api.models import MessageRequest
-from onyx.server.features.build.api.models import MessageResponse
-from onyx.server.features.build.db.sandbox import get_sandbox_by_user_id
-from onyx.server.features.build.db.sandbox import update_sandbox_heartbeat
-from onyx.server.features.build.session.manager import RateLimitError
-from onyx.server.features.build.session.manager import SessionManager
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.permissions import require_permission
+from aethersearch.configs.constants import PUBLIC_API_TAGS
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.server.features.build.api.models import MessageListResponse
+from aethersearch.server.features.build.api.models import MessageRequest
+from aethersearch.server.features.build.api.models import MessageResponse
+from aethersearch.server.features.build.db.sandbox import get_sandbox_by_user_id
+from aethersearch.server.features.build.db.sandbox import update_sandbox_heartbeat
+from aethersearch.server.features.build.session.manager import RateLimitError
+from aethersearch.server.features.build.session.manager import SessionManager
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

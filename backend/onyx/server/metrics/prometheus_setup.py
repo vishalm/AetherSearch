@@ -1,4 +1,4 @@
-"""Prometheus metrics setup for the Onyx API server.
+"""Prometheus metrics setup for the AetherSearch API server.
 
 Orchestrates HTTP request instrumentation via ``prometheus-fastapi-instrumentator``:
 - Request count, latency histograms, in-progress gauges
@@ -15,9 +15,9 @@ from prometheus_fastapi_instrumentator.metrics import default as default_metrics
 from sqlalchemy.exc import TimeoutError as SATimeoutError
 from starlette.applications import Starlette
 
-from onyx.server.metrics.per_tenant import per_tenant_request_callback
-from onyx.server.metrics.postgres_connection_pool import pool_timeout_handler
-from onyx.server.metrics.slow_requests import slow_request_callback
+from aethersearch.server.metrics.per_tenant import per_tenant_request_callback
+from aethersearch.server.metrics.postgres_connection_pool import pool_timeout_handler
+from aethersearch.server.metrics.slow_requests import slow_request_callback
 
 _EXCLUDED_HANDLERS = [
     "/health",
@@ -42,7 +42,7 @@ _LATENCY_BUCKETS = (
 
 
 def setup_prometheus_metrics(app: Starlette) -> None:
-    """Initialize HTTP request metrics for the Onyx API server.
+    """Initialize HTTP request metrics for the AetherSearch API server.
 
     Must be called in ``get_application()`` BEFORE the app starts, because
     the instrumentator adds middleware via ``app.add_middleware()``.

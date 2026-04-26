@@ -1,20 +1,20 @@
 import pytest
 
-from ee.onyx.server.scim.models import ScimEmail
-from ee.onyx.server.scim.models import ScimGroupMember
-from ee.onyx.server.scim.models import ScimGroupResource
-from ee.onyx.server.scim.models import ScimMeta
-from ee.onyx.server.scim.models import ScimName
-from ee.onyx.server.scim.models import ScimPatchOperation
-from ee.onyx.server.scim.models import ScimPatchOperationType
-from ee.onyx.server.scim.models import ScimPatchResourceValue
-from ee.onyx.server.scim.models import ScimPatchValue
-from ee.onyx.server.scim.models import ScimUserResource
-from ee.onyx.server.scim.patch import apply_group_patch
-from ee.onyx.server.scim.patch import apply_user_patch
-from ee.onyx.server.scim.patch import ScimPatchError
-from ee.onyx.server.scim.providers.entra import EntraProvider
-from ee.onyx.server.scim.providers.okta import OktaProvider
+from ee.aethersearch.server.scim.models import ScimEmail
+from ee.aethersearch.server.scim.models import ScimGroupMember
+from ee.aethersearch.server.scim.models import ScimGroupResource
+from ee.aethersearch.server.scim.models import ScimMeta
+from ee.aethersearch.server.scim.models import ScimName
+from ee.aethersearch.server.scim.models import ScimPatchOperation
+from ee.aethersearch.server.scim.models import ScimPatchOperationType
+from ee.aethersearch.server.scim.models import ScimPatchResourceValue
+from ee.aethersearch.server.scim.models import ScimPatchValue
+from ee.aethersearch.server.scim.models import ScimUserResource
+from ee.aethersearch.server.scim.patch import apply_group_patch
+from ee.aethersearch.server.scim.patch import apply_user_patch
+from ee.aethersearch.server.scim.patch import ScimPatchError
+from ee.aethersearch.server.scim.providers.entra import EntraProvider
+from ee.aethersearch.server.scim.providers.okta import OktaProvider
 
 _OKTA_IGNORED = OktaProvider().ignored_patch_paths
 _ENTRA_IGNORED = EntraProvider().ignored_patch_paths

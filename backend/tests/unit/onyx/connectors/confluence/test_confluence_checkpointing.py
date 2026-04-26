@@ -10,20 +10,20 @@ from unittest.mock import patch
 import pytest
 from requests.exceptions import HTTPError
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.confluence.connector import ConfluenceCheckpoint
-from onyx.connectors.confluence.connector import ConfluenceConnector
-from onyx.connectors.confluence.onyx_confluence import OnyxConfluence
-from onyx.connectors.exceptions import CredentialExpiredError
-from onyx.connectors.exceptions import InsufficientPermissionsError
-from onyx.connectors.exceptions import UnexpectedValidationError
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentFailure
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import SlimDocument
-from tests.unit.onyx.connectors.utils import load_everything_from_checkpoint_connector
-from tests.unit.onyx.connectors.utils import (
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.confluence.connector import ConfluenceCheckpoint
+from aethersearch.connectors.confluence.connector import ConfluenceConnector
+from aethersearch.connectors.confluence.aethersearch_confluence import AetherSearchConfluence
+from aethersearch.connectors.exceptions import CredentialExpiredError
+from aethersearch.connectors.exceptions import InsufficientPermissionsError
+from aethersearch.connectors.exceptions import UnexpectedValidationError
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentFailure
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import SlimDocument
+from tests.unit.aethersearch.connectors.utils import load_everything_from_checkpoint_connector
+from tests.unit.aethersearch.connectors.utils import (
     load_everything_from_checkpoint_connector_from_checkpoint,
 )
 
@@ -41,17 +41,17 @@ def space_key() -> str:
 
 
 @pytest.fixture
-def mock_confluence_client() -> OnyxConfluence:
+def mock_confluence_client() -> AetherSearchConfluence:
     """Create a mock Confluence client with proper typing"""
     # Server mode just Also updates the start value
-    return OnyxConfluence(
+    return AetherSearchConfluence(
         is_cloud=False, url="test", credentials_provider=MagicMock(), timeout=None
     )
 
 
 @pytest.fixture
 def confluence_connector(
-    confluence_base_url: str, space_key: str, mock_confluence_client: OnyxConfluence
+    confluence_base_url: str, space_key: str, mock_confluence_client: AetherSearchConfluence
 ) -> Generator[ConfluenceConnector, None, None]:
     """Create a Confluence connector with a mock client"""
     # NOTE: we test with is_cloud=False for all tests, which is generally fine because the behavior
@@ -68,7 +68,7 @@ def confluence_connector(
     # Initialize the client directly
     connector._confluence_client = mock_confluence_client
     connector._low_timeout_confluence_client = mock_confluence_client
-    with patch("onyx.connectors.confluence.connector._SLIM_DOC_BATCH_SIZE", 2):
+    with patch("aethersearch.connectors.confluence.connector._SLIM_DOC_BATCH_SIZE", 2):
         yield connector
 
 
@@ -274,7 +274,7 @@ def test_load_from_checkpoint_with_page_processing_error(
             )
 
     with patch(
-        "onyx.connectors.confluence.connector.ConfluenceConnector._convert_page_to_document",
+        "aethersearch.connectors.confluence.connector.ConfluenceConnector._convert_page_to_document",
         side_effect=mock_convert_side_effect,
     ):
         # Call load_from_checkpoint
@@ -385,7 +385,7 @@ def test_validate_connector_settings_errors(
     error = HTTPError(response=MagicMock(status_code=status_code))
 
     with patch(
-        "onyx.connectors.confluence.onyx_confluence.OnyxConfluence.retrieve_confluence_spaces"
+        "aethersearch.connectors.confluence.aethersearch_confluence.AetherSearchConfluence.retrieve_confluence_spaces"
     ) as mock_retrieve:
         mock_retrieve.side_effect = error
 

@@ -6,22 +6,22 @@ from datetime import timezone
 
 import discord
 
-from onyx.configs.app_configs import DISCORD_BOT_INVOKE_CHAR
-from onyx.configs.constants import ONYX_DISCORD_URL
-from onyx.db.discord_bot import bulk_create_channel_configs
-from onyx.db.discord_bot import get_guild_config_by_discord_id
-from onyx.db.discord_bot import get_guild_config_by_internal_id
-from onyx.db.discord_bot import get_guild_config_by_registration_key
-from onyx.db.discord_bot import sync_channel_configs
-from onyx.db.engine.sql_engine import get_session_with_tenant
-from onyx.db.utils import DiscordChannelView
-from onyx.onyxbot.discord.cache import DiscordCacheManager
-from onyx.onyxbot.discord.constants import REGISTER_COMMAND
-from onyx.onyxbot.discord.constants import SYNC_CHANNELS_COMMAND
-from onyx.onyxbot.discord.exceptions import RegistrationError
-from onyx.onyxbot.discord.exceptions import SyncChannelsError
-from onyx.server.manage.discord_bot.utils import parse_discord_registration_key
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import DISCORD_BOT_INVOKE_CHAR
+from aethersearch.configs.constants import AETHERSEARCH_DISCORD_URL
+from aethersearch.db.discord_bot import bulk_create_channel_configs
+from aethersearch.db.discord_bot import get_guild_config_by_discord_id
+from aethersearch.db.discord_bot import get_guild_config_by_internal_id
+from aethersearch.db.discord_bot import get_guild_config_by_registration_key
+from aethersearch.db.discord_bot import sync_channel_configs
+from aethersearch.db.engine.sql_engine import get_session_with_tenant
+from aethersearch.db.utils import DiscordChannelView
+from aethersearch.aethersearchbot.discord.cache import DiscordCacheManager
+from aethersearch.aethersearchbot.discord.constants import REGISTER_COMMAND
+from aethersearch.aethersearchbot.discord.constants import SYNC_CHANNELS_COMMAND
+from aethersearch.aethersearchbot.discord.exceptions import RegistrationError
+from aethersearch.aethersearchbot.discord.exceptions import SyncChannelsError
+from aethersearch.server.manage.discord_bot.utils import parse_discord_registration_key
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import CURRENT_TENANT_ID_CONTEXTVAR
 
 logger = setup_logger()
@@ -32,7 +32,7 @@ async def handle_dm(message: discord.Message) -> None:
     dm_response = (
         "**I can't respond to DMs** :sweat:\n\n"
         f"Please chat with me in a server channel, or join the official "
-        f"[Onyx Discord]({ONYX_DISCORD_URL}) for help!"
+        f"[AetherSearch Discord]({AETHERSEARCH_DISCORD_URL}) for help!"
     )
     await message.channel.send(dm_response)
 
@@ -135,8 +135,8 @@ async def handle_registration_command(
         logger.info(f"Registration successful: {guild_name}")
         await message.reply(
             ":white_check_mark: **Successfully registered!**\n\n"
-            "This server is now connected to Onyx. "
-            "I'll respond to messages based on your server and channel settings set in Onyx."
+            "This server is now connected to AetherSearch. "
+            "I'll respond to messages based on your server and channel settings set in AetherSearch."
         )
     except RegistrationError as e:
         logger.debug(f"Registration failed: {guild_name}, error={e}")
@@ -185,7 +185,7 @@ async def _register_guild(
             f"Guild {guild_id} is already registered to tenant {existing_tenant}"
         )
         raise RegistrationError(
-            "This server is already registered.\n\nOnyxBot can only connect one Discord server to one Onyx workspace."
+            "This server is already registered.\n\nAetherSearchBot can only connect one Discord server to one AetherSearch workspace."
         )
 
     context_token = CURRENT_TENANT_ID_CONTEXTVAR.set(tenant_id)
@@ -206,7 +206,7 @@ async def _register_guild(
                     raise RegistrationError(
                         "Registration key not found.\n\n"
                         "The key may have expired or been deleted. "
-                        "Please generate a new one from the Onyx admin panel."
+                        "Please generate a new one from the AetherSearch admin panel."
                     )
 
                 # Check if already used
@@ -214,7 +214,7 @@ async def _register_guild(
                     raise RegistrationError(
                         "This registration key has already been used.\n\n"
                         "Each key can only be used once. "
-                        "Please generate a new key from the Onyx admin panel."
+                        "Please generate a new key from the AetherSearch admin panel."
                     )
 
                 # Update the guild config
@@ -318,7 +318,7 @@ async def handle_sync_channels_command(
             with get_session_with_tenant(tenant_id=tenant_id) as db:
                 if not message.guild:
                     raise SyncChannelsError(
-                        "Server not found. This shouldn't happen. Please contact Onyx support."
+                        "Server not found. This shouldn't happen. Please contact AetherSearch support."
                     )
                 config = get_guild_config_by_discord_id(db, message.guild.id)
                 return config.id if config else None
@@ -327,7 +327,7 @@ async def handle_sync_channels_command(
 
         if not guild_config_id:
             raise SyncChannelsError(
-                "Server config not found. This shouldn't happen. Please contact Onyx support."
+                "Server config not found. This shouldn't happen. Please contact AetherSearch support."
             )
 
         # Perform the sync
@@ -342,7 +342,7 @@ async def handle_sync_channels_command(
             f"* **{added}** new channel(s) added\n"
             f"* **{removed}** deleted channel(s) removed\n"
             f"* **{updated}** channel name(s) updated\n\n"
-            "New channels are disabled by default. Enable them in the Onyx admin panel."
+            "New channels are disabled by default. Enable them in the AetherSearch admin panel."
         )
     except SyncChannelsError as e:
         logger.debug(f"Sync-channels failed: {guild_name}, error={e}")

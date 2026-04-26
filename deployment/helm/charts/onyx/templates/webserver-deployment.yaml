@@ -2,9 +2,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "onyx.fullname" . }}-web-server
+  name: {{ include "aethersearch.fullname" . }}-web-server
   labels:
-    {{- include "onyx.labels" . | nindent 4 }}
+    {{- include "aethersearch.labels" . | nindent 4 }}
     {{- with .Values.webserver.deploymentLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -14,7 +14,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "onyx.selectorLabels" . | nindent 6 }}
+      {{- include "aethersearch.selectorLabels" . | nindent 6 }}
       {{- if .Values.webserver.deploymentLabels }}
       {{- toYaml .Values.webserver.deploymentLabels | nindent 6 }}
       {{- end }}
@@ -26,7 +26,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "onyx.labels" . | nindent 8 }}
+        {{- include "aethersearch.labels" . | nindent 8 }}
         {{- with .Values.webserver.deploymentLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -38,7 +38,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "onyx.serviceAccountName" . }}
+      serviceAccountName: {{ include "aethersearch.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.webserver.podSecurityContext | nindent 8 }}
       {{- with .Values.webserver.nodeSelector }}
@@ -81,7 +81,7 @@ spec:
             - configMapRef:
                 name: {{ .Values.config.envConfigMapName }}
           env:
-            {{- include "onyx.envSecrets" . | nindent 12}}
+            {{- include "aethersearch.envSecrets" . | nindent 12}}
             {{- with .Values.webserver.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}

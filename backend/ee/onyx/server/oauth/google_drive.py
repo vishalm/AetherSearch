@@ -11,31 +11,31 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from ee.onyx.server.oauth.api_router import router
-from onyx.auth.permissions import require_permission
-from onyx.configs.app_configs import DEV_MODE
-from onyx.configs.app_configs import OAUTH_GOOGLE_DRIVE_CLIENT_ID
-from onyx.configs.app_configs import OAUTH_GOOGLE_DRIVE_CLIENT_SECRET
-from onyx.configs.app_configs import WEB_DOMAIN
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.google_utils.google_auth import get_google_oauth_creds
-from onyx.connectors.google_utils.google_auth import sanitize_oauth_credentials
-from onyx.connectors.google_utils.shared_constants import (
+from ee.aethersearch.server.oauth.api_router import router
+from aethersearch.auth.permissions import require_permission
+from aethersearch.configs.app_configs import DEV_MODE
+from aethersearch.configs.app_configs import OAUTH_GOOGLE_DRIVE_CLIENT_ID
+from aethersearch.configs.app_configs import OAUTH_GOOGLE_DRIVE_CLIENT_SECRET
+from aethersearch.configs.app_configs import WEB_DOMAIN
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.google_utils.google_auth import get_google_oauth_creds
+from aethersearch.connectors.google_utils.google_auth import sanitize_oauth_credentials
+from aethersearch.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_AUTHENTICATION_METHOD,
 )
-from onyx.connectors.google_utils.shared_constants import DB_CREDENTIALS_DICT_TOKEN_KEY
-from onyx.connectors.google_utils.shared_constants import (
+from aethersearch.connectors.google_utils.shared_constants import DB_CREDENTIALS_DICT_TOKEN_KEY
+from aethersearch.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_PRIMARY_ADMIN_KEY,
 )
-from onyx.connectors.google_utils.shared_constants import (
+from aethersearch.connectors.google_utils.shared_constants import (
     GoogleOAuthAuthenticationMethod,
 )
-from onyx.db.credentials import create_credential
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.redis.redis_pool import get_redis_client
-from onyx.server.documents.models import CredentialBase
+from aethersearch.db.credentials import create_credential
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.server.documents.models import CredentialBase
 from shared_configs.contextvars import get_current_tenant_id
 
 

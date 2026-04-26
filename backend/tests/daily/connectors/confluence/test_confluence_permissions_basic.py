@@ -5,15 +5,15 @@ from unittest.mock import patch
 
 import pytest
 
-from ee.onyx.external_permissions.confluence.doc_sync import confluence_doc_sync
-from onyx.access.models import DocExternalAccess
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.confluence.connector import ConfluenceConnector
-from onyx.connectors.credentials_provider import OnyxStaticCredentialsProvider
-from onyx.connectors.models import HierarchyNode
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.utils import DocumentRow
-from onyx.db.utils import SortOrder
+from ee.aethersearch.external_permissions.confluence.doc_sync import confluence_doc_sync
+from aethersearch.access.models import DocExternalAccess
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.confluence.connector import ConfluenceConnector
+from aethersearch.connectors.credentials_provider import AetherSearchStaticCredentialsProvider
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.utils import DocumentRow
+from aethersearch.db.utils import SortOrder
 from tests.daily.connectors.utils import load_all_from_connector
 
 
@@ -24,7 +24,7 @@ def confluence_connector() -> ConfluenceConnector:
         is_cloud=True,
     )
 
-    credentials_provider = OnyxStaticCredentialsProvider(
+    credentials_provider = AetherSearchStaticCredentialsProvider(
         None,
         DocumentSource.CONFLUENCE,
         {
@@ -39,7 +39,7 @@ def confluence_connector() -> ConfluenceConnector:
 # This should never fail because even if the docs in the cloud change,
 # the full doc ids retrieved should always be a subset of the slim doc ids
 @patch(
-    "onyx.file_processing.extract_file_text.get_unstructured_api_key",
+    "aethersearch.file_processing.extract_file_text.get_unstructured_api_key",
     return_value=None,
 )
 def test_confluence_connector_permissions(
@@ -85,9 +85,9 @@ def test_confluence_connector_permissions(
     ), f"Full doc IDs are not a subset of slim doc IDs. Found {len(difference)} IDs in full docs but not in slim docs."
 
 
-@patch("ee.onyx.external_permissions.confluence.doc_sync.OnyxDBCredentialsProvider")
+@patch("ee.aethersearch.external_permissions.confluence.doc_sync.AetherSearchDBCredentialsProvider")
 @patch(
-    "onyx.file_processing.extract_file_text.get_unstructured_api_key",
+    "aethersearch.file_processing.extract_file_text.get_unstructured_api_key",
     return_value=None,
 )
 def test_confluence_connector_restriction_handling(
@@ -104,7 +104,7 @@ def test_confluence_connector_restriction_handling(
         "confluence_username": os.environ["CONFLUENCE_USER_NAME"],
         "confluence_access_token": os.environ["CONFLUENCE_ACCESS_TOKEN"],
     }
-    # this prevents redis calls inside of OnyxConfluence
+    # this prevents redis calls inside of AetherSearchConfluence
     mock_provider_instance.is_dynamic.return_value = False
     # Make the class return our configured instance when called
     mock_db_provider_class.return_value = mock_provider_instance
@@ -141,7 +141,7 @@ def test_confluence_connector_restriction_handling(
 
     # if no restriction is applied, the groups should give access, so no need
     # for more emails outside of the owner
-    non_restricted_emails = {"chris@onyx.app"}
+    non_restricted_emails = {"chris@aethersearch.app"}
     non_restricted_user_groups = {
         "confluence-admins-danswerai",
         "org-admins",
@@ -150,15 +150,15 @@ def test_confluence_connector_restriction_handling(
     }
 
     # if restriction is applied, only should be visible to shared users / groups
-    restricted_emails = {"chris@onyx.app", "hagen@danswer.ai", "oauth@onyx.app"}
+    restricted_emails = {"chris@aethersearch.app", "hagen@danswer.ai", "oauth@aethersearch.app"}
     restricted_user_groups = {"confluence-admins-danswerai"}
 
-    extra_restricted_emails = {"chris@onyx.app", "oauth@onyx.app"}
+    extra_restricted_emails = {"chris@aethersearch.app", "oauth@aethersearch.app"}
     extra_restricted_user_groups: set[str] = set()
 
-    # note that this is only allowed since yuhong@onyx.app is a member of the
+    # note that this is only allowed since yuhong@aethersearch.app is a member of the
     # confluence-admins-danswerai group
-    special_restricted_emails = {"chris@onyx.app", "yuhong@onyx.app", "oauth@onyx.app"}
+    special_restricted_emails = {"chris@aethersearch.app", "yuhong@aethersearch.app", "oauth@aethersearch.app"}
     special_restricted_user_groups: set[str] = set()
 
     # Check Root+Page+2 is public

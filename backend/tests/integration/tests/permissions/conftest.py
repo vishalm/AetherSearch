@@ -15,11 +15,11 @@ This avoids a costly full reset per test.
 
 import pytest
 
-from onyx.auth.schemas import UserRole
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.pat import create_pat
-from onyx.db.users import add_slack_user_if_not_exists
-from onyx.db.users import batch_add_ext_perm_user_if_not_exists
+from aethersearch.auth.schemas import UserRole
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.pat import create_pat
+from aethersearch.db.users import add_slack_user_if_not_exists
+from aethersearch.db.users import batch_add_ext_perm_user_if_not_exists
 from tests.integration.common_utils.managers.api_key import APIKeyManager
 from tests.integration.common_utils.managers.user import UserManager
 from tests.integration.common_utils.reset import reset_all

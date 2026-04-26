@@ -4,13 +4,13 @@ from enum import Enum
 from pydantic import BaseModel
 from pydantic import Field
 
-from onyx.configs.app_configs import DEFAULT_PRUNING_FREQ
-from onyx.configs.app_configs import DEFAULT_USER_FILE_MAX_UPLOAD_SIZE_MB
-from onyx.configs.app_configs import DISABLE_VECTOR_DB
-from onyx.configs.app_configs import MAX_ALLOWED_UPLOAD_SIZE_MB
-from onyx.configs.constants import NotificationType
-from onyx.configs.constants import QueryHistoryType
-from onyx.db.models import Notification as NotificationDBModel
+from aethersearch.configs.app_configs import DEFAULT_PRUNING_FREQ
+from aethersearch.configs.app_configs import DEFAULT_USER_FILE_MAX_UPLOAD_SIZE_MB
+from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
+from aethersearch.configs.app_configs import MAX_ALLOWED_UPLOAD_SIZE_MB
+from aethersearch.configs.constants import NotificationType
+from aethersearch.configs.constants import QueryHistoryType
+from aethersearch.db.models import Notification as NotificationDBModel
 from shared_configs.configs import POSTGRES_DEFAULT_SCHEMA
 
 DEFAULT_FILE_TOKEN_COUNT_THRESHOLD_K_VECTOR_DB = 200
@@ -113,15 +113,15 @@ class UserSettings(Settings):
     notifications: list[Notification]
     needs_reindexing: bool
     tenant_id: str = POSTGRES_DEFAULT_SCHEMA
-    # Feature flag for Onyx Craft (Build Mode) - used for server-side redirects
-    onyx_craft_enabled: bool = False
+    # Feature flag for AetherSearch Craft (Build Mode) - used for server-side redirects
+    aethersearch_craft_enabled: bool = False
     # True when a vector database (Vespa/OpenSearch) is available.
     # False when DISABLE_VECTOR_DB is set — connectors, RAG search, and
     # document sets are unavailable.
     vector_db_enabled: bool = True
     # True when hooks are available: single-tenant EE deployments only.
     hooks_enabled: bool = False
-    # Application version, read from the ONYX_VERSION env var at startup.
+    # Application version, read from the AETHERSEARCH_VERSION env var at startup.
     version: str | None = None
     # Hard ceiling for user_file_max_upload_size_mb, derived from env var.
     max_allowed_upload_size_mb: int = MAX_ALLOWED_UPLOAD_SIZE_MB

@@ -10,9 +10,9 @@ import (
 
 // Known container names for PostgreSQL in order of preference
 var postgresContainerNames = []string{
-	"onyx_postgres",                  // From restart_containers.sh
-	"onyx-relational_db-1",           // Docker compose default project name
-	"onyx-stack-relational_db-1",     // Docker compose with stack project name
+	"aethersearch_postgres",                  // From restart_containers.sh
+	"aethersearch-relational_db-1",           // Docker compose default project name
+	"aethersearch-stack-relational_db-1",     // Docker compose with stack project name
 	"docker_compose-relational_db-1", // Legacy docker compose naming
 	"relational_db",                  // Service name only
 }

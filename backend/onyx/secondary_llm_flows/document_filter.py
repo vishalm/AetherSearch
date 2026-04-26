@@ -1,19 +1,19 @@
 import json
 import re
 
-from onyx.context.search.models import ContextExpansionType
-from onyx.context.search.models import InferenceChunk
-from onyx.context.search.models import InferenceSection
-from onyx.llm.interfaces import LLM
-from onyx.llm.models import ReasoningEffort
-from onyx.llm.models import UserMessage
-from onyx.prompts.search_prompts import DOCUMENT_CONTEXT_SELECTION_PROMPT
-from onyx.prompts.search_prompts import DOCUMENT_SELECTION_PROMPT
-from onyx.prompts.search_prompts import TRY_TO_FILL_TO_MAX_INSTRUCTIONS
-from onyx.tools.tool_implementations.search.constants import MAX_CHUNKS_FOR_RELEVANCE
-from onyx.tracing.llm_utils import llm_generation_span
-from onyx.tracing.llm_utils import record_llm_response
-from onyx.utils.logger import setup_logger
+from aethersearch.context.search.models import ContextExpansionType
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.context.search.models import InferenceSection
+from aethersearch.llm.interfaces import LLM
+from aethersearch.llm.models import ReasoningEffort
+from aethersearch.llm.models import UserMessage
+from aethersearch.prompts.search_prompts import DOCUMENT_CONTEXT_SELECTION_PROMPT
+from aethersearch.prompts.search_prompts import DOCUMENT_SELECTION_PROMPT
+from aethersearch.prompts.search_prompts import TRY_TO_FILL_TO_MAX_INSTRUCTIONS
+from aethersearch.tools.tool_implementations.search.constants import MAX_CHUNKS_FOR_RELEVANCE
+from aethersearch.tracing.llm_utils import llm_generation_span
+from aethersearch.tracing.llm_utils import record_llm_response
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

@@ -2,22 +2,22 @@ from collections import defaultdict
 from collections.abc import Callable
 from typing import TypeVar
 
-from onyx.context.search.models import ContextExpansionType
-from onyx.context.search.models import IndexFilters
-from onyx.context.search.models import InferenceChunk
-from onyx.context.search.models import InferenceSection
-from onyx.context.search.utils import inference_section_from_chunks
-from onyx.document_index.interfaces import DocumentIndex
-from onyx.document_index.interfaces import VespaChunkRequest
-from onyx.document_index.vespa.shared_utils.utils import (
+from aethersearch.context.search.models import ContextExpansionType
+from aethersearch.context.search.models import IndexFilters
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.context.search.models import InferenceSection
+from aethersearch.context.search.utils import inference_section_from_chunks
+from aethersearch.document_index.interfaces import DocumentIndex
+from aethersearch.document_index.interfaces import VespaChunkRequest
+from aethersearch.document_index.vespa.shared_utils.utils import (
     replace_invalid_doc_id_characters,
 )
-from onyx.llm.interfaces import LLM
-from onyx.prompts.prompt_utils import clean_up_source
-from onyx.secondary_llm_flows.document_filter import classify_section_relevance
-from onyx.tools.tool_implementations.search.constants import FULL_DOC_NUM_CHUNKS_AROUND
-from onyx.tools.tool_implementations.search.constants import RRF_K_VALUE
-from onyx.utils.logger import setup_logger
+from aethersearch.llm.interfaces import LLM
+from aethersearch.prompts.prompt_utils import clean_up_source
+from aethersearch.secondary_llm_flows.document_filter import classify_section_relevance
+from aethersearch.tools.tool_implementations.search.constants import FULL_DOC_NUM_CHUNKS_AROUND
+from aethersearch.tools.tool_implementations.search.constants import RRF_K_VALUE
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

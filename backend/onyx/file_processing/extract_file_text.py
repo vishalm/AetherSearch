@@ -24,18 +24,18 @@ import openpyxl
 from openpyxl.worksheet._read_only import ReadOnlyWorksheet
 from PIL import Image
 
-from onyx.configs.app_configs import MAX_EMBEDDED_IMAGES_PER_FILE
-from onyx.configs.app_configs import MAX_XLSX_CELLS_PER_SHEET
-from onyx.configs.constants import ONYX_METADATA_FILENAME
-from onyx.configs.llm_configs import get_image_extraction_and_analysis_enabled
-from onyx.file_processing.file_types import OnyxFileExtensions
-from onyx.file_processing.file_types import OnyxMimeTypes
-from onyx.file_processing.file_types import PRESENTATION_MIME_TYPE
-from onyx.file_processing.file_types import WORD_PROCESSING_MIME_TYPE
-from onyx.file_processing.html_utils import parse_html_page_basic
-from onyx.file_processing.unstructured import get_unstructured_api_key
-from onyx.file_processing.unstructured import unstructured_to_text
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import MAX_EMBEDDED_IMAGES_PER_FILE
+from aethersearch.configs.app_configs import MAX_XLSX_CELLS_PER_SHEET
+from aethersearch.configs.constants import AETHERSEARCH_METADATA_FILENAME
+from aethersearch.configs.llm_configs import get_image_extraction_and_analysis_enabled
+from aethersearch.file_processing.file_types import AetherSearchFileExtensions
+from aethersearch.file_processing.file_types import AetherSearchMimeTypes
+from aethersearch.file_processing.file_types import PRESENTATION_MIME_TYPE
+from aethersearch.file_processing.file_types import WORD_PROCESSING_MIME_TYPE
+from aethersearch.file_processing.html_utils import parse_html_page_basic
+from aethersearch.file_processing.unstructured import get_unstructured_api_key
+from aethersearch.file_processing.unstructured import unstructured_to_text
+from aethersearch.utils.logger import setup_logger
 
 if TYPE_CHECKING:
     from markitdown import MarkItDown
@@ -142,7 +142,7 @@ def load_files_from_zip(
             if (
                 ignore_macos_resource_fork_files
                 and is_macos_resource_fork_file(file_info.filename)
-            ) or file_info.filename == ONYX_METADATA_FILENAME:
+            ) or file_info.filename == AETHERSEARCH_METADATA_FILENAME:
                 continue
 
             with zip_file.open(file_info.filename, "r") as subfile:
@@ -150,15 +150,15 @@ def load_files_from_zip(
                 yield file_info, subfile
 
 
-def _extract_onyx_metadata(line: str) -> dict | None:
+def _extract_aethersearch_metadata(line: str) -> dict | None:
     """
     Example: first line has:
-        <!-- ONYX_METADATA={"title": "..."} -->
+        <!-- AETHERSEARCH_METADATA={"title": "..."} -->
       or
-        #ONYX_METADATA={"title":"..."}
+        #AETHERSEARCH_METADATA={"title":"..."}
     """
-    html_comment_pattern = r"<!--\s*ONYX_METADATA=\{(.*?)\}\s*-->"
-    hashtag_pattern = r"#ONYX_METADATA=\{(.*?)\}"
+    html_comment_pattern = r"<!--\s*AETHERSEARCH_METADATA=\{(.*?)\}\s*-->"
+    hashtag_pattern = r"#AETHERSEARCH_METADATA=\{(.*?)\}"
 
     html_comment_match = re.search(html_comment_pattern, line)
     hashtag_match = re.search(hashtag_pattern, line)
@@ -180,10 +180,10 @@ def read_text_file(
     file: IO,
     encoding: str = "utf-8",
     errors: str = "replace",
-    ignore_onyx_metadata: bool = True,
+    ignore_aethersearch_metadata: bool = True,
 ) -> tuple[str, dict]:
     """
-    For plain text files. Optionally extracts Onyx metadata from the first line.
+    For plain text files. Optionally extracts AetherSearch metadata from the first line.
     """
     metadata = {}
     file_content_raw = ""
@@ -199,8 +199,8 @@ def read_text_file(
             )
 
         # optionally parse metadata in the first line
-        if ind == 0 and not ignore_onyx_metadata:
-            potential_meta = _extract_onyx_metadata(line)
+        if ind == 0 and not ignore_aethersearch_metadata:
+            potential_meta = _extract_aethersearch_metadata(line)
             if potential_meta is not None:
                 metadata = potential_meta
                 continue
@@ -290,7 +290,7 @@ def read_pdf_file(
             # Try the explicit password first, then fall back to an empty
             # string.  Owner-password-only PDFs (permission restrictions but
             # no open password) decrypt successfully with "".
-            # See https://github.com/onyx-dot-app/onyx/issues/9754
+            # See https://github.com/aethersearch-dot-app/aethersearch/issues/9754
             passwords = [p for p in [pdf_pass, ""] if p is not None]
             decrypt_success = False
             for pw in passwords:
@@ -453,7 +453,7 @@ def read_docx_file(
         file.seek(0)
         encoding = detect_encoding(file)
         text_content_raw, _ = read_text_file(
-            file, encoding=encoding, ignore_onyx_metadata=False
+            file, encoding=encoding, ignore_aethersearch_metadata=False
         )
         return text_content_raw or "", []
 
@@ -701,7 +701,7 @@ def extract_file_text(
         if extension is None:
             extension = get_file_ext(file_name)
 
-        if extension in OnyxFileExtensions.TEXT_AND_DOCUMENT_EXTENSIONS:
+        if extension in AetherSearchFileExtensions.TEXT_AND_DOCUMENT_EXTENSIONS:
             func = extension_to_function.get(extension, file_io_to_text)
             file.seek(0)
             return func(file)
@@ -733,7 +733,7 @@ class ExtractionResult(NamedTuple):
 def extract_result_from_text_file(file: IO[Any]) -> ExtractionResult:
     encoding = detect_encoding(file)
     text_content_raw, file_metadata = read_text_file(
-        file, encoding=encoding, ignore_onyx_metadata=False
+        file, encoding=encoding, ignore_aethersearch_metadata=False
     )
     return ExtractionResult(
         text_content=text_content_raw,
@@ -805,7 +805,7 @@ def _extract_text_and_images(
     # with content types in UploadMimeTypes.DOCUMENT_MIME_TYPES as plain text files.
     # As a result, the file name extension may differ from the original content type.
     # We process files with a plain text content type first to handle this scenario.
-    if content_type in OnyxMimeTypes.TEXT_MIME_TYPES:
+    if content_type in AetherSearchMimeTypes.TEXT_MIME_TYPES:
         return extract_result_from_text_file(file)
 
     # Default processing
@@ -867,7 +867,7 @@ def _extract_text_and_images(
             )
 
         # If we reach here and it's a recognized text extension
-        if extension in OnyxFileExtensions.PLAIN_TEXT_EXTENSIONS:
+        if extension in AetherSearchFileExtensions.PLAIN_TEXT_EXTENSIONS:
             return extract_result_from_text_file(file)
 
         # If it's an image file or something else, we do not parse embedded images from them

@@ -5,12 +5,12 @@ from urllib.parse import unquote
 
 from fastapi import Request
 
-from onyx.auth.constants import API_KEY_HEADER_ALTERNATIVE_NAME
-from onyx.auth.constants import API_KEY_HEADER_NAME
-from onyx.auth.constants import API_KEY_PREFIX
-from onyx.auth.constants import BEARER_PREFIX
-from onyx.auth.constants import DEPRECATED_API_KEY_PREFIX
-from onyx.auth.constants import PAT_PREFIX
+from aethersearch.auth.constants import API_KEY_HEADER_ALTERNATIVE_NAME
+from aethersearch.auth.constants import API_KEY_HEADER_NAME
+from aethersearch.auth.constants import API_KEY_PREFIX
+from aethersearch.auth.constants import BEARER_PREFIX
+from aethersearch.auth.constants import DEPRECATED_API_KEY_PREFIX
+from aethersearch.auth.constants import PAT_PREFIX
 
 
 def get_hashed_bearer_token_from_request(
@@ -23,7 +23,7 @@ def get_hashed_bearer_token_from_request(
 
     Args:
         request: The FastAPI request
-        valid_prefixes: List of valid token prefixes (e.g., ["on_", "onyx_pat_"])
+        valid_prefixes: List of valid token prefixes (e.g., ["on_", "aethersearch_pat_"])
         hash_fn: Function to hash the token (e.g., hash_api_key or hash_pat)
         allow_non_bearer: If True, accept raw tokens without "Bearer " prefix
 

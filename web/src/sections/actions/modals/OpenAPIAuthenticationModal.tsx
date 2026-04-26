@@ -390,7 +390,7 @@ export default function OpenAPIAuthenticationModal({
                               {isOAuthEnabled && (
                                 <InputSelect.Item
                                   value="pt-oauth"
-                                  description="Forward the user's OAuth access token used to authenticate Onyx."
+                                  description="Forward the user's OAuth access token used to authenticate AetherSearch."
                                 >
                                   OAuth Pass-through
                                 </InputSelect.Item>
@@ -648,7 +648,7 @@ export default function OpenAPIAuthenticationModal({
                     {values.authMethod === "pt-oauth" && (
                       <MessageCard
                         title="Use pass-through for services with shared identity provider."
-                        description="Onyx will forward the user's OAuth access token directly to the server as an Authorization header. Make sure the server supports authentication with the same provider."
+                        description="AetherSearch will forward the user's OAuth access token directly to the server as an Authorization header. Make sure the server supports authentication with the same provider."
                       />
                     )}
                   </>

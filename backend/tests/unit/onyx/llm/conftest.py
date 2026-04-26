@@ -9,8 +9,8 @@ from collections.abc import Generator
 
 import pytest
 
-from onyx.llm.litellm_singleton.config import load_model_metadata_enrichments
-from onyx.llm.model_name_parser import parse_litellm_model_name
+from aethersearch.llm.litellm_singleton.config import load_model_metadata_enrichments
+from aethersearch.llm.model_name_parser import parse_litellm_model_name
 
 
 @pytest.fixture(scope="session", autouse=True)

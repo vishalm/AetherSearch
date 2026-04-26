@@ -27,71 +27,71 @@ from slack_sdk.socket_mode.response import SocketModeResponse
 from sqlalchemy.exc import ProgrammingError
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import DEV_MODE
-from onyx.configs.app_configs import POD_NAME
-from onyx.configs.app_configs import POD_NAMESPACE
-from onyx.configs.constants import MessageType
-from onyx.configs.constants import OnyxRedisLocks
-from onyx.configs.onyxbot_configs import NOTIFY_SLACKBOT_NO_ANSWER
-from onyx.connectors.slack.utils import expert_info_from_slack_id
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.engine.sql_engine import get_session_with_tenant
-from onyx.db.engine.sql_engine import SqlEngine
-from onyx.db.engine.tenant_utils import get_all_tenant_ids
-from onyx.db.models import SlackBot
-from onyx.db.search_settings import get_current_search_settings
-from onyx.db.slack_bot import fetch_slack_bot
-from onyx.db.slack_bot import fetch_slack_bots
-from onyx.key_value_store.interface import KvKeyNotFoundError
-from onyx.natural_language_processing.search_nlp_models import EmbeddingModel
-from onyx.natural_language_processing.search_nlp_models import warm_up_bi_encoder
-from onyx.onyxbot.slack.config import get_slack_channel_config_for_bot_and_channel
-from onyx.onyxbot.slack.config import MAX_TENANTS_PER_POD
-from onyx.onyxbot.slack.config import TENANT_ACQUISITION_INTERVAL
-from onyx.onyxbot.slack.config import TENANT_HEARTBEAT_EXPIRATION
-from onyx.onyxbot.slack.config import TENANT_HEARTBEAT_INTERVAL
-from onyx.onyxbot.slack.config import TENANT_LOCK_EXPIRATION
-from onyx.onyxbot.slack.constants import DISLIKE_BLOCK_ACTION_ID
-from onyx.onyxbot.slack.constants import FEEDBACK_DOC_BUTTON_BLOCK_ACTION_ID
-from onyx.onyxbot.slack.constants import FOLLOWUP_BUTTON_ACTION_ID
-from onyx.onyxbot.slack.constants import FOLLOWUP_BUTTON_RESOLVED_ACTION_ID
-from onyx.onyxbot.slack.constants import GENERATE_ANSWER_BUTTON_ACTION_ID
-from onyx.onyxbot.slack.constants import IMMEDIATE_RESOLVED_BUTTON_ACTION_ID
-from onyx.onyxbot.slack.constants import KEEP_TO_YOURSELF_ACTION_ID
-from onyx.onyxbot.slack.constants import LIKE_BLOCK_ACTION_ID
-from onyx.onyxbot.slack.constants import SHOW_EVERYONE_ACTION_ID
-from onyx.onyxbot.slack.constants import VIEW_DOC_FEEDBACK_ID
-from onyx.onyxbot.slack.handlers.handle_buttons import handle_doc_feedback_button
-from onyx.onyxbot.slack.handlers.handle_buttons import handle_followup_button
-from onyx.onyxbot.slack.handlers.handle_buttons import handle_followup_resolved_button
-from onyx.onyxbot.slack.handlers.handle_buttons import handle_generate_answer_button
-from onyx.onyxbot.slack.handlers.handle_buttons import (
+from aethersearch.configs.app_configs import DEV_MODE
+from aethersearch.configs.app_configs import POD_NAME
+from aethersearch.configs.app_configs import POD_NAMESPACE
+from aethersearch.configs.constants import MessageType
+from aethersearch.configs.constants import AetherSearchRedisLocks
+from aethersearch.configs.aethersearchbot_configs import NOTIFY_SLACKBOT_NO_ANSWER
+from aethersearch.connectors.slack.utils import expert_info_from_slack_id
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.engine.sql_engine import get_session_with_tenant
+from aethersearch.db.engine.sql_engine import SqlEngine
+from aethersearch.db.engine.tenant_utils import get_all_tenant_ids
+from aethersearch.db.models import SlackBot
+from aethersearch.db.search_settings import get_current_search_settings
+from aethersearch.db.slack_bot import fetch_slack_bot
+from aethersearch.db.slack_bot import fetch_slack_bots
+from aethersearch.key_value_store.interface import KvKeyNotFoundError
+from aethersearch.natural_language_processing.search_nlp_models import EmbeddingModel
+from aethersearch.natural_language_processing.search_nlp_models import warm_up_bi_encoder
+from aethersearch.aethersearchbot.slack.config import get_slack_channel_config_for_bot_and_channel
+from aethersearch.aethersearchbot.slack.config import MAX_TENANTS_PER_POD
+from aethersearch.aethersearchbot.slack.config import TENANT_ACQUISITION_INTERVAL
+from aethersearch.aethersearchbot.slack.config import TENANT_HEARTBEAT_EXPIRATION
+from aethersearch.aethersearchbot.slack.config import TENANT_HEARTBEAT_INTERVAL
+from aethersearch.aethersearchbot.slack.config import TENANT_LOCK_EXPIRATION
+from aethersearch.aethersearchbot.slack.constants import DISLIKE_BLOCK_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import FEEDBACK_DOC_BUTTON_BLOCK_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import FOLLOWUP_BUTTON_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import FOLLOWUP_BUTTON_RESOLVED_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import GENERATE_ANSWER_BUTTON_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import IMMEDIATE_RESOLVED_BUTTON_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import KEEP_TO_YOURSELF_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import LIKE_BLOCK_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import SHOW_EVERYONE_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import VIEW_DOC_FEEDBACK_ID
+from aethersearch.aethersearchbot.slack.handlers.handle_buttons import handle_doc_feedback_button
+from aethersearch.aethersearchbot.slack.handlers.handle_buttons import handle_followup_button
+from aethersearch.aethersearchbot.slack.handlers.handle_buttons import handle_followup_resolved_button
+from aethersearch.aethersearchbot.slack.handlers.handle_buttons import handle_generate_answer_button
+from aethersearch.aethersearchbot.slack.handlers.handle_buttons import (
     handle_publish_ephemeral_message_button,
 )
-from onyx.onyxbot.slack.handlers.handle_buttons import handle_slack_feedback
-from onyx.onyxbot.slack.handlers.handle_message import handle_message
-from onyx.onyxbot.slack.handlers.handle_message import (
+from aethersearch.aethersearchbot.slack.handlers.handle_buttons import handle_slack_feedback
+from aethersearch.aethersearchbot.slack.handlers.handle_message import handle_message
+from aethersearch.aethersearchbot.slack.handlers.handle_message import (
     remove_scheduled_feedback_reminder,
 )
-from onyx.onyxbot.slack.handlers.handle_message import schedule_feedback_reminder
-from onyx.onyxbot.slack.models import SlackContext
-from onyx.onyxbot.slack.models import SlackMessageInfo
-from onyx.onyxbot.slack.models import ThreadMessage
-from onyx.onyxbot.slack.utils import check_message_limit
-from onyx.onyxbot.slack.utils import decompose_action_id
-from onyx.onyxbot.slack.utils import get_channel_name_from_id
-from onyx.onyxbot.slack.utils import get_channel_type_from_id
-from onyx.onyxbot.slack.utils import get_onyx_bot_auth_ids
-from onyx.onyxbot.slack.utils import read_slack_thread
-from onyx.onyxbot.slack.utils import remove_onyx_bot_tag
-from onyx.onyxbot.slack.utils import respond_in_thread_or_channel
-from onyx.onyxbot.slack.utils import TenantSocketModeClient
-from onyx.redis.redis_pool import get_redis_client
-from onyx.server.manage.models import SlackBotTokens
-from onyx.tracing.setup import setup_tracing
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
-from onyx.utils.variable_functionality import set_is_ee_based_on_env_variable
+from aethersearch.aethersearchbot.slack.handlers.handle_message import schedule_feedback_reminder
+from aethersearch.aethersearchbot.slack.models import SlackContext
+from aethersearch.aethersearchbot.slack.models import SlackMessageInfo
+from aethersearch.aethersearchbot.slack.models import ThreadMessage
+from aethersearch.aethersearchbot.slack.utils import check_message_limit
+from aethersearch.aethersearchbot.slack.utils import decompose_action_id
+from aethersearch.aethersearchbot.slack.utils import get_channel_name_from_id
+from aethersearch.aethersearchbot.slack.utils import get_channel_type_from_id
+from aethersearch.aethersearchbot.slack.utils import get_aethersearch_bot_auth_ids
+from aethersearch.aethersearchbot.slack.utils import read_slack_thread
+from aethersearch.aethersearchbot.slack.utils import remove_aethersearch_bot_tag
+from aethersearch.aethersearchbot.slack.utils import respond_in_thread_or_channel
+from aethersearch.aethersearchbot.slack.utils import TenantSocketModeClient
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.server.manage.models import SlackBotTokens
+from aethersearch.tracing.setup import setup_tracing
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import fetch_ee_implementation_or_noop
+from aethersearch.utils.variable_functionality import set_is_ee_based_on_env_variable
 from shared_configs.configs import DISALLOWED_SLACK_BOT_TENANT_LIST
 from shared_configs.configs import MODEL_SERVER_HOST
 from shared_configs.configs import MODEL_SERVER_PORT
@@ -284,7 +284,7 @@ class SlackbotHandler:
         # tenants that are disabled (e.g. their trial is over and haven't subscribed)
         # for non-cloud, this will return an empty set
         gated_tenants = fetch_ee_implementation_or_noop(
-            "onyx.server.tenants.product_gating",
+            "aethersearch.server.tenants.product_gating",
             "get_gated_tenants",
             set(),
         )()
@@ -319,7 +319,7 @@ class SlackbotHandler:
             # thread_local=False because the shutdown event is handled
             # on an arbitrary thread
             rlock: RedisLock = redis_client.lock(
-                OnyxRedisLocks.SLACK_BOT_LOCK,
+                AetherSearchRedisLocks.SLACK_BOT_LOCK,
                 timeout=TENANT_LOCK_EXPIRATION,
                 thread_local=False,
             )
@@ -495,7 +495,7 @@ class SlackbotHandler:
         logger.debug(f"Sending heartbeats for {len(tenant_ids)} active tenants")
         for tenant_id in tenant_ids:
             redis_client = get_redis_client(tenant_id=tenant_id)
-            heartbeat_key = f"{OnyxRedisLocks.SLACK_BOT_HEARTBEAT_PREFIX}:{pod_id}"
+            heartbeat_key = f"{AetherSearchRedisLocks.SLACK_BOT_HEARTBEAT_PREFIX}:{pod_id}"
             redis_client.set(
                 heartbeat_key, current_time, ex=TENANT_HEARTBEAT_EXPIRATION
             )
@@ -560,7 +560,7 @@ class SlackbotHandler:
         # Establish a WebSocket connection to the Socket Mode servers.
         # connect() internally calls apps.connections.open; on auth failure
         # slack_sdk's socket_mode client logs its own error (shipped to
-        # Sentry as ONYX-BACKEND-4) and re-raises. The common case is
+        # Sentry as AETHERSEARCH-BACKEND-4) and re-raises. The common case is
         # caught above by the auth_test guard — this wrapper covers the
         # rarer path where bot_token is valid but app_token is not.
         try:
@@ -652,7 +652,7 @@ def prefilter_requests(req: SocketModeRequest, client: TenantSocketModeClient) -
     # skip cases where the bot is disabled in the web UI
     tenant_id = get_current_tenant_id()
 
-    bot_token_user_id, bot_token_bot_id = get_onyx_bot_auth_ids(
+    bot_token_user_id, bot_token_bot_id = get_aethersearch_bot_auth_ids(
         tenant_id, client.web_client
     )
     logger.info(f"prefilter_requests: {bot_token_user_id=} {bot_token_bot_id=}")
@@ -703,7 +703,7 @@ def prefilter_requests(req: SocketModeRequest, client: TenantSocketModeClient) -
 
         if (
             msg in _SLACK_GREETINGS_TO_IGNORE
-            or remove_onyx_bot_tag(tenant_id, msg, client=client.web_client)
+            or remove_aethersearch_bot_tag(tenant_id, msg, client=client.web_client)
             in _SLACK_GREETINGS_TO_IGNORE
         ):
             channel_specific_logger.error(
@@ -721,11 +721,11 @@ def prefilter_requests(req: SocketModeRequest, client: TenantSocketModeClient) -
         if event_type not in ["app_mention", "message"]:
             return False
 
-        bot_token_user_id, bot_token_bot_id = get_onyx_bot_auth_ids(
+        bot_token_user_id, bot_token_bot_id = get_aethersearch_bot_auth_ids(
             tenant_id, client.web_client
         )
         if event_type == "message":
-            is_onyx_bot_msg = False
+            is_aethersearch_bot_msg = False
             is_tagged = False
 
             event_user = event.get("user", "")
@@ -736,17 +736,17 @@ def prefilter_requests(req: SocketModeRequest, client: TenantSocketModeClient) -
                 is_tagged = True
 
             if bot_token_user_id and bot_token_user_id in event_user:
-                is_onyx_bot_msg = True
+                is_aethersearch_bot_msg = True
 
             if bot_token_bot_id and bot_token_bot_id in event_bot_id:
-                is_onyx_bot_msg = True
+                is_aethersearch_bot_msg = True
 
-            # OnyxBot should never respond to itself
-            if is_onyx_bot_msg:
-                logger.info("Ignoring message from OnyxBot (self-message)")
+            # AetherSearchBot should never respond to itself
+            if is_aethersearch_bot_msg:
+                logger.info("Ignoring message from AetherSearchBot (self-message)")
                 return False
 
-            # DMs with the bot don't pick up the @OnyxBot so we have to keep the
+            # DMs with the bot don't pick up the @AetherSearchBot so we have to keep the
             # caught events_api
             if is_tagged and not is_dm:
                 # Let the tag flow handle this case, don't reply twice
@@ -767,7 +767,7 @@ def prefilter_requests(req: SocketModeRequest, client: TenantSocketModeClient) -
                     channel_name=channel_name,
                 )
 
-            # If OnyxBot is not specifically tagged and the channel is not set to respond to bots, ignore the message
+            # If AetherSearchBot is not specifically tagged and the channel is not set to respond to bots, ignore the message
             if (not bot_token_user_id or bot_token_user_id not in msg) and (
                 not slack_channel_config
                 or not slack_channel_config.channel_config.get("respond_to_bots")
@@ -790,7 +790,7 @@ def prefilter_requests(req: SocketModeRequest, client: TenantSocketModeClient) -
         message_ts = event.get("ts")
         thread_ts = event.get("thread_ts")
         # Pick the root of the thread (if a thread exists)
-        # Can respond in thread if it's an "im" directly to Onyx or @OnyxBot is tagged
+        # Can respond in thread if it's an "im" directly to AetherSearch or @AetherSearchBot is tagged
         if (
             thread_ts
             and message_ts != thread_ts
@@ -814,14 +814,14 @@ def prefilter_requests(req: SocketModeRequest, client: TenantSocketModeClient) -
 
         if not channel:
             channel_specific_logger.error(
-                "Received OnyxBot command without channel - skipping"
+                "Received AetherSearchBot command without channel - skipping"
             )
             return False
 
         sender = req.payload.get("user_id")
         if not sender:
             channel_specific_logger.error(
-                "Cannot respond to OnyxBot command without sender to respond to."
+                "Cannot respond to AetherSearchBot command without sender to respond to."
             )
             return False
 
@@ -879,7 +879,7 @@ def build_request_details(
         channel = cast(str, event["channel"])
 
         # Check for both app_mention events and messages containing bot tag
-        bot_token_user_id, _ = get_onyx_bot_auth_ids(tenant_id, client.web_client)
+        bot_token_user_id, _ = get_aethersearch_bot_auth_ids(tenant_id, client.web_client)
         message_ts = event.get("ts")
         thread_ts = event.get("thread_ts")
         sender_id = event.get("user") or None
@@ -888,7 +888,7 @@ def build_request_details(
         )
         email = expert_info.email if expert_info else None
 
-        msg = remove_onyx_bot_tag(tenant_id, msg, client=client.web_client)
+        msg = remove_aethersearch_bot_tag(tenant_id, msg, client=client.web_client)
 
         logger.info(f"Received Slack message: {msg}")
 
@@ -902,7 +902,7 @@ def build_request_details(
                     tagged = True
 
         if tagged:
-            logger.debug("User tagged OnyxBot")
+            logger.debug("User tagged AetherSearchBot")
 
         # Build Slack context for federated search
         # Get proper channel type from Slack API instead of relying on event.channel_type
@@ -1138,11 +1138,11 @@ def _check_tenant_gated(client: TenantSocketModeClient, req: SocketModeRequest) 
 
     Returns True if blocked.
     """
-    from onyx.server.settings.models import ApplicationStatus
+    from aethersearch.server.settings.models import ApplicationStatus
 
     # Multi-tenant path: control plane marks gated tenants in Redis
     is_gated: bool = fetch_ee_implementation_or_noop(
-        "onyx.server.tenants.product_gating",
+        "aethersearch.server.tenants.product_gating",
         "is_tenant_gated",
         False,
     )(get_current_tenant_id())
@@ -1150,7 +1150,7 @@ def _check_tenant_gated(client: TenantSocketModeClient, req: SocketModeRequest) 
     # Self-hosted path: check license metadata cache
     if not is_gated:
         get_cached_metadata = fetch_ee_implementation_or_noop(
-            "onyx.db.license",
+            "aethersearch.db.license",
             "get_cached_license_metadata",
             None,
         )
@@ -1182,7 +1182,7 @@ def _check_tenant_gated(client: TenantSocketModeClient, req: SocketModeRequest) 
                 channel=channel,
                 thread_ts=thread_ts,
                 text=(
-                    "Your organization's subscription has expired. Please contact your Onyx administrator to restore access."
+                    "Your organization's subscription has expired. Please contact your AetherSearch administrator to restore access."
                 ),
             )
     logger.info(f"Blocked Slack request for gated tenant {get_current_tenant_id()}")
@@ -1220,7 +1220,7 @@ def _get_socket_client(
     slack_bot_tokens: SlackBotTokens, tenant_id: str, slack_bot_id: int
 ) -> TenantSocketModeClient:
     # For more info on how to set this up, checkout the docs:
-    # https://docs.onyx.app/admins/getting_started/slack_bot_setup
+    # https://docs.aethersearch.app/admins/getting_started/slack_bot_setup
 
     # use the retry handlers built into the slack sdk
     connection_error_retry_handler = ConnectionErrorRetryHandler()

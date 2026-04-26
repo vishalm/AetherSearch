@@ -44,65 +44,65 @@ from sqlalchemy.types import LargeBinary
 from sqlalchemy.types import TypeDecorator
 from typing_extensions import TypedDict  # noreorder
 
-from onyx.auth.schemas import UserRole
-from onyx.configs.constants import ANONYMOUS_USER_UUID
-from onyx.configs.constants import DEFAULT_BOOST
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import FederatedConnectorSource
-from onyx.configs.constants import FileOrigin
-from onyx.configs.constants import MessageType
-from onyx.configs.constants import MilestoneRecordType
-from onyx.configs.constants import NotificationType
-from onyx.configs.constants import SearchFeedbackType
-from onyx.configs.constants import TokenRateLimitScope
-from onyx.connectors.models import InputType
-from onyx.db.enums import AccessType
-from onyx.db.enums import AccountType
-from onyx.db.enums import ArtifactType
-from onyx.db.enums import BuildSessionStatus
-from onyx.db.enums import ChatSessionSharedStatus
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import DefaultAppMode
-from onyx.db.enums import EmbeddingPrecision
-from onyx.db.enums import GrantSource
-from onyx.db.enums import HierarchyNodeType
-from onyx.db.enums import HookFailStrategy
-from onyx.db.enums import HookPoint
-from onyx.db.enums import IndexingMode
-from onyx.db.enums import IndexingStatus
-from onyx.db.enums import IndexModelStatus
-from onyx.db.enums import LLMModelFlowType
-from onyx.db.enums import MCPAuthenticationPerformer
-from onyx.db.enums import MCPAuthenticationType
-from onyx.db.enums import MCPServerStatus
-from onyx.db.enums import MCPTransport
-from onyx.db.enums import OpenSearchDocumentMigrationStatus
-from onyx.db.enums import OpenSearchTenantMigrationStatus
-from onyx.db.enums import Permission
-from onyx.db.enums import PermissionSyncStatus
-from onyx.db.enums import ProcessingMode
-from onyx.db.enums import SandboxStatus
-from onyx.db.enums import SharingScope
-from onyx.db.enums import SwitchoverType
-from onyx.db.enums import SyncStatus
-from onyx.db.enums import SyncType
-from onyx.db.enums import TaskStatus
-from onyx.db.enums import ThemePreference
-from onyx.db.enums import UserFileStatus
-from onyx.db.pydantic_type import PydanticListType
-from onyx.db.pydantic_type import PydanticType
-from onyx.file_store.models import FileDescriptor
-from onyx.kg.models import KGEntityTypeAttributes
-from onyx.kg.models import KGStage
-from onyx.llm.override_models import LLMOverride
-from onyx.llm.override_models import PromptOverride
-from onyx.tools.tool_implementations.web_search.models import WebContentProviderConfig
-from onyx.utils.encryption import decrypt_bytes_to_string
-from onyx.utils.encryption import encrypt_string_to_bytes
-from onyx.utils.headers import HeaderItemDict
-from onyx.utils.logger import setup_logger
-from onyx.utils.sensitive import SensitiveValue
-from onyx.utils.special_types import JSON_ro
+from aethersearch.auth.schemas import UserRole
+from aethersearch.configs.constants import ANONYMOUS_USER_UUID
+from aethersearch.configs.constants import DEFAULT_BOOST
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import FederatedConnectorSource
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.configs.constants import MessageType
+from aethersearch.configs.constants import MilestoneRecordType
+from aethersearch.configs.constants import NotificationType
+from aethersearch.configs.constants import SearchFeedbackType
+from aethersearch.configs.constants import TokenRateLimitScope
+from aethersearch.connectors.models import InputType
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import AccountType
+from aethersearch.db.enums import ArtifactType
+from aethersearch.db.enums import BuildSessionStatus
+from aethersearch.db.enums import ChatSessionSharedStatus
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import DefaultAppMode
+from aethersearch.db.enums import EmbeddingPrecision
+from aethersearch.db.enums import GrantSource
+from aethersearch.db.enums import HierarchyNodeType
+from aethersearch.db.enums import HookFailStrategy
+from aethersearch.db.enums import HookPoint
+from aethersearch.db.enums import IndexingMode
+from aethersearch.db.enums import IndexingStatus
+from aethersearch.db.enums import IndexModelStatus
+from aethersearch.db.enums import LLMModelFlowType
+from aethersearch.db.enums import MCPAuthenticationPerformer
+from aethersearch.db.enums import MCPAuthenticationType
+from aethersearch.db.enums import MCPServerStatus
+from aethersearch.db.enums import MCPTransport
+from aethersearch.db.enums import OpenSearchDocumentMigrationStatus
+from aethersearch.db.enums import OpenSearchTenantMigrationStatus
+from aethersearch.db.enums import Permission
+from aethersearch.db.enums import PermissionSyncStatus
+from aethersearch.db.enums import ProcessingMode
+from aethersearch.db.enums import SandboxStatus
+from aethersearch.db.enums import SharingScope
+from aethersearch.db.enums import SwitchoverType
+from aethersearch.db.enums import SyncStatus
+from aethersearch.db.enums import SyncType
+from aethersearch.db.enums import TaskStatus
+from aethersearch.db.enums import ThemePreference
+from aethersearch.db.enums import UserFileStatus
+from aethersearch.db.pydantic_type import PydanticListType
+from aethersearch.db.pydantic_type import PydanticType
+from aethersearch.file_store.models import FileDescriptor
+from aethersearch.kg.models import KGEntityTypeAttributes
+from aethersearch.kg.models import KGStage
+from aethersearch.llm.override_models import LLMOverride
+from aethersearch.llm.override_models import PromptOverride
+from aethersearch.tools.tool_implementations.web_search.models import WebContentProviderConfig
+from aethersearch.utils.encryption import decrypt_bytes_to_string
+from aethersearch.utils.encryption import encrypt_string_to_bytes
+from aethersearch.utils.headers import HeaderItemDict
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.sensitive import SensitiveValue
+from aethersearch.utils.special_types import JSON_ro
 from shared_configs.enums import EmbeddingProvider
 
 # TODO: After anonymous user migration has been deployed, make user_id columns NOT NULL
@@ -755,7 +755,7 @@ class ConnectorCredentialPair(Base):
 
     # source type (defined in the connector's `source` field)
     # E.g. for google_drive perm sync:
-    # {"customer_id": "123567", "company_domain": "@onyx.app"}
+    # {"customer_id": "123567", "company_domain": "@aethersearch.app"}
     auto_sync_options: Mapped[dict[str, Any] | None] = mapped_column(
         postgresql.JSONB(), nullable=True
     )
@@ -934,7 +934,7 @@ class Document(Base):
     # NOTE: if more sensitive data is added here for display, make sure to add user/group permission
 
     # this should correspond to the ID of the document
-    # (as is passed around in Onyx)
+    # (as is passed around in AetherSearch)
     id: Mapped[str] = mapped_column(NullFilteredString, primary_key=True)
     from_ingestion_api: Mapped[bool] = mapped_column(
         Boolean, default=False, nullable=True
@@ -972,7 +972,7 @@ class Document(Base):
         DateTime(timezone=True), nullable=True, index=True
     )
     # The following are not attached to User because the account/email may not be known
-    # within Onyx
+    # within AetherSearch
     # Something like the document creator
     primary_owners: Mapped[list[str] | None] = mapped_column(
         postgresql.ARRAY(String), nullable=True
@@ -1058,7 +1058,7 @@ class Document(Base):
 class OpenSearchDocumentMigrationRecord(Base):
     """Tracks the migration status of documents from Vespa to OpenSearch.
 
-    This table can be dropped when the migration is complete for all Onyx
+    This table can be dropped when the migration is complete for all AetherSearch
     instances.
     """
 
@@ -1099,7 +1099,7 @@ class OpenSearchTenantMigrationRecord(Base):
 
     Should only contain one row.
 
-    This table can be dropped when the migration is complete for all Onyx
+    This table can be dropped when the migration is complete for all AetherSearch
     instances.
     """
 
@@ -1783,7 +1783,7 @@ class ChunkStats(Base):
     # NOTE: if more sensitive data is added here for display, make sure to add user/group permission
 
     # this should correspond to the ID of the document
-    # (as is passed around in Onyx)x
+    # (as is passed around in AetherSearch)x
     id: Mapped[str] = mapped_column(
         NullFilteredString,
         primary_key=True,
@@ -2568,8 +2568,8 @@ class ChatSession(Base):
         ForeignKey("persona.id"), nullable=True
     )
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    # This chat created by OnyxBot
-    onyxbot_flow: Mapped[bool] = mapped_column(Boolean, default=False)
+    # This chat created by AetherSearchBot
+    aethersearchbot_flow: Mapped[bool] = mapped_column(Boolean, default=False)
     # Only ever set to True if system is set to not hard-delete chats
     deleted: Mapped[bool] = mapped_column(Boolean, default=False)
     # controls whether or not this conversation is viewable by others
@@ -3975,11 +3975,11 @@ class FileContent(Base):
 Enterprise Edition Models
 ************************************************************************
 
-These models are only used in Enterprise Edition only features in Onyx.
+These models are only used in Enterprise Edition only features in AetherSearch.
 They are kept here to simplify the codebase and avoid having different assumptions
-on the shape of data being passed around between the MIT and EE versions of Onyx.
+on the shape of data being passed around between the MIT and EE versions of AetherSearch.
 
-In the MIT version of Onyx, assume these tables are always empty.
+In the MIT version of AetherSearch, assume these tables are always empty.
 """
 
 
@@ -4317,7 +4317,7 @@ class User__ExternalUserGroupId(Base):
     """Maps user info both internal and external to the name of the external group
     This maps the user to all of their external groups so that the external group name can be
     attached to the ACL list matching during query time. User level permissions can be handled by
-    directly adding the Onyx user to the doc ACL list"""
+    directly adding the AetherSearch user to the doc ACL list"""
 
     __tablename__ = "user__external_user_group_id"
 
@@ -5198,7 +5198,7 @@ class ScimToken(Base):
 
 
 class ScimUserMapping(Base):
-    """Maps SCIM externalId from the IdP to an Onyx User."""
+    """Maps SCIM externalId from the IdP to an AetherSearch User."""
 
     __tablename__ = "scim_user_mapping"
 
@@ -5230,7 +5230,7 @@ class ScimUserMapping(Base):
 
 
 class ScimGroupMapping(Base):
-    """Maps SCIM externalId from the IdP to an Onyx UserGroup."""
+    """Maps SCIM externalId from the IdP to an AetherSearch UserGroup."""
 
     __tablename__ = "scim_group_mapping"
 

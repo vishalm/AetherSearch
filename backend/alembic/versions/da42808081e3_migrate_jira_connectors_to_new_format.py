@@ -10,8 +10,8 @@ from alembic import op
 import sqlalchemy as sa
 import json
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.jira.utils import extract_jira_project
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.jira.utils import extract_jira_project
 
 
 # revision identifiers, used by Alembic.

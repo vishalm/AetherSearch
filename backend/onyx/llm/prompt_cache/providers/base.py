@@ -3,8 +3,8 @@
 from abc import ABC
 from abc import abstractmethod
 
-from onyx.llm.interfaces import LanguageModelInput
-from onyx.llm.prompt_cache.models import CacheMetadata
+from aethersearch.llm.interfaces import LanguageModelInput
+from aethersearch.llm.prompt_cache.models import CacheMetadata
 
 
 class PromptCacheProvider(ABC):

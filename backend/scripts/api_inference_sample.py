@@ -1,5 +1,5 @@
 # This file is used to demonstrate how to use the backend APIs directly
-# In this case, the equivalent of asking a question in Onyx Chat in a new chat session
+# In this case, the equivalent of asking a question in AetherSearch Chat in a new chat session
 import argparse
 import json
 import os
@@ -7,9 +7,9 @@ import os
 import requests
 
 
-def create_new_chat_session(onyx_url: str, api_key: str | None) -> int:
+def create_new_chat_session(aethersearch_url: str, api_key: str | None) -> int:
     headers = {"Authorization": f"Bearer {api_key}"} if api_key else None
-    session_endpoint = onyx_url + "/api/chat/create-chat-session"
+    session_endpoint = aethersearch_url + "/api/chat/create-chat-session"
 
     response = requests.post(
         session_endpoint,
@@ -22,10 +22,10 @@ def create_new_chat_session(onyx_url: str, api_key: str | None) -> int:
     return new_session_id
 
 
-def process_question(onyx_url: str, question: str, api_key: str | None) -> None:
-    message_endpoint = onyx_url + "/api/chat/send-chat-message"
+def process_question(aethersearch_url: str, question: str, api_key: str | None) -> None:
+    message_endpoint = aethersearch_url + "/api/chat/send-chat-message"
 
-    chat_session_id = create_new_chat_session(onyx_url, api_key)
+    chat_session_id = create_new_chat_session(aethersearch_url, api_key)
 
     headers = {"Authorization": f"Bearer {api_key}"} if api_key else None
 
@@ -65,23 +65,23 @@ def process_question(onyx_url: str, question: str, api_key: str | None) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Sample API Usage")
     parser.add_argument(
-        "--onyx-url",
+        "--aethersearch-url",
         type=str,
         default="http://localhost:80",
-        help="Onyx URL, should point to Onyx nginx.",
+        help="AetherSearch URL, should point to AetherSearch nginx.",
     )
     parser.add_argument(
         "--test-question",
         type=str,
-        default="What is Onyx?",
+        default="What is AetherSearch?",
         help="Test question for new Chat Session.",
     )
 
     # Not needed if Auth is disabled
-    # Or for Onyx MIT API key must be replaced with session cookie
+    # Or for AetherSearch MIT API key must be replaced with session cookie
     api_key = os.environ.get("DANSWER_API_KEY")
 
     args = parser.parse_args()
     process_question(
-        onyx_url=args.onyx_url, question=args.test_question, api_key=api_key
+        aethersearch_url=args.aethersearch_url, question=args.test_question, api_key=api_key
     )

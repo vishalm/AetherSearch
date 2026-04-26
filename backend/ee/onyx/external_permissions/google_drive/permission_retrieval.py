@@ -1,9 +1,9 @@
 from retry import retry
 
-from ee.onyx.external_permissions.google_drive.models import GoogleDrivePermission
-from onyx.connectors.google_utils.google_utils import execute_paginated_retrieval
-from onyx.connectors.google_utils.resources import GoogleDriveService
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.external_permissions.google_drive.models import GoogleDrivePermission
+from aethersearch.connectors.google_utils.google_utils import execute_paginated_retrieval
+from aethersearch.connectors.google_utils.resources import GoogleDriveService
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

@@ -2,16 +2,16 @@ from collections.abc import Iterator
 
 from googleapiclient.discovery import Resource
 
-from ee.onyx.external_permissions.google_drive.models import GoogleDrivePermission
-from ee.onyx.external_permissions.google_drive.permission_retrieval import (
+from ee.aethersearch.external_permissions.google_drive.models import GoogleDrivePermission
+from ee.aethersearch.external_permissions.google_drive.permission_retrieval import (
     get_permissions_by_ids,
 )
-from onyx.connectors.google_drive.constants import DRIVE_FOLDER_TYPE
-from onyx.connectors.google_drive.file_retrieval import generate_time_range_filter
-from onyx.connectors.google_drive.models import GoogleDriveFileType
-from onyx.connectors.google_utils.google_utils import execute_paginated_retrieval
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.utils.logger import setup_logger
+from aethersearch.connectors.google_drive.constants import DRIVE_FOLDER_TYPE
+from aethersearch.connectors.google_drive.file_retrieval import generate_time_range_filter
+from aethersearch.connectors.google_drive.models import GoogleDriveFileType
+from aethersearch.connectors.google_utils.google_utils import execute_paginated_retrieval
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

@@ -3,17 +3,17 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from ee.onyx.background.task_name_builders import QUERY_HISTORY_TASK_NAME_PREFIX
-from onyx.auth.users import get_display_email
-from onyx.background.task_utils import extract_task_id_from_query_history_report_name
-from onyx.configs.constants import MessageType
-from onyx.configs.constants import QAFeedbackType
-from onyx.configs.constants import SessionType
-from onyx.db.enums import TaskStatus
-from onyx.db.models import ChatMessage
-from onyx.db.models import ChatSession
-from onyx.db.models import FileRecord
-from onyx.db.models import TaskQueueState
+from ee.aethersearch.background.task_name_builders import QUERY_HISTORY_TASK_NAME_PREFIX
+from aethersearch.auth.users import get_display_email
+from aethersearch.background.task_utils import extract_task_id_from_query_history_report_name
+from aethersearch.configs.constants import MessageType
+from aethersearch.configs.constants import QAFeedbackType
+from aethersearch.configs.constants import SessionType
+from aethersearch.db.enums import TaskStatus
+from aethersearch.db.models import ChatMessage
+from aethersearch.db.models import ChatSession
+from aethersearch.db.models import FileRecord
+from aethersearch.db.models import TaskQueueState
 
 
 class AbridgedSearchDoc(BaseModel):
@@ -133,7 +133,7 @@ class ChatSessionMinimal(BaseModel):
             time_created=chat_session.time_created,
             feedback_type=session_feedback_type,
             flow_type=(
-                SessionType.SLACK if chat_session.onyxbot_flow else SessionType.CHAT
+                SessionType.SLACK if chat_session.aethersearchbot_flow else SessionType.CHAT
             ),
             conversation_length=len(
                 [

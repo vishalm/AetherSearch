@@ -3,22 +3,22 @@ from fastapi import Depends
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.db.notification import dismiss_notification
-from onyx.db.notification import get_notification_by_id
-from onyx.db.notification import get_notifications
-from onyx.server.features.build.utils import ensure_build_mode_intro_notification
-from onyx.server.features.notifications.utils import (
+from aethersearch.auth.permissions import require_permission
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.db.notification import dismiss_notification
+from aethersearch.db.notification import get_notification_by_id
+from aethersearch.db.notification import get_notifications
+from aethersearch.server.features.build.utils import ensure_build_mode_intro_notification
+from aethersearch.server.features.notifications.utils import (
     ensure_permissions_migration_notification,
 )
-from onyx.server.features.release_notes.utils import (
+from aethersearch.server.features.release_notes.utils import (
     ensure_release_notes_fresh_and_notify,
 )
-from onyx.server.settings.models import Notification as NotificationModel
-from onyx.utils.logger import setup_logger
+from aethersearch.server.settings.models import Notification as NotificationModel
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 router = APIRouter(prefix="/notifications")

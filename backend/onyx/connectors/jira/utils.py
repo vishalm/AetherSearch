@@ -10,9 +10,9 @@ from jira.resources import CustomFieldOption
 from jira.resources import Issue
 from jira.resources import User
 
-from onyx.connectors.cross_connector_utils.miscellaneous_utils import scoped_url
-from onyx.connectors.models import BasicExpertInfo
-from onyx.utils.logger import setup_logger
+from aethersearch.connectors.cross_connector_utils.miscellaneous_utils import scoped_url
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-from onyx.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
+from aethersearch.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
 
 
 def test_time_str_to_utc() -> None:

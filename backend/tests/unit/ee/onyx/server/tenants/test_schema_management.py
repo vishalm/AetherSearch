@@ -2,8 +2,8 @@
 
 import pytest
 
-from ee.onyx.server.tenants.schema_management import drop_schema
-from ee.onyx.server.tenants.schema_management import validate_tenant_id
+from ee.aethersearch.server.tenants.schema_management import drop_schema
+from ee.aethersearch.server.tenants.schema_management import validate_tenant_id
 
 
 class TestValidateTenantId:

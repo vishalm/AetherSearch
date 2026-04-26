@@ -2,17 +2,17 @@ import csv
 import os
 import shutil
 
-from onyx.connectors.salesforce.shelve_stuff.shelve_functions import find_ids_by_type
-from onyx.connectors.salesforce.shelve_stuff.shelve_functions import (
+from aethersearch.connectors.salesforce.shelve_stuff.shelve_functions import find_ids_by_type
+from aethersearch.connectors.salesforce.shelve_stuff.shelve_functions import (
     get_affected_parent_ids_by_type,
 )
-from onyx.connectors.salesforce.shelve_stuff.shelve_functions import get_child_ids
-from onyx.connectors.salesforce.shelve_stuff.shelve_functions import get_record
-from onyx.connectors.salesforce.shelve_stuff.shelve_functions import (
+from aethersearch.connectors.salesforce.shelve_stuff.shelve_functions import get_child_ids
+from aethersearch.connectors.salesforce.shelve_stuff.shelve_functions import get_record
+from aethersearch.connectors.salesforce.shelve_stuff.shelve_functions import (
     update_sf_db_with_csv,
 )
-from onyx.connectors.salesforce.utils import BASE_DATA_PATH
-from onyx.connectors.salesforce.utils import get_object_type_path
+from aethersearch.connectors.salesforce.utils import BASE_DATA_PATH
+from aethersearch.connectors.salesforce.utils import get_object_type_path
 
 _VALID_SALESFORCE_IDS = [
     "001bm00000fd9Z3AAI",

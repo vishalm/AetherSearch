@@ -9,8 +9,8 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.connectors.linear.connector import LinearConnector
-from onyx.connectors.models import ConnectorMissingCredentialError
+from aethersearch.connectors.linear.connector import LinearConnector
+from aethersearch.connectors.models import ConnectorMissingCredentialError
 
 _FRESH_ACCESS_TOKEN = "fresh-access-token"
 _OLD_ACCESS_TOKEN = "old-access-token"
@@ -41,7 +41,7 @@ def _refresh_response_payload(
     }
 
 
-@patch("onyx.connectors.linear.connector.request_with_retries")
+@patch("aethersearch.connectors.linear.connector.request_with_retries")
 def test_refresh_token_returns_new_credentials(
     mock_request: MagicMock,
 ) -> None:
@@ -68,7 +68,7 @@ def test_refresh_token_returns_new_credentials(
     assert call_kwargs["data"]["refresh_token"] == _REFRESH_TOKEN_VALUE
 
 
-@patch("onyx.connectors.linear.connector.request_with_retries")
+@patch("aethersearch.connectors.linear.connector.request_with_retries")
 def test_refresh_token_keeps_existing_refresh_token_when_omitted(
     mock_request: MagicMock,
 ) -> None:
@@ -97,7 +97,7 @@ def test_refresh_token_missing_refresh_token_raises() -> None:
         connector.refresh_token({"access_token": _OLD_ACCESS_TOKEN})
 
 
-@patch("onyx.connectors.linear.connector.request_with_retries")
+@patch("aethersearch.connectors.linear.connector.request_with_retries")
 def test_refresh_token_non_ok_response_raises(mock_request: MagicMock) -> None:
     """refresh_token should raise RuntimeError if the token endpoint returns a non-OK response."""
     mock_request.return_value = _make_mock_response(ok=False, text="invalid_grant")
@@ -127,7 +127,7 @@ def test_load_credentials_with_access_token_and_no_expiry_does_not_refresh() -> 
     assert connector.linear_api_key == f"Bearer {_OLD_ACCESS_TOKEN}"
 
 
-@patch("onyx.connectors.linear.connector.request_with_retries")
+@patch("aethersearch.connectors.linear.connector.request_with_retries")
 def test_load_credentials_with_valid_token_does_not_refresh(
     mock_request: MagicMock,
 ) -> None:
@@ -147,7 +147,7 @@ def test_load_credentials_with_valid_token_does_not_refresh(
     mock_request.assert_not_called()
 
 
-@patch("onyx.connectors.linear.connector.request_with_retries")
+@patch("aethersearch.connectors.linear.connector.request_with_retries")
 def test_load_credentials_with_expired_token_refreshes(
     mock_request: MagicMock,
 ) -> None:
@@ -172,7 +172,7 @@ def test_load_credentials_with_expired_token_refreshes(
     mock_request.assert_called_once()
 
 
-@patch("onyx.connectors.linear.connector.request_with_retries")
+@patch("aethersearch.connectors.linear.connector.request_with_retries")
 def test_load_credentials_with_token_within_buffer_refreshes(
     mock_request: MagicMock,
 ) -> None:

@@ -10,33 +10,33 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.connectors.interfaces import GenerateDocumentsOutput
-from onyx.connectors.interfaces import GenerateSlimDocumentOutput
-from onyx.connectors.interfaces import LoadConnector
-from onyx.connectors.interfaces import PollConnector
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.interfaces import SlimConnectorWithPermSync
-from onyx.connectors.models import BasicExpertInfo
-from onyx.connectors.models import ConnectorCheckpoint
-from onyx.connectors.models import ConnectorMissingCredentialError
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import SlimDocument
-from onyx.connectors.models import TextSection
-from onyx.connectors.salesforce.doc_conversion import convert_sf_object_to_doc
-from onyx.connectors.salesforce.doc_conversion import convert_sf_query_result_to_doc
-from onyx.connectors.salesforce.doc_conversion import ID_PREFIX
-from onyx.connectors.salesforce.onyx_salesforce import OnyxSalesforce
-from onyx.connectors.salesforce.salesforce_calls import fetch_all_csvs_in_parallel
-from onyx.connectors.salesforce.sqlite_functions import OnyxSalesforceSQLite
-from onyx.connectors.salesforce.utils import ACCOUNT_OBJECT_TYPE
-from onyx.connectors.salesforce.utils import ID_FIELD
-from onyx.connectors.salesforce.utils import MODIFIED_FIELD
-from onyx.connectors.salesforce.utils import NAME_FIELD
-from onyx.connectors.salesforce.utils import USER_OBJECT_TYPE
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.connectors.interfaces import GenerateDocumentsOutput
+from aethersearch.connectors.interfaces import GenerateSlimDocumentOutput
+from aethersearch.connectors.interfaces import LoadConnector
+from aethersearch.connectors.interfaces import PollConnector
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.interfaces import SlimConnectorWithPermSync
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.connectors.models import ConnectorCheckpoint
+from aethersearch.connectors.models import ConnectorMissingCredentialError
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import SlimDocument
+from aethersearch.connectors.models import TextSection
+from aethersearch.connectors.salesforce.doc_conversion import convert_sf_object_to_doc
+from aethersearch.connectors.salesforce.doc_conversion import convert_sf_query_result_to_doc
+from aethersearch.connectors.salesforce.doc_conversion import ID_PREFIX
+from aethersearch.connectors.salesforce.aethersearch_salesforce import AetherSearchSalesforce
+from aethersearch.connectors.salesforce.salesforce_calls import fetch_all_csvs_in_parallel
+from aethersearch.connectors.salesforce.sqlite_functions import AetherSearchSalesforceSQLite
+from aethersearch.connectors.salesforce.utils import ACCOUNT_OBJECT_TYPE
+from aethersearch.connectors.salesforce.utils import ID_FIELD
+from aethersearch.connectors.salesforce.utils import MODIFIED_FIELD
+from aethersearch.connectors.salesforce.utils import NAME_FIELD
+from aethersearch.connectors.salesforce.utils import USER_OBJECT_TYPE
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -210,7 +210,7 @@ class SalesforceConnector(LoadConnector, PollConnector, SlimConnectorWithPermSyn
         custom_query_config: str | None = None,
     ) -> None:
         self.batch_size = batch_size
-        self._sf_client: OnyxSalesforce | None = None
+        self._sf_client: AetherSearchSalesforce | None = None
 
         # Validate and store custom query config
         if custom_query_config:
@@ -232,7 +232,7 @@ class SalesforceConnector(LoadConnector, PollConnector, SlimConnectorWithPermSyn
         credentials: dict[str, Any],
     ) -> dict[str, Any] | None:
         domain = "test" if credentials.get("is_sandbox") else None
-        self._sf_client = OnyxSalesforce(
+        self._sf_client = AetherSearchSalesforce(
             username=credentials["sf_username"],
             password=credentials["sf_password"],
             security_token=credentials["sf_security_token"],
@@ -241,7 +241,7 @@ class SalesforceConnector(LoadConnector, PollConnector, SlimConnectorWithPermSyn
         return None
 
     @property
-    def sf_client(self) -> OnyxSalesforce:
+    def sf_client(self) -> AetherSearchSalesforce:
         if self._sf_client is None:
             raise ConnectorMissingCredentialError("Salesforce")
         return self._sf_client
@@ -273,7 +273,7 @@ class SalesforceConnector(LoadConnector, PollConnector, SlimConnectorWithPermSyn
         all_types_to_filter: dict[str, bool],
         queryable_fields_by_type: dict[str, set[str]],
         directory: str,
-        sf_client: OnyxSalesforce,
+        sf_client: AetherSearchSalesforce,
         start: SecondsSinceUnixEpoch | None = None,
         end: SecondsSinceUnixEpoch | None = None,
     ) -> None:
@@ -315,7 +315,7 @@ class SalesforceConnector(LoadConnector, PollConnector, SlimConnectorWithPermSyn
 
     @staticmethod
     def _load_csvs_to_db(
-        csv_directory: str, remove_ids: bool, sf_db: OnyxSalesforceSQLite
+        csv_directory: str, remove_ids: bool, sf_db: AetherSearchSalesforceSQLite
     ) -> dict[str, str]:
         """
         Returns a dict of id to object type. Each id is a newly seen row in salesforce.
@@ -333,7 +333,7 @@ class SalesforceConnector(LoadConnector, PollConnector, SlimConnectorWithPermSyn
 
         # This is for testing the rest of the functionality if data has
         # already been fetched and put in sqlite
-        # from import onyx.connectors.salesforce.sf_db.sqlite_functions find_ids_by_type
+        # from import aethersearch.connectors.salesforce.sf_db.sqlite_functions find_ids_by_type
         # for object_type in self.parent_object_list:
         #     updated_ids.update(list(find_ids_by_type(object_type)))
 
@@ -392,7 +392,7 @@ class SalesforceConnector(LoadConnector, PollConnector, SlimConnectorWithPermSyn
 
     # @staticmethod
     # def _get_child_types(
-    #     parent_types: list[str], sf_client: OnyxSalesforce
+    #     parent_types: list[str], sf_client: AetherSearchSalesforce
     # ) -> set[str]:
     #     all_types: set[str] = set(parent_types)
 
@@ -444,7 +444,7 @@ class SalesforceConnector(LoadConnector, PollConnector, SlimConnectorWithPermSyn
 
     def _yield_doc_batches(
         self,
-        sf_db: OnyxSalesforceSQLite,
+        sf_db: AetherSearchSalesforceSQLite,
         type_to_processed: dict[str, int],
         changed_ids_to_type: dict[str, str],
         parent_types: set[str],
@@ -538,7 +538,7 @@ class SalesforceConnector(LoadConnector, PollConnector, SlimConnectorWithPermSyn
         parents_changed = 0
         examined_ids = 0
 
-        sf_db = OnyxSalesforceSQLite(os.path.join(temp_dir, "salesforce_db.sqlite"))
+        sf_db = AetherSearchSalesforceSQLite(os.path.join(temp_dir, "salesforce_db.sqlite"))
         sf_db.connect()
 
         try:
@@ -655,7 +655,7 @@ class SalesforceConnector(LoadConnector, PollConnector, SlimConnectorWithPermSyn
         parents_changed = 0
         processed = 0
 
-        sf_db = OnyxSalesforceSQLite(os.path.join(temp_dir, "salesforce_db.sqlite"))
+        sf_db = AetherSearchSalesforceSQLite(os.path.join(temp_dir, "salesforce_db.sqlite"))
         sf_db.connect()
 
         try:
@@ -878,7 +878,7 @@ class SalesforceConnector(LoadConnector, PollConnector, SlimConnectorWithPermSyn
         end: SecondsSinceUnixEpoch | None,
         temp_dir: str,
         parent_object_list: list[str],
-        sf_client: OnyxSalesforce,
+        sf_client: AetherSearchSalesforce,
     ) -> SalesforceConnectorContext:
         """NOTE: I suspect we're doing way too many queries here. Likely fewer queries
         and just parsing all the info we need in less passes will work."""
@@ -931,7 +931,7 @@ class SalesforceConnector(LoadConnector, PollConnector, SlimConnectorWithPermSyn
 
         logger.info(f"Parent object types: num={len(parent_types)} list={parent_types}")
         for parent_type in parent_types:
-            # parent_onyx_sf_type = OnyxSalesforceType(parent_type, sf_client)
+            # parent_aethersearch_sf_type = AetherSearchSalesforceType(parent_type, sf_client)
 
             custom_fields: list[str] | None = []
             associations_config: dict[str, list[str]] | None = None
@@ -992,7 +992,7 @@ class SalesforceConnector(LoadConnector, PollConnector, SlimConnectorWithPermSyn
             parent_to_relationship_queryable_fields[parent_type] = {}
 
             for child_type, child_relationship in child_types_working.items():
-                # onyx_sf_type = OnyxSalesforceType(child_type, sf_client)
+                # aethersearch_sf_type = AetherSearchSalesforceType(child_type, sf_client)
 
                 # map parent name to child name
                 parent_to_child_types[parent_type].add(child_type)
@@ -1062,7 +1062,7 @@ class SalesforceConnector(LoadConnector, PollConnector, SlimConnectorWithPermSyn
         # 1.1 - Detect all fields in child types which reference a parent type.
         # build dicts to detect relationships between parent and child
         for child_type in child_types.union(essential_types):
-            # onyx_sf_type = OnyxSalesforceType(child_type, sf_client)
+            # aethersearch_sf_type = AetherSearchSalesforceType(child_type, sf_client)
             parent_reference_fields = sf_client.get_parent_reference_fields(
                 child_type, parent_types
             )
@@ -1075,7 +1075,7 @@ class SalesforceConnector(LoadConnector, PollConnector, SlimConnectorWithPermSyn
         # NOTE(rkuo):
         all_types_to_filter: dict[str, bool] = {}
         for sf_type in all_types:
-            # onyx_sf_type = OnyxSalesforceType(sf_type, sf_client)
+            # aethersearch_sf_type = AetherSearchSalesforceType(sf_type, sf_client)
 
             # NOTE(rkuo): I'm not convinced it makes sense to restrict filtering at all
             # all_types_to_filter[sf_type] = sf_db.object_type_count(sf_type) > 0

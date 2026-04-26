@@ -16,20 +16,20 @@ from uuid import uuid4
 import pytest
 from sqlalchemy.orm import Session
 
-from onyx.background.indexing.run_docfetching import connector_document_extraction
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.connectors.models import InputType
-from onyx.db.enums import AccessType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import EmbeddingPrecision
-from onyx.db.enums import IndexingStatus
-from onyx.db.enums import IndexModelStatus
-from onyx.db.models import Connector
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import Credential
-from onyx.db.models import IndexAttempt
-from onyx.db.models import SearchSettings
+from aethersearch.background.indexing.run_docfetching import connector_document_extraction
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.connectors.models import InputType
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import EmbeddingPrecision
+from aethersearch.db.enums import IndexingStatus
+from aethersearch.db.enums import IndexModelStatus
+from aethersearch.db.models import Connector
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import Credential
+from aethersearch.db.models import IndexAttempt
+from aethersearch.db.models import SearchSettings
 from tests.external_dependency_unit.constants import TEST_TENANT_ID
 
 
@@ -137,31 +137,31 @@ class TestDocprocessingPriorityInDocumentExtraction:
         "has_successful_index,expected_priority",
         [
             # First-time indexing (no last_successful_index_time) should get HIGH priority
-            (False, OnyxCeleryPriority.HIGH),
+            (False, AetherSearchCeleryPriority.HIGH),
             # Re-indexing (has last_successful_index_time) should get MEDIUM priority
-            (True, OnyxCeleryPriority.MEDIUM),
+            (True, AetherSearchCeleryPriority.MEDIUM),
         ],
     )
-    @patch("onyx.background.indexing.run_docfetching.get_document_batch_storage")
-    @patch("onyx.background.indexing.run_docfetching.MemoryTracer")
-    @patch("onyx.background.indexing.run_docfetching._get_connector_runner")
+    @patch("aethersearch.background.indexing.run_docfetching.get_document_batch_storage")
+    @patch("aethersearch.background.indexing.run_docfetching.MemoryTracer")
+    @patch("aethersearch.background.indexing.run_docfetching._get_connector_runner")
     @patch(
-        "onyx.background.indexing.run_docfetching.strip_null_characters",
+        "aethersearch.background.indexing.run_docfetching.strip_null_characters",
         side_effect=lambda batch: batch,
     )
     @patch(
-        "onyx.background.indexing.run_docfetching.get_recent_completed_attempts_for_cc_pair"
+        "aethersearch.background.indexing.run_docfetching.get_recent_completed_attempts_for_cc_pair"
     )
     @patch(
-        "onyx.background.indexing.run_docfetching.get_last_successful_attempt_poll_range_end"
+        "aethersearch.background.indexing.run_docfetching.get_last_successful_attempt_poll_range_end"
     )
-    @patch("onyx.background.indexing.run_docfetching.save_checkpoint")
-    @patch("onyx.background.indexing.run_docfetching.get_latest_valid_checkpoint")
-    @patch("onyx.background.indexing.run_docfetching.get_redis_client")
-    @patch("onyx.background.indexing.run_docfetching.ensure_source_node_exists")
-    @patch("onyx.background.indexing.run_docfetching.get_source_node_id_from_cache")
-    @patch("onyx.background.indexing.run_docfetching.get_node_id_from_raw_id")
-    @patch("onyx.background.indexing.run_docfetching.cache_hierarchy_nodes_batch")
+    @patch("aethersearch.background.indexing.run_docfetching.save_checkpoint")
+    @patch("aethersearch.background.indexing.run_docfetching.get_latest_valid_checkpoint")
+    @patch("aethersearch.background.indexing.run_docfetching.get_redis_client")
+    @patch("aethersearch.background.indexing.run_docfetching.ensure_source_node_exists")
+    @patch("aethersearch.background.indexing.run_docfetching.get_source_node_id_from_cache")
+    @patch("aethersearch.background.indexing.run_docfetching.get_node_id_from_raw_id")
+    @patch("aethersearch.background.indexing.run_docfetching.cache_hierarchy_nodes_batch")
     def test_docprocessing_priority_based_on_last_successful_index_time(
         self,
         mock_cache_hierarchy_nodes_batch: MagicMock,  # noqa: ARG002
@@ -179,7 +179,7 @@ class TestDocprocessingPriorityInDocumentExtraction:
         mock_get_batch_storage: MagicMock,
         db_session: Session,
         has_successful_index: bool,
-        expected_priority: OnyxCeleryPriority,
+        expected_priority: AetherSearchCeleryPriority,
     ) -> None:
         """
         Test that docprocessing tasks get the correct priority based on

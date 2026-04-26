@@ -4,11 +4,11 @@ from typing import cast
 from github import Github
 from github.Repository import Repository
 
-from onyx.access.models import ExternalAccess
-from onyx.connectors.github.models import SerializedRepository
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import fetch_versioned_implementation
-from onyx.utils.variable_functionality import global_version
+from aethersearch.access.models import ExternalAccess
+from aethersearch.connectors.github.models import SerializedRepository
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import fetch_versioned_implementation
+from aethersearch.utils.variable_functionality import global_version
 
 logger = setup_logger()
 
@@ -29,7 +29,7 @@ def get_external_access_permission(
     ee_get_external_access_permission = cast(
         Callable[[Repository, Github, bool], ExternalAccess],
         fetch_versioned_implementation(
-            "onyx.external_permissions.github.utils",
+            "aethersearch.external_permissions.github.utils",
             "get_external_access_permission",
         ),
     )

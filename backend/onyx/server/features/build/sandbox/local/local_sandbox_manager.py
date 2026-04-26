@@ -17,27 +17,27 @@ from uuid import UUID
 
 import httpx
 
-from onyx.db.enums import SandboxStatus
-from onyx.file_store.file_store import get_default_file_store
-from onyx.server.features.build.configs import DEMO_DATA_PATH
-from onyx.server.features.build.configs import OPENCODE_DISABLED_TOOLS
-from onyx.server.features.build.configs import OUTPUTS_TEMPLATE_PATH
-from onyx.server.features.build.configs import SANDBOX_BASE_PATH
-from onyx.server.features.build.configs import VENV_TEMPLATE_PATH
-from onyx.server.features.build.sandbox.base import SandboxManager
-from onyx.server.features.build.sandbox.local.agent_client import ACPAgentClient
-from onyx.server.features.build.sandbox.local.agent_client import ACPEvent
-from onyx.server.features.build.sandbox.local.process_manager import ProcessManager
-from onyx.server.features.build.sandbox.manager.directory_manager import (
+from aethersearch.db.enums import SandboxStatus
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.server.features.build.configs import DEMO_DATA_PATH
+from aethersearch.server.features.build.configs import OPENCODE_DISABLED_TOOLS
+from aethersearch.server.features.build.configs import OUTPUTS_TEMPLATE_PATH
+from aethersearch.server.features.build.configs import SANDBOX_BASE_PATH
+from aethersearch.server.features.build.configs import VENV_TEMPLATE_PATH
+from aethersearch.server.features.build.sandbox.base import SandboxManager
+from aethersearch.server.features.build.sandbox.local.agent_client import ACPAgentClient
+from aethersearch.server.features.build.sandbox.local.agent_client import ACPEvent
+from aethersearch.server.features.build.sandbox.local.process_manager import ProcessManager
+from aethersearch.server.features.build.sandbox.manager.directory_manager import (
     DirectoryManager,
 )
-from onyx.server.features.build.sandbox.manager.snapshot_manager import SnapshotManager
-from onyx.server.features.build.sandbox.models import FilesystemEntry
-from onyx.server.features.build.sandbox.models import LLMProviderConfig
-from onyx.server.features.build.sandbox.models import SandboxInfo
-from onyx.server.features.build.sandbox.models import SnapshotResult
-from onyx.utils.logger import setup_logger
-from onyx.utils.threadpool_concurrency import ThreadSafeSet
+from aethersearch.server.features.build.sandbox.manager.snapshot_manager import SnapshotManager
+from aethersearch.server.features.build.sandbox.models import FilesystemEntry
+from aethersearch.server.features.build.sandbox.models import LLMProviderConfig
+from aethersearch.server.features.build.sandbox.models import SandboxInfo
+from aethersearch.server.features.build.sandbox.models import SnapshotResult
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.threadpool_concurrency import ThreadSafeSet
 
 logger = setup_logger()
 
@@ -73,7 +73,7 @@ class LocalSandboxManager(SandboxManager):
     def _initialize(self) -> None:
         """Initialize managers."""
         # Paths for templates
-        build_dir = Path(__file__).parent.parent.parent  # /onyx/server/features/build/
+        build_dir = Path(__file__).parent.parent.parent  # /aethersearch/server/features/build/
         skills_path = build_dir / "sandbox" / "kubernetes" / "docker" / "skills"
         agent_instructions_template_path = build_dir / "AGENTS.template.md"
 
@@ -130,7 +130,7 @@ class LocalSandboxManager(SandboxManager):
             error_msg = (
                 "Sandbox templates are missing. "
                 "Please build templates using:\n"
-                "  python -m onyx.server.features.build.sandbox.util.build_venv_template\n"
+                "  python -m aethersearch.server.features.build.sandbox.util.build_venv_template\n"
                 "Or use Docker image built with Dockerfile.sandbox-templates.\n\n"
                 "Missing templates:\n"
             )
@@ -913,7 +913,7 @@ class LocalSandboxManager(SandboxManager):
         Yields:
             Typed ACP schema event objects
         """
-        from onyx.server.features.build.api.packet_logger import get_packet_logger
+        from aethersearch.server.features.build.api.packet_logger import get_packet_logger
 
         packet_logger = get_packet_logger()
 
@@ -1133,7 +1133,7 @@ class LocalSandboxManager(SandboxManager):
         Called after uploading a file. Only adds the section if it doesn't exist.
         Inserts the section above ## Skills for better document flow.
         """
-        from onyx.server.features.build.sandbox.util.agent_instructions import (
+        from aethersearch.server.features.build.sandbox.util.agent_instructions import (
             ATTACHMENTS_SECTION_CONTENT,
         )
 

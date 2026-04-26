@@ -8,48 +8,48 @@ from slack_sdk.models.views import View
 from slack_sdk.socket_mode.request import SocketModeRequest
 from slack_sdk.webhook import WebhookClient
 
-from onyx.chat.models import ChatBasicResponse
-from onyx.chat.process_message import remove_answer_citations
-from onyx.configs.constants import MessageType
-from onyx.configs.constants import SearchFeedbackType
-from onyx.configs.onyxbot_configs import ONYX_BOT_FOLLOWUP_EMOJI
-from onyx.connectors.slack.utils import expert_info_from_slack_id
-from onyx.context.search.models import SavedSearchDoc
-from onyx.context.search.models import SearchDoc
-from onyx.db.chat import get_chat_message
-from onyx.db.chat import translate_db_message_to_chat_message_detail
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.feedback import create_chat_message_feedback
-from onyx.db.feedback import create_doc_retrieval_feedback
-from onyx.db.users import get_user_by_email
-from onyx.onyxbot.slack.blocks import build_follow_up_resolved_blocks
-from onyx.onyxbot.slack.blocks import build_slack_response_blocks
-from onyx.onyxbot.slack.blocks import get_document_feedback_blocks
-from onyx.onyxbot.slack.config import get_slack_channel_config_for_bot_and_channel
-from onyx.onyxbot.slack.constants import DISLIKE_BLOCK_ACTION_ID
-from onyx.onyxbot.slack.constants import FeedbackVisibility
-from onyx.onyxbot.slack.constants import KEEP_TO_YOURSELF_ACTION_ID
-from onyx.onyxbot.slack.constants import LIKE_BLOCK_ACTION_ID
-from onyx.onyxbot.slack.constants import SHOW_EVERYONE_ACTION_ID
-from onyx.onyxbot.slack.constants import VIEW_DOC_FEEDBACK_ID
-from onyx.onyxbot.slack.handlers.handle_message import (
+from aethersearch.chat.models import ChatBasicResponse
+from aethersearch.chat.process_message import remove_answer_citations
+from aethersearch.configs.constants import MessageType
+from aethersearch.configs.constants import SearchFeedbackType
+from aethersearch.configs.aethersearchbot_configs import AETHERSEARCH_BOT_FOLLOWUP_EMOJI
+from aethersearch.connectors.slack.utils import expert_info_from_slack_id
+from aethersearch.context.search.models import SavedSearchDoc
+from aethersearch.context.search.models import SearchDoc
+from aethersearch.db.chat import get_chat_message
+from aethersearch.db.chat import translate_db_message_to_chat_message_detail
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.feedback import create_chat_message_feedback
+from aethersearch.db.feedback import create_doc_retrieval_feedback
+from aethersearch.db.users import get_user_by_email
+from aethersearch.aethersearchbot.slack.blocks import build_follow_up_resolved_blocks
+from aethersearch.aethersearchbot.slack.blocks import build_slack_response_blocks
+from aethersearch.aethersearchbot.slack.blocks import get_document_feedback_blocks
+from aethersearch.aethersearchbot.slack.config import get_slack_channel_config_for_bot_and_channel
+from aethersearch.aethersearchbot.slack.constants import DISLIKE_BLOCK_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import FeedbackVisibility
+from aethersearch.aethersearchbot.slack.constants import KEEP_TO_YOURSELF_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import LIKE_BLOCK_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import SHOW_EVERYONE_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import VIEW_DOC_FEEDBACK_ID
+from aethersearch.aethersearchbot.slack.handlers.handle_message import (
     remove_scheduled_feedback_reminder,
 )
-from onyx.onyxbot.slack.handlers.handle_regular_answer import handle_regular_answer
-from onyx.onyxbot.slack.models import SlackMessageInfo
-from onyx.onyxbot.slack.utils import build_feedback_id
-from onyx.onyxbot.slack.utils import decompose_action_id
-from onyx.onyxbot.slack.utils import fetch_group_ids_from_names
-from onyx.onyxbot.slack.utils import fetch_slack_user_ids_from_emails
-from onyx.onyxbot.slack.utils import get_channel_name_from_id
-from onyx.onyxbot.slack.utils import get_feedback_visibility
-from onyx.onyxbot.slack.utils import read_slack_thread
-from onyx.onyxbot.slack.utils import respond_in_thread_or_channel
-from onyx.onyxbot.slack.utils import TenantSocketModeClient
-from onyx.onyxbot.slack.utils import update_emote_react
-from onyx.server.query_and_chat.models import ChatMessageDetail
-from onyx.server.query_and_chat.streaming_models import CitationInfo
-from onyx.utils.logger import setup_logger
+from aethersearch.aethersearchbot.slack.handlers.handle_regular_answer import handle_regular_answer
+from aethersearch.aethersearchbot.slack.models import SlackMessageInfo
+from aethersearch.aethersearchbot.slack.utils import build_feedback_id
+from aethersearch.aethersearchbot.slack.utils import decompose_action_id
+from aethersearch.aethersearchbot.slack.utils import fetch_group_ids_from_names
+from aethersearch.aethersearchbot.slack.utils import fetch_slack_user_ids_from_emails
+from aethersearch.aethersearchbot.slack.utils import get_channel_name_from_id
+from aethersearch.aethersearchbot.slack.utils import get_feedback_visibility
+from aethersearch.aethersearchbot.slack.utils import read_slack_thread
+from aethersearch.aethersearchbot.slack.utils import respond_in_thread_or_channel
+from aethersearch.aethersearchbot.slack.utils import TenantSocketModeClient
+from aethersearch.aethersearchbot.slack.utils import update_emote_react
+from aethersearch.server.query_and_chat.models import ChatMessageDetail
+from aethersearch.server.query_and_chat.streaming_models import CitationInfo
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -223,16 +223,16 @@ def handle_publish_ephemeral_message_button(
 
     chat_message_id = value_dict.get("chat_message_id")
 
-    # Obtain onyx_user and chat_message information
+    # Obtain aethersearch_user and chat_message information
     if not chat_message_id:
         raise ValueError("Missing chat_message_id in the payload")
 
     with get_session_with_current_tenant() as db_session:
-        onyx_user = get_user_by_email(user_email, db_session)
-        if not onyx_user:
-            raise ValueError("Cannot determine onyx_user_id from email in payload")
+        aethersearch_user = get_user_by_email(user_email, db_session)
+        if not aethersearch_user:
+            raise ValueError("Cannot determine aethersearch_user_id from email in payload")
         try:
-            chat_message = get_chat_message(chat_message_id, onyx_user.id, db_session)
+            chat_message = get_chat_message(chat_message_id, aethersearch_user.id, db_session)
         except ValueError:
             chat_message = get_chat_message(
                 chat_message_id, None, db_session
@@ -255,7 +255,7 @@ def handle_publish_ephemeral_message_button(
         else:
             top_documents = []
 
-        onyx_bot_answer = ChatBasicResponse(
+        aethersearch_bot_answer = ChatBasicResponse(
             answer=chat_message_detail.message,
             answer_citationless=remove_answer_citations(chat_message_detail.message),
             top_documents=top_documents,
@@ -280,7 +280,7 @@ def handle_publish_ephemeral_message_button(
 
         # remove handling of empheremal block and add AI feedback.
         all_blocks = build_slack_response_blocks(
-            answer=onyx_bot_answer,
+            answer=aethersearch_bot_answer,
             message_info=slack_message_info,
             channel_conf=channel_conf,
             feedback_reminder_id=feedback_reminder_id,
@@ -294,7 +294,7 @@ def handle_publish_ephemeral_message_button(
                 client=client.web_client,
                 channel=channel_id,
                 receiver_ids=None,  # If respond_member_group_list is set, send to them. TODO: check!
-                text="Hello! Onyx has some results for you!",
+                text="Hello! AetherSearch has some results for you!",
                 blocks=all_blocks,
                 thread_ts=original_question_ts,
                 # don't unfurl, since otherwise we will have 5+ previews which makes the message very long
@@ -309,7 +309,7 @@ def handle_publish_ephemeral_message_button(
         # Keep as ephemeral message in channel or thread, but remove the publish button and add feedback button
 
         changed_blocks = build_slack_response_blocks(
-            answer=onyx_bot_answer,
+            answer=aethersearch_bot_answer,
             message_info=slack_message_info,
             channel_conf=channel_conf,
             feedback_reminder_id=feedback_reminder_id,
@@ -367,20 +367,20 @@ def handle_slack_feedback(
 ) -> None:
     message_id, doc_id, doc_rank = decompose_action_id(feedback_id)
 
-    # Get Onyx user from Slack ID
+    # Get AetherSearch user from Slack ID
     expert_info = expert_info_from_slack_id(
         user_id_to_post_confirmation, client, user_cache={}
     )
     email = expert_info.email if expert_info else None
 
     with get_session_with_current_tenant() as db_session:
-        onyx_user = get_user_by_email(email, db_session) if email else None
+        aethersearch_user = get_user_by_email(email, db_session) if email else None
         if feedback_type in [LIKE_BLOCK_ACTION_ID, DISLIKE_BLOCK_ACTION_ID]:
             create_chat_message_feedback(
                 is_positive=feedback_type == LIKE_BLOCK_ACTION_ID,
                 feedback_text="",
                 chat_message_id=message_id,
-                user_id=onyx_user.id if onyx_user else None,
+                user_id=aethersearch_user.id if aethersearch_user else None,
                 db_session=db_session,
             )
             remove_scheduled_feedback_reminder(
@@ -456,7 +456,7 @@ def handle_followup_button(
     thread_ts = req.payload["container"].get("thread_ts", None)
 
     update_emote_react(
-        emoji=ONYX_BOT_FOLLOWUP_EMOJI,
+        emoji=AETHERSEARCH_BOT_FOLLOWUP_EMOJI,
         channel=channel_id,
         message_ts=thread_ts,
         remove=False,
@@ -541,7 +541,7 @@ def handle_followup_resolved_button(
     clicker_name = get_clicker_name(req, client)
 
     update_emote_react(
-        emoji=ONYX_BOT_FOLLOWUP_EMOJI,
+        emoji=AETHERSEARCH_BOT_FOLLOWUP_EMOJI,
         channel=channel_id,
         message_ts=thread_ts,
         remove=True,

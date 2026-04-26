@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
-from onyx.access.utils import prefix_external_group
-from onyx.access.utils import prefix_user_email
-from onyx.access.utils import prefix_user_group
-from onyx.configs.constants import PUBLIC_DOC_PAT
+from aethersearch.access.utils import prefix_external_group
+from aethersearch.access.utils import prefix_user_email
+from aethersearch.access.utils import prefix_user_group
+from aethersearch.configs.constants import PUBLIC_DOC_PAT
 
 
 @dataclass(frozen=True)
@@ -16,7 +16,7 @@ class ExternalAccess:
     external_user_emails: set[str]
     # Names or external IDs of groups with access to the doc
     external_user_group_ids: set[str]
-    # Whether the document is public in the external system or Onyx
+    # Whether the document is public in the external system or AetherSearch
     is_public: bool
 
     def __str__(self) -> str:
@@ -156,7 +156,7 @@ ElementExternalAccess = DocExternalAccess | NodeExternalAccess
 # duplicate fields.
 @dataclass(frozen=True, init=False)
 class DocumentAccess(ExternalAccess):
-    # User emails for Onyx users, None indicates admin
+    # User emails for AetherSearch users, None indicates admin
     user_emails: set[str | None]
 
     # Names of user groups associated with this document

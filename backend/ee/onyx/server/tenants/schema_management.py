@@ -9,8 +9,8 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 from sqlalchemy.schema import CreateSchema
 
-from onyx.db.engine.sql_engine import build_connection_string
-from onyx.db.engine.sql_engine import get_sqlalchemy_engine
+from aethersearch.db.engine.sql_engine import build_connection_string
+from aethersearch.db.engine.sql_engine import get_sqlalchemy_engine
 from shared_configs.configs import TENANT_ID_PREFIX
 
 logger = logging.getLogger(__name__)

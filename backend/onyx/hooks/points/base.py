@@ -3,8 +3,8 @@ from typing import ClassVar
 
 from pydantic import BaseModel
 
-from onyx.db.enums import HookFailStrategy
-from onyx.db.enums import HookPoint
+from aethersearch.db.enums import HookFailStrategy
+from aethersearch.db.enums import HookPoint
 
 _REQUIRED_ATTRS = (
     "hook_point",
@@ -22,11 +22,11 @@ class HookPointSpec:
     """Static metadata and contract for a pipeline hook point.
 
     Each concrete subclass represents exactly one hook point and is instantiated
-    once at startup, registered in onyx.hooks.registry._REGISTRY. Prefer
+    once at startup, registered in aethersearch.hooks.registry._REGISTRY. Prefer
     get_hook_point_spec() or get_all_specs() from the registry over direct
     instantiation.
 
-    Each hook point is a concrete subclass of this class. Onyx engineers
+    Each hook point is a concrete subclass of this class. AetherSearch engineers
     own these definitions — customers never touch this code.
 
     Subclasses must define all attributes as class-level constants.

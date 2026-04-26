@@ -1,7 +1,7 @@
 {
     "mcpServers": {
-      "Onyx": {
-        "url": "https://cloud.onyx.app/mcp",
+      "AetherSearch": {
+        "url": "https://cloud.aethersearch.app/mcp",
         "headers": {
           "Authorization": "Bearer [YOUR PAT OR API KEY HERE]"
         }

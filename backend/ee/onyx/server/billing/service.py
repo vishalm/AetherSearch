@@ -14,17 +14,17 @@ from typing import Literal
 
 import httpx
 
-from ee.onyx.configs.app_configs import CLOUD_DATA_PLANE_URL
-from ee.onyx.server.billing.models import BillingInformationResponse
-from ee.onyx.server.billing.models import CreateCheckoutSessionResponse
-from ee.onyx.server.billing.models import CreateCustomerPortalSessionResponse
-from ee.onyx.server.billing.models import SeatUpdateResponse
-from ee.onyx.server.billing.models import SubscriptionStatusResponse
-from ee.onyx.server.tenants.access import generate_data_plane_token
-from onyx.configs.app_configs import CONTROL_PLANE_API_BASE_URL
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.configs.app_configs import CLOUD_DATA_PLANE_URL
+from ee.aethersearch.server.billing.models import BillingInformationResponse
+from ee.aethersearch.server.billing.models import CreateCheckoutSessionResponse
+from ee.aethersearch.server.billing.models import CreateCustomerPortalSessionResponse
+from ee.aethersearch.server.billing.models import SeatUpdateResponse
+from ee.aethersearch.server.billing.models import SubscriptionStatusResponse
+from ee.aethersearch.server.tenants.access import generate_data_plane_token
+from aethersearch.configs.app_configs import CONTROL_PLANE_API_BASE_URL
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()
@@ -94,7 +94,7 @@ async def _make_billing_request(
         Response JSON as dict
 
     Raises:
-        OnyxError: If request fails
+        AetherSearchError: If request fails
     """
 
     base_url = _get_base_url()
@@ -121,16 +121,16 @@ async def _make_billing_request(
         except Exception:
             pass
         logger.error(f"{error_message}: {e.response.status_code} - {detail}")
-        raise OnyxError(
-            OnyxErrorCode.BAD_GATEWAY,
+        raise AetherSearchError(
+            AetherSearchErrorCode.BAD_GATEWAY,
             detail,
             status_code_override=e.response.status_code,
         )
 
     except httpx.RequestError:
         logger.exception("Failed to connect to billing service")
-        raise OnyxError(
-            OnyxErrorCode.BAD_GATEWAY, "Failed to connect to billing service"
+        raise AetherSearchError(
+            AetherSearchErrorCode.BAD_GATEWAY, "Failed to connect to billing service"
         )
 
 

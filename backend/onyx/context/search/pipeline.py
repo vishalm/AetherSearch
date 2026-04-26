@@ -3,34 +3,34 @@ from datetime import datetime
 
 from sqlalchemy.orm import Session
 
-from onyx.context.search.models import BaseFilters
-from onyx.context.search.models import ChunkIndexRequest
-from onyx.context.search.models import ChunkSearchRequest
-from onyx.context.search.models import IndexFilters
-from onyx.context.search.models import InferenceChunk
-from onyx.context.search.models import InferenceSection
-from onyx.context.search.models import PersonaSearchInfo
-from onyx.context.search.preprocessing.access_filters import (
+from aethersearch.context.search.models import BaseFilters
+from aethersearch.context.search.models import ChunkIndexRequest
+from aethersearch.context.search.models import ChunkSearchRequest
+from aethersearch.context.search.models import IndexFilters
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.context.search.models import InferenceSection
+from aethersearch.context.search.models import PersonaSearchInfo
+from aethersearch.context.search.preprocessing.access_filters import (
     build_access_filters_for_user,
 )
-from onyx.context.search.retrieval.search_runner import search_chunks
-from onyx.context.search.utils import inference_section_from_chunks
-from onyx.db.document_set import filter_document_set_names_by_user_access
-from onyx.db.models import User
-from onyx.document_index.interfaces import DocumentIndex
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.federated_connectors.federated_retrieval import FederatedRetrievalInfo
-from onyx.llm.interfaces import LLM
-from onyx.natural_language_processing.english_stopwords import strip_stopwords
-from onyx.natural_language_processing.search_nlp_models import EmbeddingModel
-from onyx.secondary_llm_flows.source_filter import extract_source_filter
-from onyx.secondary_llm_flows.time_filter import extract_time_filter
-from onyx.utils.logger import setup_logger
-from onyx.utils.threadpool_concurrency import FunctionCall
-from onyx.utils.threadpool_concurrency import run_functions_in_parallel
-from onyx.utils.timing import log_function_time
-from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
+from aethersearch.context.search.retrieval.search_runner import search_chunks
+from aethersearch.context.search.utils import inference_section_from_chunks
+from aethersearch.db.document_set import filter_document_set_names_by_user_access
+from aethersearch.db.models import User
+from aethersearch.document_index.interfaces import DocumentIndex
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.federated_connectors.federated_retrieval import FederatedRetrievalInfo
+from aethersearch.llm.interfaces import LLM
+from aethersearch.natural_language_processing.english_stopwords import strip_stopwords
+from aethersearch.natural_language_processing.search_nlp_models import EmbeddingModel
+from aethersearch.secondary_llm_flows.source_filter import extract_source_filter
+from aethersearch.secondary_llm_flows.time_filter import extract_time_filter
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.threadpool_concurrency import FunctionCall
+from aethersearch.utils.threadpool_concurrency import run_functions_in_parallel
+from aethersearch.utils.timing import log_function_time
+from aethersearch.utils.variable_functionality import fetch_ee_implementation_or_noop
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.contextvars import get_current_tenant_id
 
@@ -80,8 +80,8 @@ def _build_index_filters(
             name for name in base_filters.document_set if name not in accessible_names
         )
         if unauthorized:
-            raise OnyxError(
-                OnyxErrorCode.INSUFFICIENT_PERMISSIONS,
+            raise AetherSearchError(
+                AetherSearchErrorCode.INSUFFICIENT_PERMISSIONS,
                 f"User does not have access to document sets: {unauthorized}",
             )
 
@@ -344,7 +344,7 @@ def search_pipeline(
     # For some specific connectors like Salesforce, a user that has access to an object doesn't mean
     # that they have access to all of the fields of the object.
     censored_chunks: list[InferenceChunk] = fetch_ee_implementation_or_noop(
-        "onyx.external_permissions.post_query_censoring",
+        "aethersearch.external_permissions.post_query_censoring",
         "_post_query_chunk_censoring",
         retrieved_chunks,
     )(

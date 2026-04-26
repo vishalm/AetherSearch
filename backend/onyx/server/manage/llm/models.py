@@ -9,18 +9,18 @@ from pydantic import BaseModel
 from pydantic import Field
 from pydantic import field_validator
 
-from onyx.db.enums import LLMModelFlowType
-from onyx.llm.utils import get_max_input_tokens
-from onyx.llm.utils import litellm_thinks_model_supports_image_input
-from onyx.llm.utils import model_is_reasoning_model
-from onyx.server.manage.llm.utils import DYNAMIC_LLM_PROVIDERS
-from onyx.server.manage.llm.utils import extract_vendor_from_model_name
-from onyx.server.manage.llm.utils import filter_model_configurations
-from onyx.server.manage.llm.utils import is_reasoning_model
+from aethersearch.db.enums import LLMModelFlowType
+from aethersearch.llm.utils import get_max_input_tokens
+from aethersearch.llm.utils import litellm_thinks_model_supports_image_input
+from aethersearch.llm.utils import model_is_reasoning_model
+from aethersearch.server.manage.llm.utils import DYNAMIC_LLM_PROVIDERS
+from aethersearch.server.manage.llm.utils import extract_vendor_from_model_name
+from aethersearch.server.manage.llm.utils import filter_model_configurations
+from aethersearch.server.manage.llm.utils import is_reasoning_model
 
 if TYPE_CHECKING:
-    from onyx.db.models import LLMProvider as LLMProviderModel
-    from onyx.db.models import ModelConfiguration as ModelConfigurationModel
+    from aethersearch.db.models import LLMProvider as LLMProviderModel
+    from aethersearch.db.models import ModelConfiguration as ModelConfigurationModel
 
 T = TypeVar("T", "LLMProviderDescriptor", "LLMProviderView", "VisionProviderResponse")
 
@@ -71,7 +71,7 @@ class LLMProviderDescriptor(BaseModel):
         cls,
         llm_provider_model: "LLMProviderModel",
     ) -> "LLMProviderDescriptor":
-        from onyx.llm.well_known_providers.llm_provider_options import (
+        from aethersearch.llm.well_known_providers.llm_provider_options import (
             get_provider_display_name,
         )
 
@@ -239,7 +239,7 @@ class ModelConfigurationView(BaseModel):
             )
 
         # For static providers (OpenAI, Anthropic, etc.), use LiteLLM enrichments
-        from onyx.llm.model_name_parser import parse_litellm_model_name
+        from aethersearch.llm.model_name_parser import parse_litellm_model_name
 
         # Parse the model name to get display information
         # Include provider prefix if not already present (enrichments use full keys like "vertex_ai/...")

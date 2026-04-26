@@ -3,33 +3,33 @@ from fastapi import Depends
 from fastapi import Response
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import LLMProvider as LLMProviderModel
-from onyx.db.models import User
-from onyx.db.models import VoiceProvider
-from onyx.db.voice import deactivate_stt_provider
-from onyx.db.voice import deactivate_tts_provider
-from onyx.db.voice import delete_voice_provider
-from onyx.db.voice import fetch_voice_provider_by_id
-from onyx.db.voice import fetch_voice_provider_by_type
-from onyx.db.voice import fetch_voice_providers
-from onyx.db.voice import set_default_stt_provider
-from onyx.db.voice import set_default_tts_provider
-from onyx.db.voice import upsert_voice_provider
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.server.manage.voice.models import VoiceOption
-from onyx.server.manage.voice.models import VoiceProviderTestRequest
-from onyx.server.manage.voice.models import VoiceProviderUpdateSuccess
-from onyx.server.manage.voice.models import VoiceProviderUpsertRequest
-from onyx.server.manage.voice.models import VoiceProviderView
-from onyx.utils.encryption import mask_string
-from onyx.utils.logger import setup_logger
-from onyx.utils.url import SSRFException
-from onyx.utils.url import validate_outbound_http_url
-from onyx.voice.factory import get_voice_provider
+from aethersearch.auth.permissions import require_permission
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import LLMProvider as LLMProviderModel
+from aethersearch.db.models import User
+from aethersearch.db.models import VoiceProvider
+from aethersearch.db.voice import deactivate_stt_provider
+from aethersearch.db.voice import deactivate_tts_provider
+from aethersearch.db.voice import delete_voice_provider
+from aethersearch.db.voice import fetch_voice_provider_by_id
+from aethersearch.db.voice import fetch_voice_provider_by_type
+from aethersearch.db.voice import fetch_voice_providers
+from aethersearch.db.voice import set_default_stt_provider
+from aethersearch.db.voice import set_default_tts_provider
+from aethersearch.db.voice import upsert_voice_provider
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.server.manage.voice.models import VoiceOption
+from aethersearch.server.manage.voice.models import VoiceProviderTestRequest
+from aethersearch.server.manage.voice.models import VoiceProviderUpdateSuccess
+from aethersearch.server.manage.voice.models import VoiceProviderUpsertRequest
+from aethersearch.server.manage.voice.models import VoiceProviderView
+from aethersearch.utils.encryption import mask_string
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.url import SSRFException
+from aethersearch.utils.url import validate_outbound_http_url
+from aethersearch.voice.factory import get_voice_provider
 
 logger = setup_logger()
 
@@ -51,8 +51,8 @@ def _validate_voice_api_base(provider_type: str, api_base: str | None) -> str | 
             api_base, allow_private_network=allow_private_network
         )
     except (ValueError, SSRFException) as e:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             f"Invalid target URI: {str(e)}",
         ) from e
 
@@ -99,13 +99,13 @@ async def upsert_voice_provider_endpoint(
     if request.llm_provider_id is not None:
         llm_provider = db_session.get(LLMProviderModel, request.llm_provider_id)
         if llm_provider is None:
-            raise OnyxError(
-                OnyxErrorCode.NOT_FOUND,
+            raise AetherSearchError(
+                AetherSearchErrorCode.NOT_FOUND,
                 f"LLM provider with id {request.llm_provider_id} not found.",
             )
         if llm_provider.api_key is None:
-            raise OnyxError(
-                OnyxErrorCode.VALIDATION_ERROR,
+            raise AetherSearchError(
+                AetherSearchErrorCode.VALIDATION_ERROR,
                 "Selected LLM provider has no API key configured.",
             )
         api_key = llm_provider.api_key.get_value(apply_mask=False)
@@ -136,14 +136,14 @@ async def upsert_voice_provider_endpoint(
     try:
         voice_provider = get_voice_provider(provider)
         await voice_provider.validate_credentials()
-    except OnyxError:
+    except AetherSearchError:
         db_session.rollback()
         raise
     except Exception as e:
         db_session.rollback()
         logger.error(f"Voice provider credential validation failed on save: {e}")
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             VOICE_PROVIDER_VALIDATION_FAILURE_MESSAGE,
         ) from e
 
@@ -231,15 +231,15 @@ async def test_voice_provider(
             db_session, request.provider_type
         )
         if existing_provider is None or not existing_provider.api_key:
-            raise OnyxError(
-                OnyxErrorCode.VALIDATION_ERROR,
+            raise AetherSearchError(
+                AetherSearchErrorCode.VALIDATION_ERROR,
                 "No stored API key found for this provider type.",
             )
         api_key = existing_provider.api_key.get_value(apply_mask=False)
 
     if not api_key:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "API key is required. Either provide api_key or set use_stored_key to true.",
         )
 
@@ -260,17 +260,17 @@ async def test_voice_provider(
     try:
         provider = get_voice_provider(temp_provider)
     except ValueError as exc:
-        raise OnyxError(OnyxErrorCode.VALIDATION_ERROR, str(exc)) from exc
+        raise AetherSearchError(AetherSearchErrorCode.VALIDATION_ERROR, str(exc)) from exc
 
     # Validate credentials with a real API call
     try:
         await provider.validate_credentials()
-    except OnyxError:
+    except AetherSearchError:
         raise
     except Exception as e:
         logger.error(f"Voice provider connection test failed: {e}")
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             VOICE_PROVIDER_VALIDATION_FAILURE_MESSAGE,
         ) from e
 
@@ -287,17 +287,17 @@ def get_provider_voices(
     """Get available voices for a provider."""
     provider_db = fetch_voice_provider_by_id(db_session, provider_id)
     if provider_db is None:
-        raise OnyxError(OnyxErrorCode.NOT_FOUND, "Voice provider not found.")
+        raise AetherSearchError(AetherSearchErrorCode.NOT_FOUND, "Voice provider not found.")
 
     if not provider_db.api_key:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR, "Provider has no API key configured."
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR, "Provider has no API key configured."
         )
 
     try:
         provider = get_voice_provider(provider_db)
     except ValueError as exc:
-        raise OnyxError(OnyxErrorCode.VALIDATION_ERROR, str(exc)) from exc
+        raise AetherSearchError(AetherSearchErrorCode.VALIDATION_ERROR, str(exc)) from exc
 
     return [VoiceOption(**voice) for voice in provider.get_available_voices()]
 
@@ -321,6 +321,6 @@ def get_voices_by_type(
     try:
         provider = get_voice_provider(temp_provider)
     except ValueError as exc:
-        raise OnyxError(OnyxErrorCode.VALIDATION_ERROR, str(exc)) from exc
+        raise AetherSearchError(AetherSearchErrorCode.VALIDATION_ERROR, str(exc)) from exc
 
     return [VoiceOption(**voice) for voice in provider.get_available_voices()]

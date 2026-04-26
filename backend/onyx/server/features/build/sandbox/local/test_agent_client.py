@@ -3,13 +3,13 @@
 
 Usage:
   # From backend directory:
-  PYTHONPATH=. python onyx/server/features/build/sandbox/local/test_agent_client.py
+  PYTHONPATH=. python aethersearch/server/features/build/sandbox/local/test_agent_client.py
 
   # Or with specific message:
-  PYTHONPATH=. python onyx/server/features/build/sandbox/local/test_agent_client.py "What files are in this directory?"
+  PYTHONPATH=. python aethersearch/server/features/build/sandbox/local/test_agent_client.py "What files are in this directory?"
 
   # With specific working directory:
-  PYTHONPATH=. python onyx/server/features/build/sandbox/local/test_agent_client.py --dir /path/to/project "List files"
+  PYTHONPATH=. python aethersearch/server/features/build/sandbox/local/test_agent_client.py --dir /path/to/project "List files"
 """
 
 import argparse
@@ -27,7 +27,7 @@ from acp.schema import ToolCallProgress
 from acp.schema import ToolCallStart
 
 try:
-    from onyx.server.features.build.sandbox.local.agent_client import ACPAgentClient
+    from aethersearch.server.features.build.sandbox.local.agent_client import ACPAgentClient
 except ImportError:
     from agent_client import ACPAgentClient  # ty: ignore[unresolved-import]
 

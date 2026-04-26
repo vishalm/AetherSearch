@@ -2,7 +2,7 @@
 
 from unittest.mock import MagicMock
 
-from onyx.connectors.teams.connector import _collect_all_teams
+from aethersearch.connectors.teams.connector import _collect_all_teams
 
 
 def test_special_characters_in_team_names() -> None:
@@ -74,9 +74,9 @@ def test_single_quote_escaping() -> None:
 
 def test_helper_functions() -> None:
     """Test the helper functions for team name processing."""
-    from onyx.connectors.teams.connector import _can_use_odata_filter
-    from onyx.connectors.teams.connector import _escape_odata_string
-    from onyx.connectors.teams.connector import _has_odata_incompatible_chars
+    from aethersearch.connectors.teams.connector import _can_use_odata_filter
+    from aethersearch.connectors.teams.connector import _escape_odata_string
+    from aethersearch.connectors.teams.connector import _has_odata_incompatible_chars
 
     # Test OData string escaping
     assert _escape_odata_string("Team's Group") == "Team''s Group"

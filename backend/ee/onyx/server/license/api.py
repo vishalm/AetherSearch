@@ -1,6 +1,6 @@
 """License API endpoints for self-hosted deployments.
 
-These endpoints allow self-hosted Onyx instances to:
+These endpoints allow self-hosted AetherSearch instances to:
 1. Claim a license after Stripe checkout (via cloud data plane proxy)
 2. Upload a license file manually (for air-gapped deployments)
 3. View license status and seat usage
@@ -17,27 +17,27 @@ from fastapi import File
 from fastapi import UploadFile
 from sqlalchemy.orm import Session
 
-from ee.onyx.configs.app_configs import CLOUD_DATA_PLANE_URL
-from ee.onyx.db.license import delete_license as db_delete_license
-from ee.onyx.db.license import get_license
-from ee.onyx.db.license import get_license_metadata
-from ee.onyx.db.license import invalidate_license_cache
-from ee.onyx.db.license import refresh_license_cache
-from ee.onyx.db.license import update_license_cache
-from ee.onyx.db.license import upsert_license
-from ee.onyx.server.license.models import LicenseResponse
-from ee.onyx.server.license.models import LicenseSource
-from ee.onyx.server.license.models import LicenseStatusResponse
-from ee.onyx.server.license.models import LicenseUploadResponse
-from ee.onyx.server.license.models import SeatUsageResponse
-from ee.onyx.utils.license import verify_license_signature
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import User
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.configs.app_configs import CLOUD_DATA_PLANE_URL
+from ee.aethersearch.db.license import delete_license as db_delete_license
+from ee.aethersearch.db.license import get_license
+from ee.aethersearch.db.license import get_license_metadata
+from ee.aethersearch.db.license import invalidate_license_cache
+from ee.aethersearch.db.license import refresh_license_cache
+from ee.aethersearch.db.license import update_license_cache
+from ee.aethersearch.db.license import upsert_license
+from ee.aethersearch.server.license.models import LicenseResponse
+from ee.aethersearch.server.license.models import LicenseSource
+from ee.aethersearch.server.license.models import LicenseStatusResponse
+from ee.aethersearch.server.license.models import LicenseUploadResponse
+from ee.aethersearch.server.license.models import SeatUsageResponse
+from ee.aethersearch.utils.license import verify_license_signature
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import User
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()
@@ -45,8 +45,8 @@ logger = setup_logger()
 router = APIRouter(prefix="/license")
 
 # PEM-style delimiters used in license file format
-_PEM_BEGIN = "-----BEGIN ONYX LICENSE-----"
-_PEM_END = "-----END ONYX LICENSE-----"
+_PEM_BEGIN = "-----BEGIN AETHERSEARCH LICENSE-----"
+_PEM_END = "-----END AETHERSEARCH LICENSE-----"
 
 
 def _strip_pem_delimiters(content: str) -> str:
@@ -129,8 +129,8 @@ async def claim_license(
     2. Without session_id: Re-claim using existing license for auth
     """
     if MULTI_TENANT:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "License claiming is only available for self-hosted deployments",
         )
 
@@ -148,15 +148,15 @@ async def claim_license(
             # Re-claim using existing license for auth
             metadata = get_license_metadata(db_session)
             if not metadata or not metadata.tenant_id:
-                raise OnyxError(
-                    OnyxErrorCode.VALIDATION_ERROR,
+                raise AetherSearchError(
+                    AetherSearchErrorCode.VALIDATION_ERROR,
                     "No license found. Provide session_id after checkout.",
                 )
 
             license_row = get_license(db_session)
             if not license_row or not license_row.license_data:
-                raise OnyxError(
-                    OnyxErrorCode.VALIDATION_ERROR,
+                raise AetherSearchError(
+                    AetherSearchErrorCode.VALIDATION_ERROR,
                     "No license found in database",
                 )
 
@@ -176,7 +176,7 @@ async def claim_license(
         license_data = data.get("license")
 
         if not license_data:
-            raise OnyxError(OnyxErrorCode.NOT_FOUND, "No license in response")
+            raise AetherSearchError(AetherSearchErrorCode.NOT_FOUND, "No license in response")
 
         # Verify signature before persisting
         payload = verify_license_signature(license_data)
@@ -202,14 +202,14 @@ async def claim_license(
             detail = error_data.get("detail", detail)
         except Exception:
             pass
-        raise OnyxError(
-            OnyxErrorCode.BAD_GATEWAY, detail, status_code_override=status_code
+        raise AetherSearchError(
+            AetherSearchErrorCode.BAD_GATEWAY, detail, status_code_override=status_code
         )
     except ValueError as e:
-        raise OnyxError(OnyxErrorCode.VALIDATION_ERROR, str(e))
+        raise AetherSearchError(AetherSearchErrorCode.VALIDATION_ERROR, str(e))
     except requests.RequestException:
-        raise OnyxError(
-            OnyxErrorCode.BAD_GATEWAY, "Failed to connect to license server"
+        raise AetherSearchError(
+            AetherSearchErrorCode.BAD_GATEWAY, "Failed to connect to license server"
         )
 
 
@@ -223,11 +223,11 @@ async def upload_license(
     Upload a license file manually (self-hosted only).
 
     Used for air-gapped deployments where the cloud data plane is not accessible.
-    The license file must be cryptographically signed by Onyx.
+    The license file must be cryptographically signed by AetherSearch.
     """
     if MULTI_TENANT:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "License upload is only available for self-hosted deployments",
         )
 
@@ -239,14 +239,14 @@ async def upload_license(
         # Remove any stray whitespace/newlines from user input
         license_data = license_data.strip()
     except UnicodeDecodeError:
-        raise OnyxError(OnyxErrorCode.INVALID_INPUT, "Invalid license file format")
+        raise AetherSearchError(AetherSearchErrorCode.INVALID_INPUT, "Invalid license file format")
 
     # Verify cryptographic signature - this is the only validation needed
     # The license's tenant_id identifies the customer in control plane, not locally
     try:
         payload = verify_license_signature(license_data)
     except ValueError as e:
-        raise OnyxError(OnyxErrorCode.VALIDATION_ERROR, str(e))
+        raise AetherSearchError(AetherSearchErrorCode.VALIDATION_ERROR, str(e))
 
     # Persist to DB and update cache
     upsert_license(db_session, license_data)
@@ -302,8 +302,8 @@ async def delete_license(
     Admin only - removes license from database and invalidates cache.
     """
     if MULTI_TENANT:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "License deletion is only available for self-hosted deployments",
         )
 

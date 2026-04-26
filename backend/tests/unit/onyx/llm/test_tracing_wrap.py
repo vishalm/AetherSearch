@@ -1,5 +1,5 @@
 # ruff: noqa: ARG002
-"""Unit tests for `onyx.llm.tracing_wrap`.
+"""Unit tests for `aethersearch.llm.tracing_wrap`.
 
 Cover:
 - `LLM.__init_subclass__` auto-wraps `invoke` and `stream` on concrete subclasses
@@ -25,31 +25,31 @@ from typing import cast
 
 import pytest
 
-from onyx.llm.interfaces import LLM
-from onyx.llm.interfaces import LLMConfig
-from onyx.llm.interfaces import LLMUserIdentity
-from onyx.llm.model_response import ChatCompletionDeltaToolCall
-from onyx.llm.model_response import Choice
-from onyx.llm.model_response import Delta
-from onyx.llm.model_response import FunctionCall as DeltaFunctionCall
-from onyx.llm.model_response import Message
-from onyx.llm.model_response import ModelResponse
-from onyx.llm.model_response import ModelResponseStream
-from onyx.llm.model_response import StreamingChoice
-from onyx.llm.models import LanguageModelInput
-from onyx.llm.models import ReasoningEffort
-from onyx.llm.models import ToolChoiceOptions
-from onyx.llm.models import UserMessage
-from onyx.llm.tracing_wrap import _ALREADY_WRAPPED_ATTR
-from onyx.llm.tracing_wrap import _extract_prompt
-from onyx.llm.tracing_wrap import _finalize_tool_calls
-from onyx.llm.tracing_wrap import _merge_tool_call_delta
-from onyx.llm.tracing_wrap import _outer_generation_span_active
-from onyx.llm.tracing_wrap import _validate_prompt_param
-from onyx.llm.tracing_wrap import wrap_invoke
-from onyx.llm.tracing_wrap import wrap_stream
-from onyx.tracing.framework.create import generation_span
-from onyx.tracing.framework.create import trace
+from aethersearch.llm.interfaces import LLM
+from aethersearch.llm.interfaces import LLMConfig
+from aethersearch.llm.interfaces import LLMUserIdentity
+from aethersearch.llm.model_response import ChatCompletionDeltaToolCall
+from aethersearch.llm.model_response import Choice
+from aethersearch.llm.model_response import Delta
+from aethersearch.llm.model_response import FunctionCall as DeltaFunctionCall
+from aethersearch.llm.model_response import Message
+from aethersearch.llm.model_response import ModelResponse
+from aethersearch.llm.model_response import ModelResponseStream
+from aethersearch.llm.model_response import StreamingChoice
+from aethersearch.llm.models import LanguageModelInput
+from aethersearch.llm.models import ReasoningEffort
+from aethersearch.llm.models import ToolChoiceOptions
+from aethersearch.llm.models import UserMessage
+from aethersearch.llm.tracing_wrap import _ALREADY_WRAPPED_ATTR
+from aethersearch.llm.tracing_wrap import _extract_prompt
+from aethersearch.llm.tracing_wrap import _finalize_tool_calls
+from aethersearch.llm.tracing_wrap import _merge_tool_call_delta
+from aethersearch.llm.tracing_wrap import _outer_generation_span_active
+from aethersearch.llm.tracing_wrap import _validate_prompt_param
+from aethersearch.llm.tracing_wrap import wrap_invoke
+from aethersearch.llm.tracing_wrap import wrap_stream
+from aethersearch.tracing.framework.create import generation_span
+from aethersearch.tracing.framework.create import trace
 
 _TEST_MODEL_RESPONSE = ModelResponse(
     id="test-id",

@@ -9,11 +9,11 @@ import re
 
 import pytest
 
-from onyx.context.search.models import IndexFilters
-from onyx.context.search.models import QueryExpansionType
-from onyx.db.enums import EmbeddingPrecision
-from onyx.document_index.disabled import DisabledDocumentIndex
-from onyx.document_index.disabled import VECTOR_DB_DISABLED_ERROR
+from aethersearch.context.search.models import IndexFilters
+from aethersearch.context.search.models import QueryExpansionType
+from aethersearch.db.enums import EmbeddingPrecision
+from aethersearch.document_index.disabled import DisabledDocumentIndex
+from aethersearch.document_index.disabled import VECTOR_DB_DISABLED_ERROR
 
 ESCAPED_ERROR = re.escape(VECTOR_DB_DISABLED_ERROR)
 

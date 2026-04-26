@@ -4,17 +4,17 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from onyx.configs.constants import MessageType
-from onyx.context.search.models import SearchDoc
-from onyx.file_store.models import InMemoryChatFile
-from onyx.server.query_and_chat.models import MessageResponseIDInfo
-from onyx.server.query_and_chat.models import MultiModelMessageResponseIDInfo
-from onyx.server.query_and_chat.streaming_models import CitationInfo
-from onyx.server.query_and_chat.streaming_models import GeneratedImage
-from onyx.server.query_and_chat.streaming_models import Packet
-from onyx.tools.models import SearchToolUsage
-from onyx.tools.models import ToolCallKickoff
-from onyx.tools.tool_implementations.custom.base_tool_types import ToolResultType
+from aethersearch.configs.constants import MessageType
+from aethersearch.context.search.models import SearchDoc
+from aethersearch.file_store.models import InMemoryChatFile
+from aethersearch.server.query_and_chat.models import MessageResponseIDInfo
+from aethersearch.server.query_and_chat.models import MultiModelMessageResponseIDInfo
+from aethersearch.server.query_and_chat.streaming_models import CitationInfo
+from aethersearch.server.query_and_chat.streaming_models import GeneratedImage
+from aethersearch.server.query_and_chat.streaming_models import Packet
+from aethersearch.tools.models import SearchToolUsage
+from aethersearch.tools.models import ToolCallKickoff
+from aethersearch.tools.tool_implementations.custom.base_tool_types import ToolResultType
 
 
 class StreamingError(BaseModel):
@@ -73,7 +73,7 @@ class ChatBasicResponse(BaseModel):
 
 class ChatFullResponse(BaseModel):
     """Complete non-streaming response with all available data.
-    NOTE: This model is used for the core flow of the Onyx application, any changes to it should be reviewed and approved by an
+    NOTE: This model is used for the core flow of the AetherSearch application, any changes to it should be reviewed and approved by an
     experienced team member. It is very important to 1. avoid bloat and 2. that this remains backwards compatible across versions.
     """
 

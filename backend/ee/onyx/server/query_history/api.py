@@ -12,52 +12,52 @@ from fastapi import Query
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
-from ee.onyx.background.task_name_builders import query_history_task_name
-from ee.onyx.db.query_history import get_all_query_history_export_tasks
-from ee.onyx.db.query_history import get_page_of_chat_sessions
-from ee.onyx.db.query_history import get_total_filtered_chat_sessions_count
-from ee.onyx.server.query_history.models import ChatSessionMinimal
-from ee.onyx.server.query_history.models import ChatSessionSnapshot
-from ee.onyx.server.query_history.models import MessageSnapshot
-from ee.onyx.server.query_history.models import QueryHistoryExport
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import get_display_email
-from onyx.background.celery.versioned_apps.client import app as client_app
-from onyx.background.task_utils import construct_query_history_report_name
-from onyx.chat.chat_utils import create_chat_history_chain
-from onyx.configs.constants import FileOrigin
-from onyx.configs.constants import FileType
-from onyx.configs.constants import MessageType
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import PUBLIC_API_TAGS
-from onyx.configs.constants import QAFeedbackType
-from onyx.configs.constants import QueryHistoryType
-from onyx.configs.constants import SessionType
-from onyx.db.chat import get_chat_session_by_id
-from onyx.db.chat import get_chat_sessions_by_user
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.enums import TaskStatus
-from onyx.db.file_record import get_query_history_export_files
-from onyx.db.models import ChatSession
-from onyx.db.models import User
-from onyx.db.tasks import get_task_with_id
-from onyx.db.tasks import register_task
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.file_store.file_store import get_default_file_store
-from onyx.server.documents.models import PaginatedReturn
-from onyx.server.query_and_chat.models import ChatSessionDetails
-from onyx.server.query_and_chat.models import ChatSessionsResponse
-from onyx.server.settings.store import load_settings
-from onyx.utils.threadpool_concurrency import parallel_yield
+from ee.aethersearch.background.task_name_builders import query_history_task_name
+from ee.aethersearch.db.query_history import get_all_query_history_export_tasks
+from ee.aethersearch.db.query_history import get_page_of_chat_sessions
+from ee.aethersearch.db.query_history import get_total_filtered_chat_sessions_count
+from ee.aethersearch.server.query_history.models import ChatSessionMinimal
+from ee.aethersearch.server.query_history.models import ChatSessionSnapshot
+from ee.aethersearch.server.query_history.models import MessageSnapshot
+from ee.aethersearch.server.query_history.models import QueryHistoryExport
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import get_display_email
+from aethersearch.background.celery.versioned_apps.client import app as client_app
+from aethersearch.background.task_utils import construct_query_history_report_name
+from aethersearch.chat.chat_utils import create_chat_history_chain
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.configs.constants import FileType
+from aethersearch.configs.constants import MessageType
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import PUBLIC_API_TAGS
+from aethersearch.configs.constants import QAFeedbackType
+from aethersearch.configs.constants import QueryHistoryType
+from aethersearch.configs.constants import SessionType
+from aethersearch.db.chat import get_chat_session_by_id
+from aethersearch.db.chat import get_chat_sessions_by_user
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.enums import TaskStatus
+from aethersearch.db.file_record import get_query_history_export_files
+from aethersearch.db.models import ChatSession
+from aethersearch.db.models import User
+from aethersearch.db.tasks import get_task_with_id
+from aethersearch.db.tasks import register_task
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.server.documents.models import PaginatedReturn
+from aethersearch.server.query_and_chat.models import ChatSessionDetails
+from aethersearch.server.query_and_chat.models import ChatSessionsResponse
+from aethersearch.server.settings.store import load_settings
+from aethersearch.utils.threadpool_concurrency import parallel_yield
 from shared_configs.contextvars import get_current_tenant_id
 
 router = APIRouter()
 
-ONYX_ANONYMIZED_EMAIL = "anonymous@anonymous.invalid"
+AETHERSEARCH_ANONYMIZED_EMAIL = "anonymous@anonymous.invalid"
 
 
 def ensure_query_history_is_enabled(
@@ -65,8 +65,8 @@ def ensure_query_history_is_enabled(
 ) -> QueryHistoryType:
     query_history_type = load_settings().query_history_type or QueryHistoryType.NORMAL
     if query_history_type in disallowed:
-        raise OnyxError(
-            OnyxErrorCode.INSUFFICIENT_PERMISSIONS,
+        raise AetherSearchError(
+            AetherSearchErrorCode.INSUFFICIENT_PERMISSIONS,
             "Query history has been disabled by the administrator.",
         )
     return query_history_type
@@ -135,7 +135,7 @@ def snapshot_from_chat_session(
     except RuntimeError:
         return None
 
-    flow_type = SessionType.SLACK if chat_session.onyxbot_flow else SessionType.CHAT
+    flow_type = SessionType.SLACK if chat_session.aethersearchbot_flow else SessionType.CHAT
 
     return ChatSessionSnapshot(
         id=chat_session.id,
@@ -229,7 +229,7 @@ def get_chat_session_history(
     for chat_session in page_of_chat_sessions:
         minimal_chat_session = ChatSessionMinimal.from_chat_session(chat_session)
         if query_history_type == QueryHistoryType.ANONYMIZED:
-            minimal_chat_session.user_email = ONYX_ANONYMIZED_EMAIL
+            minimal_chat_session.user_email = AETHERSEARCH_ANONYMIZED_EMAIL
         minimal_chat_sessions.append(minimal_chat_session)
 
     return PaginatedReturn(
@@ -271,7 +271,7 @@ def get_chat_session_admin(
         )
 
     if query_history_type == QueryHistoryType.ANONYMIZED:
-        snapshot.user_email = ONYX_ANONYMIZED_EMAIL
+        snapshot.user_email = AETHERSEARCH_ANONYMIZED_EMAIL
 
     return snapshot
 
@@ -335,10 +335,10 @@ def start_query_history_export(
     )
 
     client_app.send_task(
-        OnyxCeleryTask.EXPORT_QUERY_HISTORY_TASK,
+        AetherSearchCeleryTask.EXPORT_QUERY_HISTORY_TASK,
         task_id=task_id,
-        priority=OnyxCeleryPriority.MEDIUM,
-        queue=OnyxCeleryQueues.CSV_GENERATION,
+        priority=AetherSearchCeleryPriority.MEDIUM,
+        queue=AetherSearchCeleryQueues.CSV_GENERATION,
         kwargs={
             "start": start,
             "end": end,

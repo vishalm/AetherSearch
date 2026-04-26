@@ -9,20 +9,20 @@ from pydantic import ConfigDict
 from pydantic import Field
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import MAX_EMBEDDED_IMAGES_PER_FILE
-from onyx.configs.app_configs import MAX_EMBEDDED_IMAGES_PER_UPLOAD
-from onyx.configs.llm_configs import get_image_extraction_and_analysis_enabled
-from onyx.db.llm import fetch_default_llm_model
-from onyx.file_processing.extract_file_text import count_docx_embedded_images
-from onyx.file_processing.extract_file_text import count_pdf_embedded_images
-from onyx.file_processing.extract_file_text import extract_file_text
-from onyx.file_processing.extract_file_text import get_file_ext
-from onyx.file_processing.file_types import OnyxFileExtensions
-from onyx.file_processing.password_validation import is_file_password_protected
-from onyx.natural_language_processing.utils import count_tokens
-from onyx.natural_language_processing.utils import get_tokenizer
-from onyx.server.settings.store import load_settings
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import MAX_EMBEDDED_IMAGES_PER_FILE
+from aethersearch.configs.app_configs import MAX_EMBEDDED_IMAGES_PER_UPLOAD
+from aethersearch.configs.llm_configs import get_image_extraction_and_analysis_enabled
+from aethersearch.db.llm import fetch_default_llm_model
+from aethersearch.file_processing.extract_file_text import count_docx_embedded_images
+from aethersearch.file_processing.extract_file_text import count_pdf_embedded_images
+from aethersearch.file_processing.extract_file_text import extract_file_text
+from aethersearch.file_processing.extract_file_text import get_file_ext
+from aethersearch.file_processing.file_types import AetherSearchFileExtensions
+from aethersearch.file_processing.password_validation import is_file_password_protected
+from aethersearch.natural_language_processing.utils import count_tokens
+from aethersearch.natural_language_processing.utils import get_tokenizer
+from aethersearch.server.settings.store import load_settings
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 UNKNOWN_FILENAME = "[unknown_file]"  # More descriptive than empty string
@@ -89,7 +89,7 @@ class CategorizedFiles(BaseModel):
 
 def _skip_token_threshold(extension: str) -> bool:
     """Return True if this file extension should bypass the token limit."""
-    return extension.lower() in OnyxFileExtensions.TABULAR_EXTENSIONS
+    return extension.lower() in AetherSearchFileExtensions.TABULAR_EXTENSIONS
 
 
 def _apply_long_side_cap(width: int, height: int, cap: int) -> tuple[int, int]:
@@ -221,7 +221,7 @@ def categorize_uploaded_files(
             extension = get_file_ext(filename)
 
             # If image, estimate tokens via dedicated method first
-            if extension in OnyxFileExtensions.IMAGE_EXTENSIONS:
+            if extension in AetherSearchFileExtensions.IMAGE_EXTENSIONS:
                 try:
                     token_count = estimate_image_tokens_for_upload(upload)
                 except (UnidentifiedImageError, OSError) as e:

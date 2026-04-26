@@ -1,21 +1,21 @@
-from ee.onyx.configs.app_configs import CONFLUENCE_ANONYMOUS_ACCESS_IS_PUBLIC
-from ee.onyx.external_permissions.confluence.constants import ALL_CONF_EMAILS_GROUP_NAME
-from ee.onyx.external_permissions.confluence.constants import REQUEST_PAGINATION_LIMIT
-from ee.onyx.external_permissions.confluence.constants import VIEWSPACE_PERMISSION_TYPE
-from onyx.access.models import ExternalAccess
-from onyx.access.utils import build_ext_group_name_for_onyx
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.confluence.onyx_confluence import (
+from ee.aethersearch.configs.app_configs import CONFLUENCE_ANONYMOUS_ACCESS_IS_PUBLIC
+from ee.aethersearch.external_permissions.confluence.constants import ALL_CONF_EMAILS_GROUP_NAME
+from ee.aethersearch.external_permissions.confluence.constants import REQUEST_PAGINATION_LIMIT
+from ee.aethersearch.external_permissions.confluence.constants import VIEWSPACE_PERMISSION_TYPE
+from aethersearch.access.models import ExternalAccess
+from aethersearch.access.utils import build_ext_group_name_for_aethersearch
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.confluence.aethersearch_confluence import (
     get_user_email_from_username__server,
 )
-from onyx.connectors.confluence.onyx_confluence import OnyxConfluence
-from onyx.utils.logger import setup_logger
+from aethersearch.connectors.confluence.aethersearch_confluence import AetherSearchConfluence
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
 
 def _get_server_space_permissions(
-    confluence_client: OnyxConfluence, space_key: str
+    confluence_client: AetherSearchConfluence, space_key: str
 ) -> ExternalAccess:
     space_permissions = confluence_client.get_all_space_permissions_server(
         space_key=space_key
@@ -75,7 +75,7 @@ def _get_server_space_permissions(
 
 
 def _get_cloud_space_permissions(
-    confluence_client: OnyxConfluence, space_key: str
+    confluence_client: AetherSearchConfluence, space_key: str
 ) -> ExternalAccess:
     space_permissions_result = confluence_client.get_space(
         space_key=space_key, expand="permissions"
@@ -110,7 +110,7 @@ def _get_cloud_space_permissions(
 
 
 def get_space_permission(
-    confluence_client: OnyxConfluence,
+    confluence_client: AetherSearchConfluence,
     space_key: str,
     is_cloud: bool,
     add_prefix: bool = False,
@@ -135,7 +135,7 @@ def get_space_permission(
     # Prefix group IDs with source type if requested (for indexing path)
     if add_prefix and space_permissions.external_user_group_ids:
         prefixed_groups = {
-            build_ext_group_name_for_onyx(g, DocumentSource.CONFLUENCE)
+            build_ext_group_name_for_aethersearch(g, DocumentSource.CONFLUENCE)
             for g in space_permissions.external_user_group_ids
         }
         return ExternalAccess(
@@ -148,7 +148,7 @@ def get_space_permission(
 
 
 def get_all_space_permissions(
-    confluence_client: OnyxConfluence,
+    confluence_client: AetherSearchConfluence,
     is_cloud: bool,
     add_prefix: bool = False,
 ) -> dict[str, ExternalAccess]:

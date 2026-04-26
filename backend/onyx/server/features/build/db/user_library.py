@@ -13,26 +13,26 @@ from sqlalchemy import Integer
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.models import InputType
-from onyx.db.connector import create_connector
-from onyx.db.connector import fetch_connectors
-from onyx.db.connector_credential_pair import add_credential_to_connector
-from onyx.db.connector_credential_pair import get_connector_credential_pairs_for_user
-from onyx.db.credentials import create_credential
-from onyx.db.credentials import fetch_credentials_for_user
-from onyx.db.enums import AccessType
-from onyx.db.enums import ProcessingMode
-from onyx.db.models import Connector
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import Document as DbDocument
-from onyx.db.models import DocumentByConnectorCredentialPair
-from onyx.db.models import User
-from onyx.server.documents.models import ConnectorBase
-from onyx.server.documents.models import CredentialBase
-from onyx.server.features.build.configs import USER_LIBRARY_CONNECTOR_NAME
-from onyx.server.features.build.configs import USER_LIBRARY_CREDENTIAL_NAME
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.models import InputType
+from aethersearch.db.connector import create_connector
+from aethersearch.db.connector import fetch_connectors
+from aethersearch.db.connector_credential_pair import add_credential_to_connector
+from aethersearch.db.connector_credential_pair import get_connector_credential_pairs_for_user
+from aethersearch.db.credentials import create_credential
+from aethersearch.db.credentials import fetch_credentials_for_user
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ProcessingMode
+from aethersearch.db.models import Connector
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import Document as DbDocument
+from aethersearch.db.models import DocumentByConnectorCredentialPair
+from aethersearch.db.models import User
+from aethersearch.server.documents.models import ConnectorBase
+from aethersearch.server.documents.models import CredentialBase
+from aethersearch.server.features.build.configs import USER_LIBRARY_CONNECTOR_NAME
+from aethersearch.server.features.build.configs import USER_LIBRARY_CREDENTIAL_NAME
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -88,7 +88,7 @@ def get_or_create_craft_connector(db_session: Session, user: User) -> tuple[int,
         Tuple of (connector_id, credential_id)
 
     Note: We need to create a credential even though CRAFT_FILE doesn't require
-    authentication. This is because Onyx's connector-credential pair system
+    authentication. This is because AetherSearch's connector-credential pair system
     requires a credential for all connectors. The credential is empty ({}).
 
     This function handles recovery from partial creation failures by detecting

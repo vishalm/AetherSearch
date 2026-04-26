@@ -11,15 +11,15 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Session
 
-import onyx.db.document as dbdocument
-from onyx.db.entity_type import UNGROUNDED_SOURCE_NAME
-from onyx.db.models import Document
-from onyx.db.models import KGEntity
-from onyx.db.models import KGEntityExtractionStaging
-from onyx.db.models import KGEntityType
-from onyx.kg.models import KGGroundingType
-from onyx.kg.models import KGStage
-from onyx.kg.utils.formatting_utils import make_entity_id
+import aethersearch.db.document as dbdocument
+from aethersearch.db.entity_type import UNGROUNDED_SOURCE_NAME
+from aethersearch.db.models import Document
+from aethersearch.db.models import KGEntity
+from aethersearch.db.models import KGEntityExtractionStaging
+from aethersearch.db.models import KGEntityType
+from aethersearch.kg.models import KGGroundingType
+from aethersearch.kg.models import KGStage
+from aethersearch.kg.utils.formatting_utils import make_entity_id
 
 
 def upsert_staging_entity(

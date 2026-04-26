@@ -1,7 +1,7 @@
 from sqlalchemy import text
 
-from onyx.db.engine.sql_engine import get_session_with_shared_schema
-from onyx.db.engine.sql_engine import SqlEngine
+from aethersearch.db.engine.sql_engine import get_session_with_shared_schema
+from aethersearch.db.engine.sql_engine import SqlEngine
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.configs import POSTGRES_DEFAULT_SCHEMA
 from shared_configs.configs import TENANT_ID_PREFIX

@@ -1,8 +1,8 @@
 from typing import Any
 from unittest.mock import Mock
 
-from onyx.configs.constants import MilestoneRecordType
-from onyx.utils import telemetry as telemetry_utils
+from aethersearch.configs.constants import MilestoneRecordType
+from aethersearch.utils import telemetry as telemetry_utils
 
 
 def test_mt_cloud_telemetry_noop_when_not_multi_tenant(monkeypatch: Any) -> None:
@@ -13,7 +13,7 @@ def test_mt_cloud_telemetry_noop_when_not_multi_tenant(monkeypatch: Any) -> None
         fetch_impl,
     )
     # mt_cloud_telemetry reads the module-local imported symbol, so patch this path.
-    monkeypatch.setattr("onyx.utils.telemetry.MULTI_TENANT", False)
+    monkeypatch.setattr("aethersearch.utils.telemetry.MULTI_TENANT", False)
 
     telemetry_utils.mt_cloud_telemetry(
         tenant_id="tenant-1",
@@ -36,7 +36,7 @@ def test_mt_cloud_telemetry_calls_event_telemetry_when_multi_tenant(
         fetch_impl,
     )
     # mt_cloud_telemetry reads the module-local imported symbol, so patch this path.
-    monkeypatch.setattr("onyx.utils.telemetry.MULTI_TENANT", True)
+    monkeypatch.setattr("aethersearch.utils.telemetry.MULTI_TENANT", True)
 
     telemetry_utils.mt_cloud_telemetry(
         tenant_id="tenant-1",
@@ -46,7 +46,7 @@ def test_mt_cloud_telemetry_calls_event_telemetry_when_multi_tenant(
     )
 
     fetch_impl.assert_called_once_with(
-        module="onyx.utils.telemetry",
+        module="aethersearch.utils.telemetry",
         attribute="event_telemetry",
         fallback=telemetry_utils.noop_fallback,
     )
@@ -64,7 +64,7 @@ def test_mt_cloud_identify_noop_when_not_multi_tenant(monkeypatch: Any) -> None:
         "fetch_versioned_implementation_with_fallback",
         fetch_impl,
     )
-    monkeypatch.setattr("onyx.utils.telemetry.MULTI_TENANT", False)
+    monkeypatch.setattr("aethersearch.utils.telemetry.MULTI_TENANT", False)
 
     telemetry_utils.mt_cloud_identify(
         distinct_id="12345678-1234-1234-1234-123456789abc",
@@ -84,7 +84,7 @@ def test_mt_cloud_identify_calls_identify_user_when_multi_tenant(
         "fetch_versioned_implementation_with_fallback",
         fetch_impl,
     )
-    monkeypatch.setattr("onyx.utils.telemetry.MULTI_TENANT", True)
+    monkeypatch.setattr("aethersearch.utils.telemetry.MULTI_TENANT", True)
 
     telemetry_utils.mt_cloud_identify(
         distinct_id="12345678-1234-1234-1234-123456789abc",
@@ -92,7 +92,7 @@ def test_mt_cloud_identify_calls_identify_user_when_multi_tenant(
     )
 
     fetch_impl.assert_called_once_with(
-        module="onyx.utils.telemetry",
+        module="aethersearch.utils.telemetry",
         attribute="identify_user",
         fallback=telemetry_utils.noop_fallback,
     )

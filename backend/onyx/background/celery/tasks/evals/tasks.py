@@ -5,21 +5,21 @@ from typing import Any
 from celery import shared_task
 from celery import Task
 
-from onyx.configs.app_configs import BRAINTRUST_API_KEY
-from onyx.configs.app_configs import JOB_TIMEOUT
-from onyx.configs.app_configs import SCHEDULED_EVAL_DATASET_NAMES
-from onyx.configs.app_configs import SCHEDULED_EVAL_PERMISSIONS_EMAIL
-from onyx.configs.app_configs import SCHEDULED_EVAL_PROJECT
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.evals.eval import run_eval
-from onyx.evals.models import EvalConfigurationOptions
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import BRAINTRUST_API_KEY
+from aethersearch.configs.app_configs import JOB_TIMEOUT
+from aethersearch.configs.app_configs import SCHEDULED_EVAL_DATASET_NAMES
+from aethersearch.configs.app_configs import SCHEDULED_EVAL_PERMISSIONS_EMAIL
+from aethersearch.configs.app_configs import SCHEDULED_EVAL_PROJECT
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.evals.eval import run_eval
+from aethersearch.evals.models import EvalConfigurationOptions
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
 
 @shared_task(
-    name=OnyxCeleryTask.EVAL_RUN_TASK,
+    name=AetherSearchCeleryTask.EVAL_RUN_TASK,
     ignore_result=True,
     soft_time_limit=JOB_TIMEOUT,
     bind=True,
@@ -42,7 +42,7 @@ def eval_run_task(
 
 
 @shared_task(
-    name=OnyxCeleryTask.SCHEDULED_EVAL_TASK,
+    name=AetherSearchCeleryTask.SCHEDULED_EVAL_TASK,
     ignore_result=True,
     soft_time_limit=JOB_TIMEOUT * 5,  # Allow more time for multiple datasets
     bind=True,
@@ -55,7 +55,7 @@ def scheduled_eval_task(self: Task, **kwargs: Any) -> None:  # noqa: ARG001
 
     Configure via environment variables (with defaults):
     - SCHEDULED_EVAL_DATASET_NAMES: Comma-separated list of Braintrust dataset names
-    - SCHEDULED_EVAL_PERMISSIONS_EMAIL: Email for search permissions (default: roshan@onyx.app)
+    - SCHEDULED_EVAL_PERMISSIONS_EMAIL: Email for search permissions (default: roshan@aethersearch.app)
     - SCHEDULED_EVAL_PROJECT: Braintrust project name
     """
     if not BRAINTRUST_API_KEY:

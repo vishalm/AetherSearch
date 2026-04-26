@@ -1,7 +1,7 @@
 # AetherSearch AWS modules
 
 ## Overview
-This directory contains Terraform modules to provision the core AWS infrastructure for Onyx:
+This directory contains Terraform modules to provision the core AWS infrastructure for AetherSearch:
 
 - `vpc`: Creates a VPC with public/private subnets sized for EKS
 - `eks`: Provisions an Amazon EKS cluster, essential addons (EBS CSI, metrics server, cluster autoscaler), and optional IRSA for S3 access
@@ -9,16 +9,16 @@ This directory contains Terraform modules to provision the core AWS infrastructu
 - `redis`: Creates an ElastiCache for Redis replication group
 - `s3`: Creates an S3 bucket and locks access to a provided S3 VPC endpoint
 - `opensearch`: Creates an Amazon OpenSearch domain for managed search workloads
-- `onyx`: A higher-level composition that wires the above modules together for a complete, opinionated stack
+- `aethersearch`: A higher-level composition that wires the above modules together for a complete, opinionated stack
 
-Use the `onyx` module if you want a working EKS + Postgres + Redis + S3 stack with sane defaults. Use the individual modules if you need more granular control.
+Use the `aethersearch` module if you want a working EKS + Postgres + Redis + S3 stack with sane defaults. Use the individual modules if you need more granular control.
 
 ## Quickstart (copy/paste)
 The snippet below shows a minimal working example that:
 - Sets up providers
 - Waits for EKS to be ready
 - Configures `kubernetes` and `helm` providers against the created cluster
-- Provisions the full Onyx AWS stack via the `onyx` module
+- Provisions the full AetherSearch AWS stack via the `aethersearch` module
 
 ```hcl
 locals {
@@ -29,14 +29,14 @@ provider "aws" {
   region = local.region
 }
 
-module "onyx" {
+module "aethersearch" {
   # If your root module is next to this modules/ directory:
-  # source = "./modules/aws/onyx"
+  # source = "./modules/aws/aethersearch"
   # If referencing from this repo as a template, adjust the path accordingly.
-  source = "./modules/aws/onyx"
+  source = "./modules/aws/aethersearch"
 
   region            = local.region
-  name              = "onyx"            # used as a prefix and workspace-aware
+  name              = "aethersearch"            # used as a prefix and workspace-aware
   postgres_username = "pgusername"
   postgres_password = "your-postgres-password"
   # create_vpc    = true  # default true; set to false to use an existing VPC (see below)
@@ -44,17 +44,17 @@ module "onyx" {
 
 resource "null_resource" "wait_for_cluster" {
   provisioner "local-exec" {
-    command = "aws eks wait cluster-active --name ${module.onyx.cluster_name} --region ${local.region}"
+    command = "aws eks wait cluster-active --name ${module.aethersearch.cluster_name} --region ${local.region}"
   }
 }
 
 data "aws_eks_cluster" "eks" {
-  name       = module.onyx.cluster_name
+  name       = module.aethersearch.cluster_name
   depends_on = [null_resource.wait_for_cluster]
 }
 
 data "aws_eks_cluster_auth" "eks" {
-  name       = module.onyx.cluster_name
+  name       = module.aethersearch.cluster_name
   depends_on = [null_resource.wait_for_cluster]
 }
 
@@ -74,14 +74,14 @@ provider "helm" {
 
 # Optional: expose handy outputs at the root module level
 output "cluster_name" {
-  value = module.onyx.cluster_name
+  value = module.aethersearch.cluster_name
 }
 output "postgres_connection_url" {
-  value     = module.onyx.postgres_connection_url
+  value     = module.aethersearch.postgres_connection_url
   sensitive = true
 }
 output "redis_connection_url" {
-  value     = module.onyx.redis_connection_url
+  value     = module.aethersearch.redis_connection_url
   sensitive = true
 }
 ```
@@ -97,11 +97,11 @@ terraform apply
 If you already have a VPC and subnets, disable VPC creation and provide IDs, CIDR, and the ID of the existing S3 gateway endpoint in that VPC:
 
 ```hcl
-module "onyx" {
-  source = "./modules/aws/onyx"
+module "aethersearch" {
+  source = "./modules/aws/aethersearch"
 
   region            = local.region
-  name              = "onyx"
+  name              = "aethersearch"
   postgres_username = "pgusername"
   postgres_password = "your-postgres-password"
 
@@ -116,7 +116,7 @@ module "onyx" {
 
 ## What each module does
 
-### `onyx`
+### `aethersearch`
 - Orchestrates `vpc`, `eks`, `postgres`, `redis`, and `s3`
 - Names resources using `name` and the current Terraform workspace
 - Exposes convenient outputs:
@@ -125,7 +125,7 @@ module "onyx" {
   - `redis_connection_url` (sensitive): hostname:port
 
 Inputs (common):
-- `name` (default `onyx`), `region` (default `us-west-2`), `tags`
+- `name` (default `aethersearch`), `region` (default `us-west-2`), `tags`
 - `postgres_username`, `postgres_password`
 - `create_vpc` (default true) or existing VPC details and `s3_vpc_endpoint_id`
 - WAF controls such as `waf_allowed_ip_cidrs`, `waf_common_rule_set_count_rules`, rate limits, geo restrictions, and logging retention
@@ -166,31 +166,31 @@ Key inputs include:
 - Supports custom subnets, security groups, fine-grained access control, encryption, and CloudWatch log publishing
 - Outputs domain endpoints, ARN, and the managed security group ID when it creates one
 
-## Installing the Onyx Helm chart (after Terraform)
-Once the cluster is active, deploy application workloads via Helm. You can use the chart in `deployment/helm/charts/onyx`.
+## Installing the AetherSearch Helm chart (after Terraform)
+Once the cluster is active, deploy application workloads via Helm. You can use the chart in `deployment/helm/charts/aethersearch`.
 
 ```bash
 # Set kubeconfig to your new cluster (if you’re not using the TF providers for kubernetes/helm)
 aws eks update-kubeconfig --name $(terraform output -raw cluster_name) --region ${AWS_REGION:-us-west-2}
 
-kubectl create namespace onyx --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace aethersearch --dry-run=client -o yaml | kubectl apply -f -
 
 # If using AWS S3 via IRSA created by the EKS module, consider disabling MinIO
-# Replace the path below with the absolute or correct relative path to the onyx Helm chart
-helm upgrade --install onyx /path/to/onyx/deployment/helm/charts/onyx \
-  --namespace onyx \
+# Replace the path below with the absolute or correct relative path to the aethersearch Helm chart
+helm upgrade --install aethersearch /path/to/aethersearch/deployment/helm/charts/aethersearch \
+  --namespace aethersearch \
   --set minio.enabled=false \
   --set serviceAccount.create=false \
-  --set serviceAccount.name=onyx-s3-access
+  --set serviceAccount.name=aethersearch-s3-access
 ```
 
 Notes:
-- The EKS module can create an IRSA role plus a Kubernetes `ServiceAccount` named `onyx-s3-access` (by default in namespace `onyx`) when `s3_bucket_names` is provided. Use that service account in the Helm chart to avoid static S3 credentials.
+- The EKS module can create an IRSA role plus a Kubernetes `ServiceAccount` named `aethersearch-s3-access` (by default in namespace `aethersearch`) when `s3_bucket_names` is provided. Use that service account in the Helm chart to avoid static S3 credentials.
 - If you prefer MinIO inside the cluster, leave `minio.enabled=true` (default) and skip IRSA.
 
 ## Workflow tips
 - First apply can be infra-only; once EKS is active, install the Helm chart.
-- Use Terraform workspaces to create isolated environments; the `onyx` module automatically includes the workspace in resource names.
+- Use Terraform workspaces to create isolated environments; the `aethersearch` module automatically includes the workspace in resource names.
 
 ## Security
 - Database and Redis connection outputs are marked sensitive. Handle them carefully.

@@ -5,9 +5,9 @@ from unittest.mock import MagicMock
 
 from slack_sdk.errors import SlackApiError
 
-from onyx.context.search.models import Tag
-from onyx.onyxbot.slack.constants import SLACK_CHANNEL_REF_PATTERN
-from onyx.onyxbot.slack.handlers.handle_regular_answer import resolve_channel_references
+from aethersearch.context.search.models import Tag
+from aethersearch.aethersearchbot.slack.constants import SLACK_CHANNEL_REF_PATTERN
+from aethersearch.aethersearchbot.slack.handlers.handle_regular_answer import resolve_channel_references
 
 # ---------------------------------------------------------------------------
 # Helpers

@@ -1,9 +1,9 @@
 import pytest
 
-import onyx.auth.users as users
-from onyx.auth.users import verify_email_domain
-from onyx.configs.constants import AuthType
-from onyx.error_handling.exceptions import OnyxError
+import aethersearch.auth.users as users
+from aethersearch.auth.users import verify_email_domain
+from aethersearch.configs.constants import AuthType
+from aethersearch.error_handling.exceptions import AetherSearchError
 
 
 def test_verify_email_domain_allows_case_insensitive_match(
@@ -21,7 +21,7 @@ def test_verify_email_domain_rejects_non_whitelisted_domain(
 ) -> None:
     monkeypatch.setattr(users, "VALID_EMAIL_DOMAINS", ["example.com"], raising=False)
 
-    with pytest.raises(OnyxError) as exc:
+    with pytest.raises(AetherSearchError) as exc:
         verify_email_domain("user@another.com")
     assert exc.value.status_code == 400
     assert "Email domain is not valid" in exc.value.detail
@@ -32,7 +32,7 @@ def test_verify_email_domain_invalid_email_format(
 ) -> None:
     monkeypatch.setattr(users, "VALID_EMAIL_DOMAINS", ["example.com"], raising=False)
 
-    with pytest.raises(OnyxError) as exc:
+    with pytest.raises(AetherSearchError) as exc:
         verify_email_domain("userexample.com")  # missing '@'
     assert exc.value.status_code == 400
     assert "Email is not valid" in exc.value.detail
@@ -44,20 +44,20 @@ def test_verify_email_domain_rejects_plus_addressing(
     monkeypatch.setattr(users, "VALID_EMAIL_DOMAINS", [], raising=False)
     monkeypatch.setattr(users, "AUTH_TYPE", AuthType.CLOUD, raising=False)
 
-    with pytest.raises(OnyxError) as exc:
+    with pytest.raises(AetherSearchError) as exc:
         verify_email_domain("user+tag@gmail.com")
     assert exc.value.status_code == 400
     assert "'+'" in exc.value.detail
 
 
-def test_verify_email_domain_allows_plus_for_onyx_app(
+def test_verify_email_domain_allows_plus_for_aethersearch_app(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(users, "VALID_EMAIL_DOMAINS", [], raising=False)
     monkeypatch.setattr(users, "AUTH_TYPE", AuthType.CLOUD, raising=False)
 
-    # Should not raise for onyx.app domain
-    verify_email_domain("user+tag@onyx.app")
+    # Should not raise for aethersearch.app domain
+    verify_email_domain("user+tag@aethersearch.app")
 
 
 def test_verify_email_domain_rejects_dotted_gmail_on_registration(
@@ -66,7 +66,7 @@ def test_verify_email_domain_rejects_dotted_gmail_on_registration(
     monkeypatch.setattr(users, "VALID_EMAIL_DOMAINS", [], raising=False)
     monkeypatch.setattr(users, "AUTH_TYPE", AuthType.CLOUD, raising=False)
 
-    with pytest.raises(OnyxError) as exc:
+    with pytest.raises(AetherSearchError) as exc:
         verify_email_domain("first.last@gmail.com", is_registration=True)
     assert exc.value.status_code == 400
     assert "'.'" in exc.value.detail
@@ -106,7 +106,7 @@ def test_verify_email_domain_rejects_googlemail(
     monkeypatch.setattr(users, "VALID_EMAIL_DOMAINS", [], raising=False)
     monkeypatch.setattr(users, "AUTH_TYPE", AuthType.CLOUD, raising=False)
 
-    with pytest.raises(OnyxError) as exc:
+    with pytest.raises(AetherSearchError) as exc:
         verify_email_domain("user@googlemail.com")
     assert exc.value.status_code == 400
     assert "gmail.com" in exc.value.detail

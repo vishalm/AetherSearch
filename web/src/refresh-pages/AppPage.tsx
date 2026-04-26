@@ -8,8 +8,8 @@ import { SEARCH_PARAM_NAMES } from "@/app/app/services/searchParams";
 import { Section } from "@/layouts/general-layouts";
 import { useFederatedConnectors, useFilters, useLlmManager } from "@/lib/hooks";
 import { useForcedTools } from "@/lib/hooks/useForcedTools";
-import OnyxInitializingLoader from "@/components/OnyxInitializingLoader";
-import { OnyxDocument, MinimalOnyxDocument } from "@/lib/search/interfaces";
+import AetherSearchInitializingLoader from "@/components/AetherSearchInitializingLoader";
+import { AetherSearchDocument, MinimalAetherSearchDocument } from "@/lib/search/interfaces";
 import {
   useSettingsContext,
   useVectorDbEnabled,
@@ -227,7 +227,7 @@ export default function AppPage({ firstMessage }: ChatPageProps) {
     currentProjectId === null && deepResearchEnabled;
 
   const [presentingDocument, setPresentingDocument] =
-    useState<MinimalOnyxDocument | null>(null);
+    useState<MinimalAetherSearchDocument | null>(null);
 
   const llmManager = useLlmManager(currentChatSession ?? undefined, liveAgent);
 
@@ -349,7 +349,7 @@ export default function AppPage({ firstMessage }: ChatPageProps) {
     };
   }, []);
 
-  const [selectedDocuments, setSelectedDocuments] = useState<OnyxDocument[]>(
+  const [selectedDocuments, setSelectedDocuments] = useState<AetherSearchDocument[]>(
     []
   );
 
@@ -598,7 +598,7 @@ export default function AppPage({ firstMessage }: ChatPageProps) {
   }, [isNewSession, defaultAppMode, isSearch, resetInputBar, setAppMode]);
 
   const handleSearchDocumentClick = useCallback(
-    (doc: MinimalOnyxDocument) => setPresentingDocument(doc),
+    (doc: MinimalAetherSearchDocument) => setPresentingDocument(doc),
     []
   );
 
@@ -722,7 +722,7 @@ export default function AppPage({ firstMessage }: ChatPageProps) {
           : "1fr auto 1fr",
   };
 
-  if (!isReady) return <OnyxInitializingLoader />;
+  if (!isReady) return <AetherSearchInitializingLoader />;
 
   return (
     <>

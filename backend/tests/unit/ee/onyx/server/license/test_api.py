@@ -1,6 +1,6 @@
 """Tests for license API utilities."""
 
-from ee.onyx.server.license.api import _strip_pem_delimiters
+from ee.aethersearch.server.license.api import _strip_pem_delimiters
 
 
 class TestStripPemDelimiters:
@@ -8,9 +8,9 @@ class TestStripPemDelimiters:
 
     def test_strips_pem_delimiters(self) -> None:
         """Content wrapped in PEM delimiters is extracted correctly."""
-        content = """-----BEGIN ONYX LICENSE-----
+        content = """-----BEGIN AETHERSEARCH LICENSE-----
 eyJwYXlsb2FkIjogeyJ2ZXJzaW9uIjogIjEuMCJ9fQ==
------END ONYX LICENSE-----"""
+-----END AETHERSEARCH LICENSE-----"""
 
         result = _strip_pem_delimiters(content)
 
@@ -18,11 +18,11 @@ eyJwYXlsb2FkIjogeyJ2ZXJzaW9uIjogIjEuMCJ9fQ==
 
     def test_handles_multiline_content(self) -> None:
         """Multiline base64 content between delimiters is preserved."""
-        content = """-----BEGIN ONYX LICENSE-----
+        content = """-----BEGIN AETHERSEARCH LICENSE-----
 eyJwYXlsb2FkIjogeyJ2ZXJzaW9uIjog
 IjEuMCIsICJ0ZW5hbnRfaWQiOiAidGVz
 dCJ9LCAic2lnbmF0dXJlIjogImFiYyJ9
------END ONYX LICENSE-----"""
+-----END AETHERSEARCH LICENSE-----"""
 
         result = _strip_pem_delimiters(content)
 
@@ -42,9 +42,9 @@ dCJ9LCAic2lnbmF0dXJlIjogImFiYyJ9"""
     def test_handles_whitespace(self) -> None:
         """Leading/trailing whitespace is handled correctly."""
         content = """
-  -----BEGIN ONYX LICENSE-----
+  -----BEGIN AETHERSEARCH LICENSE-----
 eyJwYXlsb2FkIjogeyJ2ZXJzaW9uIjogIjEuMCJ9fQ==
------END ONYX LICENSE-----
+-----END AETHERSEARCH LICENSE-----
   """
 
         result = _strip_pem_delimiters(content)
@@ -53,11 +53,11 @@ eyJwYXlsb2FkIjogeyJ2ZXJzaW9uIjogIjEuMCJ9fQ==
 
     def test_partial_delimiters_unchanged(self) -> None:
         """Content with only begin or only end delimiter is returned unchanged."""
-        begin_only = """-----BEGIN ONYX LICENSE-----
+        begin_only = """-----BEGIN AETHERSEARCH LICENSE-----
 eyJwYXlsb2FkIjogeyJ2ZXJzaW9uIjogIjEuMCJ9fQ=="""
 
         end_only = """eyJwYXlsb2FkIjogeyJ2ZXJzaW9uIjogIjEuMCJ9fQ==
------END ONYX LICENSE-----"""
+-----END AETHERSEARCH LICENSE-----"""
 
         assert _strip_pem_delimiters(begin_only) == begin_only.strip()
         assert _strip_pem_delimiters(end_only) == end_only.strip()
@@ -72,10 +72,10 @@ eyJwYXlsb2FkIjogeyJ2ZXJzaW9uIjogIjEuMCJ9fQ=="""
 
     def test_trailing_newlines_stripped_after_pem(self) -> None:
         """Inner content with trailing newlines after PEM stripping is cleaned."""
-        content = """-----BEGIN ONYX LICENSE-----
+        content = """-----BEGIN AETHERSEARCH LICENSE-----
 eyJwYXlsb2FkIjogeyJ2ZXJzaW9uIjogIjEuMCJ9fQ==
 
------END ONYX LICENSE-----"""
+-----END AETHERSEARCH LICENSE-----"""
 
         result = _strip_pem_delimiters(content)
 

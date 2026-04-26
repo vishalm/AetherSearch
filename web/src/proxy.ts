@@ -8,7 +8,7 @@ import {
 
 // Authentication cookie names (matches backend constants)
 const FASTAPI_USERS_AUTH_COOKIE_NAME = "fastapiusersauth";
-const ANONYMOUS_USER_COOKIE_NAME = "onyx_anonymous_user";
+const ANONYMOUS_USER_COOKIE_NAME = "aethersearch_anonymous_user";
 
 // Protected route prefixes (require authentication)
 const PROTECTED_ROUTES = ["/app", "/admin", "/agents", "/connector"];

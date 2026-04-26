@@ -6,9 +6,9 @@ from uuid import UUID
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import MessageType
-from onyx.db.models import BuildMessage
-from onyx.db.models import BuildSession
+from aethersearch.configs.constants import MessageType
+from aethersearch.db.models import BuildMessage
+from aethersearch.db.models import BuildSession
 
 
 def count_user_messages_in_window(

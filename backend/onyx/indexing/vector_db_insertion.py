@@ -8,13 +8,13 @@ from itertools import groupby
 import httpx
 import sentry_sdk
 
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import DocumentFailure
-from onyx.document_index.interfaces import DocumentIndex
-from onyx.document_index.interfaces import DocumentInsertionRecord
-from onyx.document_index.interfaces import IndexBatchParams
-from onyx.indexing.models import DocMetadataAwareIndexChunk
-from onyx.utils.logger import setup_logger
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import DocumentFailure
+from aethersearch.document_index.interfaces import DocumentIndex
+from aethersearch.document_index.interfaces import DocumentInsertionRecord
+from aethersearch.document_index.interfaces import IndexBatchParams
+from aethersearch.indexing.models import DocMetadataAwareIndexChunk
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

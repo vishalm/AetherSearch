@@ -7,8 +7,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from ee.onyx.server.license.models import LicensePayload
-from ee.onyx.server.license.models import PlanType
+from ee.aethersearch.server.license.models import LicensePayload
+from ee.aethersearch.server.license.models import PlanType
 
 
 @pytest.fixture

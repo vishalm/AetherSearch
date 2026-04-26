@@ -3,19 +3,19 @@ from datetime import timedelta
 
 from celery import shared_task
 
-from ee.onyx.db.query_history import get_all_query_history_export_tasks
-from onyx.configs.app_configs import JOB_TIMEOUT
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.db.engine.sql_engine import get_session_with_tenant
-from onyx.db.enums import TaskStatus
-from onyx.db.tasks import delete_task_with_id
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.db.query_history import get_all_query_history_export_tasks
+from aethersearch.configs.app_configs import JOB_TIMEOUT
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.db.engine.sql_engine import get_session_with_tenant
+from aethersearch.db.enums import TaskStatus
+from aethersearch.db.tasks import delete_task_with_id
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
 
 @shared_task(
-    name=OnyxCeleryTask.EXPORT_QUERY_HISTORY_CLEANUP_TASK,
+    name=AetherSearchCeleryTask.EXPORT_QUERY_HISTORY_CLEANUP_TASK,
     ignore_result=True,
     soft_time_limit=JOB_TIMEOUT,
 )

@@ -6,16 +6,16 @@ from typing import Union
 
 from pydantic import BaseModel
 
-from onyx.configs.constants import MessageType
-from onyx.db.enums import ArtifactType
-from onyx.db.enums import BuildSessionStatus
-from onyx.db.enums import SandboxStatus
-from onyx.db.enums import SharingScope
-from onyx.server.features.build.sandbox.models import FilesystemEntry as FileSystemEntry
+from aethersearch.configs.constants import MessageType
+from aethersearch.db.enums import ArtifactType
+from aethersearch.db.enums import BuildSessionStatus
+from aethersearch.db.enums import SandboxStatus
+from aethersearch.db.enums import SharingScope
+from aethersearch.server.features.build.sandbox.models import FilesystemEntry as FileSystemEntry
 
 if TYPE_CHECKING:
-    from onyx.db.models import BuildSession
-    from onyx.db.models import Sandbox
+    from aethersearch.db.models import BuildSession
+    from aethersearch.db.models import Sandbox
 
 
 # ===== Session Models =====

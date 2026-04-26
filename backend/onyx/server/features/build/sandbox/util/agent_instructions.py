@@ -7,7 +7,7 @@ that are shared between local and kubernetes sandbox managers.
 import threading
 from pathlib import Path
 
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

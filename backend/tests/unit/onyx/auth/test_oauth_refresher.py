@@ -7,12 +7,12 @@ from unittest.mock import patch
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from onyx.auth.oauth_refresher import _test_expire_oauth_token
-from onyx.auth.oauth_refresher import check_and_refresh_oauth_tokens
-from onyx.auth.oauth_refresher import check_oauth_account_has_refresh_token
-from onyx.auth.oauth_refresher import get_oauth_accounts_requiring_refresh_token
-from onyx.auth.oauth_refresher import refresh_oauth_token
-from onyx.db.models import OAuthAccount
+from aethersearch.auth.oauth_refresher import _test_expire_oauth_token
+from aethersearch.auth.oauth_refresher import check_and_refresh_oauth_tokens
+from aethersearch.auth.oauth_refresher import check_oauth_account_has_refresh_token
+from aethersearch.auth.oauth_refresher import get_oauth_accounts_requiring_refresh_token
+from aethersearch.auth.oauth_refresher import refresh_oauth_token
+from aethersearch.db.models import OAuthAccount
 
 
 @pytest.mark.asyncio
@@ -43,7 +43,7 @@ async def test_refresh_oauth_token_success(
     mock_oauth_account.refresh_token = "old_refresh_token"
 
     # Patch at the module level where it's actually being used
-    with patch("onyx.auth.oauth_refresher.httpx.AsyncClient") as client_class_mock:
+    with patch("aethersearch.auth.oauth_refresher.httpx.AsyncClient") as client_class_mock:
         # Configure the context manager
         client_instance = mock_client
         client_class_mock.return_value.__aenter__.return_value = client_instance
@@ -86,7 +86,7 @@ async def test_refresh_oauth_token_failure(
     mock_oauth_account.refresh_token = "old_refresh_token"
 
     # Patch at the module level where it's actually being used
-    with patch("onyx.auth.oauth_refresher.httpx.AsyncClient") as client_class_mock:
+    with patch("aethersearch.auth.oauth_refresher.httpx.AsyncClient") as client_class_mock:
         # Configure the context manager
         client_class_mock.return_value.__aenter__.return_value = mock_client
 
@@ -158,7 +158,7 @@ async def test_check_and_refresh_oauth_tokens(
 
     # Mock refresh_oauth_token function
     with patch(
-        "onyx.auth.oauth_refresher.refresh_oauth_token", AsyncMock(return_value=True)
+        "aethersearch.auth.oauth_refresher.refresh_oauth_token", AsyncMock(return_value=True)
     ) as mock_refresh:
         # Call the function under test
         await check_and_refresh_oauth_tokens(

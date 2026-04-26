@@ -12,42 +12,42 @@ from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import ENABLE_CONTEXTUAL_RAG
-from onyx.configs.app_configs import MAX_SLACK_THREAD_CONTEXT_MESSAGES
-from onyx.configs.app_configs import SLACK_THREAD_CONTEXT_BATCH_SIZE
-from onyx.configs.chat_configs import DOC_TIME_DECAY
-from onyx.connectors.models import IndexingDocument
-from onyx.connectors.models import TextSection
-from onyx.context.search.federated.models import ChannelMetadata
-from onyx.context.search.federated.models import DirectThreadFetch
-from onyx.context.search.federated.models import SlackMessage
-from onyx.context.search.federated.slack_search_utils import ALL_CHANNEL_TYPES
-from onyx.context.search.federated.slack_search_utils import build_channel_query_filter
-from onyx.context.search.federated.slack_search_utils import build_slack_queries
-from onyx.context.search.federated.slack_search_utils import get_channel_type
-from onyx.context.search.federated.slack_search_utils import (
+from aethersearch.configs.app_configs import ENABLE_CONTEXTUAL_RAG
+from aethersearch.configs.app_configs import MAX_SLACK_THREAD_CONTEXT_MESSAGES
+from aethersearch.configs.app_configs import SLACK_THREAD_CONTEXT_BATCH_SIZE
+from aethersearch.configs.chat_configs import DOC_TIME_DECAY
+from aethersearch.connectors.models import IndexingDocument
+from aethersearch.connectors.models import TextSection
+from aethersearch.context.search.federated.models import ChannelMetadata
+from aethersearch.context.search.federated.models import DirectThreadFetch
+from aethersearch.context.search.federated.models import SlackMessage
+from aethersearch.context.search.federated.slack_search_utils import ALL_CHANNEL_TYPES
+from aethersearch.context.search.federated.slack_search_utils import build_channel_query_filter
+from aethersearch.context.search.federated.slack_search_utils import build_slack_queries
+from aethersearch.context.search.federated.slack_search_utils import get_channel_type
+from aethersearch.context.search.federated.slack_search_utils import (
     get_channel_type_for_missing_scope,
 )
-from onyx.context.search.federated.slack_search_utils import is_recency_query
-from onyx.context.search.federated.slack_search_utils import should_include_message
-from onyx.context.search.models import ChunkIndexRequest
-from onyx.context.search.models import InferenceChunk
-from onyx.db.document import DocumentSource
-from onyx.db.models import SearchSettings
-from onyx.db.search_settings import get_current_search_settings
-from onyx.document_index.document_index_utils import get_multipass_config
-from onyx.federated_connectors.slack.models import SlackEntities
-from onyx.indexing.chunker import Chunker
-from onyx.indexing.embedder import DefaultIndexingEmbedder
-from onyx.indexing.models import DocAwareChunk
-from onyx.llm.factory import get_default_llm
-from onyx.onyxbot.slack.models import ChannelType
-from onyx.onyxbot.slack.models import SlackContext
-from onyx.redis.redis_pool import get_redis_client
-from onyx.server.federated.models import FederatedConnectorDetail
-from onyx.utils.logger import setup_logger
-from onyx.utils.threadpool_concurrency import run_functions_tuples_in_parallel
-from onyx.utils.timing import log_function_time
+from aethersearch.context.search.federated.slack_search_utils import is_recency_query
+from aethersearch.context.search.federated.slack_search_utils import should_include_message
+from aethersearch.context.search.models import ChunkIndexRequest
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.db.document import DocumentSource
+from aethersearch.db.models import SearchSettings
+from aethersearch.db.search_settings import get_current_search_settings
+from aethersearch.document_index.document_index_utils import get_multipass_config
+from aethersearch.federated_connectors.slack.models import SlackEntities
+from aethersearch.indexing.chunker import Chunker
+from aethersearch.indexing.embedder import DefaultIndexingEmbedder
+from aethersearch.indexing.models import DocAwareChunk
+from aethersearch.llm.factory import get_default_llm
+from aethersearch.aethersearchbot.slack.models import ChannelType
+from aethersearch.aethersearchbot.slack.models import SlackContext
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.server.federated.models import FederatedConnectorDetail
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.threadpool_concurrency import run_functions_tuples_in_parallel
+from aethersearch.utils.timing import log_function_time
 
 logger = setup_logger()
 

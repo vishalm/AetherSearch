@@ -9,36 +9,36 @@ from fastapi import Query
 from fastapi import UploadFile
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import current_curator_or_admin_user
-from onyx.configs.constants import PUBLIC_API_TAGS
-from onyx.connectors.factory import validate_ccpair_for_user
-from onyx.db.credentials import alter_credential
-from onyx.db.credentials import cleanup_gmail_credentials
-from onyx.db.credentials import create_credential
-from onyx.db.credentials import CREDENTIAL_PERMISSIONS_TO_IGNORE
-from onyx.db.credentials import delete_credential
-from onyx.db.credentials import delete_credential_for_user
-from onyx.db.credentials import fetch_credential_by_id_for_user
-from onyx.db.credentials import fetch_credentials_by_source_for_user
-from onyx.db.credentials import fetch_credentials_for_user
-from onyx.db.credentials import swap_credentials_connector
-from onyx.db.credentials import update_credential
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import DocumentSource
-from onyx.db.models import User
-from onyx.server.documents.models import CredentialBase
-from onyx.server.documents.models import CredentialDataUpdateRequest
-from onyx.server.documents.models import CredentialSnapshot
-from onyx.server.documents.models import CredentialSwapRequest
-from onyx.server.documents.models import ObjectCreationIdResponse
-from onyx.server.documents.private_key_types import FILE_TYPE_TO_FILE_PROCESSOR
-from onyx.server.documents.private_key_types import PrivateKeyFileTypes
-from onyx.server.documents.private_key_types import ProcessPrivateKeyFileProtocol
-from onyx.server.models import StatusResponse
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import current_curator_or_admin_user
+from aethersearch.configs.constants import PUBLIC_API_TAGS
+from aethersearch.connectors.factory import validate_ccpair_for_user
+from aethersearch.db.credentials import alter_credential
+from aethersearch.db.credentials import cleanup_gmail_credentials
+from aethersearch.db.credentials import create_credential
+from aethersearch.db.credentials import CREDENTIAL_PERMISSIONS_TO_IGNORE
+from aethersearch.db.credentials import delete_credential
+from aethersearch.db.credentials import delete_credential_for_user
+from aethersearch.db.credentials import fetch_credential_by_id_for_user
+from aethersearch.db.credentials import fetch_credentials_by_source_for_user
+from aethersearch.db.credentials import fetch_credentials_for_user
+from aethersearch.db.credentials import swap_credentials_connector
+from aethersearch.db.credentials import update_credential
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import DocumentSource
+from aethersearch.db.models import User
+from aethersearch.server.documents.models import CredentialBase
+from aethersearch.server.documents.models import CredentialDataUpdateRequest
+from aethersearch.server.documents.models import CredentialSnapshot
+from aethersearch.server.documents.models import CredentialSwapRequest
+from aethersearch.server.documents.models import ObjectCreationIdResponse
+from aethersearch.server.documents.private_key_types import FILE_TYPE_TO_FILE_PROCESSOR
+from aethersearch.server.documents.private_key_types import PrivateKeyFileTypes
+from aethersearch.server.documents.private_key_types import ProcessPrivateKeyFileProtocol
+from aethersearch.server.models import StatusResponse
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import fetch_ee_implementation_or_noop
 
 logger = setup_logger()
 
@@ -140,7 +140,7 @@ def create_credential_from_model(
 ) -> ObjectCreationIdResponse:
     if not _ignore_credential_permissions(credential_info.source):
         fetch_ee_implementation_or_noop(
-            "onyx.db.user_group", "validate_object_creation_for_user", None
+            "aethersearch.db.user_group", "validate_object_creation_for_user", None
         )(
             db_session=db_session,
             user=user,
@@ -204,7 +204,7 @@ def create_credential_with_private_key(
 
     if not _ignore_credential_permissions(DocumentSource(source)):
         fetch_ee_implementation_or_noop(
-            "onyx.db.user_group", "validate_object_creation_for_user", None
+            "aethersearch.db.user_group", "validate_object_creation_for_user", None
         )(
             db_session=db_session,
             user=user,

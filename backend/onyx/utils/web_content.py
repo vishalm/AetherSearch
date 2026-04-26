@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 
 from bs4.dammit import UnicodeDammit
 
-from onyx.file_processing.extract_file_text import read_pdf_file
+from aethersearch.file_processing.extract_file_text import read_pdf_file
 
 PDF_MIME_TYPES = (
     "application/pdf",

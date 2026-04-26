@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from onyx.configs.constants import OnyxCeleryTask
+from aethersearch.configs.constants import AetherSearchCeleryTask
 
-QUERY_HISTORY_TASK_NAME_PREFIX = OnyxCeleryTask.EXPORT_QUERY_HISTORY_TASK
+QUERY_HISTORY_TASK_NAME_PREFIX = AetherSearchCeleryTask.EXPORT_QUERY_HISTORY_TASK
 
 
 def name_chat_ttl_task(

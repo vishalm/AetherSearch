@@ -3,13 +3,13 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from onyx.db.enums import UserFileStatus
-from onyx.db.models import UserFile
-from onyx.db.models import UserProject
-from onyx.db.projects import CategorizedFilesResult
-from onyx.file_store.models import ChatFileType
-from onyx.server.query_and_chat.chat_utils import mime_type_to_chat_file_type
-from onyx.server.query_and_chat.models import ChatSessionDetails
+from aethersearch.db.enums import UserFileStatus
+from aethersearch.db.models import UserFile
+from aethersearch.db.models import UserProject
+from aethersearch.db.projects import CategorizedFilesResult
+from aethersearch.file_store.models import ChatFileType
+from aethersearch.server.query_and_chat.chat_utils import mime_type_to_chat_file_type
+from aethersearch.server.query_and_chat.models import ChatSessionDetails
 
 
 class UserFileSnapshot(BaseModel):

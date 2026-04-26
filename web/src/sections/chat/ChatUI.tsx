@@ -2,7 +2,7 @@
 
 import React, { useCallback, useMemo, useRef } from "react";
 import { Message } from "@/app/app/interfaces";
-import { OnyxDocument, MinimalOnyxDocument } from "@/lib/search/interfaces";
+import { AetherSearchDocument, MinimalAetherSearchDocument } from "@/lib/search/interfaces";
 import HumanMessage from "@/app/app/message/HumanMessage";
 import { ErrorBanner } from "@/app/app/message/Resubmit";
 import { MinimalPersonaSnapshot } from "@/app/admin/agents/interfaces";
@@ -26,7 +26,7 @@ const MSG_MAX_W = "max-w-[720px] min-w-[400px]";
 export interface ChatUIProps {
   liveAgent: MinimalPersonaSnapshot;
   llmManager: LlmManager;
-  setPresentingDocument: (doc: MinimalOnyxDocument | null) => void;
+  setPresentingDocument: (doc: MinimalAetherSearchDocument | null) => void;
   onMessageSelection: (nodeId: number) => void;
   stopGenerating: () => void;
 
@@ -80,7 +80,7 @@ const ChatUI = React.memo(
     const error = useUncaughtError();
     const loadError = useLoadingError();
     // Stable fallbacks to avoid changing prop identities on each render
-    const emptyDocs = useMemo<OnyxDocument[]>(() => [], []);
+    const emptyDocs = useMemo<AetherSearchDocument[]>(() => [], []);
     const emptyChildrenIds = useMemo<number[]>(() => [], []);
 
     // Lookup: model identifier → provider slug (for icon resolution).

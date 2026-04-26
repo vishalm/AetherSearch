@@ -17,59 +17,59 @@ from unittest.mock import patch
 import pytest
 from sqlalchemy.orm import Session
 
-from onyx.background.celery.tasks.opensearch_migration.constants import (
+from aethersearch.background.celery.tasks.opensearch_migration.constants import (
     GET_VESPA_CHUNKS_SLICE_COUNT,
 )
-from onyx.background.celery.tasks.opensearch_migration.tasks import (
+from aethersearch.background.celery.tasks.opensearch_migration.tasks import (
     is_continuation_token_done_for_all_slices,
 )
-from onyx.background.celery.tasks.opensearch_migration.tasks import (
+from aethersearch.background.celery.tasks.opensearch_migration.tasks import (
     migrate_chunks_from_vespa_to_opensearch_task,
 )
-from onyx.background.celery.tasks.opensearch_migration.transformer import (
+from aethersearch.background.celery.tasks.opensearch_migration.transformer import (
     transform_vespa_chunks_to_opensearch_chunks,
 )
-from onyx.configs.constants import PUBLIC_DOC_PAT
-from onyx.configs.constants import SOURCE_TYPE
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.models import Document
-from onyx.db.models import OpenSearchDocumentMigrationRecord
-from onyx.db.models import OpenSearchTenantMigrationRecord
-from onyx.db.opensearch_migration import build_sanitized_to_original_doc_id_mapping
-from onyx.db.search_settings import get_active_search_settings
-from onyx.document_index.interfaces_new import TenantState
-from onyx.document_index.opensearch.client import OpenSearchClient
-from onyx.document_index.opensearch.client import OpenSearchIndexClient
-from onyx.document_index.opensearch.client import wait_for_opensearch_with_timeout
-from onyx.document_index.opensearch.constants import DEFAULT_MAX_CHUNK_SIZE
-from onyx.document_index.opensearch.schema import DocumentChunk
-from onyx.document_index.opensearch.schema import get_opensearch_doc_chunk_id
-from onyx.document_index.opensearch.search import DocumentQuery
-from onyx.document_index.vespa.shared_utils.utils import wait_for_vespa_with_timeout
-from onyx.document_index.vespa.vespa_document_index import VespaDocumentIndex
-from onyx.document_index.vespa_constants import ACCESS_CONTROL_LIST
-from onyx.document_index.vespa_constants import BLURB
-from onyx.document_index.vespa_constants import BOOST
-from onyx.document_index.vespa_constants import CHUNK_CONTEXT
-from onyx.document_index.vespa_constants import CHUNK_ID
-from onyx.document_index.vespa_constants import CONTENT
-from onyx.document_index.vespa_constants import DOC_SUMMARY
-from onyx.document_index.vespa_constants import DOC_UPDATED_AT
-from onyx.document_index.vespa_constants import DOCUMENT_ID
-from onyx.document_index.vespa_constants import DOCUMENT_SETS
-from onyx.document_index.vespa_constants import EMBEDDINGS
-from onyx.document_index.vespa_constants import FULL_CHUNK_EMBEDDING_KEY
-from onyx.document_index.vespa_constants import HIDDEN
-from onyx.document_index.vespa_constants import IMAGE_FILE_NAME
-from onyx.document_index.vespa_constants import METADATA_LIST
-from onyx.document_index.vespa_constants import METADATA_SUFFIX
-from onyx.document_index.vespa_constants import PRIMARY_OWNERS
-from onyx.document_index.vespa_constants import SECONDARY_OWNERS
-from onyx.document_index.vespa_constants import SEMANTIC_IDENTIFIER
-from onyx.document_index.vespa_constants import SOURCE_LINKS
-from onyx.document_index.vespa_constants import TITLE
-from onyx.document_index.vespa_constants import TITLE_EMBEDDING
-from onyx.document_index.vespa_constants import USER_PROJECT
+from aethersearch.configs.constants import PUBLIC_DOC_PAT
+from aethersearch.configs.constants import SOURCE_TYPE
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.models import Document
+from aethersearch.db.models import OpenSearchDocumentMigrationRecord
+from aethersearch.db.models import OpenSearchTenantMigrationRecord
+from aethersearch.db.opensearch_migration import build_sanitized_to_original_doc_id_mapping
+from aethersearch.db.search_settings import get_active_search_settings
+from aethersearch.document_index.interfaces_new import TenantState
+from aethersearch.document_index.opensearch.client import OpenSearchClient
+from aethersearch.document_index.opensearch.client import OpenSearchIndexClient
+from aethersearch.document_index.opensearch.client import wait_for_opensearch_with_timeout
+from aethersearch.document_index.opensearch.constants import DEFAULT_MAX_CHUNK_SIZE
+from aethersearch.document_index.opensearch.schema import DocumentChunk
+from aethersearch.document_index.opensearch.schema import get_opensearch_doc_chunk_id
+from aethersearch.document_index.opensearch.search import DocumentQuery
+from aethersearch.document_index.vespa.shared_utils.utils import wait_for_vespa_with_timeout
+from aethersearch.document_index.vespa.vespa_document_index import VespaDocumentIndex
+from aethersearch.document_index.vespa_constants import ACCESS_CONTROL_LIST
+from aethersearch.document_index.vespa_constants import BLURB
+from aethersearch.document_index.vespa_constants import BOOST
+from aethersearch.document_index.vespa_constants import CHUNK_CONTEXT
+from aethersearch.document_index.vespa_constants import CHUNK_ID
+from aethersearch.document_index.vespa_constants import CONTENT
+from aethersearch.document_index.vespa_constants import DOC_SUMMARY
+from aethersearch.document_index.vespa_constants import DOC_UPDATED_AT
+from aethersearch.document_index.vespa_constants import DOCUMENT_ID
+from aethersearch.document_index.vespa_constants import DOCUMENT_SETS
+from aethersearch.document_index.vespa_constants import EMBEDDINGS
+from aethersearch.document_index.vespa_constants import FULL_CHUNK_EMBEDDING_KEY
+from aethersearch.document_index.vespa_constants import HIDDEN
+from aethersearch.document_index.vespa_constants import IMAGE_FILE_NAME
+from aethersearch.document_index.vespa_constants import METADATA_LIST
+from aethersearch.document_index.vespa_constants import METADATA_SUFFIX
+from aethersearch.document_index.vespa_constants import PRIMARY_OWNERS
+from aethersearch.document_index.vespa_constants import SECONDARY_OWNERS
+from aethersearch.document_index.vespa_constants import SEMANTIC_IDENTIFIER
+from aethersearch.document_index.vespa_constants import SOURCE_LINKS
+from aethersearch.document_index.vespa_constants import TITLE
+from aethersearch.document_index.vespa_constants import TITLE_EMBEDDING
+from aethersearch.document_index.vespa_constants import USER_PROJECT
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.contextvars import get_current_tenant_id
 from tests.external_dependency_unit.full_setup import ensure_full_deployment_setup
@@ -240,15 +240,15 @@ def full_deployment_setup() -> Generator[None, None, None]:
 
     TODO(ENG-3764)(andrei): Consolidate some of these test fixtures.
     """
-    # Patch ENABLE_OPENSEARCH_INDEXING_FOR_ONYX just for this test because we
+    # Patch ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH just for this test because we
     # don't yet want that enabled for all tests.
     # TODO(andrei): Remove this once CI enables OpenSearch for all tests.
     with (
         patch(
-            "onyx.configs.app_configs.ENABLE_OPENSEARCH_INDEXING_FOR_ONYX",
+            "aethersearch.configs.app_configs.ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH",
             True,
         ),
-        patch("onyx.document_index.factory.ENABLE_OPENSEARCH_INDEXING_FOR_ONYX", True),
+        patch("aethersearch.document_index.factory.ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH", True),
     ):
         ensure_full_deployment_setup(opensearch_available=True)
         yield  # Test runs here.
@@ -325,11 +325,11 @@ def patch_get_vespa_chunks_page_size() -> Generator[int, None, None]:
     test_page_size = 5
     with (
         patch(
-            "onyx.background.celery.tasks.opensearch_migration.tasks.GET_VESPA_CHUNKS_PAGE_SIZE",
+            "aethersearch.background.celery.tasks.opensearch_migration.tasks.GET_VESPA_CHUNKS_PAGE_SIZE",
             test_page_size,
         ),
         patch(
-            "onyx.background.celery.tasks.opensearch_migration.constants.GET_VESPA_CHUNKS_PAGE_SIZE",
+            "aethersearch.background.celery.tasks.opensearch_migration.constants.GET_VESPA_CHUNKS_PAGE_SIZE",
             test_page_size,
         ),
     ):
@@ -396,18 +396,18 @@ def clean_migration_tables(db_session: Session) -> Generator[None, None, None]:
 
 
 @pytest.fixture(scope="function")
-def enable_opensearch_indexing_for_onyx() -> Generator[None, None, None]:
+def enable_opensearch_indexing_for_aethersearch() -> Generator[None, None, None]:
     with patch(
-        "onyx.background.celery.tasks.opensearch_migration.tasks.ENABLE_OPENSEARCH_INDEXING_FOR_ONYX",
+        "aethersearch.background.celery.tasks.opensearch_migration.tasks.ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH",
         True,
     ):
         yield  # Test runs here.
 
 
 @pytest.fixture(scope="function")
-def disable_opensearch_indexing_for_onyx() -> Generator[None, None, None]:
+def disable_opensearch_indexing_for_aethersearch() -> Generator[None, None, None]:
     with patch(
-        "onyx.background.celery.tasks.opensearch_migration.tasks.ENABLE_OPENSEARCH_INDEXING_FOR_ONYX",
+        "aethersearch.background.celery.tasks.opensearch_migration.tasks.ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH",
         False,
     ):
         yield  # Test runs here.
@@ -424,7 +424,7 @@ class TestMigrateChunksFromVespaToOpenSearchTask:
         opensearch_client: OpenSearchIndexClient,
         test_embedding_dimension: int,
         clean_migration_tables: None,  # noqa: ARG002
-        enable_opensearch_indexing_for_onyx: None,  # noqa: ARG002
+        enable_opensearch_indexing_for_aethersearch: None,  # noqa: ARG002
     ) -> None:
         """
         Tests that all chunks are migrated from Vespa to OpenSearch.
@@ -496,7 +496,7 @@ class TestMigrateChunksFromVespaToOpenSearchTask:
         opensearch_client: OpenSearchIndexClient,
         test_embedding_dimension: int,
         clean_migration_tables: None,  # noqa: ARG002
-        enable_opensearch_indexing_for_onyx: None,  # noqa: ARG002
+        enable_opensearch_indexing_for_aethersearch: None,  # noqa: ARG002
     ) -> None:
         """Tests that chunk migration resumes from a saved continuation token.
 
@@ -536,7 +536,7 @@ class TestMigrateChunksFromVespaToOpenSearchTask:
         mock_lock.acquire.return_value = True
         mock_redis_client.lock.return_value = mock_lock
         with patch(
-            "onyx.background.celery.tasks.opensearch_migration.tasks.get_redis_client",
+            "aethersearch.background.celery.tasks.opensearch_migration.tasks.get_redis_client",
             return_value=mock_redis_client,
         ):
             result_1 = migrate_chunks_from_vespa_to_opensearch_task(
@@ -605,7 +605,7 @@ class TestMigrateChunksFromVespaToOpenSearchTask:
         opensearch_client: OpenSearchIndexClient,
         test_embedding_dimension: int,
         clean_migration_tables: None,  # noqa: ARG002
-        enable_opensearch_indexing_for_onyx: None,  # noqa: ARG002
+        enable_opensearch_indexing_for_aethersearch: None,  # noqa: ARG002
     ) -> None:
         """
         Tests that chunk migration works correctly even when the batch size
@@ -649,7 +649,7 @@ class TestMigrateChunksFromVespaToOpenSearchTask:
         mock_lock.acquire.return_value = True
         mock_redis_client.lock.return_value = mock_lock
         with patch(
-            "onyx.background.celery.tasks.opensearch_migration.tasks.get_redis_client",
+            "aethersearch.background.celery.tasks.opensearch_migration.tasks.get_redis_client",
             return_value=mock_redis_client,
         ):
             result_1 = migrate_chunks_from_vespa_to_opensearch_task(
@@ -685,15 +685,15 @@ class TestMigrateChunksFromVespaToOpenSearchTask:
         mock_redis_client.lock.return_value = mock_lock
         with (
             patch(
-                "onyx.background.celery.tasks.opensearch_migration.tasks.GET_VESPA_CHUNKS_PAGE_SIZE",
+                "aethersearch.background.celery.tasks.opensearch_migration.tasks.GET_VESPA_CHUNKS_PAGE_SIZE",
                 2,
             ),
             patch(
-                "onyx.background.celery.tasks.opensearch_migration.constants.GET_VESPA_CHUNKS_PAGE_SIZE",
+                "aethersearch.background.celery.tasks.opensearch_migration.constants.GET_VESPA_CHUNKS_PAGE_SIZE",
                 2,
             ),
             patch(
-                "onyx.background.celery.tasks.opensearch_migration.tasks.get_redis_client",
+                "aethersearch.background.celery.tasks.opensearch_migration.tasks.get_redis_client",
                 return_value=mock_redis_client,
             ),
         ):
@@ -726,11 +726,11 @@ class TestMigrateChunksFromVespaToOpenSearchTask:
         # Run the remainder of the migration.
         with (
             patch(
-                "onyx.background.celery.tasks.opensearch_migration.tasks.GET_VESPA_CHUNKS_PAGE_SIZE",
+                "aethersearch.background.celery.tasks.opensearch_migration.tasks.GET_VESPA_CHUNKS_PAGE_SIZE",
                 2,
             ),
             patch(
-                "onyx.background.celery.tasks.opensearch_migration.constants.GET_VESPA_CHUNKS_PAGE_SIZE",
+                "aethersearch.background.celery.tasks.opensearch_migration.constants.GET_VESPA_CHUNKS_PAGE_SIZE",
                 2,
             ),
         ):
@@ -775,7 +775,7 @@ class TestMigrateChunksFromVespaToOpenSearchTask:
         # Get this just to ensure Vespa is clean from previous test runs.
         test_documents: list[Document],  # noqa: ARG002
         clean_migration_tables: None,  # noqa: ARG002
-        enable_opensearch_indexing_for_onyx: None,  # noqa: ARG002
+        enable_opensearch_indexing_for_aethersearch: None,  # noqa: ARG002
     ) -> None:
         """
         Tests that chunk migration completes without error when Vespa is empty.
@@ -809,7 +809,7 @@ class TestMigrateChunksFromVespaToOpenSearchTask:
         opensearch_client: OpenSearchIndexClient,
         test_embedding_dimension: int,
         clean_migration_tables: None,  # noqa: ARG002
-        enable_opensearch_indexing_for_onyx: None,  # noqa: ARG002
+        enable_opensearch_indexing_for_aethersearch: None,  # noqa: ARG002
     ) -> None:
         """
         Tests that the migration task updates existing chunks in OpenSearch if
@@ -904,7 +904,7 @@ class TestMigrateChunksFromVespaToOpenSearchTask:
         opensearch_client: OpenSearchIndexClient,
         test_embedding_dimension: int,
         clean_migration_tables: None,  # noqa: ARG002
-        enable_opensearch_indexing_for_onyx: None,  # noqa: ARG002
+        enable_opensearch_indexing_for_aethersearch: None,  # noqa: ARG002
     ) -> None:
         """
         Tests that the migration task no-ops when the migration is complete.
@@ -1005,7 +1005,7 @@ class TestMigrateChunksFromVespaToOpenSearchTask:
 
     def test_returns_none_when_feature_disabled(
         self,
-        disable_opensearch_indexing_for_onyx: None,  # noqa: ARG002
+        disable_opensearch_indexing_for_aethersearch: None,  # noqa: ARG002
     ) -> None:
         """Tests that task returns None when feature is disabled."""
         # Under test.

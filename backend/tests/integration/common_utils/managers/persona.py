@@ -3,8 +3,8 @@ from uuid import uuid4
 
 import requests
 
-from onyx.server.features.persona.models import FullPersonaSnapshot
-from onyx.server.features.persona.models import PersonaUpsertRequest
+from aethersearch.server.features.persona.models import FullPersonaSnapshot
+from aethersearch.server.features.persona.models import PersonaUpsertRequest
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.test_models import DATestPersona
 from tests.integration.common_utils.test_models import DATestPersonaLabel

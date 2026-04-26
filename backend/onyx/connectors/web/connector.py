@@ -22,31 +22,31 @@ from requests_oauthlib import OAuth2Session
 from typing_extensions import override
 from urllib3.exceptions import MaxRetryError
 
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.app_configs import WEB_CONNECTOR_OAUTH_CLIENT_ID
-from onyx.configs.app_configs import WEB_CONNECTOR_OAUTH_CLIENT_SECRET
-from onyx.configs.app_configs import WEB_CONNECTOR_OAUTH_TOKEN_URL
-from onyx.configs.app_configs import WEB_CONNECTOR_VALIDATE_URLS
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.connectors.exceptions import CredentialExpiredError
-from onyx.connectors.exceptions import InsufficientPermissionsError
-from onyx.connectors.exceptions import UnexpectedValidationError
-from onyx.connectors.interfaces import GenerateDocumentsOutput
-from onyx.connectors.interfaces import GenerateSlimDocumentOutput
-from onyx.connectors.interfaces import LoadConnector
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.interfaces import SlimConnector
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import SlimDocument
-from onyx.connectors.models import TextSection
-from onyx.file_processing.html_utils import web_html_cleanup
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.utils.logger import setup_logger
-from onyx.utils.sitemap import list_pages_for_site
-from onyx.utils.web_content import extract_pdf_text
-from onyx.utils.web_content import is_pdf_resource
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.app_configs import WEB_CONNECTOR_OAUTH_CLIENT_ID
+from aethersearch.configs.app_configs import WEB_CONNECTOR_OAUTH_CLIENT_SECRET
+from aethersearch.configs.app_configs import WEB_CONNECTOR_OAUTH_TOKEN_URL
+from aethersearch.configs.app_configs import WEB_CONNECTOR_VALIDATE_URLS
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.connectors.exceptions import CredentialExpiredError
+from aethersearch.connectors.exceptions import InsufficientPermissionsError
+from aethersearch.connectors.exceptions import UnexpectedValidationError
+from aethersearch.connectors.interfaces import GenerateDocumentsOutput
+from aethersearch.connectors.interfaces import GenerateSlimDocumentOutput
+from aethersearch.connectors.interfaces import LoadConnector
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.interfaces import SlimConnector
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import SlimDocument
+from aethersearch.connectors.models import TextSection
+from aethersearch.file_processing.html_utils import web_html_cleanup
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.sitemap import list_pages_for_site
+from aethersearch.utils.web_content import extract_pdf_text
+from aethersearch.utils.web_content import is_pdf_resource
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()
@@ -608,7 +608,7 @@ class WebConnector(LoadConnector, SlimConnector):
                     # a body (e.g. pure XML, some SPAs mid-navigation). That
                     # surfaces as "Page.evaluate: TypeError: Cannot read
                     # properties of null (reading 'scrollHeight')"
-                    # (ONYX-BACKEND-H6G5). Skip auto-scroll in that case and
+                    # (AETHERSEARCH-BACKEND-H6G5). Skip auto-scroll in that case and
                     # fall back to whatever content the initial load gave us.
                     scroll_attempts = 0
                     previous_height = page.evaluate("document.body.scrollHeight")
@@ -869,6 +869,6 @@ class WebConnector(LoadConnector, SlimConnector):
 
 
 if __name__ == "__main__":
-    connector = WebConnector("https://docs.onyx.app/")
+    connector = WebConnector("https://docs.aethersearch.app/")
     document_batches = connector.load_from_state()
     print(next(document_batches))

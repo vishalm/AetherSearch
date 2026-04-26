@@ -9,8 +9,8 @@ from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm import Session
 
-from onyx.db.models import TenantUsage
-from onyx.utils.logger import setup_logger
+from aethersearch.db.models import TenantUsage
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import USAGE_LIMIT_WINDOW_SECONDS
 
 logger = setup_logger()

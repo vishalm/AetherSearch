@@ -5,9 +5,9 @@ from datetime import timezone
 
 import pytest
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.models import InputType
-from onyx.db.enums import AccessType
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.models import InputType
+from aethersearch.db.enums import AccessType
 from tests.integration.common_utils.managers.cc_pair import CCPairManager
 from tests.integration.common_utils.managers.connector import ConnectorManager
 from tests.integration.common_utils.managers.credential import CredentialManager

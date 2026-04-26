@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.db.dal import DAL
+from aethersearch.db.dal import DAL
 
 
 class TestDALSessionDelegation:
@@ -43,7 +43,7 @@ class TestDALSessionDelegation:
 class TestDALFromTenant:
     """Verify the from_tenant context manager lifecycle."""
 
-    @patch("onyx.db.dal.get_session_with_tenant")
+    @patch("aethersearch.db.dal.get_session_with_tenant")
     def test_yields_dal_with_tenant_session(self, mock_get_session: MagicMock) -> None:
         mock_session = MagicMock()
         mock_get_session.return_value.__enter__ = MagicMock(return_value=mock_session)
@@ -55,7 +55,7 @@ class TestDALFromTenant:
 
         mock_get_session.assert_called_once_with(tenant_id="tenant_abc")
 
-    @patch("onyx.db.dal.get_session_with_tenant")
+    @patch("aethersearch.db.dal.get_session_with_tenant")
     def test_session_closed_after_context_exits(
         self, mock_get_session: MagicMock
     ) -> None:
@@ -68,7 +68,7 @@ class TestDALFromTenant:
 
         mock_get_session.return_value.__exit__.assert_called_once()
 
-    @patch("onyx.db.dal.get_session_with_tenant")
+    @patch("aethersearch.db.dal.get_session_with_tenant")
     def test_session_closed_on_exception(self, mock_get_session: MagicMock) -> None:
         mock_session = MagicMock()
         mock_get_session.return_value.__enter__ = MagicMock(return_value=mock_session)
@@ -80,7 +80,7 @@ class TestDALFromTenant:
 
         mock_get_session.return_value.__exit__.assert_called_once()
 
-    @patch("onyx.db.dal.get_session_with_tenant")
+    @patch("aethersearch.db.dal.get_session_with_tenant")
     def test_subclass_from_tenant_returns_subclass_instance(
         self, mock_get_session: MagicMock
     ) -> None:
@@ -95,7 +95,7 @@ class TestDALFromTenant:
         with MyDAL.from_tenant("tenant_abc") as dal:
             assert isinstance(dal, MyDAL)
 
-    @patch("onyx.db.dal.get_session_with_tenant")
+    @patch("aethersearch.db.dal.get_session_with_tenant")
     def test_uncommitted_changes_not_auto_committed(
         self, mock_get_session: MagicMock
     ) -> None:

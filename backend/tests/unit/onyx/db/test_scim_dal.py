@@ -4,11 +4,11 @@ from uuid import uuid4
 
 import pytest
 
-from ee.onyx.db.scim import ScimDAL
-from onyx.db.models import ScimGroupMapping
-from onyx.db.models import ScimToken
-from onyx.db.models import ScimUserMapping
-from tests.unit.onyx.db.conftest import model_attrs
+from ee.aethersearch.db.scim import ScimDAL
+from aethersearch.db.models import ScimGroupMapping
+from aethersearch.db.models import ScimToken
+from aethersearch.db.models import ScimUserMapping
+from tests.unit.aethersearch.db.conftest import model_attrs
 
 
 class TestScimDALTokens:
@@ -43,7 +43,7 @@ class TestScimDALTokens:
             id=1,
             name="test-token",
             hashed_token="a" * 64,
-            token_display="onyx_scim_****abcd",
+            token_display="aethersearch_scim_****abcd",
             is_active=True,
             created_by_id=uuid4(),
         )
@@ -61,7 +61,7 @@ class TestScimDALTokens:
             id=1,
             name="test-token",
             hashed_token="a" * 64,
-            token_display="onyx_scim_****abcd",
+            token_display="aethersearch_scim_****abcd",
             is_active=True,
             created_by_id=uuid4(),
         )

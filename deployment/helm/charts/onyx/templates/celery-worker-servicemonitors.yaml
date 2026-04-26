@@ -4,9 +4,9 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "onyx.fullname" . }}-celery-worker-monitoring
+  name: {{ include "aethersearch.fullname" . }}-celery-worker-monitoring
   labels:
-    {{- include "onyx.labels" . | nindent 4 }}
+    {{- include "aethersearch.labels" . | nindent 4 }}
     {{- with .Values.monitoring.serviceMonitors.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -29,9 +29,9 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "onyx.fullname" . }}-celery-worker-docfetching
+  name: {{ include "aethersearch.fullname" . }}-celery-worker-docfetching
   labels:
-    {{- include "onyx.labels" . | nindent 4 }}
+    {{- include "aethersearch.labels" . | nindent 4 }}
     {{- with .Values.monitoring.serviceMonitors.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -54,9 +54,9 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "onyx.fullname" . }}-celery-worker-docprocessing
+  name: {{ include "aethersearch.fullname" . }}-celery-worker-docprocessing
   labels:
-    {{- include "onyx.labels" . | nindent 4 }}
+    {{- include "aethersearch.labels" . | nindent 4 }}
     {{- with .Values.monitoring.serviceMonitors.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -79,9 +79,9 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "onyx.fullname" . }}-celery-worker-heavy
+  name: {{ include "aethersearch.fullname" . }}-celery-worker-heavy
   labels:
-    {{- include "onyx.labels" . | nindent 4 }}
+    {{- include "aethersearch.labels" . | nindent 4 }}
     {{- with .Values.monitoring.serviceMonitors.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -104,9 +104,9 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "onyx.fullname" . }}-celery-worker-light
+  name: {{ include "aethersearch.fullname" . }}-celery-worker-light
   labels:
-    {{- include "onyx.labels" . | nindent 4 }}
+    {{- include "aethersearch.labels" . | nindent 4 }}
     {{- with .Values.monitoring.serviceMonitors.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -129,9 +129,9 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "onyx.fullname" . }}-celery-worker-primary
+  name: {{ include "aethersearch.fullname" . }}-celery-worker-primary
   labels:
-    {{- include "onyx.labels" . | nindent 4 }}
+    {{- include "aethersearch.labels" . | nindent 4 }}
     {{- with .Values.monitoring.serviceMonitors.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}

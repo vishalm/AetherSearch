@@ -4,19 +4,19 @@ from collections.abc import Callable
 
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import ANTHROPIC_DEFAULT_API_KEY
-from onyx.configs.app_configs import COHERE_DEFAULT_API_KEY
-from onyx.configs.app_configs import OPENAI_DEFAULT_API_KEY
-from onyx.configs.app_configs import OPENROUTER_DEFAULT_API_KEY
-from onyx.db.usage import check_usage_limit
-from onyx.db.usage import UsageLimitExceededError
-from onyx.db.usage import UsageType
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.server.tenant_usage_limits import TenantUsageLimitKeys
-from onyx.server.tenant_usage_limits import TenantUsageLimitOverrides
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import fetch_versioned_implementation
+from aethersearch.configs.app_configs import ANTHROPIC_DEFAULT_API_KEY
+from aethersearch.configs.app_configs import COHERE_DEFAULT_API_KEY
+from aethersearch.configs.app_configs import OPENAI_DEFAULT_API_KEY
+from aethersearch.configs.app_configs import OPENROUTER_DEFAULT_API_KEY
+from aethersearch.db.usage import check_usage_limit
+from aethersearch.db.usage import UsageLimitExceededError
+from aethersearch.db.usage import UsageType
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.server.tenant_usage_limits import TenantUsageLimitKeys
+from aethersearch.server.tenant_usage_limits import TenantUsageLimitOverrides
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import fetch_versioned_implementation
 from shared_configs.configs import USAGE_LIMIT_API_CALLS_PAID
 from shared_configs.configs import USAGE_LIMIT_API_CALLS_TRIAL
 from shared_configs.configs import USAGE_LIMIT_CHUNKS_INDEXED_PAID
@@ -29,8 +29,8 @@ from shared_configs.configs import USAGE_LIMITS_ENABLED
 
 logger = setup_logger()
 
-# Collect all Onyx-managed default API keys for comparison
-_ONYX_MANAGED_API_KEYS: set[str] = set()
+# Collect all AetherSearch-managed default API keys for comparison
+_AETHERSEARCH_MANAGED_API_KEYS: set[str] = set()
 for key in [
     OPENAI_DEFAULT_API_KEY,
     ANTHROPIC_DEFAULT_API_KEY,
@@ -38,12 +38,12 @@ for key in [
     OPENROUTER_DEFAULT_API_KEY,
 ]:
     if key:
-        _ONYX_MANAGED_API_KEYS.add(key)
+        _AETHERSEARCH_MANAGED_API_KEYS.add(key)
 
 
-def is_onyx_managed_api_key(api_key: str | None) -> bool:
-    """Check if the given API key is one of Onyx's managed default keys."""
-    return bool(api_key) and api_key in _ONYX_MANAGED_API_KEYS
+def is_aethersearch_managed_api_key(api_key: str | None) -> bool:
+    """Check if the given API key is one of AetherSearch's managed default keys."""
+    return bool(api_key) and api_key in _AETHERSEARCH_MANAGED_API_KEYS
 
 
 def is_usage_limits_enabled() -> bool:
@@ -69,7 +69,7 @@ def is_tenant_on_trial_fn(tenant_id: str) -> bool:
     otherwise falls back to the non-EE version that returns False.
     """
     fn: Callable[[str], bool] = fetch_versioned_implementation(
-        "onyx.server.usage_limits", "is_tenant_on_trial"
+        "aethersearch.server.usage_limits", "is_tenant_on_trial"
     )
     return fn(tenant_id)
 
@@ -88,7 +88,7 @@ def _get_tenant_override(tenant_id: str, field_name: str) -> int | None:
     try:
         # Try to get EE version that has tenant overrides
         get_overrides_fn = fetch_versioned_implementation(
-            "onyx.server.tenant_usage_limits", "get_tenant_usage_limit_overrides"
+            "aethersearch.server.tenant_usage_limits", "get_tenant_usage_limit_overrides"
         )
         overrides: TenantUsageLimitOverrides | None = get_overrides_fn(tenant_id)
 
@@ -175,9 +175,9 @@ def check_llm_cost_limit_for_provider(
     llm_provider_api_key: str | None,
 ) -> None:
     """
-    Check if the LLM cost limit would be exceeded for a provider using Onyx-managed keys.
+    Check if the LLM cost limit would be exceeded for a provider using AetherSearch-managed keys.
 
-    Only enforces limits when the provider uses Onyx-managed API keys.
+    Only enforces limits when the provider uses AetherSearch-managed API keys.
     Users with their own API keys are not subject to LLM cost limits.
 
     Args:
@@ -191,8 +191,8 @@ def check_llm_cost_limit_for_provider(
     if not is_usage_limits_enabled():
         return
 
-    # Only enforce limits for Onyx-managed API keys
-    if not is_onyx_managed_api_key(llm_provider_api_key):
+    # Only enforce limits for AetherSearch-managed API keys
+    if not is_aethersearch_managed_api_key(llm_provider_api_key):
         return
 
     check_usage_and_raise(
@@ -271,4 +271,4 @@ def check_usage_and_raise(
                 "Please upgrade your plan or wait for the next billing period."
             )
 
-        raise OnyxError(OnyxErrorCode.RATE_LIMITED, detail)
+        raise AetherSearchError(AetherSearchErrorCode.RATE_LIMITED, detail)

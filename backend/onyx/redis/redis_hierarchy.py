@@ -24,14 +24,14 @@ from redis import Redis
 from redis.lock import Lock as RedisLock
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import DocumentSource
-from onyx.db.enums import HierarchyNodeType
-from onyx.db.hierarchy import ensure_source_node_exists as db_ensure_source_node_exists
-from onyx.db.hierarchy import get_all_hierarchy_nodes_for_source
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.db.enums import HierarchyNodeType
+from aethersearch.db.hierarchy import ensure_source_node_exists as db_ensure_source_node_exists
+from aethersearch.db.hierarchy import get_all_hierarchy_nodes_for_source
+from aethersearch.utils.logger import setup_logger
 
 if TYPE_CHECKING:
-    from onyx.db.models import HierarchyNode as DBHierarchyNode
+    from aethersearch.db.models import HierarchyNode as DBHierarchyNode
 
 logger = setup_logger()
 

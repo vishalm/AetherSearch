@@ -1,9 +1,9 @@
 """OpenAI provider adapter for prompt caching."""
 
-from onyx.llm.interfaces import LanguageModelInput
-from onyx.llm.prompt_cache.models import CacheMetadata
-from onyx.llm.prompt_cache.providers.base import PromptCacheProvider
-from onyx.llm.prompt_cache.utils import prepare_messages_with_cacheable_transform
+from aethersearch.llm.interfaces import LanguageModelInput
+from aethersearch.llm.prompt_cache.models import CacheMetadata
+from aethersearch.llm.prompt_cache.providers.base import PromptCacheProvider
+from aethersearch.llm.prompt_cache.utils import prepare_messages_with_cacheable_transform
 
 
 class OpenAIPromptCacheProvider(PromptCacheProvider):

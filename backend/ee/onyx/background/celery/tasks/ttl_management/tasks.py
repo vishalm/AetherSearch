@@ -3,20 +3,20 @@ from uuid import UUID
 from celery import shared_task
 from celery import Task
 
-from ee.onyx.background.celery_utils import should_perform_chat_ttl_check
-from onyx.configs.app_configs import JOB_TIMEOUT
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.db.chat import delete_chat_session
-from onyx.db.chat import get_chat_sessions_older_than
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.server.settings.store import load_settings
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.background.celery_utils import should_perform_chat_ttl_check
+from aethersearch.configs.app_configs import JOB_TIMEOUT
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.db.chat import delete_chat_session
+from aethersearch.db.chat import get_chat_sessions_older_than
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.server.settings.store import load_settings
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
 
 @shared_task(
-    name=OnyxCeleryTask.PERFORM_TTL_MANAGEMENT_TASK,
+    name=AetherSearchCeleryTask.PERFORM_TTL_MANAGEMENT_TASK,
     ignore_result=True,
     soft_time_limit=JOB_TIMEOUT,
     bind=True,
@@ -63,7 +63,7 @@ def perform_ttl_management_task(
 
 
 @shared_task(
-    name=OnyxCeleryTask.CHECK_TTL_MANAGEMENT_TASK,
+    name=AetherSearchCeleryTask.CHECK_TTL_MANAGEMENT_TASK,
     ignore_result=True,
     soft_time_limit=JOB_TIMEOUT,
 )

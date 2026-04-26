@@ -6,22 +6,22 @@ from unittest.mock import patch
 
 import pytest
 
-from ee.onyx.server.billing.models import BillingInformationResponse
-from ee.onyx.server.billing.models import CreateCheckoutSessionResponse
-from ee.onyx.server.billing.models import CreateCustomerPortalSessionResponse
-from ee.onyx.server.billing.models import SeatUpdateResponse
-from ee.onyx.server.billing.models import SubscriptionStatusResponse
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
+from ee.aethersearch.server.billing.models import BillingInformationResponse
+from ee.aethersearch.server.billing.models import CreateCheckoutSessionResponse
+from ee.aethersearch.server.billing.models import CreateCustomerPortalSessionResponse
+from ee.aethersearch.server.billing.models import SeatUpdateResponse
+from ee.aethersearch.server.billing.models import SubscriptionStatusResponse
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
 
 
 class TestCreateCheckoutSession:
     """Tests for create_checkout_session endpoint."""
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.create_checkout_service")
-    @patch("ee.onyx.server.billing.api._get_tenant_id")
-    @patch("ee.onyx.server.billing.api._get_license_data")
+    @patch("ee.aethersearch.server.billing.api.create_checkout_service")
+    @patch("ee.aethersearch.server.billing.api._get_tenant_id")
+    @patch("ee.aethersearch.server.billing.api._get_license_data")
     async def test_creates_checkout_session_cloud(
         self,
         mock_get_license: MagicMock,
@@ -29,8 +29,8 @@ class TestCreateCheckoutSession:
         mock_service: AsyncMock,
     ) -> None:
         """Should create checkout session for cloud deployment."""
-        from ee.onyx.server.billing.api import create_checkout_session
-        from ee.onyx.server.billing.models import CreateCheckoutSessionRequest
+        from ee.aethersearch.server.billing.api import create_checkout_session
+        from ee.aethersearch.server.billing.models import CreateCheckoutSessionRequest
 
         mock_get_license.return_value = None
         mock_get_tenant.return_value = "tenant_123"
@@ -47,9 +47,9 @@ class TestCreateCheckoutSession:
         mock_service.assert_called_once()
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.create_checkout_service")
-    @patch("ee.onyx.server.billing.api._get_tenant_id")
-    @patch("ee.onyx.server.billing.api._get_license_data")
+    @patch("ee.aethersearch.server.billing.api.create_checkout_service")
+    @patch("ee.aethersearch.server.billing.api._get_tenant_id")
+    @patch("ee.aethersearch.server.billing.api._get_license_data")
     async def test_creates_checkout_session_self_hosted(
         self,
         mock_get_license: MagicMock,
@@ -57,8 +57,8 @@ class TestCreateCheckoutSession:
         mock_service: AsyncMock,
     ) -> None:
         """Should create checkout session for self-hosted with license."""
-        from ee.onyx.server.billing.api import create_checkout_session
-        from ee.onyx.server.billing.models import CreateCheckoutSessionRequest
+        from ee.aethersearch.server.billing.api import create_checkout_session
+        from ee.aethersearch.server.billing.models import CreateCheckoutSessionRequest
 
         mock_get_license.return_value = "license_data_blob"
         mock_get_tenant.return_value = None
@@ -80,33 +80,33 @@ class TestCreateCheckoutSession:
         assert call_kwargs["license_data"] == "license_data_blob"
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.create_checkout_service")
-    @patch("ee.onyx.server.billing.api._get_tenant_id")
-    @patch("ee.onyx.server.billing.api._get_license_data")
+    @patch("ee.aethersearch.server.billing.api.create_checkout_service")
+    @patch("ee.aethersearch.server.billing.api._get_tenant_id")
+    @patch("ee.aethersearch.server.billing.api._get_license_data")
     async def test_raises_on_service_error(
         self,
         mock_get_license: MagicMock,
         mock_get_tenant: MagicMock,
         mock_service: AsyncMock,
     ) -> None:
-        """Should propagate OnyxError when service fails."""
-        from ee.onyx.server.billing.api import create_checkout_session
+        """Should propagate AetherSearchError when service fails."""
+        from ee.aethersearch.server.billing.api import create_checkout_session
 
         mock_get_license.return_value = None
         mock_get_tenant.return_value = "tenant_123"
-        mock_service.side_effect = OnyxError(
-            OnyxErrorCode.BAD_GATEWAY,
+        mock_service.side_effect = AetherSearchError(
+            AetherSearchErrorCode.BAD_GATEWAY,
             "Stripe error",
             status_code_override=502,
         )
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             await create_checkout_session(
                 request=None, _=MagicMock(), db_session=MagicMock()
             )
 
         assert exc_info.value.status_code == 502
-        assert exc_info.value.error_code is OnyxErrorCode.BAD_GATEWAY
+        assert exc_info.value.error_code is AetherSearchErrorCode.BAD_GATEWAY
         assert exc_info.value.detail == "Stripe error"
 
 
@@ -114,10 +114,10 @@ class TestCreateCustomerPortalSession:
     """Tests for create_customer_portal_session endpoint."""
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.MULTI_TENANT", False)
-    @patch("ee.onyx.server.billing.api.create_portal_service")
-    @patch("ee.onyx.server.billing.api._get_tenant_id")
-    @patch("ee.onyx.server.billing.api._get_license_data")
+    @patch("ee.aethersearch.server.billing.api.MULTI_TENANT", False)
+    @patch("ee.aethersearch.server.billing.api.create_portal_service")
+    @patch("ee.aethersearch.server.billing.api._get_tenant_id")
+    @patch("ee.aethersearch.server.billing.api._get_license_data")
     async def test_requires_license_for_self_hosted(
         self,
         mock_get_license: MagicMock,
@@ -125,24 +125,24 @@ class TestCreateCustomerPortalSession:
         mock_service: AsyncMock,  # noqa: ARG002
     ) -> None:
         """Should reject self-hosted without license."""
-        from ee.onyx.server.billing.api import create_customer_portal_session
+        from ee.aethersearch.server.billing.api import create_customer_portal_session
 
         mock_get_license.return_value = None
         mock_get_tenant.return_value = None
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             await create_customer_portal_session(
                 request=None, _=MagicMock(), db_session=MagicMock()
             )
 
         assert exc_info.value.status_code == 400
-        assert exc_info.value.error_code is OnyxErrorCode.VALIDATION_ERROR
+        assert exc_info.value.error_code is AetherSearchErrorCode.VALIDATION_ERROR
         assert exc_info.value.detail == "No license found"
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.create_portal_service")
-    @patch("ee.onyx.server.billing.api._get_tenant_id")
-    @patch("ee.onyx.server.billing.api._get_license_data")
+    @patch("ee.aethersearch.server.billing.api.create_portal_service")
+    @patch("ee.aethersearch.server.billing.api._get_tenant_id")
+    @patch("ee.aethersearch.server.billing.api._get_license_data")
     async def test_creates_portal_session(
         self,
         mock_get_license: MagicMock,
@@ -150,7 +150,7 @@ class TestCreateCustomerPortalSession:
         mock_service: AsyncMock,
     ) -> None:
         """Should create portal session with valid license."""
-        from ee.onyx.server.billing.api import create_customer_portal_session
+        from ee.aethersearch.server.billing.api import create_customer_portal_session
 
         mock_get_license.return_value = "license_blob"
         mock_get_tenant.return_value = None
@@ -169,16 +169,16 @@ class TestGetBillingInformation:
     """Tests for get_billing_information endpoint."""
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.MULTI_TENANT", False)
-    @patch("ee.onyx.server.billing.api._get_tenant_id")
-    @patch("ee.onyx.server.billing.api._get_license_data")
+    @patch("ee.aethersearch.server.billing.api.MULTI_TENANT", False)
+    @patch("ee.aethersearch.server.billing.api._get_tenant_id")
+    @patch("ee.aethersearch.server.billing.api._get_license_data")
     async def test_returns_not_subscribed_without_license(
         self,
         mock_get_license: MagicMock,
         mock_get_tenant: MagicMock,
     ) -> None:
         """Should return subscribed=False for self-hosted without license."""
-        from ee.onyx.server.billing.api import get_billing_information
+        from ee.aethersearch.server.billing.api import get_billing_information
 
         mock_get_license.return_value = None
         mock_get_tenant.return_value = None
@@ -189,9 +189,9 @@ class TestGetBillingInformation:
         assert result.subscribed is False
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.get_billing_service")
-    @patch("ee.onyx.server.billing.api._get_tenant_id")
-    @patch("ee.onyx.server.billing.api._get_license_data")
+    @patch("ee.aethersearch.server.billing.api.get_billing_service")
+    @patch("ee.aethersearch.server.billing.api._get_tenant_id")
+    @patch("ee.aethersearch.server.billing.api._get_license_data")
     async def test_returns_billing_info(
         self,
         mock_get_license: MagicMock,
@@ -199,7 +199,7 @@ class TestGetBillingInformation:
         mock_service: AsyncMock,
     ) -> None:
         """Should return billing information with valid license."""
-        from ee.onyx.server.billing.api import get_billing_information
+        from ee.aethersearch.server.billing.api import get_billing_information
 
         mock_get_license.return_value = "license_blob"
         mock_get_tenant.return_value = None
@@ -221,35 +221,35 @@ class TestUpdateSeats:
     """Tests for update_seats endpoint."""
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.MULTI_TENANT", False)
-    @patch("ee.onyx.server.billing.api._get_tenant_id")
-    @patch("ee.onyx.server.billing.api._get_license_data")
+    @patch("ee.aethersearch.server.billing.api.MULTI_TENANT", False)
+    @patch("ee.aethersearch.server.billing.api._get_tenant_id")
+    @patch("ee.aethersearch.server.billing.api._get_license_data")
     async def test_requires_license_for_self_hosted(
         self,
         mock_get_license: MagicMock,
         mock_get_tenant: MagicMock,
     ) -> None:
         """Should reject self-hosted without license."""
-        from ee.onyx.server.billing.api import update_seats
-        from ee.onyx.server.billing.models import SeatUpdateRequest
+        from ee.aethersearch.server.billing.api import update_seats
+        from ee.aethersearch.server.billing.models import SeatUpdateRequest
 
         mock_get_license.return_value = None
         mock_get_tenant.return_value = None
 
         request = SeatUpdateRequest(new_seat_count=10)
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             await update_seats(request=request, _=MagicMock(), db_session=MagicMock())
 
         assert exc_info.value.status_code == 400
-        assert exc_info.value.error_code is OnyxErrorCode.VALIDATION_ERROR
+        assert exc_info.value.error_code is AetherSearchErrorCode.VALIDATION_ERROR
         assert exc_info.value.detail == "No license found"
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.get_used_seats")
-    @patch("ee.onyx.server.billing.api.update_seat_service")
-    @patch("ee.onyx.server.billing.api._get_tenant_id")
-    @patch("ee.onyx.server.billing.api._get_license_data")
+    @patch("ee.aethersearch.server.billing.api.get_used_seats")
+    @patch("ee.aethersearch.server.billing.api.update_seat_service")
+    @patch("ee.aethersearch.server.billing.api._get_tenant_id")
+    @patch("ee.aethersearch.server.billing.api._get_license_data")
     async def test_updates_seats_successfully(
         self,
         mock_get_license: MagicMock,
@@ -258,8 +258,8 @@ class TestUpdateSeats:
         mock_get_used_seats: MagicMock,
     ) -> None:
         """Should update seats with valid license."""
-        from ee.onyx.server.billing.api import update_seats
-        from ee.onyx.server.billing.models import SeatUpdateRequest
+        from ee.aethersearch.server.billing.api import update_seats
+        from ee.aethersearch.server.billing.models import SeatUpdateRequest
 
         mock_get_license.return_value = "license_blob"
         mock_get_tenant.return_value = None
@@ -286,10 +286,10 @@ class TestUpdateSeats:
         )
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.get_used_seats")
-    @patch("ee.onyx.server.billing.api.update_seat_service")
-    @patch("ee.onyx.server.billing.api._get_tenant_id")
-    @patch("ee.onyx.server.billing.api._get_license_data")
+    @patch("ee.aethersearch.server.billing.api.get_used_seats")
+    @patch("ee.aethersearch.server.billing.api.update_seat_service")
+    @patch("ee.aethersearch.server.billing.api._get_tenant_id")
+    @patch("ee.aethersearch.server.billing.api._get_license_data")
     async def test_handles_billing_service_error(
         self,
         mock_get_license: MagicMock,
@@ -297,26 +297,26 @@ class TestUpdateSeats:
         mock_service: AsyncMock,
         mock_get_used_seats: MagicMock,
     ) -> None:
-        """Should propagate OnyxError from service layer."""
-        from ee.onyx.server.billing.api import update_seats
-        from ee.onyx.server.billing.models import SeatUpdateRequest
+        """Should propagate AetherSearchError from service layer."""
+        from ee.aethersearch.server.billing.api import update_seats
+        from ee.aethersearch.server.billing.models import SeatUpdateRequest
 
         mock_get_license.return_value = "license_blob"
         mock_get_tenant.return_value = None
         mock_get_used_seats.return_value = 0
-        mock_service.side_effect = OnyxError(
-            OnyxErrorCode.BAD_GATEWAY,
+        mock_service.side_effect = AetherSearchError(
+            AetherSearchErrorCode.BAD_GATEWAY,
             "Cannot reduce below 10 seats",
             status_code_override=400,
         )
 
         request = SeatUpdateRequest(new_seat_count=5)
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             await update_seats(request=request, _=MagicMock(), db_session=MagicMock())
 
         assert exc_info.value.status_code == 400
-        assert exc_info.value.error_code is OnyxErrorCode.BAD_GATEWAY
+        assert exc_info.value.error_code is AetherSearchErrorCode.BAD_GATEWAY
         assert exc_info.value.detail == "Cannot reduce below 10 seats"
 
 
@@ -324,10 +324,10 @@ class TestCircuitBreaker:
     """Tests for the billing circuit breaker functionality."""
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.MULTI_TENANT", False)
-    @patch("ee.onyx.server.billing.api._is_billing_circuit_open")
-    @patch("ee.onyx.server.billing.api._get_tenant_id")
-    @patch("ee.onyx.server.billing.api._get_license_data")
+    @patch("ee.aethersearch.server.billing.api.MULTI_TENANT", False)
+    @patch("ee.aethersearch.server.billing.api._is_billing_circuit_open")
+    @patch("ee.aethersearch.server.billing.api._get_tenant_id")
+    @patch("ee.aethersearch.server.billing.api._get_license_data")
     async def test_returns_503_when_circuit_open(
         self,
         mock_get_license: MagicMock,
@@ -335,26 +335,26 @@ class TestCircuitBreaker:
         mock_circuit_open: MagicMock,
     ) -> None:
         """Should return 503 when circuit breaker is open."""
-        from ee.onyx.server.billing.api import get_billing_information
+        from ee.aethersearch.server.billing.api import get_billing_information
 
         mock_get_license.return_value = "license_blob"
         mock_get_tenant.return_value = None
         mock_circuit_open.return_value = True
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             await get_billing_information(_=MagicMock(), db_session=MagicMock())
 
         assert exc_info.value.status_code == 503
-        assert exc_info.value.error_code is OnyxErrorCode.SERVICE_UNAVAILABLE
+        assert exc_info.value.error_code is AetherSearchErrorCode.SERVICE_UNAVAILABLE
         assert "Connect to Stripe" in exc_info.value.detail
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.MULTI_TENANT", False)
-    @patch("ee.onyx.server.billing.api._open_billing_circuit")
-    @patch("ee.onyx.server.billing.api._is_billing_circuit_open")
-    @patch("ee.onyx.server.billing.api.get_billing_service")
-    @patch("ee.onyx.server.billing.api._get_tenant_id")
-    @patch("ee.onyx.server.billing.api._get_license_data")
+    @patch("ee.aethersearch.server.billing.api.MULTI_TENANT", False)
+    @patch("ee.aethersearch.server.billing.api._open_billing_circuit")
+    @patch("ee.aethersearch.server.billing.api._is_billing_circuit_open")
+    @patch("ee.aethersearch.server.billing.api.get_billing_service")
+    @patch("ee.aethersearch.server.billing.api._get_tenant_id")
+    @patch("ee.aethersearch.server.billing.api._get_license_data")
     async def test_opens_circuit_on_502_error(
         self,
         mock_get_license: MagicMock,
@@ -364,30 +364,30 @@ class TestCircuitBreaker:
         mock_open_circuit: MagicMock,
     ) -> None:
         """Should open circuit breaker on 502 error."""
-        from ee.onyx.server.billing.api import get_billing_information
+        from ee.aethersearch.server.billing.api import get_billing_information
 
         mock_get_license.return_value = "license_blob"
         mock_get_tenant.return_value = None
         mock_circuit_open_check.return_value = False
-        mock_service.side_effect = OnyxError(
-            OnyxErrorCode.BAD_GATEWAY,
+        mock_service.side_effect = AetherSearchError(
+            AetherSearchErrorCode.BAD_GATEWAY,
             "Connection failed",
             status_code_override=502,
         )
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             await get_billing_information(_=MagicMock(), db_session=MagicMock())
 
         assert exc_info.value.status_code == 502
         mock_open_circuit.assert_called_once()
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.MULTI_TENANT", False)
-    @patch("ee.onyx.server.billing.api._open_billing_circuit")
-    @patch("ee.onyx.server.billing.api._is_billing_circuit_open")
-    @patch("ee.onyx.server.billing.api.get_billing_service")
-    @patch("ee.onyx.server.billing.api._get_tenant_id")
-    @patch("ee.onyx.server.billing.api._get_license_data")
+    @patch("ee.aethersearch.server.billing.api.MULTI_TENANT", False)
+    @patch("ee.aethersearch.server.billing.api._open_billing_circuit")
+    @patch("ee.aethersearch.server.billing.api._is_billing_circuit_open")
+    @patch("ee.aethersearch.server.billing.api.get_billing_service")
+    @patch("ee.aethersearch.server.billing.api._get_tenant_id")
+    @patch("ee.aethersearch.server.billing.api._get_license_data")
     async def test_opens_circuit_on_503_error(
         self,
         mock_get_license: MagicMock,
@@ -397,30 +397,30 @@ class TestCircuitBreaker:
         mock_open_circuit: MagicMock,
     ) -> None:
         """Should open circuit breaker on 503 error."""
-        from ee.onyx.server.billing.api import get_billing_information
+        from ee.aethersearch.server.billing.api import get_billing_information
 
         mock_get_license.return_value = "license_blob"
         mock_get_tenant.return_value = None
         mock_circuit_open_check.return_value = False
-        mock_service.side_effect = OnyxError(
-            OnyxErrorCode.BAD_GATEWAY,
+        mock_service.side_effect = AetherSearchError(
+            AetherSearchErrorCode.BAD_GATEWAY,
             "Service unavailable",
             status_code_override=503,
         )
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             await get_billing_information(_=MagicMock(), db_session=MagicMock())
 
         assert exc_info.value.status_code == 503
         mock_open_circuit.assert_called_once()
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.MULTI_TENANT", False)
-    @patch("ee.onyx.server.billing.api._open_billing_circuit")
-    @patch("ee.onyx.server.billing.api._is_billing_circuit_open")
-    @patch("ee.onyx.server.billing.api.get_billing_service")
-    @patch("ee.onyx.server.billing.api._get_tenant_id")
-    @patch("ee.onyx.server.billing.api._get_license_data")
+    @patch("ee.aethersearch.server.billing.api.MULTI_TENANT", False)
+    @patch("ee.aethersearch.server.billing.api._open_billing_circuit")
+    @patch("ee.aethersearch.server.billing.api._is_billing_circuit_open")
+    @patch("ee.aethersearch.server.billing.api.get_billing_service")
+    @patch("ee.aethersearch.server.billing.api._get_tenant_id")
+    @patch("ee.aethersearch.server.billing.api._get_license_data")
     async def test_opens_circuit_on_504_error(
         self,
         mock_get_license: MagicMock,
@@ -430,30 +430,30 @@ class TestCircuitBreaker:
         mock_open_circuit: MagicMock,
     ) -> None:
         """Should open circuit breaker on 504 error."""
-        from ee.onyx.server.billing.api import get_billing_information
+        from ee.aethersearch.server.billing.api import get_billing_information
 
         mock_get_license.return_value = "license_blob"
         mock_get_tenant.return_value = None
         mock_circuit_open_check.return_value = False
-        mock_service.side_effect = OnyxError(
-            OnyxErrorCode.BAD_GATEWAY,
+        mock_service.side_effect = AetherSearchError(
+            AetherSearchErrorCode.BAD_GATEWAY,
             "Gateway timeout",
             status_code_override=504,
         )
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             await get_billing_information(_=MagicMock(), db_session=MagicMock())
 
         assert exc_info.value.status_code == 504
         mock_open_circuit.assert_called_once()
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.MULTI_TENANT", False)
-    @patch("ee.onyx.server.billing.api._open_billing_circuit")
-    @patch("ee.onyx.server.billing.api._is_billing_circuit_open")
-    @patch("ee.onyx.server.billing.api.get_billing_service")
-    @patch("ee.onyx.server.billing.api._get_tenant_id")
-    @patch("ee.onyx.server.billing.api._get_license_data")
+    @patch("ee.aethersearch.server.billing.api.MULTI_TENANT", False)
+    @patch("ee.aethersearch.server.billing.api._open_billing_circuit")
+    @patch("ee.aethersearch.server.billing.api._is_billing_circuit_open")
+    @patch("ee.aethersearch.server.billing.api.get_billing_service")
+    @patch("ee.aethersearch.server.billing.api._get_tenant_id")
+    @patch("ee.aethersearch.server.billing.api._get_license_data")
     async def test_does_not_open_circuit_on_400_error(
         self,
         mock_get_license: MagicMock,
@@ -463,18 +463,18 @@ class TestCircuitBreaker:
         mock_open_circuit: MagicMock,
     ) -> None:
         """Should NOT open circuit breaker on 400 error (client error)."""
-        from ee.onyx.server.billing.api import get_billing_information
+        from ee.aethersearch.server.billing.api import get_billing_information
 
         mock_get_license.return_value = "license_blob"
         mock_get_tenant.return_value = None
         mock_circuit_open_check.return_value = False
-        mock_service.side_effect = OnyxError(
-            OnyxErrorCode.BAD_GATEWAY,
+        mock_service.side_effect = AetherSearchError(
+            AetherSearchErrorCode.BAD_GATEWAY,
             "Bad request",
             status_code_override=400,
         )
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             await get_billing_information(_=MagicMock(), db_session=MagicMock())
 
         assert exc_info.value.status_code == 400
@@ -485,14 +485,14 @@ class TestResetConnection:
     """Tests for reset_stripe_connection endpoint."""
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.MULTI_TENANT", False)
-    @patch("ee.onyx.server.billing.api._close_billing_circuit")
+    @patch("ee.aethersearch.server.billing.api.MULTI_TENANT", False)
+    @patch("ee.aethersearch.server.billing.api._close_billing_circuit")
     async def test_closes_circuit_for_self_hosted(
         self,
         mock_close_circuit: MagicMock,
     ) -> None:
         """Should close circuit breaker for self-hosted deployment."""
-        from ee.onyx.server.billing.api import reset_stripe_connection
+        from ee.aethersearch.server.billing.api import reset_stripe_connection
 
         result = await reset_stripe_connection(_=MagicMock())
 
@@ -501,14 +501,14 @@ class TestResetConnection:
         mock_close_circuit.assert_called_once()
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.MULTI_TENANT", True)
-    @patch("ee.onyx.server.billing.api._close_billing_circuit")
+    @patch("ee.aethersearch.server.billing.api.MULTI_TENANT", True)
+    @patch("ee.aethersearch.server.billing.api._close_billing_circuit")
     async def test_noop_for_cloud(
         self,
         mock_close_circuit: MagicMock,
     ) -> None:
         """Should be no-op for cloud deployment."""
-        from ee.onyx.server.billing.api import reset_stripe_connection
+        from ee.aethersearch.server.billing.api import reset_stripe_connection
 
         result = await reset_stripe_connection(_=MagicMock())
 
@@ -521,10 +521,10 @@ class TestCheckoutSessionWithSeats:
     """Tests for checkout session with seats parameter."""
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.get_used_seats")
-    @patch("ee.onyx.server.billing.api.create_checkout_service")
-    @patch("ee.onyx.server.billing.api._get_tenant_id")
-    @patch("ee.onyx.server.billing.api._get_license_data")
+    @patch("ee.aethersearch.server.billing.api.get_used_seats")
+    @patch("ee.aethersearch.server.billing.api.create_checkout_service")
+    @patch("ee.aethersearch.server.billing.api._get_tenant_id")
+    @patch("ee.aethersearch.server.billing.api._get_license_data")
     async def test_passes_seats_parameter(
         self,
         mock_get_license: MagicMock,
@@ -533,8 +533,8 @@ class TestCheckoutSessionWithSeats:
         mock_get_used_seats: MagicMock,
     ) -> None:
         """Should pass seats parameter to service."""
-        from ee.onyx.server.billing.api import create_checkout_session
-        from ee.onyx.server.billing.models import CreateCheckoutSessionRequest
+        from ee.aethersearch.server.billing.api import create_checkout_session
+        from ee.aethersearch.server.billing.models import CreateCheckoutSessionRequest
 
         mock_get_license.return_value = None
         mock_get_tenant.return_value = "tenant_123"
@@ -552,9 +552,9 @@ class TestCheckoutSessionWithSeats:
         assert call_kwargs["seats"] == 25
 
     @pytest.mark.asyncio
-    @patch("ee.onyx.server.billing.api.create_checkout_service")
-    @patch("ee.onyx.server.billing.api._get_tenant_id")
-    @patch("ee.onyx.server.billing.api._get_license_data")
+    @patch("ee.aethersearch.server.billing.api.create_checkout_service")
+    @patch("ee.aethersearch.server.billing.api._get_tenant_id")
+    @patch("ee.aethersearch.server.billing.api._get_license_data")
     async def test_seats_none_when_not_provided(
         self,
         mock_get_license: MagicMock,
@@ -562,8 +562,8 @@ class TestCheckoutSessionWithSeats:
         mock_service: AsyncMock,
     ) -> None:
         """Should pass None for seats when not provided."""
-        from ee.onyx.server.billing.api import create_checkout_session
-        from ee.onyx.server.billing.models import CreateCheckoutSessionRequest
+        from ee.aethersearch.server.billing.api import create_checkout_session
+        from ee.aethersearch.server.billing.models import CreateCheckoutSessionRequest
 
         mock_get_license.return_value = None
         mock_get_tenant.return_value = "tenant_123"

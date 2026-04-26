@@ -6,20 +6,20 @@
 
 # import pytest
 
-# from onyx.tools.models import ToolResponse
-# from onyx.tools.tool_implementations.images.image_generation_tool import (
+# from aethersearch.tools.models import ToolResponse
+# from aethersearch.tools.tool_implementations.images.image_generation_tool import (
 #     IMAGE_GENERATION_HEARTBEAT_ID,
 # )
-# from onyx.tools.tool_implementations.images.image_generation_tool import (
+# from aethersearch.tools.tool_implementations.images.image_generation_tool import (
 #     IMAGE_GENERATION_RESPONSE_ID,
 # )
-# from onyx.tools.tool_implementations.images.image_generation_tool import (
+# from aethersearch.tools.tool_implementations.images.image_generation_tool import (
 #     ImageGenerationResponse,
 # )
-# from onyx.tools.tool_implementations.images.image_generation_tool import (
+# from aethersearch.tools.tool_implementations.images.image_generation_tool import (
 #     ImageGenerationTool,
 # )
-# from onyx.tools.tool_implementations.images.image_generation_tool import ImageShape
+# from aethersearch.tools.tool_implementations.images.image_generation_tool import ImageShape
 
 
 # @pytest.fixture

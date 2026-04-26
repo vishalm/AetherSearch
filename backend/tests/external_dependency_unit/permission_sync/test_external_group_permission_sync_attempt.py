@@ -12,23 +12,23 @@ from datetime import timezone
 import pytest
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.models import InputType
-from onyx.db.enums import AccessType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import PermissionSyncStatus
-from onyx.db.models import Connector
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import Credential
-from onyx.db.models import ExternalGroupPermissionSyncAttempt
-from onyx.db.permission_sync_attempt import complete_external_group_sync_attempt
-from onyx.db.permission_sync_attempt import create_external_group_sync_attempt
-from onyx.db.permission_sync_attempt import get_external_group_sync_attempt
-from onyx.db.permission_sync_attempt import (
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.models import InputType
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import PermissionSyncStatus
+from aethersearch.db.models import Connector
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import Credential
+from aethersearch.db.models import ExternalGroupPermissionSyncAttempt
+from aethersearch.db.permission_sync_attempt import complete_external_group_sync_attempt
+from aethersearch.db.permission_sync_attempt import create_external_group_sync_attempt
+from aethersearch.db.permission_sync_attempt import get_external_group_sync_attempt
+from aethersearch.db.permission_sync_attempt import (
     get_recent_external_group_sync_attempts_for_cc_pair,
 )
-from onyx.db.permission_sync_attempt import mark_external_group_sync_attempt_failed
-from onyx.db.permission_sync_attempt import mark_external_group_sync_attempt_in_progress
+from aethersearch.db.permission_sync_attempt import mark_external_group_sync_attempt_failed
+from aethersearch.db.permission_sync_attempt import mark_external_group_sync_attempt_in_progress
 from tests.external_dependency_unit.conftest import create_test_user
 
 

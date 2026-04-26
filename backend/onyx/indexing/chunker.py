@@ -1,26 +1,26 @@
 from chonkie import SentenceChunker
 
-from onyx.configs.app_configs import AVERAGE_SUMMARY_EMBEDDINGS
-from onyx.configs.app_configs import BLURB_SIZE
-from onyx.configs.app_configs import LARGE_CHUNK_RATIO
-from onyx.configs.app_configs import MINI_CHUNK_SIZE
-from onyx.configs.app_configs import SKIP_METADATA_IN_CHUNK
-from onyx.configs.app_configs import USE_CHUNK_SUMMARY
-from onyx.configs.app_configs import USE_DOCUMENT_SUMMARY
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import RETURN_SEPARATOR
-from onyx.configs.constants import SECTION_SEPARATOR
-from onyx.connectors.cross_connector_utils.miscellaneous_utils import (
+from aethersearch.configs.app_configs import AVERAGE_SUMMARY_EMBEDDINGS
+from aethersearch.configs.app_configs import BLURB_SIZE
+from aethersearch.configs.app_configs import LARGE_CHUNK_RATIO
+from aethersearch.configs.app_configs import MINI_CHUNK_SIZE
+from aethersearch.configs.app_configs import SKIP_METADATA_IN_CHUNK
+from aethersearch.configs.app_configs import USE_CHUNK_SUMMARY
+from aethersearch.configs.app_configs import USE_DOCUMENT_SUMMARY
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import RETURN_SEPARATOR
+from aethersearch.configs.constants import SECTION_SEPARATOR
+from aethersearch.connectors.cross_connector_utils.miscellaneous_utils import (
     get_metadata_keys_to_ignore,
 )
-from onyx.connectors.models import IndexingDocument
-from onyx.indexing.chunking import DocumentChunker
-from onyx.indexing.chunking import extract_blurb
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.indexing.models import DocAwareChunk
-from onyx.llm.utils import MAX_CONTEXT_TOKENS
-from onyx.natural_language_processing.utils import BaseTokenizer
-from onyx.utils.logger import setup_logger
+from aethersearch.connectors.models import IndexingDocument
+from aethersearch.indexing.chunking import DocumentChunker
+from aethersearch.indexing.chunking import extract_blurb
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.indexing.models import DocAwareChunk
+from aethersearch.llm.utils import MAX_CONTEXT_TOKENS
+from aethersearch.natural_language_processing.utils import BaseTokenizer
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import DOC_EMBEDDING_CONTEXT_SIZE
 
 # Not supporting overlaps, we need a clean combination of chunks and it is unclear if overlaps

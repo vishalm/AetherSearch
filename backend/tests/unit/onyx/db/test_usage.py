@@ -7,14 +7,14 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.db.usage import check_usage_limit
-from onyx.db.usage import get_current_window_start
-from onyx.db.usage import get_or_create_tenant_usage
-from onyx.db.usage import get_tenant_usage_stats
-from onyx.db.usage import increment_usage
-from onyx.db.usage import TenantUsageStats
-from onyx.db.usage import UsageLimitExceededError
-from onyx.db.usage import UsageType
+from aethersearch.db.usage import check_usage_limit
+from aethersearch.db.usage import get_current_window_start
+from aethersearch.db.usage import get_or_create_tenant_usage
+from aethersearch.db.usage import get_tenant_usage_stats
+from aethersearch.db.usage import increment_usage
+from aethersearch.db.usage import TenantUsageStats
+from aethersearch.db.usage import UsageLimitExceededError
+from aethersearch.db.usage import UsageType
 
 
 class TestGetCurrentWindowStart:
@@ -22,7 +22,7 @@ class TestGetCurrentWindowStart:
 
     def test_weekly_window_aligns_to_monday(self) -> None:
         """Test that weekly windows align to Monday 00:00 UTC."""
-        with patch("onyx.db.usage.USAGE_LIMIT_WINDOW_SECONDS", 604800):  # 1 week
+        with patch("aethersearch.db.usage.USAGE_LIMIT_WINDOW_SECONDS", 604800):  # 1 week
             window_start = get_current_window_start()
 
             # Window should be on a Monday
@@ -125,7 +125,7 @@ class TestIncrementUsage:
 
         mock_session = MagicMock()
 
-        with patch("onyx.db.usage.get_or_create_tenant_usage", return_value=mock_usage):
+        with patch("aethersearch.db.usage.get_or_create_tenant_usage", return_value=mock_usage):
             increment_usage(mock_session, UsageType.LLM_COST, 50.5)
 
         assert mock_usage.llm_cost_cents == 150.5
@@ -138,7 +138,7 @@ class TestIncrementUsage:
 
         mock_session = MagicMock()
 
-        with patch("onyx.db.usage.get_or_create_tenant_usage", return_value=mock_usage):
+        with patch("aethersearch.db.usage.get_or_create_tenant_usage", return_value=mock_usage):
             increment_usage(mock_session, UsageType.CHUNKS_INDEXED, 100)
 
         assert mock_usage.chunks_indexed == 600
@@ -150,7 +150,7 @@ class TestIncrementUsage:
 
         mock_session = MagicMock()
 
-        with patch("onyx.db.usage.get_or_create_tenant_usage", return_value=mock_usage):
+        with patch("aethersearch.db.usage.get_or_create_tenant_usage", return_value=mock_usage):
             increment_usage(mock_session, UsageType.API_CALLS, 1)
 
         assert mock_usage.api_calls == 11
@@ -162,7 +162,7 @@ class TestIncrementUsage:
 
         mock_session = MagicMock()
 
-        with patch("onyx.db.usage.get_or_create_tenant_usage", return_value=mock_usage):
+        with patch("aethersearch.db.usage.get_or_create_tenant_usage", return_value=mock_usage):
             increment_usage(mock_session, UsageType.NON_STREAMING_API_CALLS, 1)
 
         assert mock_usage.non_streaming_api_calls == 6
@@ -183,7 +183,7 @@ class TestCheckUsageLimit:
             non_streaming_api_calls=5,
         )
 
-        with patch("onyx.db.usage.get_tenant_usage_stats", return_value=mock_stats):
+        with patch("aethersearch.db.usage.get_tenant_usage_stats", return_value=mock_stats):
             # Should not raise
             check_usage_limit(
                 mock_session,
@@ -204,7 +204,7 @@ class TestCheckUsageLimit:
             non_streaming_api_calls=5,
         )
 
-        with patch("onyx.db.usage.get_tenant_usage_stats", return_value=mock_stats):
+        with patch("aethersearch.db.usage.get_tenant_usage_stats", return_value=mock_stats):
             # Should not raise - at limit but not over
             check_usage_limit(
                 mock_session,
@@ -225,7 +225,7 @@ class TestCheckUsageLimit:
             non_streaming_api_calls=5,
         )
 
-        with patch("onyx.db.usage.get_tenant_usage_stats", return_value=mock_stats):
+        with patch("aethersearch.db.usage.get_tenant_usage_stats", return_value=mock_stats):
             with pytest.raises(UsageLimitExceededError) as exc_info:
                 check_usage_limit(
                     mock_session,
@@ -250,7 +250,7 @@ class TestCheckUsageLimit:
             non_streaming_api_calls=5,
         )
 
-        with patch("onyx.db.usage.get_tenant_usage_stats", return_value=mock_stats):
+        with patch("aethersearch.db.usage.get_tenant_usage_stats", return_value=mock_stats):
             with pytest.raises(UsageLimitExceededError) as exc_info:
                 check_usage_limit(
                     mock_session,
@@ -273,7 +273,7 @@ class TestCheckUsageLimit:
             non_streaming_api_calls=5,
         )
 
-        with patch("onyx.db.usage.get_tenant_usage_stats", return_value=mock_stats):
+        with patch("aethersearch.db.usage.get_tenant_usage_stats", return_value=mock_stats):
             with pytest.raises(UsageLimitExceededError) as exc_info:
                 check_usage_limit(
                     mock_session,
@@ -323,7 +323,7 @@ class TestWindowRollover:
 
         # Get stats for a new window (no existing record)
         with patch(
-            "onyx.db.usage.get_current_window_start",
+            "aethersearch.db.usage.get_current_window_start",
             return_value=datetime(2024, 1, 8, tzinfo=timezone.utc),
         ):
             stats = get_tenant_usage_stats(mock_session)

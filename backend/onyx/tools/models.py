@@ -10,18 +10,18 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import model_validator
 
-from onyx.chat.emitter import Emitter
-from onyx.configs.chat_configs import MAX_CHUNKS_FED_TO_CHAT
-from onyx.configs.chat_configs import NUM_RETURNED_HITS
-from onyx.configs.constants import MessageType
-from onyx.context.search.models import SearchDoc
-from onyx.context.search.models import SearchDocsResponse
-from onyx.db.memory import UserMemoryContext
-from onyx.server.query_and_chat.placement import Placement
-from onyx.server.query_and_chat.streaming_models import CustomToolErrorInfo
-from onyx.server.query_and_chat.streaming_models import GeneratedImage
-from onyx.tools.tool_implementations.images.models import FinalImageGenerationResponse
-from onyx.tools.tool_implementations.memory.models import MemoryToolResponse
+from aethersearch.chat.emitter import Emitter
+from aethersearch.configs.chat_configs import MAX_CHUNKS_FED_TO_CHAT
+from aethersearch.configs.chat_configs import NUM_RETURNED_HITS
+from aethersearch.configs.constants import MessageType
+from aethersearch.context.search.models import SearchDoc
+from aethersearch.context.search.models import SearchDocsResponse
+from aethersearch.db.memory import UserMemoryContext
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.server.query_and_chat.streaming_models import CustomToolErrorInfo
+from aethersearch.server.query_and_chat.streaming_models import GeneratedImage
+from aethersearch.tools.tool_implementations.images.models import FinalImageGenerationResponse
+from aethersearch.tools.tool_implementations.memory.models import MemoryToolResponse
 
 TOOL_CALL_MSG_FUNC_NAME = "function_name"
 TOOL_CALL_MSG_ARGUMENTS = "arguments"

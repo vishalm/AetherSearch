@@ -1,11 +1,11 @@
 import json
 from collections.abc import Generator
 
-from onyx.document_index.vespa.chunk_retrieval import get_chunks_via_visit_api
-from onyx.document_index.vespa.chunk_retrieval import VespaChunkRequest
-from onyx.document_index.vespa.index import IndexFilters
-from onyx.kg.models import KGChunkFormat
-from onyx.utils.logger import setup_logger
+from aethersearch.document_index.vespa.chunk_retrieval import get_chunks_via_visit_api
+from aethersearch.document_index.vespa.chunk_retrieval import VespaChunkRequest
+from aethersearch.document_index.vespa.index import IndexFilters
+from aethersearch.kg.models import KGChunkFormat
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

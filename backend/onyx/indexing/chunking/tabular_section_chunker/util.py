@@ -1,5 +1,5 @@
-from onyx.natural_language_processing.utils import BaseTokenizer
-from onyx.natural_language_processing.utils import count_tokens
+from aethersearch.natural_language_processing.utils import BaseTokenizer
+from aethersearch.natural_language_processing.utils import count_tokens
 
 
 def label(name: str) -> str:

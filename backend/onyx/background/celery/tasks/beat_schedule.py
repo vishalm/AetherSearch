@@ -4,18 +4,18 @@ from typing import Any
 
 from celery.schedules import crontab
 
-from onyx.configs.app_configs import AUTO_LLM_CONFIG_URL
-from onyx.configs.app_configs import AUTO_LLM_UPDATE_INTERVAL_SECONDS
-from onyx.configs.app_configs import DISABLE_OPENSEARCH_MIGRATION_TASK
-from onyx.configs.app_configs import DISABLE_VECTOR_DB
-from onyx.configs.app_configs import ENABLE_OPENSEARCH_INDEXING_FOR_ONYX
-from onyx.configs.app_configs import ENTERPRISE_EDITION_ENABLED
-from onyx.configs.app_configs import ONYX_DISABLE_VESPA
-from onyx.configs.app_configs import SCHEDULED_EVAL_DATASET_NAMES
-from onyx.configs.constants import ONYX_CLOUD_CELERY_TASK_PREFIX
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
+from aethersearch.configs.app_configs import AUTO_LLM_CONFIG_URL
+from aethersearch.configs.app_configs import AUTO_LLM_UPDATE_INTERVAL_SECONDS
+from aethersearch.configs.app_configs import DISABLE_OPENSEARCH_MIGRATION_TASK
+from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
+from aethersearch.configs.app_configs import ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH
+from aethersearch.configs.app_configs import ENTERPRISE_EDITION_ENABLED
+from aethersearch.configs.app_configs import AETHERSEARCH_DISABLE_VESPA
+from aethersearch.configs.app_configs import SCHEDULED_EVAL_DATASET_NAMES
+from aethersearch.configs.constants import AETHERSEARCH_CLOUD_CELERY_TASK_PREFIX
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
 from shared_configs.configs import MULTI_TENANT
 
 # choosing 15 minutes because it roughly gives us enough time to process many tasks
@@ -36,47 +36,47 @@ CLOUD_DOC_PERMISSION_SYNC_MULTIPLIER_DEFAULT = 1.0
 beat_task_templates: list[dict] = [
     {
         "name": "check-for-user-file-processing",
-        "task": OnyxCeleryTask.CHECK_FOR_USER_FILE_PROCESSING,
+        "task": AetherSearchCeleryTask.CHECK_FOR_USER_FILE_PROCESSING,
         "schedule": timedelta(seconds=20),
         "options": {
-            "priority": OnyxCeleryPriority.MEDIUM,
+            "priority": AetherSearchCeleryPriority.MEDIUM,
             "expires": BEAT_EXPIRES_DEFAULT,
         },
     },
     {
         "name": "check-for-user-file-project-sync",
-        "task": OnyxCeleryTask.CHECK_FOR_USER_FILE_PROJECT_SYNC,
+        "task": AetherSearchCeleryTask.CHECK_FOR_USER_FILE_PROJECT_SYNC,
         "schedule": timedelta(seconds=20),
         "options": {
-            "priority": OnyxCeleryPriority.MEDIUM,
+            "priority": AetherSearchCeleryPriority.MEDIUM,
             "expires": BEAT_EXPIRES_DEFAULT,
         },
     },
     {
         "name": "check-for-user-file-delete",
-        "task": OnyxCeleryTask.CHECK_FOR_USER_FILE_DELETE,
+        "task": AetherSearchCeleryTask.CHECK_FOR_USER_FILE_DELETE,
         "schedule": timedelta(seconds=20),
         "options": {
-            "priority": OnyxCeleryPriority.MEDIUM,
+            "priority": AetherSearchCeleryPriority.MEDIUM,
             "expires": BEAT_EXPIRES_DEFAULT,
         },
     },
     {
         "name": "check-for-indexing",
-        "task": OnyxCeleryTask.CHECK_FOR_INDEXING,
+        "task": AetherSearchCeleryTask.CHECK_FOR_INDEXING,
         "schedule": timedelta(seconds=15),
         "options": {
-            "priority": OnyxCeleryPriority.MEDIUM,
+            "priority": AetherSearchCeleryPriority.MEDIUM,
             "expires": BEAT_EXPIRES_DEFAULT,
             "work_gated": True,
         },
     },
     {
         "name": "check-for-checkpoint-cleanup",
-        "task": OnyxCeleryTask.CHECK_FOR_CHECKPOINT_CLEANUP,
+        "task": AetherSearchCeleryTask.CHECK_FOR_CHECKPOINT_CLEANUP,
         "schedule": timedelta(hours=1),
         "options": {
-            "priority": OnyxCeleryPriority.LOW,
+            "priority": AetherSearchCeleryPriority.LOW,
             "expires": BEAT_EXPIRES_DEFAULT,
             # Run on gated tenants too — they may still have stale checkpoints to clean.
             "skip_gated": False,
@@ -84,10 +84,10 @@ beat_task_templates: list[dict] = [
     },
     {
         "name": "check-for-index-attempt-cleanup",
-        "task": OnyxCeleryTask.CHECK_FOR_INDEX_ATTEMPT_CLEANUP,
+        "task": AetherSearchCeleryTask.CHECK_FOR_INDEX_ATTEMPT_CLEANUP,
         "schedule": timedelta(minutes=30),
         "options": {
-            "priority": OnyxCeleryPriority.MEDIUM,
+            "priority": AetherSearchCeleryPriority.MEDIUM,
             "expires": BEAT_EXPIRES_DEFAULT,
             # Run on gated tenants too — they may still have stale index attempts.
             "skip_gated": False,
@@ -95,10 +95,10 @@ beat_task_templates: list[dict] = [
     },
     {
         "name": "check-for-connector-deletion",
-        "task": OnyxCeleryTask.CHECK_FOR_CONNECTOR_DELETION,
+        "task": AetherSearchCeleryTask.CHECK_FOR_CONNECTOR_DELETION,
         "schedule": timedelta(seconds=20),
         "options": {
-            "priority": OnyxCeleryPriority.MEDIUM,
+            "priority": AetherSearchCeleryPriority.MEDIUM,
             "expires": BEAT_EXPIRES_DEFAULT,
             # Gated tenants may still have connectors awaiting deletion.
             "skip_gated": False,
@@ -107,47 +107,47 @@ beat_task_templates: list[dict] = [
     },
     {
         "name": "check-for-vespa-sync",
-        "task": OnyxCeleryTask.CHECK_FOR_VESPA_SYNC_TASK,
+        "task": AetherSearchCeleryTask.CHECK_FOR_VESPA_SYNC_TASK,
         "schedule": timedelta(seconds=20),
         "options": {
-            "priority": OnyxCeleryPriority.MEDIUM,
+            "priority": AetherSearchCeleryPriority.MEDIUM,
             "expires": BEAT_EXPIRES_DEFAULT,
             "work_gated": True,
         },
     },
     {
         "name": "check-for-pruning",
-        "task": OnyxCeleryTask.CHECK_FOR_PRUNING,
+        "task": AetherSearchCeleryTask.CHECK_FOR_PRUNING,
         "schedule": timedelta(seconds=20),
         "options": {
-            "priority": OnyxCeleryPriority.MEDIUM,
+            "priority": AetherSearchCeleryPriority.MEDIUM,
             "expires": BEAT_EXPIRES_DEFAULT,
             "work_gated": True,
         },
     },
     {
         "name": "check-for-hierarchy-fetching",
-        "task": OnyxCeleryTask.CHECK_FOR_HIERARCHY_FETCHING,
+        "task": AetherSearchCeleryTask.CHECK_FOR_HIERARCHY_FETCHING,
         "schedule": timedelta(hours=1),  # Check hourly, but only fetch once per day
         "options": {
-            "priority": OnyxCeleryPriority.LOW,
+            "priority": AetherSearchCeleryPriority.LOW,
             "expires": BEAT_EXPIRES_DEFAULT,
         },
     },
     {
         "name": "monitor-background-processes",
-        "task": OnyxCeleryTask.MONITOR_BACKGROUND_PROCESSES,
+        "task": AetherSearchCeleryTask.MONITOR_BACKGROUND_PROCESSES,
         "schedule": timedelta(minutes=5),
         "options": {
-            "priority": OnyxCeleryPriority.LOW,
+            "priority": AetherSearchCeleryPriority.LOW,
             "expires": BEAT_EXPIRES_DEFAULT,
-            "queue": OnyxCeleryQueues.MONITORING,
+            "queue": AetherSearchCeleryQueues.MONITORING,
         },
     },
     # Sandbox cleanup tasks
     {
         "name": "cleanup-idle-sandboxes",
-        "task": OnyxCeleryTask.CLEANUP_IDLE_SANDBOXES,
+        "task": AetherSearchCeleryTask.CLEANUP_IDLE_SANDBOXES,
         # SANDBOX_IDLE_TIMEOUT_SECONDS defaults to 1 hour, so there is no
         # functional reason to scan more often than every ~15 minutes. In the
         # cloud this is multiplied by CLOUD_BEAT_MULTIPLIER_DEFAULT (=8) so
@@ -157,20 +157,20 @@ beat_task_templates: list[dict] = [
         # background DB load on the cloud cluster.
         "schedule": timedelta(minutes=15),
         "options": {
-            "priority": OnyxCeleryPriority.LOW,
+            "priority": AetherSearchCeleryPriority.LOW,
             "expires": BEAT_EXPIRES_DEFAULT,
-            "queue": OnyxCeleryQueues.SANDBOX,
+            "queue": AetherSearchCeleryQueues.SANDBOX,
             "work_gated": True,
         },
     },
     {
         "name": "cleanup-old-snapshots",
-        "task": OnyxCeleryTask.CLEANUP_OLD_SNAPSHOTS,
+        "task": AetherSearchCeleryTask.CLEANUP_OLD_SNAPSHOTS,
         "schedule": timedelta(hours=24),
         "options": {
-            "priority": OnyxCeleryPriority.LOW,
+            "priority": AetherSearchCeleryPriority.LOW,
             "expires": BEAT_EXPIRES_DEFAULT,
-            "queue": OnyxCeleryQueues.SANDBOX,
+            "queue": AetherSearchCeleryQueues.SANDBOX,
         },
     },
 ]
@@ -180,20 +180,20 @@ if ENTERPRISE_EDITION_ENABLED:
         [
             {
                 "name": "check-for-doc-permissions-sync",
-                "task": OnyxCeleryTask.CHECK_FOR_DOC_PERMISSIONS_SYNC,
+                "task": AetherSearchCeleryTask.CHECK_FOR_DOC_PERMISSIONS_SYNC,
                 "schedule": timedelta(seconds=30),
                 "options": {
-                    "priority": OnyxCeleryPriority.MEDIUM,
+                    "priority": AetherSearchCeleryPriority.MEDIUM,
                     "expires": BEAT_EXPIRES_DEFAULT,
                     "work_gated": True,
                 },
             },
             {
                 "name": "check-for-external-group-sync",
-                "task": OnyxCeleryTask.CHECK_FOR_EXTERNAL_GROUP_SYNC,
+                "task": AetherSearchCeleryTask.CHECK_FOR_EXTERNAL_GROUP_SYNC,
                 "schedule": timedelta(seconds=20),
                 "options": {
-                    "priority": OnyxCeleryPriority.MEDIUM,
+                    "priority": AetherSearchCeleryPriority.MEDIUM,
                     "expires": BEAT_EXPIRES_DEFAULT,
                     "work_gated": True,
                 },
@@ -206,10 +206,10 @@ if AUTO_LLM_CONFIG_URL:
     beat_task_templates.append(
         {
             "name": "check-for-auto-llm-update",
-            "task": OnyxCeleryTask.CHECK_FOR_AUTO_LLM_UPDATE,
+            "task": AetherSearchCeleryTask.CHECK_FOR_AUTO_LLM_UPDATE,
             "schedule": timedelta(seconds=AUTO_LLM_UPDATE_INTERVAL_SECONDS),
             "options": {
-                "priority": OnyxCeleryPriority.LOW,
+                "priority": AetherSearchCeleryPriority.LOW,
                 "expires": BEAT_EXPIRES_DEFAULT,
             },
         }
@@ -220,7 +220,7 @@ if SCHEDULED_EVAL_DATASET_NAMES:
     beat_task_templates.append(
         {
             "name": "scheduled-eval-pipeline",
-            "task": OnyxCeleryTask.SCHEDULED_EVAL_TASK,
+            "task": AetherSearchCeleryTask.SCHEDULED_EVAL_TASK,
             # run every Sunday at midnight UTC
             "schedule": crontab(
                 hour=0,
@@ -228,7 +228,7 @@ if SCHEDULED_EVAL_DATASET_NAMES:
                 day_of_week=0,
             ),
             "options": {
-                "priority": OnyxCeleryPriority.LOW,
+                "priority": AetherSearchCeleryPriority.LOW,
                 "expires": BEAT_EXPIRES_DEFAULT,
             },
         }
@@ -236,21 +236,21 @@ if SCHEDULED_EVAL_DATASET_NAMES:
 
 # Add OpenSearch migration task if enabled.
 if (
-    ENABLE_OPENSEARCH_INDEXING_FOR_ONYX
+    ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH
     and not DISABLE_OPENSEARCH_MIGRATION_TASK
-    and not ONYX_DISABLE_VESPA
+    and not AETHERSEARCH_DISABLE_VESPA
 ):
     beat_task_templates.append(
         {
             "name": "migrate-chunks-from-vespa-to-opensearch",
-            "task": OnyxCeleryTask.MIGRATE_CHUNKS_FROM_VESPA_TO_OPENSEARCH_TASK,
+            "task": AetherSearchCeleryTask.MIGRATE_CHUNKS_FROM_VESPA_TO_OPENSEARCH_TASK,
             # Try to enqueue an invocation of this task with this frequency.
             "schedule": timedelta(seconds=120),  # 2 minutes
             "options": {
-                "priority": OnyxCeleryPriority.LOW,
+                "priority": AetherSearchCeleryPriority.LOW,
                 # If the task was not dequeued in this time, revoke it.
                 "expires": BEAT_EXPIRES_DEFAULT,
-                "queue": OnyxCeleryQueues.OPENSEARCH_MIGRATION,
+                "queue": AetherSearchCeleryQueues.OPENSEARCH_MIGRATION,
             },
         }
     )
@@ -283,12 +283,12 @@ def make_cloud_generator_task(task: dict[str, Any]) -> dict[str, Any]:
     task_schedule: timedelta = task["schedule"]
     cloud_task["schedule"] = task_schedule
     cloud_task["options"] = {}
-    cloud_task["options"]["priority"] = OnyxCeleryPriority.HIGHEST
+    cloud_task["options"]["priority"] = AetherSearchCeleryPriority.HIGHEST
     cloud_task["options"]["expires"] = BEAT_EXPIRES_DEFAULT
 
     # settings dependent on the original task
-    cloud_task["name"] = f"{ONYX_CLOUD_CELERY_TASK_PREFIX}_{task['name']}"
-    cloud_task["task"] = OnyxCeleryTask.CLOUD_BEAT_TASK_GENERATOR
+    cloud_task["name"] = f"{AETHERSEARCH_CLOUD_CELERY_TASK_PREFIX}_{task['name']}"
+    cloud_task["task"] = AetherSearchCeleryTask.CLOUD_BEAT_TASK_GENERATOR
     cloud_task["kwargs"] = {}
     cloud_task["kwargs"]["task_name"] = task["task"]
 
@@ -301,47 +301,47 @@ def make_cloud_generator_task(task: dict[str, Any]) -> dict[str, Any]:
 
 
 # tasks that only run in the cloud and are system wide
-# the name attribute must start with ONYX_CLOUD_CELERY_TASK_PREFIX = "cloud" to be seen
+# the name attribute must start with AETHERSEARCH_CLOUD_CELERY_TASK_PREFIX = "cloud" to be seen
 # by the DynamicTenantScheduler as system wide task and not a per tenant task
 beat_cloud_tasks: list[dict] = [
     # cloud specific tasks
     {
-        "name": f"{ONYX_CLOUD_CELERY_TASK_PREFIX}_monitor-alembic",
-        "task": OnyxCeleryTask.CLOUD_MONITOR_ALEMBIC,
+        "name": f"{AETHERSEARCH_CLOUD_CELERY_TASK_PREFIX}_monitor-alembic",
+        "task": AetherSearchCeleryTask.CLOUD_MONITOR_ALEMBIC,
         "schedule": timedelta(hours=1),
         "options": {
-            "queue": OnyxCeleryQueues.MONITORING,
-            "priority": OnyxCeleryPriority.HIGH,
+            "queue": AetherSearchCeleryQueues.MONITORING,
+            "priority": AetherSearchCeleryPriority.HIGH,
             "expires": BEAT_EXPIRES_DEFAULT,
         },
     },
     {
-        "name": f"{ONYX_CLOUD_CELERY_TASK_PREFIX}_monitor-celery-queues",
-        "task": OnyxCeleryTask.CLOUD_MONITOR_CELERY_QUEUES,
+        "name": f"{AETHERSEARCH_CLOUD_CELERY_TASK_PREFIX}_monitor-celery-queues",
+        "task": AetherSearchCeleryTask.CLOUD_MONITOR_CELERY_QUEUES,
         "schedule": timedelta(seconds=30),
         "options": {
-            "queue": OnyxCeleryQueues.MONITORING,
-            "priority": OnyxCeleryPriority.HIGH,
+            "queue": AetherSearchCeleryQueues.MONITORING,
+            "priority": AetherSearchCeleryPriority.HIGH,
             "expires": BEAT_EXPIRES_DEFAULT,
         },
     },
     {
-        "name": f"{ONYX_CLOUD_CELERY_TASK_PREFIX}_check-available-tenants",
-        "task": OnyxCeleryTask.CLOUD_CHECK_AVAILABLE_TENANTS,
+        "name": f"{AETHERSEARCH_CLOUD_CELERY_TASK_PREFIX}_check-available-tenants",
+        "task": AetherSearchCeleryTask.CLOUD_CHECK_AVAILABLE_TENANTS,
         "schedule": timedelta(minutes=2),
         "options": {
-            "queue": OnyxCeleryQueues.MONITORING,
-            "priority": OnyxCeleryPriority.HIGH,
+            "queue": AetherSearchCeleryQueues.MONITORING,
+            "priority": AetherSearchCeleryPriority.HIGH,
             "expires": BEAT_EXPIRES_DEFAULT,
         },
     },
     {
-        "name": f"{ONYX_CLOUD_CELERY_TASK_PREFIX}_monitor-celery-pidbox",
-        "task": OnyxCeleryTask.CLOUD_MONITOR_CELERY_PIDBOX,
+        "name": f"{AETHERSEARCH_CLOUD_CELERY_TASK_PREFIX}_monitor-celery-pidbox",
+        "task": AetherSearchCeleryTask.CLOUD_MONITOR_CELERY_PIDBOX,
         "schedule": timedelta(hours=4),
         "options": {
-            "queue": OnyxCeleryQueues.MONITORING,
-            "priority": OnyxCeleryPriority.HIGH,
+            "queue": AetherSearchCeleryQueues.MONITORING,
+            "priority": AetherSearchCeleryPriority.HIGH,
             "expires": BEAT_EXPIRES_DEFAULT,
         },
     },
@@ -354,32 +354,32 @@ if not MULTI_TENANT:
         [
             {
                 "name": "monitor-celery-queues",
-                "task": OnyxCeleryTask.MONITOR_CELERY_QUEUES,
+                "task": AetherSearchCeleryTask.MONITOR_CELERY_QUEUES,
                 "schedule": timedelta(seconds=10),
                 "options": {
-                    "priority": OnyxCeleryPriority.MEDIUM,
+                    "priority": AetherSearchCeleryPriority.MEDIUM,
                     "expires": BEAT_EXPIRES_DEFAULT,
-                    "queue": OnyxCeleryQueues.MONITORING,
+                    "queue": AetherSearchCeleryQueues.MONITORING,
                 },
             },
             {
                 "name": "monitor-process-memory",
-                "task": OnyxCeleryTask.MONITOR_PROCESS_MEMORY,
+                "task": AetherSearchCeleryTask.MONITOR_PROCESS_MEMORY,
                 "schedule": timedelta(minutes=5),
                 "options": {
-                    "priority": OnyxCeleryPriority.LOW,
+                    "priority": AetherSearchCeleryPriority.LOW,
                     "expires": BEAT_EXPIRES_DEFAULT,
-                    "queue": OnyxCeleryQueues.MONITORING,
+                    "queue": AetherSearchCeleryQueues.MONITORING,
                 },
             },
             {
                 "name": "celery-beat-heartbeat",
-                "task": OnyxCeleryTask.CELERY_BEAT_HEARTBEAT,
+                "task": AetherSearchCeleryTask.CELERY_BEAT_HEARTBEAT,
                 "schedule": timedelta(minutes=1),
                 "options": {
-                    "priority": OnyxCeleryPriority.HIGHEST,
+                    "priority": AetherSearchCeleryPriority.HIGHEST,
                     "expires": BEAT_EXPIRES_DEFAULT,
-                    "queue": OnyxCeleryQueues.PRIMARY,
+                    "queue": AetherSearchCeleryQueues.PRIMARY,
                 },
             },
         ]

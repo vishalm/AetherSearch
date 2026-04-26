@@ -14,19 +14,19 @@ from sqlalchemy import update
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import Session
 
-from onyx.connectors.models import ConnectorFailure
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import IndexingStatus
-from onyx.db.enums import IndexModelStatus
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import IndexAttempt
-from onyx.db.models import IndexAttemptError
-from onyx.db.models import SearchSettings
-from onyx.server.documents.models import ConnectorCredentialPairIdentifier
-from onyx.utils.logger import setup_logger
-from onyx.utils.telemetry import optional_telemetry
-from onyx.utils.telemetry import RecordType
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import IndexingStatus
+from aethersearch.db.enums import IndexModelStatus
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import IndexAttempt
+from aethersearch.db.models import IndexAttemptError
+from aethersearch.db.models import SearchSettings
+from aethersearch.server.documents.models import ConnectorCredentialPairIdentifier
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.telemetry import optional_telemetry
+from aethersearch.utils.telemetry import RecordType
 
 logger = setup_logger()
 

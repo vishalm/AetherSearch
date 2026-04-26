@@ -10,7 +10,7 @@ services:
       /bin/sh -c "
       alembic upgrade head &&
       echo \"Starting AetherSearch Api Server\" &&
-      uvicorn onyx.main:app --host 0.0.0.0 --port 8080"
+      uvicorn aethersearch.main:app --host 0.0.0.0 --port 8080"
     depends_on:
       - relational_db
       - index
@@ -157,7 +157,7 @@ services:
   #       echo 'MCP server is disabled (MCP_SERVER_ENABLED=false), skipping...';
   #       exit 0;
   #     else
-  #       exec python -m onyx.mcp_server_main;
+  #       exec python -m aethersearch.mcp_server_main;
   #     fi"
   #   env_file:
   #     - path: .env

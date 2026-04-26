@@ -3,10 +3,10 @@ import threading
 
 from sqlalchemy import update
 
-from onyx.configs.constants import INDEXING_WORKER_HEARTBEAT_INTERVAL
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.models import IndexAttempt
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import INDEXING_WORKER_HEARTBEAT_INTERVAL
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.models import IndexAttempt
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

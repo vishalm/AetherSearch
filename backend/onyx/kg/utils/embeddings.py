@@ -2,10 +2,10 @@ from typing import List
 
 import numpy as np
 
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.search_settings import get_current_search_settings
-from onyx.natural_language_processing.search_nlp_models import EmbeddingModel
-from onyx.natural_language_processing.search_nlp_models import EmbedTextType
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.search_settings import get_current_search_settings
+from aethersearch.natural_language_processing.search_nlp_models import EmbeddingModel
+from aethersearch.natural_language_processing.search_nlp_models import EmbedTextType
 from shared_configs.configs import MODEL_SERVER_HOST
 from shared_configs.configs import MODEL_SERVER_PORT
 

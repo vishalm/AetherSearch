@@ -5,8 +5,8 @@ process_message.py (CE code) uses isinstance checks against them.
 
 execute_hook is the public entry point. It dispatches to _execute_hook_impl
 via fetch_versioned_implementation so that:
-  - CE: onyx.hooks.executor._execute_hook_impl → no-op, returns HookSkipped()
-  - EE: ee.onyx.hooks.executor._execute_hook_impl → real HTTP call
+  - CE: aethersearch.hooks.executor._execute_hook_impl → no-op, returns HookSkipped()
+  - EE: ee.aethersearch.hooks.executor._execute_hook_impl → real HTTP call
 """
 
 from typing import Any
@@ -15,8 +15,8 @@ from typing import TypeVar
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from onyx.db.enums import HookPoint
-from onyx.utils.variable_functionality import fetch_versioned_implementation
+from aethersearch.db.enums import HookPoint
+from aethersearch.utils.variable_functionality import fetch_versioned_implementation
 
 
 class HookSkipped:
@@ -53,7 +53,7 @@ def execute_hook(
     Dispatches to the versioned implementation so EE gets the real executor
     and CE gets the no-op stub, without any changes at the call site.
     """
-    impl = fetch_versioned_implementation("onyx.hooks.executor", "_execute_hook_impl")
+    impl = fetch_versioned_implementation("aethersearch.hooks.executor", "_execute_hook_impl")
     return impl(
         db_session=db_session,
         hook_point=hook_point,

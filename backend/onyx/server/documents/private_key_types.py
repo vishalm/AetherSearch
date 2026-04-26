@@ -5,7 +5,7 @@ from typing import Protocol
 from fastapi import HTTPException
 from fastapi import UploadFile
 
-from onyx.server.documents.document_utils import validate_pkcs12_content
+from aethersearch.server.documents.document_utils import validate_pkcs12_content
 
 
 class ProcessPrivateKeyFileProtocol(Protocol):

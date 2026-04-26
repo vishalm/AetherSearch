@@ -2,21 +2,21 @@ from collections.abc import Generator
 
 from slack_sdk import WebClient
 
-from ee.onyx.external_permissions.perm_sync_types import FetchAllDocumentsFunction
-from ee.onyx.external_permissions.perm_sync_types import FetchAllDocumentsIdsFunction
-from ee.onyx.external_permissions.slack.utils import fetch_user_id_to_email_map
-from onyx.access.models import DocExternalAccess
-from onyx.access.models import ExternalAccess
-from onyx.connectors.credentials_provider import OnyxDBCredentialsProvider
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.slack.connector import get_channels
-from onyx.connectors.slack.connector import make_paginated_slack_api_call
-from onyx.connectors.slack.connector import SlackConnector
-from onyx.db.models import ConnectorCredentialPair
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.redis.redis_pool import get_redis_client
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.external_permissions.perm_sync_types import FetchAllDocumentsFunction
+from ee.aethersearch.external_permissions.perm_sync_types import FetchAllDocumentsIdsFunction
+from ee.aethersearch.external_permissions.slack.utils import fetch_user_id_to_email_map
+from aethersearch.access.models import DocExternalAccess
+from aethersearch.access.models import ExternalAccess
+from aethersearch.connectors.credentials_provider import AetherSearchDBCredentialsProvider
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.slack.connector import get_channels
+from aethersearch.connectors.slack.connector import make_paginated_slack_api_call
+from aethersearch.connectors.slack.connector import SlackConnector
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()
@@ -151,7 +151,7 @@ def slack_doc_sync(
     # Use credentials provider instead of directly loading credentials
 
     tenant_id = get_current_tenant_id()
-    provider = OnyxDBCredentialsProvider(tenant_id, "slack", cc_pair.credential.id)
+    provider = AetherSearchDBCredentialsProvider(tenant_id, "slack", cc_pair.credential.id)
     r = get_redis_client(tenant_id=tenant_id)
     credential_json = (
         cc_pair.credential.credential_json.get_value(apply_mask=False)

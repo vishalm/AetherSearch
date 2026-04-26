@@ -2,10 +2,10 @@ package cmd
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/onyx-dot-app/onyx/cli/internal/config"
-	"github.com/onyx-dot-app/onyx/cli/internal/onboarding"
-	"github.com/onyx-dot-app/onyx/cli/internal/starprompt"
-	"github.com/onyx-dot-app/onyx/cli/internal/tui"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/config"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/onboarding"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/starprompt"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/tui"
 	"github.com/spf13/cobra"
 )
 

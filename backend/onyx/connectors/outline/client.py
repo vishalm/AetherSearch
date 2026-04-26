@@ -5,7 +5,7 @@ from requests.exceptions import ConnectionError as RequestsConnectionError
 from requests.exceptions import RequestException
 from requests.exceptions import Timeout
 
-from onyx.configs.app_configs import REQUEST_TIMEOUT_SECONDS
+from aethersearch.configs.app_configs import REQUEST_TIMEOUT_SECONDS
 
 
 class OutlineClientRequestFailedError(ConnectionError):

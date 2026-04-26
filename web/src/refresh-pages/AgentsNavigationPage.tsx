@@ -12,7 +12,7 @@ import * as SettingsLayouts from "@/layouts/settings-layouts";
 import TextSeparator from "@/refresh-components/TextSeparator";
 import Tabs from "@/refresh-components/Tabs";
 import { Button } from "@opal/components";
-import { SvgOnyxOctagon, SvgPlus } from "@opal/icons";
+import { SvgAetherSearchOctagon, SvgPlus } from "@opal/icons";
 import useOnMount from "@/hooks/useOnMount";
 import { useAgentsFilters } from "@/sections/agents/AgentsFilters";
 
@@ -96,7 +96,7 @@ export default function AgentsNavigationPage() {
       aria-label="Agents Page"
     >
       <SettingsLayouts.Header
-        icon={SvgOnyxOctagon}
+        icon={SvgAetherSearchOctagon}
         title="Agents"
         description="Customize AI behavior and knowledge for you and your team's use cases."
         rightChildren={

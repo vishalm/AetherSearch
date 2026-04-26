@@ -14,13 +14,13 @@ from sqlalchemy.engine.cursor import CursorResult
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import Session
 
-from onyx.db.enums import PermissionSyncStatus
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import DocPermissionSyncAttempt
-from onyx.db.models import ExternalGroupPermissionSyncAttempt
-from onyx.utils.logger import setup_logger
-from onyx.utils.telemetry import optional_telemetry
-from onyx.utils.telemetry import RecordType
+from aethersearch.db.enums import PermissionSyncStatus
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import DocPermissionSyncAttempt
+from aethersearch.db.models import ExternalGroupPermissionSyncAttempt
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.telemetry import optional_telemetry
+from aethersearch.utils.telemetry import RecordType
 
 logger = setup_logger()
 

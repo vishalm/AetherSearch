@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.background.celery import celery_redis
+from aethersearch.background.celery import celery_redis
 
 
 @pytest.fixture(autouse=True)
@@ -26,7 +26,7 @@ def _make_mock_app(broker_url: str = "redis://localhost:6379/15") -> MagicMock:
 
 
 class TestCeleryGetBrokerClient:
-    @patch("onyx.background.celery.celery_redis.Redis")
+    @patch("aethersearch.background.celery.celery_redis.Redis")
     def test_creates_client_on_first_call(self, mock_redis_cls: MagicMock) -> None:
         mock_client = MagicMock()
         mock_redis_cls.from_url.return_value = mock_client
@@ -41,7 +41,7 @@ class TestCeleryGetBrokerClient:
         assert call_args[1]["socket_keepalive"] is True
         assert call_args[1]["retry_on_timeout"] is True
 
-    @patch("onyx.background.celery.celery_redis.Redis")
+    @patch("aethersearch.background.celery.celery_redis.Redis")
     def test_reuses_cached_client(self, mock_redis_cls: MagicMock) -> None:
         mock_client = MagicMock()
         mock_client.ping.return_value = True
@@ -55,7 +55,7 @@ class TestCeleryGetBrokerClient:
         # from_url called only once
         assert mock_redis_cls.from_url.call_count == 1
 
-    @patch("onyx.background.celery.celery_redis.Redis")
+    @patch("aethersearch.background.celery.celery_redis.Redis")
     def test_reconnects_on_ping_failure(self, mock_redis_cls: MagicMock) -> None:
         stale_client = MagicMock()
         stale_client.ping.side_effect = ConnectionError("disconnected")
@@ -76,7 +76,7 @@ class TestCeleryGetBrokerClient:
         assert client2 is fresh_client
         assert mock_redis_cls.from_url.call_count == 2
 
-    @patch("onyx.background.celery.celery_redis.Redis")
+    @patch("aethersearch.background.celery.celery_redis.Redis")
     def test_uses_broker_url_from_app_config(self, mock_redis_cls: MagicMock) -> None:
         mock_redis_cls.from_url.return_value = MagicMock()
 

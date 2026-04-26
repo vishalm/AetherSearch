@@ -6,12 +6,12 @@ from typing import IO
 
 import bs4
 
-from onyx.configs.app_configs import HTML_BASED_CONNECTOR_TRANSFORM_LINKS_STRATEGY
-from onyx.configs.app_configs import PARSE_WITH_TRAFILATURA
-from onyx.configs.app_configs import WEB_CONNECTOR_IGNORED_CLASSES
-from onyx.configs.app_configs import WEB_CONNECTOR_IGNORED_ELEMENTS
-from onyx.file_processing.enums import HtmlBasedConnectorTransformLinksStrategy
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import HTML_BASED_CONNECTOR_TRANSFORM_LINKS_STRATEGY
+from aethersearch.configs.app_configs import PARSE_WITH_TRAFILATURA
+from aethersearch.configs.app_configs import WEB_CONNECTOR_IGNORED_CLASSES
+from aethersearch.configs.app_configs import WEB_CONNECTOR_IGNORED_ELEMENTS
+from aethersearch.file_processing.enums import HtmlBasedConnectorTransformLinksStrategy
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

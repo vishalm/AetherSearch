@@ -3,7 +3,7 @@
 import { ValidSources } from "@/lib/types";
 import { SourceIcon } from "./SourceIcon";
 import { useState } from "react";
-import { SvgOnyxLogo, SvgGithub } from "@opal/logos";
+import { SvgAetherSearchLogo, SvgGithub } from "@opal/logos";
 
 export function WebResultIcon({
   url,
@@ -22,7 +22,7 @@ export function WebResultIcon({
   return (
     <>
       {hostname.includes("aethersearch.app") ? (
-        <SvgOnyxLogo size={size} className="dark:text-[#fff] text-[#000]" />
+        <SvgAetherSearchLogo size={size} className="dark:text-[#fff] text-[#000]" />
       ) : hostname === "github.com" || hostname.endsWith(".github.com") ? (
         <SvgGithub size={size} />
       ) : !error ? (

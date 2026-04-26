@@ -7,9 +7,9 @@ from chonkie import SentenceChunker
 from pydantic import BaseModel
 from pydantic import Field
 
-from onyx.connectors.models import IndexingDocument
-from onyx.connectors.models import Section
-from onyx.indexing.models import DocAwareChunk
+from aethersearch.connectors.models import IndexingDocument
+from aethersearch.connectors.models import Section
+from aethersearch.indexing.models import DocAwareChunk
 
 
 def extract_blurb(text: str, blurb_splitter: SentenceChunker) -> str:

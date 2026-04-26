@@ -27,9 +27,9 @@ from typing import NamedTuple
 from alembic.config import Config
 from alembic.script import ScriptDirectory
 
-from onyx.db.engine.sql_engine import SqlEngine
-from onyx.db.engine.tenant_utils import get_all_tenant_ids
-from onyx.db.engine.tenant_utils import get_schemas_needing_migration
+from aethersearch.db.engine.sql_engine import SqlEngine
+from aethersearch.db.engine.tenant_utils import get_all_tenant_ids
+from aethersearch.db.engine.tenant_utils import get_schemas_needing_migration
 from shared_configs.configs import TENANT_ID_PREFIX
 
 

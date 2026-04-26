@@ -9,10 +9,10 @@ import pytest
 from redis import Redis
 from redis.exceptions import ConnectionError as RedisConnectionError
 
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.server.manage.invite_rate_limit import enforce_invite_rate_limit
-from onyx.server.manage.invite_rate_limit import enforce_remove_invited_rate_limit
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.server.manage.invite_rate_limit import enforce_invite_rate_limit
+from aethersearch.server.manage.invite_rate_limit import enforce_remove_invited_rate_limit
 
 
 class _StubRedis:
@@ -64,10 +64,10 @@ def test_invite_allows_under_all_tiers() -> None:
     user_id = uuid4()
 
     with (
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 5),
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 50),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 5),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 50),
         patch(
-            "onyx.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY",
+            "aethersearch.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY",
             500,
         ),
     ):
@@ -87,10 +87,10 @@ def test_invite_minute_bucket_blocks_request_flood() -> None:
     user_id = uuid4()
 
     with (
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 5),
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 500),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 5),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 500),
         patch(
-            "onyx.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY",
+            "aethersearch.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY",
             5000,
         ),
     ):
@@ -99,12 +99,12 @@ def test_invite_minute_bucket_blocks_request_flood() -> None:
                 redis_client, user_id, num_invites=1, tenant_id="tenant_a"
             )
 
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             enforce_invite_rate_limit(
                 redis_client, user_id, num_invites=1, tenant_id="tenant_a"
             )
 
-    assert exc_info.value.error_code == OnyxErrorCode.RATE_LIMITED
+    assert exc_info.value.error_code == AetherSearchErrorCode.RATE_LIMITED
 
 
 def test_invite_bulk_call_does_not_trip_minute_bucket() -> None:
@@ -113,10 +113,10 @@ def test_invite_bulk_call_does_not_trip_minute_bucket() -> None:
     user_id = uuid4()
 
     with (
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 5),
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 50),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 5),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 50),
         patch(
-            "onyx.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY",
+            "aethersearch.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY",
             500,
         ),
     ):
@@ -134,19 +134,19 @@ def test_invite_admin_daily_cap_enforced() -> None:
 
     with (
         patch(
-            "onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN",
+            "aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN",
             1000,
         ),
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 50),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 50),
         patch(
-            "onyx.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY",
+            "aethersearch.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY",
             5000,
         ),
     ):
         enforce_invite_rate_limit(
             redis_client, user_id, num_invites=50, tenant_id="tenant_a"
         )
-        with pytest.raises(OnyxError):
+        with pytest.raises(AetherSearchError):
             enforce_invite_rate_limit(
                 redis_client, user_id, num_invites=1, tenant_id="tenant_a"
             )
@@ -158,14 +158,14 @@ def test_invite_tenant_daily_cap_enforced_across_admins() -> None:
 
     with (
         patch(
-            "onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN",
+            "aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN",
             1000,
         ),
         patch(
-            "onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY",
+            "aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY",
             1000,
         ),
-        patch("onyx.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY", 10),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY", 10),
     ):
         enforce_invite_rate_limit(
             redis_client, uuid4(), num_invites=6, tenant_id="tenant_a"
@@ -173,7 +173,7 @@ def test_invite_tenant_daily_cap_enforced_across_admins() -> None:
         enforce_invite_rate_limit(
             redis_client, uuid4(), num_invites=4, tenant_id="tenant_a"
         )
-        with pytest.raises(OnyxError):
+        with pytest.raises(AetherSearchError):
             enforce_invite_rate_limit(
                 redis_client, uuid4(), num_invites=1, tenant_id="tenant_a"
             )
@@ -185,14 +185,14 @@ def test_invite_rejected_request_does_not_consume_budget() -> None:
     user_id = uuid4()
 
     with (
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 5),
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 50),
-        patch("onyx.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY", 10),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 5),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 50),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY", 10),
     ):
         enforce_invite_rate_limit(
             redis_client, user_id, num_invites=10, tenant_id="tenant_a"
         )
-        with pytest.raises(OnyxError):
+        with pytest.raises(AetherSearchError):
             enforce_invite_rate_limit(
                 redis_client, user_id, num_invites=5, tenant_id="tenant_a"
             )
@@ -209,10 +209,10 @@ def test_invite_zero_new_invites_still_ticks_minute_bucket() -> None:
     user_id = uuid4()
 
     with (
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 2),
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 500),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 2),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 500),
         patch(
-            "onyx.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY",
+            "aethersearch.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY",
             5000,
         ),
     ):
@@ -222,7 +222,7 @@ def test_invite_zero_new_invites_still_ticks_minute_bucket() -> None:
         enforce_invite_rate_limit(
             redis_client, user_id, num_invites=0, tenant_id="tenant_a"
         )
-        with pytest.raises(OnyxError):
+        with pytest.raises(AetherSearchError):
             enforce_invite_rate_limit(
                 redis_client, user_id, num_invites=0, tenant_id="tenant_a"
             )
@@ -237,9 +237,9 @@ def test_invite_limit_zero_disables_tier() -> None:
     user_id = uuid4()
 
     with (
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 0),
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 0),
-        patch("onyx.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY", 0),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 0),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 0),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY", 0),
     ):
         for _ in range(100):
             enforce_invite_rate_limit(
@@ -255,15 +255,15 @@ def test_invite_tenant_bucket_is_isolated_across_tenants() -> None:
     user_id = uuid4()
 
     with (
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 1000),
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 1000),
-        patch("onyx.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY", 10),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 1000),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 1000),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY", 10),
     ):
         # Tenant A exhausts its own cap.
         enforce_invite_rate_limit(
             redis_client, user_id, num_invites=10, tenant_id="tenant_a"
         )
-        with pytest.raises(OnyxError):
+        with pytest.raises(AetherSearchError):
             enforce_invite_rate_limit(
                 redis_client, user_id, num_invites=1, tenant_id="tenant_a"
             )
@@ -279,16 +279,16 @@ def test_invite_tenant_bucket_is_isolated_across_tenants() -> None:
 
 
 def test_invite_fails_open_when_redis_unavailable() -> None:
-    """Onyx Lite deployments ship without Redis; invite flow must still work."""
+    """AetherSearch Lite deployments ship without Redis; invite flow must still work."""
     stub = _StubRedis()
     stub.eval_fail = RedisConnectionError("Redis not reachable")
     redis_client = cast(Redis, stub)
     user_id = uuid4()
 
     with (
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 1),
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 1),
-        patch("onyx.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY", 1),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 1),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 1),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY", 1),
     ):
         enforce_invite_rate_limit(
             redis_client, user_id, num_invites=1_000_000, tenant_id="tenant_a"
@@ -302,17 +302,17 @@ def test_remove_minute_bucket_blocks_pattern_attack() -> None:
 
     with (
         patch(
-            "onyx.server.manage.invite_rate_limit._REMOVE_ADMIN_PER_MIN",
+            "aethersearch.server.manage.invite_rate_limit._REMOVE_ADMIN_PER_MIN",
             3,
         ),
         patch(
-            "onyx.server.manage.invite_rate_limit._REMOVE_ADMIN_PER_DAY",
+            "aethersearch.server.manage.invite_rate_limit._REMOVE_ADMIN_PER_DAY",
             100,
         ),
     ):
         for _ in range(3):
             enforce_remove_invited_rate_limit(redis_client, user_id)
-        with pytest.raises(OnyxError):
+        with pytest.raises(AetherSearchError):
             enforce_remove_invited_rate_limit(redis_client, user_id)
 
 
@@ -322,17 +322,17 @@ def test_remove_daily_cap_enforced() -> None:
 
     with (
         patch(
-            "onyx.server.manage.invite_rate_limit._REMOVE_ADMIN_PER_MIN",
+            "aethersearch.server.manage.invite_rate_limit._REMOVE_ADMIN_PER_MIN",
             1000,
         ),
         patch(
-            "onyx.server.manage.invite_rate_limit._REMOVE_ADMIN_PER_DAY",
+            "aethersearch.server.manage.invite_rate_limit._REMOVE_ADMIN_PER_DAY",
             5,
         ),
     ):
         for _ in range(5):
             enforce_remove_invited_rate_limit(redis_client, user_id)
-        with pytest.raises(OnyxError):
+        with pytest.raises(AetherSearchError):
             enforce_remove_invited_rate_limit(redis_client, user_id)
 
 
@@ -342,10 +342,10 @@ def test_ttls_set_on_first_increment_and_not_reset() -> None:
     user_id = uuid4()
 
     with (
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 100),
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 500),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 100),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 500),
         patch(
-            "onyx.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY",
+            "aethersearch.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY",
             5000,
         ),
     ):
@@ -360,10 +360,10 @@ def test_ttls_set_on_first_increment_and_not_reset() -> None:
 
     stub.ttls[f"ratelimit:invite_put:admin:{user_id}:min"] = 999
     with (
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 100),
-        patch("onyx.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 500),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_MIN", 100),
+        patch("aethersearch.server.manage.invite_rate_limit._INVITE_ADMIN_PER_DAY", 500),
         patch(
-            "onyx.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY",
+            "aethersearch.server.manage.invite_rate_limit._INVITE_TENANT_PER_DAY",
             5000,
         ),
     ):

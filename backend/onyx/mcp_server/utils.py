@@ -1,4 +1,4 @@
-"""Utility helpers for the Onyx MCP server."""
+"""Utility helpers for the AetherSearch MCP server."""
 
 from __future__ import annotations
 
@@ -8,8 +8,8 @@ from fastmcp.server.dependencies import get_access_token
 from pydantic import BaseModel
 from pydantic import TypeAdapter
 
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import build_api_server_url_for_http_requests
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import build_api_server_url_for_http_requests
 
 
 class DocumentSetEntry(BaseModel):
@@ -42,7 +42,7 @@ def require_access_token() -> AccessToken:
     access_token = get_access_token()
     if not access_token:
         raise ValueError(
-            "MCP Server requires an Onyx access token to authenticate your request"
+            "MCP Server requires an AetherSearch access token to authenticate your request"
         )
     return access_token
 
@@ -87,14 +87,14 @@ async def get_indexed_sources(
     except (httpx.HTTPStatusError, httpx.RequestError, ValueError):
         # Re-raise known exception types (httpx errors and validation errors)
         logger.error(
-            "Onyx MCP Server: Failed to fetch indexed sources",
+            "AetherSearch MCP Server: Failed to fetch indexed sources",
             exc_info=True,
         )
         raise
     except Exception as exc:
         # Wrap unexpected exceptions
         logger.error(
-            "Onyx MCP Server: Unexpected error fetching indexed sources",
+            "AetherSearch MCP Server: Unexpected error fetching indexed sources",
             exc_info=True,
         )
         raise RuntimeError(f"Failed to fetch indexed sources: {exc}") from exc
@@ -117,13 +117,13 @@ async def get_accessible_document_sets(
         return _DOCUMENT_SET_ENTRIES_ADAPTER.validate_json(response.content)
     except (httpx.HTTPStatusError, httpx.RequestError, ValueError):
         logger.error(
-            "Onyx MCP Server: Failed to fetch document sets",
+            "AetherSearch MCP Server: Failed to fetch document sets",
             exc_info=True,
         )
         raise
     except Exception as exc:
         logger.error(
-            "Onyx MCP Server: Unexpected error fetching document sets",
+            "AetherSearch MCP Server: Unexpected error fetching document sets",
             exc_info=True,
         )
         raise RuntimeError(f"Failed to fetch document sets: {exc}") from exc

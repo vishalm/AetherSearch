@@ -17,27 +17,27 @@ from botocore.exceptions import ClientError
 from mypy_boto3_s3 import S3Client
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import AWS_REGION_NAME
-from onyx.configs.app_configs import S3_AWS_ACCESS_KEY_ID
-from onyx.configs.app_configs import S3_AWS_SECRET_ACCESS_KEY
-from onyx.configs.app_configs import S3_ENDPOINT_URL
-from onyx.configs.app_configs import S3_FILE_STORE_BUCKET_NAME
-from onyx.configs.app_configs import S3_FILE_STORE_PREFIX
-from onyx.configs.app_configs import S3_GENERATE_LOCAL_CHECKSUM
-from onyx.configs.app_configs import S3_VERIFY_SSL
-from onyx.configs.constants import FileOrigin
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.engine.sql_engine import get_session_with_current_tenant_if_none
-from onyx.db.file_record import delete_filerecord_by_file_id
-from onyx.db.file_record import get_filerecord_by_file_id
-from onyx.db.file_record import get_filerecord_by_file_id_optional
-from onyx.db.file_record import get_filerecord_by_prefix
-from onyx.db.file_record import upsert_filerecord
-from onyx.db.models import FileRecord
-from onyx.db.models import FileRecord as FileStoreModel
-from onyx.file_store.s3_key_utils import generate_s3_key
-from onyx.utils.file import FileWithMimeType
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import AWS_REGION_NAME
+from aethersearch.configs.app_configs import S3_AWS_ACCESS_KEY_ID
+from aethersearch.configs.app_configs import S3_AWS_SECRET_ACCESS_KEY
+from aethersearch.configs.app_configs import S3_ENDPOINT_URL
+from aethersearch.configs.app_configs import S3_FILE_STORE_BUCKET_NAME
+from aethersearch.configs.app_configs import S3_FILE_STORE_PREFIX
+from aethersearch.configs.app_configs import S3_GENERATE_LOCAL_CHECKSUM
+from aethersearch.configs.app_configs import S3_VERIFY_SSL
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant_if_none
+from aethersearch.db.file_record import delete_filerecord_by_file_id
+from aethersearch.db.file_record import get_filerecord_by_file_id
+from aethersearch.db.file_record import get_filerecord_by_file_id_optional
+from aethersearch.db.file_record import get_filerecord_by_prefix
+from aethersearch.db.file_record import upsert_filerecord
+from aethersearch.db.models import FileRecord
+from aethersearch.db.models import FileRecord as FileStoreModel
+from aethersearch.file_store.s3_key_utils import generate_s3_key
+from aethersearch.utils.file import FileWithMimeType
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()
@@ -189,7 +189,7 @@ class S3BackedFileStore(FileStore):
         self._aws_secret_access_key = aws_secret_access_key
         self._aws_region_name = aws_region_name or "us-east-2"
         self._s3_endpoint_url = s3_endpoint_url
-        self._s3_prefix = s3_prefix or "onyx-files"
+        self._s3_prefix = s3_prefix or "aethersearch-files"
         self._s3_verify_ssl = s3_verify_ssl
 
     def _get_s3_client(self) -> S3Client:
@@ -627,11 +627,11 @@ def get_default_file_store() -> FileStore:
     - Configuration via environment variables:
       - S3_FILE_STORE_BUCKET_NAME, S3_ENDPOINT_URL, S3_AWS_ACCESS_KEY_ID, etc.
     """
-    from onyx.configs.app_configs import FILE_STORE_BACKEND
-    from onyx.configs.constants import FileStoreType
+    from aethersearch.configs.app_configs import FILE_STORE_BACKEND
+    from aethersearch.configs.constants import FileStoreType
 
     if FileStoreType(FILE_STORE_BACKEND) == FileStoreType.POSTGRES:
-        from onyx.file_store.postgres_file_store import PostgresBackedFileStore
+        from aethersearch.file_store.postgres_file_store import PostgresBackedFileStore
 
         return PostgresBackedFileStore()
 

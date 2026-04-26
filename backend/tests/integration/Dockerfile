@@ -17,9 +17,9 @@ COPY ./tests/* /app/tests/
 COPY ./tests/utils/* /app/tests/utils/
 
 FROM base AS openapi-schema
-COPY ./scripts/onyx_openapi_schema.py /app/scripts/onyx_openapi_schema.py
-# TODO(Nik): https://linear.app/onyx-app/issue/ENG-1/update-test-infra-to-use-test-license
-RUN LICENSE_ENFORCEMENT_ENABLED=false python scripts/onyx_openapi_schema.py --filename openapi.json
+COPY ./scripts/aethersearch_openapi_schema.py /app/scripts/aethersearch_openapi_schema.py
+# TODO(Nik): https://linear.app/aethersearch-app/issue/ENG-1/update-test-infra-to-use-test-license
+RUN LICENSE_ENFORCEMENT_ENABLED=false python scripts/aethersearch_openapi_schema.py --filename openapi.json
 
 FROM openapitools/openapi-generator-cli:latest AS openapi-client
 WORKDIR /local
@@ -27,14 +27,14 @@ COPY --from=openapi-schema /app/openapi.json /local/openapi.json
 RUN openapi-generator-cli generate \
     -i /local/openapi.json \
     -g python \
-    -o /local/onyx_openapi_client \
-    --package-name onyx_openapi_client \
+    -o /local/aethersearch_openapi_client \
+    --package-name aethersearch_openapi_client \
     --skip-validate-spec \
     --openapi-normalizer "SIMPLIFY_ONEOF_ANYOF=true,SET_OAS3_NULLABLE=true"
 
 FROM integration-base AS integration
 COPY --from=openapi-schema /app/openapi.json /app/generated/openapi.json
-COPY --from=openapi-client /local/onyx_openapi_client /app/generated/onyx_openapi_client
+COPY --from=openapi-client /local/aethersearch_openapi_client /app/generated/aethersearch_openapi_client
 
 
 ENV PYTHONPATH=/app

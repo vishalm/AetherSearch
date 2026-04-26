@@ -4,44 +4,44 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from onyx.db.memory import UserMemoryContext
-from onyx.db.persona import get_default_behavior_persona
-from onyx.db.user_file import calculate_user_files_token_count
-from onyx.file_store.models import FileDescriptor
-from onyx.prompts.chat_prompts import CITATION_REMINDER
-from onyx.prompts.chat_prompts import DEFAULT_SYSTEM_PROMPT
-from onyx.prompts.chat_prompts import FILE_REMINDER
-from onyx.prompts.chat_prompts import LAST_CYCLE_CITATION_REMINDER
-from onyx.prompts.chat_prompts import REQUIRE_CITATION_GUIDANCE
-from onyx.prompts.prompt_utils import get_company_context
-from onyx.prompts.prompt_utils import handle_onyx_date_awareness
-from onyx.prompts.prompt_utils import replace_citation_guidance_tag
-from onyx.prompts.prompt_utils import replace_reminder_tag
-from onyx.prompts.tool_prompts import GENERATE_IMAGE_GUIDANCE
-from onyx.prompts.tool_prompts import INTERNAL_SEARCH_GUIDANCE
-from onyx.prompts.tool_prompts import MEMORY_GUIDANCE
-from onyx.prompts.tool_prompts import OPEN_URLS_GUIDANCE
-from onyx.prompts.tool_prompts import PYTHON_TOOL_GUIDANCE
-from onyx.prompts.tool_prompts import TOOL_DESCRIPTION_SEARCH_GUIDANCE
-from onyx.prompts.tool_prompts import TOOL_SECTION_HEADER
-from onyx.prompts.tool_prompts import WEB_SEARCH_GUIDANCE
-from onyx.prompts.tool_prompts import WEB_SEARCH_SITE_DISABLED_GUIDANCE
-from onyx.prompts.user_info import BASIC_INFORMATION_PROMPT
-from onyx.prompts.user_info import TEAM_INFORMATION_PROMPT
-from onyx.prompts.user_info import USER_INFORMATION_HEADER
-from onyx.prompts.user_info import USER_MEMORIES_PROMPT
-from onyx.prompts.user_info import USER_PREFERENCES_PROMPT
-from onyx.prompts.user_info import USER_ROLE_PROMPT
-from onyx.tools.interface import Tool
-from onyx.tools.tool_implementations.images.image_generation_tool import (
+from aethersearch.db.memory import UserMemoryContext
+from aethersearch.db.persona import get_default_behavior_persona
+from aethersearch.db.user_file import calculate_user_files_token_count
+from aethersearch.file_store.models import FileDescriptor
+from aethersearch.prompts.chat_prompts import CITATION_REMINDER
+from aethersearch.prompts.chat_prompts import DEFAULT_SYSTEM_PROMPT
+from aethersearch.prompts.chat_prompts import FILE_REMINDER
+from aethersearch.prompts.chat_prompts import LAST_CYCLE_CITATION_REMINDER
+from aethersearch.prompts.chat_prompts import REQUIRE_CITATION_GUIDANCE
+from aethersearch.prompts.prompt_utils import get_company_context
+from aethersearch.prompts.prompt_utils import handle_aethersearch_date_awareness
+from aethersearch.prompts.prompt_utils import replace_citation_guidance_tag
+from aethersearch.prompts.prompt_utils import replace_reminder_tag
+from aethersearch.prompts.tool_prompts import GENERATE_IMAGE_GUIDANCE
+from aethersearch.prompts.tool_prompts import INTERNAL_SEARCH_GUIDANCE
+from aethersearch.prompts.tool_prompts import MEMORY_GUIDANCE
+from aethersearch.prompts.tool_prompts import OPEN_URLS_GUIDANCE
+from aethersearch.prompts.tool_prompts import PYTHON_TOOL_GUIDANCE
+from aethersearch.prompts.tool_prompts import TOOL_DESCRIPTION_SEARCH_GUIDANCE
+from aethersearch.prompts.tool_prompts import TOOL_SECTION_HEADER
+from aethersearch.prompts.tool_prompts import WEB_SEARCH_GUIDANCE
+from aethersearch.prompts.tool_prompts import WEB_SEARCH_SITE_DISABLED_GUIDANCE
+from aethersearch.prompts.user_info import BASIC_INFORMATION_PROMPT
+from aethersearch.prompts.user_info import TEAM_INFORMATION_PROMPT
+from aethersearch.prompts.user_info import USER_INFORMATION_HEADER
+from aethersearch.prompts.user_info import USER_MEMORIES_PROMPT
+from aethersearch.prompts.user_info import USER_PREFERENCES_PROMPT
+from aethersearch.prompts.user_info import USER_ROLE_PROMPT
+from aethersearch.tools.interface import Tool
+from aethersearch.tools.tool_implementations.images.image_generation_tool import (
     ImageGenerationTool,
 )
-from onyx.tools.tool_implementations.memory.memory_tool import MemoryTool
-from onyx.tools.tool_implementations.open_url.open_url_tool import OpenURLTool
-from onyx.tools.tool_implementations.python.python_tool import PythonTool
-from onyx.tools.tool_implementations.search.search_tool import SearchTool
-from onyx.tools.tool_implementations.web_search.web_search_tool import WebSearchTool
-from onyx.utils.timing import log_function_time
+from aethersearch.tools.tool_implementations.memory.memory_tool import MemoryTool
+from aethersearch.tools.tool_implementations.open_url.open_url_tool import OpenURLTool
+from aethersearch.tools.tool_implementations.python.python_tool import PythonTool
+from aethersearch.tools.tool_implementations.search.search_tool import SearchTool
+from aethersearch.tools.tool_implementations.web_search.web_search_tool import WebSearchTool
+from aethersearch.utils.timing import log_function_time
 
 
 def get_default_base_system_prompt(db_session: Session) -> str:
@@ -204,7 +204,7 @@ def build_system_prompt(
     """Should only be called with the default behavior system prompt.
     If the user has replaced the default behavior prompt with their custom agent prompt, do not call this function.
     """
-    system_prompt = handle_onyx_date_awareness(base_system_prompt, datetime_aware)
+    system_prompt = handle_aethersearch_date_awareness(base_system_prompt, datetime_aware)
 
     # Replace citation guidance placeholder if present
     system_prompt, should_append_citation_guidance = replace_citation_guidance_tag(

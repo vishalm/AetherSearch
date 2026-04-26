@@ -62,7 +62,7 @@ import {
   SvgEditBig,
   SvgFolderPlus,
   SvgMoreHorizontal,
-  SvgOnyxOctagon,
+  SvgAetherSearchOctagon,
   SvgSearchMenu,
   SvgSettings,
 } from "@opal/icons";
@@ -246,13 +246,13 @@ const MemoizedAppSidebarInner = memo(function AppSidebarInner() {
   // Fetch notifications for build mode intro
   const { notifications, refresh: mutateNotifications } = useNotifications();
 
-  // Check if Onyx Craft is enabled via settings (backed by PostHog feature flag)
+  // Check if AetherSearch Craft is enabled via settings (backed by PostHog feature flag)
   // Only explicit true enables the feature; false or undefined = disabled
-  const isOnyxCraftEnabled =
-    combinedSettings?.settings?.onyx_craft_enabled === true;
+  const isAetherSearchCraftEnabled =
+    combinedSettings?.settings?.aethersearch_craft_enabled === true;
 
-  // Find build_mode feature announcement notification (only if Onyx Craft is enabled)
-  const buildModeNotification = isOnyxCraftEnabled
+  // Find build_mode feature announcement notification (only if AetherSearch Craft is enabled)
+  const buildModeNotification = isAetherSearchCraftEnabled
     ? notifications?.find(
         (n) =>
           n.notif_type === NotificationType.FEATURE_ANNOUNCEMENT &&
@@ -275,7 +275,7 @@ const MemoizedAppSidebarInner = memo(function AppSidebarInner() {
   const hasTenantModal = !!(newTenantInfo || invitationInfo);
   useEffect(() => {
     if (
-      isOnyxCraftEnabled &&
+      isAetherSearchCraftEnabled &&
       buildModeNotification &&
       !hasAutoTriggeredRef.current &&
       !hasTenantModal &&
@@ -286,7 +286,7 @@ const MemoizedAppSidebarInner = memo(function AppSidebarInner() {
     }
   }, [
     buildModeNotification,
-    isOnyxCraftEnabled,
+    isAetherSearchCraftEnabled,
     hasTenantModal,
     isCraftAnimationDisabled,
   ]);
@@ -545,7 +545,7 @@ const MemoizedAppSidebarInner = memo(function AppSidebarInner() {
         <SidebarTab
           icon={
             folded || visibleAgents.length === 0
-              ? SvgOnyxOctagon
+              ? SvgAetherSearchOctagon
               : SvgMoreHorizontal
           }
           href="/app/agents"
@@ -596,12 +596,12 @@ const MemoizedAppSidebarInner = memo(function AppSidebarInner() {
         <AccountPopover
           folded={folded}
           onShowBuildIntro={
-            isOnyxCraftEnabled ? handleShowBuildIntro : undefined
+            isAetherSearchCraftEnabled ? handleShowBuildIntro : undefined
           }
         />
       </div>
     ),
-    [folded, isAdmin, isCurator, handleShowBuildIntro, isOnyxCraftEnabled]
+    [folded, isAdmin, isCurator, handleShowBuildIntro, isAetherSearchCraftEnabled]
   );
 
   return (
@@ -670,7 +670,7 @@ const MemoizedAppSidebarInner = memo(function AppSidebarInner() {
         <div className="flex flex-col">
           {newSessionButton}
           {searchChatsButton}
-          {isOnyxCraftEnabled && buildButton}
+          {isAetherSearchCraftEnabled && buildButton}
           {folded && moreAgentsButton}
           {folded && newProjectButton}
         </div>

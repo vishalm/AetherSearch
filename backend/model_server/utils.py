@@ -11,7 +11,7 @@ from typing import TypeVar
 import torch
 
 from model_server.constants import GPUStatus
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

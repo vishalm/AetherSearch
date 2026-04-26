@@ -3,12 +3,12 @@ from collections import defaultdict
 from sqlalchemy import update
 from sqlalchemy.orm import Session
 
-from onyx.db.connector import fetch_unique_document_sources
-from onyx.db.document import DocumentSource
-from onyx.db.models import Connector
-from onyx.db.models import KGEntityType
-from onyx.kg.models import KGAttributeEntityOption
-from onyx.server.kg.models import EntityType
+from aethersearch.db.connector import fetch_unique_document_sources
+from aethersearch.db.document import DocumentSource
+from aethersearch.db.models import Connector
+from aethersearch.db.models import KGEntityType
+from aethersearch.kg.models import KGAttributeEntityOption
+from aethersearch.server.kg.models import EntityType
 
 UNGROUNDED_SOURCE_NAME = "Ungrounded"
 

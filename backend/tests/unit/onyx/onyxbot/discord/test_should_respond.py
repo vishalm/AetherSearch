@@ -10,8 +10,8 @@ from unittest.mock import patch
 import discord
 import pytest
 
-from onyx.onyxbot.discord.handle_message import check_implicit_invocation
-from onyx.onyxbot.discord.handle_message import should_respond
+from aethersearch.aethersearchbot.discord.handle_message import check_implicit_invocation
+from aethersearch.aethersearchbot.discord.handle_message import should_respond
 
 
 class TestBasicShouldRespond:
@@ -26,14 +26,14 @@ class TestBasicShouldRespond:
         mock_guild_config.enabled = False
 
         with patch(
-            "onyx.onyxbot.discord.handle_message.get_session_with_tenant"
+            "aethersearch.aethersearchbot.discord.handle_message.get_session_with_tenant"
         ) as mock_session:
             mock_db = MagicMock()
             mock_session.return_value.__enter__ = MagicMock(return_value=mock_db)
             mock_session.return_value.__exit__ = MagicMock()
 
             with patch(
-                "onyx.onyxbot.discord.handle_message.get_guild_config_by_discord_id",
+                "aethersearch.aethersearchbot.discord.handle_message.get_guild_config_by_discord_id",
                 return_value=mock_guild_config,
             ):
                 result = await should_respond(
@@ -58,7 +58,7 @@ class TestBasicShouldRespond:
         mock_channel_config.persona_override_id = None
 
         with patch(
-            "onyx.onyxbot.discord.handle_message.get_session_with_tenant"
+            "aethersearch.aethersearchbot.discord.handle_message.get_session_with_tenant"
         ) as mock_session:
             mock_db = MagicMock()
             mock_session.return_value.__enter__ = MagicMock(return_value=mock_db)
@@ -66,11 +66,11 @@ class TestBasicShouldRespond:
 
             with (
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_guild_config_by_discord_id",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_guild_config_by_discord_id",
                     return_value=mock_guild_config,
                 ),
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_channel_config_by_discord_ids",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_channel_config_by_discord_ids",
                     return_value=mock_channel_config,
                 ),
             ):
@@ -92,7 +92,7 @@ class TestBasicShouldRespond:
         mock_channel_config.enabled = False
 
         with patch(
-            "onyx.onyxbot.discord.handle_message.get_session_with_tenant"
+            "aethersearch.aethersearchbot.discord.handle_message.get_session_with_tenant"
         ) as mock_session:
             mock_db = MagicMock()
             mock_session.return_value.__enter__ = MagicMock(return_value=mock_db)
@@ -100,11 +100,11 @@ class TestBasicShouldRespond:
 
             with (
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_guild_config_by_discord_id",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_guild_config_by_discord_id",
                     return_value=mock_guild_config,
                 ),
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_channel_config_by_discord_ids",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_channel_config_by_discord_ids",
                     return_value=mock_channel_config,
                 ),
             ):
@@ -130,7 +130,7 @@ class TestBasicShouldRespond:
         mock_channel_config.persona_override_id = None
 
         with patch(
-            "onyx.onyxbot.discord.handle_message.get_session_with_tenant"
+            "aethersearch.aethersearchbot.discord.handle_message.get_session_with_tenant"
         ) as mock_session:
             mock_db = MagicMock()
             mock_session.return_value.__enter__ = MagicMock(return_value=mock_db)
@@ -138,11 +138,11 @@ class TestBasicShouldRespond:
 
             with (
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_guild_config_by_discord_id",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_guild_config_by_discord_id",
                     return_value=mock_guild_config,
                 ),
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_channel_config_by_discord_ids",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_channel_config_by_discord_ids",
                     return_value=mock_channel_config,
                 ),
             ):
@@ -162,7 +162,7 @@ class TestBasicShouldRespond:
         mock_guild_config.enabled = True
 
         with patch(
-            "onyx.onyxbot.discord.handle_message.get_session_with_tenant"
+            "aethersearch.aethersearchbot.discord.handle_message.get_session_with_tenant"
         ) as mock_session:
             mock_db = MagicMock()
             mock_session.return_value.__enter__ = MagicMock(return_value=mock_db)
@@ -170,11 +170,11 @@ class TestBasicShouldRespond:
 
             with (
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_guild_config_by_discord_id",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_guild_config_by_discord_id",
                     return_value=mock_guild_config,
                 ),
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_channel_config_by_discord_ids",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_channel_config_by_discord_ids",
                     return_value=None,  # No config
                 ),
             ):
@@ -203,7 +203,7 @@ class TestBasicShouldRespond:
         mock_discord_message.mentions = []
 
         with patch(
-            "onyx.onyxbot.discord.handle_message.get_session_with_tenant"
+            "aethersearch.aethersearchbot.discord.handle_message.get_session_with_tenant"
         ) as mock_session:
             mock_db = MagicMock()
             mock_session.return_value.__enter__ = MagicMock(return_value=mock_db)
@@ -211,15 +211,15 @@ class TestBasicShouldRespond:
 
             with (
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_guild_config_by_discord_id",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_guild_config_by_discord_id",
                     return_value=mock_guild_config,
                 ),
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_channel_config_by_discord_ids",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_channel_config_by_discord_ids",
                     return_value=mock_channel_config,
                 ),
                 patch(
-                    "onyx.onyxbot.discord.handle_message.check_implicit_invocation",
+                    "aethersearch.aethersearchbot.discord.handle_message.check_implicit_invocation",
                     return_value=False,
                 ),
             ):
@@ -245,7 +245,7 @@ class TestBasicShouldRespond:
         mock_channel_config.persona_override_id = None
 
         with patch(
-            "onyx.onyxbot.discord.handle_message.get_session_with_tenant"
+            "aethersearch.aethersearchbot.discord.handle_message.get_session_with_tenant"
         ) as mock_session:
             mock_db = MagicMock()
             mock_session.return_value.__enter__ = MagicMock(return_value=mock_db)
@@ -253,11 +253,11 @@ class TestBasicShouldRespond:
 
             with (
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_guild_config_by_discord_id",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_guild_config_by_discord_id",
                     return_value=mock_guild_config,
                 ),
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_channel_config_by_discord_ids",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_channel_config_by_discord_ids",
                     return_value=mock_channel_config,
                 ),
             ):
@@ -283,7 +283,7 @@ class TestBasicShouldRespond:
         mock_channel_config.persona_override_id = None
 
         with patch(
-            "onyx.onyxbot.discord.handle_message.get_session_with_tenant"
+            "aethersearch.aethersearchbot.discord.handle_message.get_session_with_tenant"
         ) as mock_session:
             mock_db = MagicMock()
             mock_session.return_value.__enter__ = MagicMock(return_value=mock_db)
@@ -291,11 +291,11 @@ class TestBasicShouldRespond:
 
             with (
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_guild_config_by_discord_id",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_guild_config_by_discord_id",
                     return_value=mock_guild_config,
                 ),
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_channel_config_by_discord_ids",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_channel_config_by_discord_ids",
                     return_value=mock_channel_config,
                 ),
             ):
@@ -520,7 +520,7 @@ class TestThreadOnlyMode:
         msg.reference = None
 
         with patch(
-            "onyx.onyxbot.discord.handle_message.get_session_with_tenant"
+            "aethersearch.aethersearchbot.discord.handle_message.get_session_with_tenant"
         ) as mock_session:
             mock_db = MagicMock()
             mock_session.return_value.__enter__ = MagicMock(return_value=mock_db)
@@ -528,11 +528,11 @@ class TestThreadOnlyMode:
 
             with (
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_guild_config_by_discord_id",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_guild_config_by_discord_id",
                     return_value=mock_guild_config,
                 ),
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_channel_config_by_discord_ids",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_channel_config_by_discord_ids",
                     return_value=mock_channel_config,
                 ),
             ):
@@ -557,7 +557,7 @@ class TestThreadOnlyMode:
         mock_channel_config.persona_override_id = None
 
         with patch(
-            "onyx.onyxbot.discord.handle_message.get_session_with_tenant"
+            "aethersearch.aethersearchbot.discord.handle_message.get_session_with_tenant"
         ) as mock_session:
             mock_db = MagicMock()
             mock_session.return_value.__enter__ = MagicMock(return_value=mock_db)
@@ -565,11 +565,11 @@ class TestThreadOnlyMode:
 
             with (
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_guild_config_by_discord_id",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_guild_config_by_discord_id",
                     return_value=mock_guild_config,
                 ),
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_channel_config_by_discord_ids",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_channel_config_by_discord_ids",
                     return_value=mock_channel_config,
                 ),
             ):
@@ -622,7 +622,7 @@ class TestEdgeCases:
         msg.reference = None
 
         with patch(
-            "onyx.onyxbot.discord.handle_message.get_session_with_tenant"
+            "aethersearch.aethersearchbot.discord.handle_message.get_session_with_tenant"
         ) as mock_session:
             mock_db = MagicMock()
             mock_session.return_value.__enter__ = MagicMock(return_value=mock_db)
@@ -630,11 +630,11 @@ class TestEdgeCases:
 
             with (
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_guild_config_by_discord_id",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_guild_config_by_discord_id",
                     return_value=mock_guild_config,
                 ),
                 patch(
-                    "onyx.onyxbot.discord.handle_message.get_channel_config_by_discord_ids",
+                    "aethersearch.aethersearchbot.discord.handle_message.get_channel_config_by_discord_ids",
                     return_value=mock_channel_config,
                 ),
             ):

@@ -11,7 +11,7 @@ import sys
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 
-from onyx.main import app as app_fn
+from aethersearch.main import app as app_fn
 
 OPENAPI_VERSION = "3.1.0"
 
@@ -69,7 +69,7 @@ def generate_client(openapi_json_path: str, strip_tags: bool = True) -> None:
     """Generate Python client from OpenAPI schema using openapi-generator."""
     import tempfile
 
-    output_dir = os.path.join(os.path.dirname(openapi_json_path), "onyx_openapi_client")
+    output_dir = os.path.join(os.path.dirname(openapi_json_path), "aethersearch_openapi_client")
 
     # Optionally strip tags so all endpoints go under DefaultApi
     schema_path = openapi_json_path
@@ -92,7 +92,7 @@ def generate_client(openapi_json_path: str, strip_tags: bool = True) -> None:
         "-o",
         output_dir,
         "--package-name",
-        "onyx_openapi_client",
+        "aethersearch_openapi_client",
         "--skip-validate-spec",
         "--openapi-normalizer",
         "SIMPLIFY_ONEOF_ANYOF=true,SET_OAS3_NULLABLE=true",
@@ -116,7 +116,7 @@ def generate_client(openapi_json_path: str, strip_tags: bool = True) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Export OpenAPI schema for Onyx API (does not require starting API server)"
+        description="Export OpenAPI schema for AetherSearch API (does not require starting API server)"
     )
     parser.add_argument(
         "--filename", "-f", help="Filename to write to", default="openapi.json"

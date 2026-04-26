@@ -12,7 +12,7 @@ from uuid import UUID
 
 import requests
 
-from onyx.db.enums import UserFileStatus
+from aethersearch.db.enums import UserFileStatus
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.managers.project import ProjectManager
 from tests.integration.common_utils.test_models import DATestLLMProvider

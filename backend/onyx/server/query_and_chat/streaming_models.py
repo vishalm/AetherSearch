@@ -7,8 +7,8 @@ from typing import Union
 from pydantic import BaseModel
 from pydantic import Field
 
-from onyx.context.search.models import SearchDoc
-from onyx.server.query_and_chat.placement import Placement
+from aethersearch.context.search.models import SearchDoc
+from aethersearch.server.query_and_chat.placement import Placement
 
 
 class StreamingType(Enum):

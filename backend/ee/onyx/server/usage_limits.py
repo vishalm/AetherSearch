@@ -1,9 +1,9 @@
 """EE Usage limits - trial detection via billing information."""
 
-from ee.onyx.server.tenants.billing import fetch_billing_information
-from ee.onyx.server.tenants.models import BillingInformation
-from ee.onyx.server.tenants.models import SubscriptionStatusResponse
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.server.tenants.billing import fetch_billing_information
+from ee.aethersearch.server.tenants.models import BillingInformation
+from ee.aethersearch.server.tenants.models import SubscriptionStatusResponse
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()

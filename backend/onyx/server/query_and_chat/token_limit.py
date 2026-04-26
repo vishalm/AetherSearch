@@ -11,15 +11,15 @@ from sqlalchemy import func
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from onyx.auth.users import current_chat_accessible_user
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.models import ChatMessage
-from onyx.db.models import ChatSession
-from onyx.db.models import TokenRateLimit
-from onyx.db.models import User
-from onyx.db.token_limit import fetch_all_global_token_rate_limits
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import fetch_versioned_implementation
+from aethersearch.auth.users import current_chat_accessible_user
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.models import ChatMessage
+from aethersearch.db.models import ChatSession
+from aethersearch.db.models import TokenRateLimit
+from aethersearch.db.models import User
+from aethersearch.db.token_limit import fetch_all_global_token_rate_limits
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import fetch_versioned_implementation
 
 logger = setup_logger()
 
@@ -36,7 +36,7 @@ def check_token_rate_limits(
         return
 
     versioned_rate_limit_strategy = fetch_versioned_implementation(
-        "onyx.server.query_and_chat.token_limit", _check_token_rate_limits.__name__
+        "aethersearch.server.query_and_chat.token_limit", _check_token_rate_limits.__name__
     )
     return versioned_rate_limit_strategy(user)
 

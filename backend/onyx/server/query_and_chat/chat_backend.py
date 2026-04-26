@@ -14,95 +14,95 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from onyx.access.access import user_can_access_chat_file
-from onyx.auth.api_key import get_hashed_api_key_from_request
-from onyx.auth.pat import get_hashed_pat_from_request
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import current_chat_accessible_user
-from onyx.cache.factory import get_cache_backend
-from onyx.chat.chat_processing_checker import is_chat_session_processing
-from onyx.chat.chat_state import ChatStateContainer
-from onyx.chat.chat_utils import convert_chat_history_basic
-from onyx.chat.chat_utils import create_chat_history_chain
-from onyx.chat.chat_utils import create_chat_session_from_request
-from onyx.chat.chat_utils import extract_headers
-from onyx.chat.models import ChatFullResponse
-from onyx.chat.models import CreateChatSessionID
-from onyx.chat.process_message import gather_stream_full
-from onyx.chat.process_message import handle_multi_model_stream
-from onyx.chat.process_message import handle_stream_message_objects
-from onyx.chat.prompt_utils import get_default_base_system_prompt
-from onyx.chat.stop_signal_checker import set_fence
-from onyx.configs.app_configs import WEB_DOMAIN
-from onyx.configs.chat_configs import HARD_DELETE_CHATS
-from onyx.configs.constants import MessageType
-from onyx.configs.constants import MilestoneRecordType
-from onyx.configs.constants import PUBLIC_API_TAGS
-from onyx.configs.model_configs import LITELLM_PASS_THROUGH_HEADERS
-from onyx.db.chat import add_chats_to_session_from_slack_thread
-from onyx.db.chat import delete_all_chat_sessions_for_user
-from onyx.db.chat import delete_chat_session
-from onyx.db.chat import duplicate_chat_session_for_user_from_slack
-from onyx.db.chat import get_chat_message
-from onyx.db.chat import get_chat_messages_by_session
-from onyx.db.chat import get_chat_session_by_id
-from onyx.db.chat import get_chat_sessions_by_user
-from onyx.db.chat import set_as_latest_chat_message
-from onyx.db.chat import set_preferred_response
-from onyx.db.chat import translate_db_message_to_chat_message_detail
-from onyx.db.chat import update_chat_session
-from onyx.db.chat_search import search_chat_sessions
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import Permission
-from onyx.db.feedback import create_chat_message_feedback
-from onyx.db.feedback import remove_chat_message_feedback
-from onyx.db.models import ChatSessionSharedStatus
-from onyx.db.models import Persona
-from onyx.db.models import User
-from onyx.db.persona import get_persona_by_id
-from onyx.db.usage import increment_usage
-from onyx.db.usage import UsageType
-from onyx.db.user_file import get_file_id_by_user_file_id
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.file_store.file_store import get_default_file_store
-from onyx.llm.constants import LlmProviderNames
-from onyx.llm.factory import get_default_llm
-from onyx.llm.factory import get_llm_for_persona
-from onyx.llm.factory import get_llm_token_counter
-from onyx.secondary_llm_flows.chat_session_naming import generate_chat_session_name
-from onyx.server.api_key_usage import check_api_key_usage
-from onyx.server.query_and_chat.models import ChatFeedbackRequest
-from onyx.server.query_and_chat.models import ChatMessageIdentifier
-from onyx.server.query_and_chat.models import ChatRenameRequest
-from onyx.server.query_and_chat.models import ChatSearchResponse
-from onyx.server.query_and_chat.models import ChatSessionCreationRequest
-from onyx.server.query_and_chat.models import ChatSessionDetailResponse
-from onyx.server.query_and_chat.models import ChatSessionDetails
-from onyx.server.query_and_chat.models import ChatSessionGroup
-from onyx.server.query_and_chat.models import ChatSessionsResponse
-from onyx.server.query_and_chat.models import ChatSessionSummary
-from onyx.server.query_and_chat.models import ChatSessionUpdateRequest
-from onyx.server.query_and_chat.models import MessageOrigin
-from onyx.server.query_and_chat.models import RenameChatSessionResponse
-from onyx.server.query_and_chat.models import SendMessageRequest
-from onyx.server.query_and_chat.models import SetPreferredResponseRequest
-from onyx.server.query_and_chat.models import UpdateChatSessionTemperatureRequest
-from onyx.server.query_and_chat.models import UpdateChatSessionThreadRequest
-from onyx.server.query_and_chat.session_loading import (
+from aethersearch.access.access import user_can_access_chat_file
+from aethersearch.auth.api_key import get_hashed_api_key_from_request
+from aethersearch.auth.pat import get_hashed_pat_from_request
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import current_chat_accessible_user
+from aethersearch.cache.factory import get_cache_backend
+from aethersearch.chat.chat_processing_checker import is_chat_session_processing
+from aethersearch.chat.chat_state import ChatStateContainer
+from aethersearch.chat.chat_utils import convert_chat_history_basic
+from aethersearch.chat.chat_utils import create_chat_history_chain
+from aethersearch.chat.chat_utils import create_chat_session_from_request
+from aethersearch.chat.chat_utils import extract_headers
+from aethersearch.chat.models import ChatFullResponse
+from aethersearch.chat.models import CreateChatSessionID
+from aethersearch.chat.process_message import gather_stream_full
+from aethersearch.chat.process_message import handle_multi_model_stream
+from aethersearch.chat.process_message import handle_stream_message_objects
+from aethersearch.chat.prompt_utils import get_default_base_system_prompt
+from aethersearch.chat.stop_signal_checker import set_fence
+from aethersearch.configs.app_configs import WEB_DOMAIN
+from aethersearch.configs.chat_configs import HARD_DELETE_CHATS
+from aethersearch.configs.constants import MessageType
+from aethersearch.configs.constants import MilestoneRecordType
+from aethersearch.configs.constants import PUBLIC_API_TAGS
+from aethersearch.configs.model_configs import LITELLM_PASS_THROUGH_HEADERS
+from aethersearch.db.chat import add_chats_to_session_from_slack_thread
+from aethersearch.db.chat import delete_all_chat_sessions_for_user
+from aethersearch.db.chat import delete_chat_session
+from aethersearch.db.chat import duplicate_chat_session_for_user_from_slack
+from aethersearch.db.chat import get_chat_message
+from aethersearch.db.chat import get_chat_messages_by_session
+from aethersearch.db.chat import get_chat_session_by_id
+from aethersearch.db.chat import get_chat_sessions_by_user
+from aethersearch.db.chat import set_as_latest_chat_message
+from aethersearch.db.chat import set_preferred_response
+from aethersearch.db.chat import translate_db_message_to_chat_message_detail
+from aethersearch.db.chat import update_chat_session
+from aethersearch.db.chat_search import search_chat_sessions
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import Permission
+from aethersearch.db.feedback import create_chat_message_feedback
+from aethersearch.db.feedback import remove_chat_message_feedback
+from aethersearch.db.models import ChatSessionSharedStatus
+from aethersearch.db.models import Persona
+from aethersearch.db.models import User
+from aethersearch.db.persona import get_persona_by_id
+from aethersearch.db.usage import increment_usage
+from aethersearch.db.usage import UsageType
+from aethersearch.db.user_file import get_file_id_by_user_file_id
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.llm.factory import get_default_llm
+from aethersearch.llm.factory import get_llm_for_persona
+from aethersearch.llm.factory import get_llm_token_counter
+from aethersearch.secondary_llm_flows.chat_session_naming import generate_chat_session_name
+from aethersearch.server.api_key_usage import check_api_key_usage
+from aethersearch.server.query_and_chat.models import ChatFeedbackRequest
+from aethersearch.server.query_and_chat.models import ChatMessageIdentifier
+from aethersearch.server.query_and_chat.models import ChatRenameRequest
+from aethersearch.server.query_and_chat.models import ChatSearchResponse
+from aethersearch.server.query_and_chat.models import ChatSessionCreationRequest
+from aethersearch.server.query_and_chat.models import ChatSessionDetailResponse
+from aethersearch.server.query_and_chat.models import ChatSessionDetails
+from aethersearch.server.query_and_chat.models import ChatSessionGroup
+from aethersearch.server.query_and_chat.models import ChatSessionsResponse
+from aethersearch.server.query_and_chat.models import ChatSessionSummary
+from aethersearch.server.query_and_chat.models import ChatSessionUpdateRequest
+from aethersearch.server.query_and_chat.models import MessageOrigin
+from aethersearch.server.query_and_chat.models import RenameChatSessionResponse
+from aethersearch.server.query_and_chat.models import SendMessageRequest
+from aethersearch.server.query_and_chat.models import SetPreferredResponseRequest
+from aethersearch.server.query_and_chat.models import UpdateChatSessionTemperatureRequest
+from aethersearch.server.query_and_chat.models import UpdateChatSessionThreadRequest
+from aethersearch.server.query_and_chat.session_loading import (
     translate_assistant_message_to_packets,
 )
-from onyx.server.query_and_chat.streaming_models import Packet
-from onyx.server.query_and_chat.token_limit import check_token_rate_limits
-from onyx.server.usage_limits import check_llm_cost_limit_for_provider
-from onyx.server.usage_limits import check_usage_and_raise
-from onyx.server.usage_limits import is_usage_limits_enabled
-from onyx.server.utils import get_json_line
-from onyx.tracing.framework.create import ensure_trace
-from onyx.utils.headers import get_custom_tool_additional_request_headers
-from onyx.utils.logger import setup_logger
-from onyx.utils.telemetry import mt_cloud_telemetry
+from aethersearch.server.query_and_chat.streaming_models import Packet
+from aethersearch.server.query_and_chat.token_limit import check_token_rate_limits
+from aethersearch.server.usage_limits import check_llm_cost_limit_for_provider
+from aethersearch.server.usage_limits import check_usage_and_raise
+from aethersearch.server.usage_limits import is_usage_limits_enabled
+from aethersearch.server.utils import get_json_line
+from aethersearch.tracing.framework.create import ensure_trace
+from aethersearch.utils.headers import get_custom_tool_additional_request_headers
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.telemetry import mt_cloud_telemetry
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()
@@ -610,8 +610,8 @@ def handle_send_chat_message(
         )
 
     if is_multi_model and not chat_message_req.stream:
-        raise OnyxError(
-            OnyxErrorCode.INVALID_INPUT,
+        raise AetherSearchError(
+            AetherSearchErrorCode.INVALID_INPUT,
             "Multi-model mode (llm_overrides with >1 entry) requires stream=True.",
         )
 
@@ -652,7 +652,7 @@ def handle_send_chat_message(
             # Note: LLM cost tracking is now handled in multi_llm.py
             return result
 
-    # Streaming path, normal Onyx UI behavior
+    # Streaming path, normal AetherSearch UI behavior
     def stream_generator() -> Generator[str, None, None]:
         state_container = ChatStateContainer()
         try:
@@ -726,7 +726,7 @@ def set_preferred_response_endpoint(
             preferred_assistant_message_id=request_body.preferred_response_id,
         )
     except ValueError as e:
-        raise OnyxError(OnyxErrorCode.INVALID_INPUT, str(e))
+        raise AetherSearchError(AetherSearchErrorCode.INVALID_INPUT, str(e))
 
 
 @router.post("/create-chat-message-feedback")
@@ -876,7 +876,7 @@ def fetch_chat_file(
     elif not user_can_access_chat_file(file_id, user, db_session):
         # Return 404 (rather than 403) so callers cannot probe for file
         # existence across ownership boundaries.
-        raise OnyxError(OnyxErrorCode.NOT_FOUND, "File not found")
+        raise AetherSearchError(AetherSearchErrorCode.NOT_FOUND, "File not found")
 
     file_store = get_default_file_store()
     file_record = file_store.read_file_record(file_id)
@@ -922,7 +922,7 @@ async def search_chats(
         page=page,
         page_size=page_size,
         include_deleted=False,
-        include_onyxbot_flows=False,
+        include_aethersearchbot_flows=False,
     )
 
     # Group chat sessions by time period
@@ -998,7 +998,7 @@ def stop_chat_session(
             db_session=db_session,
         )
     except ValueError:
-        raise OnyxError(OnyxErrorCode.SESSION_NOT_FOUND, "Chat session not found")
+        raise AetherSearchError(AetherSearchErrorCode.SESSION_NOT_FOUND, "Chat session not found")
 
     set_fence(chat_session_id, get_cache_backend(), True)
     return {"message": "Chat session stopped"}

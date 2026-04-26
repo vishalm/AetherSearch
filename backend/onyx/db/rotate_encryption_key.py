@@ -17,13 +17,13 @@ from sqlalchemy import select
 from sqlalchemy import update
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import ENCRYPTION_KEY_SECRET
-from onyx.db.models import Base
-from onyx.db.models import EncryptedJson
-from onyx.db.models import EncryptedString
-from onyx.utils.encryption import decrypt_bytes_to_string
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import global_version
+from aethersearch.configs.app_configs import ENCRYPTION_KEY_SECRET
+from aethersearch.db.models import Base
+from aethersearch.db.models import EncryptedJson
+from aethersearch.db.models import EncryptedString
+from aethersearch.utils.encryption import decrypt_bytes_to_string
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import global_version
 
 logger = setup_logger()
 

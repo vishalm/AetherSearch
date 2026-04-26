@@ -16,7 +16,7 @@ import { Callout } from "@/components/ui/callout";
 import { cn } from "@opal/utils";
 import { toast } from "@/hooks/useToast";
 import { SvgGlobe, SvgSlash, SvgUnplug } from "@opal/icons";
-import { SvgOnyxLogo } from "@opal/logos";
+import { SvgAetherSearchLogo } from "@opal/logos";
 import { Button, MessageCard } from "@opal/components";
 import { ADMIN_ROUTES } from "@/lib/admin-routes";
 import { WebProviderSetupModal } from "@/refresh-pages/admin/WebSearchPage/WebProviderSetupModal";
@@ -105,7 +105,7 @@ function WebSearchDisconnectModal({
     : contentProviders.filter(
         (p) =>
           p.id !== disconnectTarget.id &&
-          p.provider_type !== "onyx_web_crawler" &&
+          p.provider_type !== "aethersearch_web_crawler" &&
           p.id > 0 &&
           p.has_api_key
       );
@@ -453,11 +453,11 @@ export default function WebSearchPage() {
       const existing = byType.get(providerType);
       if (existing) return existing;
 
-      if (providerType === "onyx_web_crawler") {
+      if (providerType === "aethersearch_web_crawler") {
         return {
           id: -1,
-          name: "Onyx Web Crawler",
-          provider_type: "onyx_web_crawler",
+          name: "AetherSearch Web Crawler",
+          provider_type: "aethersearch_web_crawler",
           is_active: true,
           config: null,
           has_api_key: true,
@@ -987,7 +987,7 @@ export default function WebSearchPage() {
 
                 const canActivate =
                   providerId > 0 ||
-                  provider.provider_type === "onyx_web_crawler" ||
+                  provider.provider_type === "aethersearch_web_crawler" ||
                   isConfigured;
 
                 const ContentLogo =
@@ -999,8 +999,8 @@ export default function WebSearchPage() {
                     icon={() =>
                       ContentLogo ? (
                         <ContentLogo size={16} />
-                      ) : provider.provider_type === "onyx_web_crawler" ? (
-                        <SvgOnyxLogo size={16} />
+                      ) : provider.provider_type === "aethersearch_web_crawler" ? (
+                        <SvgAetherSearchLogo size={16} />
                       ) : (
                         <SvgGlobe size={16} />
                       )
@@ -1025,7 +1025,7 @@ export default function WebSearchPage() {
                       )
                     }
                     onEdit={
-                      provider.provider_type !== "onyx_web_crawler" &&
+                      provider.provider_type !== "aethersearch_web_crawler" &&
                       isConfigured
                         ? () => {
                             openContentModal(provider.provider_type, provider);
@@ -1033,7 +1033,7 @@ export default function WebSearchPage() {
                         : undefined
                     }
                     onDisconnect={
-                      provider.provider_type !== "onyx_web_crawler" &&
+                      provider.provider_type !== "aethersearch_web_crawler" &&
                       isConfigured &&
                       provider.id > 0
                         ? () =>
@@ -1201,8 +1201,8 @@ export default function WebSearchPage() {
             ? CONTENT_PROVIDER_DETAILS[selectedContentProviderType]?.logo
             : undefined,
           fallback:
-            selectedContentProviderType === "onyx_web_crawler" ? (
-              <SvgOnyxLogo size={24} />
+            selectedContentProviderType === "aethersearch_web_crawler" ? (
+              <SvgAetherSearchLogo size={24} />
             ) : undefined,
           size: 24,
           containerSize: 28,

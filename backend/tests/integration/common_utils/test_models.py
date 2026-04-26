@@ -7,17 +7,17 @@ from uuid import UUID
 from pydantic import BaseModel
 from pydantic import Field
 
-from onyx.auth.schemas import UserRole
-from onyx.configs.constants import MessageType
-from onyx.configs.constants import QAFeedbackType
-from onyx.context.search.models import SavedSearchDoc
-from onyx.context.search.models import SearchDoc
-from onyx.db.enums import AccessType
-from onyx.server.documents.models import DocumentSource
-from onyx.server.documents.models import IndexAttemptSnapshot
-from onyx.server.documents.models import IndexingStatus
-from onyx.server.documents.models import InputType
-from onyx.server.query_and_chat.streaming_models import GeneratedImage
+from aethersearch.auth.schemas import UserRole
+from aethersearch.configs.constants import MessageType
+from aethersearch.configs.constants import QAFeedbackType
+from aethersearch.context.search.models import SavedSearchDoc
+from aethersearch.context.search.models import SearchDoc
+from aethersearch.db.enums import AccessType
+from aethersearch.server.documents.models import DocumentSource
+from aethersearch.server.documents.models import IndexAttemptSnapshot
+from aethersearch.server.documents.models import IndexingStatus
+from aethersearch.server.documents.models import InputType
+from aethersearch.server.query_and_chat.streaming_models import GeneratedImage
 
 """
 These data models are used to represent the data on the testing side of things.

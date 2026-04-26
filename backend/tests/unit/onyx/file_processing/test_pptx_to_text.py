@@ -5,7 +5,7 @@ from pptx.chart.data import CategoryChartData
 from pptx.enum.chart import XL_CHART_TYPE
 from pptx.util import Inches
 
-from onyx.file_processing.extract_file_text import pptx_to_text
+from aethersearch.file_processing.extract_file_text import pptx_to_text
 
 
 def _make_pptx_with_chart() -> io.BytesIO:

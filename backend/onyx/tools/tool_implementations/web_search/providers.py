@@ -1,31 +1,31 @@
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.models import InternetSearchProvider
-from onyx.db.web_search import fetch_active_web_content_provider
-from onyx.db.web_search import fetch_active_web_search_provider
-from onyx.tools.tool_implementations.open_url.firecrawl import FirecrawlClient
-from onyx.tools.tool_implementations.open_url.models import WebContentProvider
-from onyx.tools.tool_implementations.open_url.onyx_web_crawler import (
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.models import InternetSearchProvider
+from aethersearch.db.web_search import fetch_active_web_content_provider
+from aethersearch.db.web_search import fetch_active_web_search_provider
+from aethersearch.tools.tool_implementations.open_url.firecrawl import FirecrawlClient
+from aethersearch.tools.tool_implementations.open_url.models import WebContentProvider
+from aethersearch.tools.tool_implementations.open_url.aethersearch_web_crawler import (
     DEFAULT_MAX_HTML_SIZE_BYTES,
 )
-from onyx.tools.tool_implementations.open_url.onyx_web_crawler import (
+from aethersearch.tools.tool_implementations.open_url.aethersearch_web_crawler import (
     DEFAULT_MAX_PDF_SIZE_BYTES,
 )
-from onyx.tools.tool_implementations.open_url.onyx_web_crawler import OnyxWebCrawler
-from onyx.tools.tool_implementations.web_search.clients.brave_client import BraveClient
-from onyx.tools.tool_implementations.web_search.clients.exa_client import ExaClient
-from onyx.tools.tool_implementations.web_search.clients.google_pse_client import (
+from aethersearch.tools.tool_implementations.open_url.aethersearch_web_crawler import AetherSearchWebCrawler
+from aethersearch.tools.tool_implementations.web_search.clients.brave_client import BraveClient
+from aethersearch.tools.tool_implementations.web_search.clients.exa_client import ExaClient
+from aethersearch.tools.tool_implementations.web_search.clients.google_pse_client import (
     GooglePSEClient,
 )
-from onyx.tools.tool_implementations.web_search.clients.searxng_client import (
+from aethersearch.tools.tool_implementations.web_search.clients.searxng_client import (
     SearXNGClient,
 )
-from onyx.tools.tool_implementations.web_search.clients.serper_client import (
+from aethersearch.tools.tool_implementations.web_search.clients.serper_client import (
     SerperClient,
 )
-from onyx.tools.tool_implementations.web_search.models import DEFAULT_MAX_RESULTS
-from onyx.tools.tool_implementations.web_search.models import WebContentProviderConfig
-from onyx.tools.tool_implementations.web_search.models import WebSearchProvider
-from onyx.utils.logger import setup_logger
+from aethersearch.tools.tool_implementations.web_search.models import DEFAULT_MAX_RESULTS
+from aethersearch.tools.tool_implementations.web_search.models import WebContentProviderConfig
+from aethersearch.tools.tool_implementations.web_search.models import WebSearchProvider
+from aethersearch.utils.logger import setup_logger
 from shared_configs.enums import WebContentProviderType
 from shared_configs.enums import WebSearchProviderType
 
@@ -142,14 +142,14 @@ def build_content_provider_from_config(
     api_key: str,
     config: WebContentProviderConfig,
 ) -> WebContentProvider | None:
-    if provider_type == WebContentProviderType.ONYX_WEB_CRAWLER:
+    if provider_type == WebContentProviderType.AETHERSEARCH_WEB_CRAWLER:
         if config.timeout_seconds is not None:
-            return OnyxWebCrawler(
+            return AetherSearchWebCrawler(
                 timeout_seconds=config.timeout_seconds,
                 max_pdf_size_bytes=DEFAULT_MAX_PDF_SIZE_BYTES,
                 max_html_size_bytes=DEFAULT_MAX_HTML_SIZE_BYTES,
             )
-        return OnyxWebCrawler(
+        return AetherSearchWebCrawler(
             max_pdf_size_bytes=DEFAULT_MAX_PDF_SIZE_BYTES,
             max_html_size_bytes=DEFAULT_MAX_HTML_SIZE_BYTES,
         )
@@ -193,7 +193,7 @@ def get_default_content_provider() -> WebContentProvider:
             if provider:
                 return provider
 
-    return OnyxWebCrawler(
+    return AetherSearchWebCrawler(
         max_pdf_size_bytes=DEFAULT_MAX_PDF_SIZE_BYTES,
         max_html_size_bytes=DEFAULT_MAX_HTML_SIZE_BYTES,
     )

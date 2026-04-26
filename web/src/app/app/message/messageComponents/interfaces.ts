@@ -1,7 +1,7 @@
 import { JSX } from "react";
 import { MinimalPersonaSnapshot } from "@/app/admin/agents/interfaces";
 import { Packet, StopReason } from "../../services/streamingModels";
-import { OnyxDocument, MinimalOnyxDocument } from "@/lib/search/interfaces";
+import { AetherSearchDocument, MinimalAetherSearchDocument } from "@/lib/search/interfaces";
 import { ProjectFile } from "../../projects/projectsService";
 import { LlmDescriptor } from "@/lib/hooks";
 import { IconType } from "react-icons";
@@ -26,10 +26,10 @@ export type TimelineLayout = "timeline" | "content";
 export interface FullChatState {
   agent: MinimalPersonaSnapshot;
   // Document-related context for citations
-  docs?: OnyxDocument[] | null;
+  docs?: AetherSearchDocument[] | null;
   userFiles?: ProjectFile[];
   citations?: CitationMap;
-  setPresentingDocument?: (document: MinimalOnyxDocument) => void;
+  setPresentingDocument?: (document: MinimalAetherSearchDocument) => void;
   // Regenerate functionality
   regenerate?: (modelOverRide: LlmDescriptor) => Promise<void>;
   overriddenModel?: string;

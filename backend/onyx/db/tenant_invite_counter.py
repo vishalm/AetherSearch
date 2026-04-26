@@ -3,7 +3,7 @@ from sqlalchemy import update
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm import Session
 
-from onyx.db.models import TenantInviteCounter
+from aethersearch.db.models import TenantInviteCounter
 
 
 def reserve_trial_invites(

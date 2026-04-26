@@ -7,14 +7,14 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.server.settings.models import ApplicationStatus
+from aethersearch.server.settings.models import ApplicationStatus
 
 # ---------------------------------------------------------------------------
 # Shared helpers
 # ---------------------------------------------------------------------------
 
-_HANDLE_MSG = "onyx.onyxbot.slack.handlers.handle_message"
-_LISTENER = "onyx.onyxbot.slack.listener"
+_HANDLE_MSG = "aethersearch.aethersearchbot.slack.handlers.handle_message"
+_LISTENER = "aethersearch.aethersearchbot.slack.listener"
 
 
 def _make_socket_request(
@@ -99,7 +99,7 @@ class TestCheckTenantGated:
         event: dict | None = None,
     ) -> tuple[bool, MagicMock]:
         """Call _check_tenant_gated with a fresh client + request."""
-        from onyx.onyxbot.slack.listener import _check_tenant_gated
+        from aethersearch.aethersearchbot.slack.listener import _check_tenant_gated
 
         client = MagicMock()
         client.web_client = MagicMock()
@@ -232,7 +232,7 @@ class TestExtractChannelFromRequest:
     def test_channel_extraction(
         self, req_type: str, payload: dict, expected: str | None
     ) -> None:
-        from onyx.onyxbot.slack.listener import _extract_channel_from_request
+        from aethersearch.aethersearchbot.slack.listener import _extract_channel_from_request
 
         req = MagicMock()
         req.type = req_type
@@ -268,7 +268,7 @@ class TestHandleMessageSeatCheck:
     def _call_handle_message(
         self, client: MagicMock | None = None, email: str = "user@test.com"
     ) -> bool:
-        from onyx.onyxbot.slack.handlers.handle_message import handle_message
+        from aethersearch.aethersearchbot.slack.handlers.handle_message import handle_message
 
         return handle_message(
             message_info=_make_message_info(email),
@@ -294,7 +294,7 @@ class TestHandleMessageSeatCheck:
 
         assert result is False
         assert "seat limit" in mock_respond.call_args[1]["text"]
-        assert "Onyx administrator" in mock_respond.call_args[1]["text"]
+        assert "AetherSearch administrator" in mock_respond.call_args[1]["text"]
 
     @pytest.mark.usefixtures("db_session")
     @patch(f"{_HANDLE_MSG}.handle_regular_answer", return_value=False)
@@ -367,12 +367,12 @@ class TestCheckSeatAvailability:
     """Tests for check_seat_availability function."""
 
     def _check(self, used: int, total: int) -> Any:
-        from ee.onyx.db.license import check_seat_availability
+        from ee.aethersearch.db.license import check_seat_availability
 
         metadata = MagicMock(seats=total)
         with (
-            patch("ee.onyx.db.license.get_used_seats", return_value=used),
-            patch("ee.onyx.db.license.get_license_metadata", return_value=metadata),
+            patch("ee.aethersearch.db.license.get_used_seats", return_value=used),
+            patch("ee.aethersearch.db.license.get_license_metadata", return_value=metadata),
         ):
             return check_seat_availability(MagicMock())
 
@@ -391,9 +391,9 @@ class TestCheckSeatAvailability:
         assert result.available is True
 
     def test_no_license_allows_unlimited(self) -> None:
-        from ee.onyx.db.license import check_seat_availability
+        from ee.aethersearch.db.license import check_seat_availability
 
-        with patch("ee.onyx.db.license.get_license_metadata", return_value=None):
+        with patch("ee.aethersearch.db.license.get_license_metadata", return_value=None):
             result = check_seat_availability(MagicMock())
             assert result.available is True
 
@@ -406,10 +406,10 @@ class TestCheckSeatAvailability:
 class TestGetUsedSeats:
     """Tests for get_used_seats — anonymous user exclusion."""
 
-    @patch("ee.onyx.db.license.MULTI_TENANT", False)
-    @patch("onyx.db.engine.sql_engine.get_session_with_current_tenant")
+    @patch("ee.aethersearch.db.license.MULTI_TENANT", False)
+    @patch("aethersearch.db.engine.sql_engine.get_session_with_current_tenant")
     def test_excludes_anonymous_user(self, mock_get_session: MagicMock) -> None:
-        from ee.onyx.db.license import get_used_seats
+        from ee.aethersearch.db.license import get_used_seats
 
         mock_session = MagicMock()
         mock_get_session.return_value.__enter__ = MagicMock(return_value=mock_session)

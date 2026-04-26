@@ -7,9 +7,9 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import selectinload
 from sqlalchemy.orm import Session
 
-from onyx.db.models import Persona
-from onyx.db.models import Project__UserFile
-from onyx.db.models import UserFile
+from aethersearch.db.models import Persona
+from aethersearch.db.models import Project__UserFile
+from aethersearch.db.models import UserFile
 
 
 def fetch_chunk_counts_for_user_files(

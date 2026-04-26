@@ -3,10 +3,10 @@ from collections.abc import Sequence
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import TokenRateLimitScope
-from onyx.db.models import TokenRateLimit
-from onyx.db.models import TokenRateLimit__UserGroup
-from onyx.server.token_rate_limits.models import TokenRateLimitArgs
+from aethersearch.configs.constants import TokenRateLimitScope
+from aethersearch.db.models import TokenRateLimit
+from aethersearch.db.models import TokenRateLimit__UserGroup
+from aethersearch.server.token_rate_limits.models import TokenRateLimitArgs
 
 
 def fetch_all_user_token_rate_limits(

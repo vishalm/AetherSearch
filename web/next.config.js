@@ -136,7 +136,7 @@ const nextConfig = {
       // Legacy /assistants → /agents redirects (added in PR #8869).
       // Preserves backward compatibility for bookmarks, shared links, and
       // hardcoded URLs that still reference the old /assistants paths.
-      // TODO: Remove these redirects in v4.0 — https://linear.app/onyx-app/issue/ENG-3771
+      // TODO: Remove these redirects in v4.0 — https://linear.app/aethersearch-app/issue/ENG-3771
       {
         source: "/admin/assistants",
         destination: "/admin/agents",

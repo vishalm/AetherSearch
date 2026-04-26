@@ -5,36 +5,36 @@ from fastapi import Depends
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from onyx import __version__ as onyx_version
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import is_user_admin
-from onyx.configs.app_configs import DEFAULT_USER_FILE_MAX_UPLOAD_SIZE_MB
-from onyx.configs.app_configs import DISABLE_VECTOR_DB
-from onyx.configs.app_configs import MAX_ALLOWED_UPLOAD_SIZE_MB
-from onyx.configs.constants import KV_REINDEX_KEY
-from onyx.configs.constants import NotificationType
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.db.notification import dismiss_all_notifications
-from onyx.db.notification import get_notifications
-from onyx.db.notification import update_notification_last_shown
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.key_value_store.factory import get_kv_store
-from onyx.key_value_store.interface import KvKeyNotFoundError
-from onyx.server.features.build.utils import is_onyx_craft_enabled
-from onyx.server.settings.models import (
+from aethersearch import __version__ as aethersearch_version
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import is_user_admin
+from aethersearch.configs.app_configs import DEFAULT_USER_FILE_MAX_UPLOAD_SIZE_MB
+from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
+from aethersearch.configs.app_configs import MAX_ALLOWED_UPLOAD_SIZE_MB
+from aethersearch.configs.constants import KV_REINDEX_KEY
+from aethersearch.configs.constants import NotificationType
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.db.notification import dismiss_all_notifications
+from aethersearch.db.notification import get_notifications
+from aethersearch.db.notification import update_notification_last_shown
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.key_value_store.factory import get_kv_store
+from aethersearch.key_value_store.interface import KvKeyNotFoundError
+from aethersearch.server.features.build.utils import is_aethersearch_craft_enabled
+from aethersearch.server.settings.models import (
     DEFAULT_FILE_TOKEN_COUNT_THRESHOLD_K_NO_VECTOR_DB,
 )
-from onyx.server.settings.models import DEFAULT_FILE_TOKEN_COUNT_THRESHOLD_K_VECTOR_DB
-from onyx.server.settings.models import Notification
-from onyx.server.settings.models import Settings
-from onyx.server.settings.models import UserSettings
-from onyx.server.settings.store import load_settings
-from onyx.server.settings.store import store_settings
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import (
+from aethersearch.server.settings.models import DEFAULT_FILE_TOKEN_COUNT_THRESHOLD_K_VECTOR_DB
+from aethersearch.server.settings.models import Notification
+from aethersearch.server.settings.models import Settings
+from aethersearch.server.settings.models import UserSettings
+from aethersearch.server.settings.store import load_settings
+from aethersearch.server.settings.store import store_settings
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import (
     fetch_versioned_implementation_with_fallback,
 )
 from shared_configs.configs import MULTI_TENANT
@@ -55,8 +55,8 @@ def admin_put_settings(
         and settings.user_file_max_upload_size_mb > 0
         and settings.user_file_max_upload_size_mb > MAX_ALLOWED_UPLOAD_SIZE_MB
     ):
-        raise OnyxError(
-            OnyxErrorCode.INVALID_INPUT,
+        raise AetherSearchError(
+            AetherSearchErrorCode.INVALID_INPUT,
             f"File upload size limit cannot exceed {MAX_ALLOWED_UPLOAD_SIZE_MB} MB",
         )
     store_settings(settings)
@@ -84,23 +84,23 @@ def fetch_settings(
         needs_reindexing = False
 
     apply_fn = fetch_versioned_implementation_with_fallback(
-        "onyx.server.settings.api",
+        "aethersearch.server.settings.api",
         "apply_license_status_to_settings",
         apply_license_status_to_settings,
     )
     general_settings = apply_fn(general_settings)
 
-    # Check if Onyx Craft is enabled for this user (used for server-side redirects)
-    onyx_craft_enabled_for_user = is_onyx_craft_enabled(user) if user else False
+    # Check if AetherSearch Craft is enabled for this user (used for server-side redirects)
+    aethersearch_craft_enabled_for_user = is_aethersearch_craft_enabled(user) if user else False
 
     return UserSettings(
         **general_settings.model_dump(),
         notifications=settings_notifications,
         needs_reindexing=needs_reindexing,
-        onyx_craft_enabled=onyx_craft_enabled_for_user,
+        aethersearch_craft_enabled=aethersearch_craft_enabled_for_user,
         vector_db_enabled=not DISABLE_VECTOR_DB,
         hooks_enabled=not MULTI_TENANT,
-        version=onyx_version,
+        version=aethersearch_version,
         max_allowed_upload_size_mb=MAX_ALLOWED_UPLOAD_SIZE_MB,
         default_user_file_max_upload_size_mb=min(
             DEFAULT_USER_FILE_MAX_UPLOAD_SIZE_MB,

@@ -9,9 +9,9 @@ from unittest.mock import MagicMock
 from unittest.mock import patch
 from uuid import uuid4
 
-from onyx.db.chat import delete_messages_and_files_from_chat_session
+from aethersearch.db.chat import delete_messages_and_files_from_chat_session
 
-_MODULE = "onyx.db.chat"
+_MODULE = "aethersearch.db.chat"
 
 
 def _make_db_session(

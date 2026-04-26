@@ -11,21 +11,21 @@ from pydantic import BaseModel
 from pydantic import Field
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.db.voice import fetch_default_stt_provider
-from onyx.db.voice import fetch_default_tts_provider
-from onyx.db.voice import update_user_voice_settings
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.redis.redis_pool import store_ws_token
-from onyx.redis.redis_pool import WsTokenRateLimitExceeded
-from onyx.server.manage.models import VoiceSettingsUpdateRequest
-from onyx.utils.logger import setup_logger
-from onyx.voice.factory import get_voice_provider
+from aethersearch.auth.permissions import require_permission
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.db.voice import fetch_default_stt_provider
+from aethersearch.db.voice import fetch_default_tts_provider
+from aethersearch.db.voice import update_user_voice_settings
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.redis.redis_pool import store_ws_token
+from aethersearch.redis.redis_pool import WsTokenRateLimitExceeded
+from aethersearch.server.manage.models import VoiceSettingsUpdateRequest
+from aethersearch.utils.logger import setup_logger
+from aethersearch.voice.factory import get_voice_provider
 
 logger = setup_logger()
 
@@ -65,14 +65,14 @@ async def transcribe_audio(
     """Transcribe audio to text using the default STT provider."""
     provider_db = fetch_default_stt_provider(db_session)
     if provider_db is None:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "No speech-to-text provider configured. Please contact your administrator.",
         )
 
     if not provider_db.api_key:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "Voice provider API key not configured.",
         )
 
@@ -82,8 +82,8 @@ async def transcribe_audio(
     while chunk := await audio.read(UPLOAD_READ_CHUNK_SIZE):
         total += len(chunk)
         if total > MAX_AUDIO_SIZE:
-            raise OnyxError(
-                OnyxErrorCode.PAYLOAD_TOO_LARGE,
+            raise AetherSearchError(
+                AetherSearchErrorCode.PAYLOAD_TOO_LARGE,
                 f"Audio file too large. Maximum size is {MAX_AUDIO_SIZE // (1024 * 1024)}MB.",
             )
         chunks.append(chunk)
@@ -96,20 +96,20 @@ async def transcribe_audio(
     try:
         provider = get_voice_provider(provider_db)
     except ValueError as exc:
-        raise OnyxError(OnyxErrorCode.INTERNAL_ERROR, str(exc)) from exc
+        raise AetherSearchError(AetherSearchErrorCode.INTERNAL_ERROR, str(exc)) from exc
 
     try:
         text = await provider.transcribe(audio_data, audio_format)
         return {"text": text}
     except NotImplementedError as exc:
-        raise OnyxError(
-            OnyxErrorCode.NOT_IMPLEMENTED,
+        raise AetherSearchError(
+            AetherSearchErrorCode.NOT_IMPLEMENTED,
             f"Speech-to-text not implemented for {provider_db.provider_type}.",
         ) from exc
     except Exception as exc:
         logger.error(f"Transcription failed: {exc}")
-        raise OnyxError(
-            OnyxErrorCode.INTERNAL_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.INTERNAL_ERROR,
             "Transcription failed. Please try again.",
         ) from exc
 
@@ -162,15 +162,15 @@ async def synthesize_speech(
         provider_db = fetch_default_tts_provider(db_session)
         if provider_db is None:
             logger.error("No TTS provider configured")
-            raise OnyxError(
-                OnyxErrorCode.VALIDATION_ERROR,
+            raise AetherSearchError(
+                AetherSearchErrorCode.VALIDATION_ERROR,
                 "No text-to-speech provider configured. Please contact your administrator.",
             )
 
         if not provider_db.api_key:
             logger.error("TTS provider has no API key")
-            raise OnyxError(
-                OnyxErrorCode.VALIDATION_ERROR,
+            raise AetherSearchError(
+                AetherSearchErrorCode.VALIDATION_ERROR,
                 "Voice provider API key not configured.",
             )
 
@@ -195,7 +195,7 @@ async def synthesize_speech(
             provider = get_voice_provider(provider_db)
         except ValueError as exc:
             logger.error(f"Failed to get voice provider: {exc}")
-            raise OnyxError(OnyxErrorCode.INTERNAL_ERROR, str(exc)) from exc
+            raise AetherSearchError(AetherSearchErrorCode.INTERNAL_ERROR, str(exc)) from exc
 
     # Pull the first chunk before returning the StreamingResponse. If the
     # provider rejects the request (e.g. text too long), the error surfaces
@@ -206,10 +206,10 @@ async def synthesize_speech(
     try:
         first_chunk = await stream_iter.__anext__()
     except StopAsyncIteration:
-        raise OnyxError(OnyxErrorCode.INTERNAL_ERROR, "TTS provider returned no audio")
+        raise AetherSearchError(AetherSearchErrorCode.INTERNAL_ERROR, "TTS provider returned no audio")
     except Exception as exc:
-        raise OnyxError(
-            OnyxErrorCode.BAD_GATEWAY, _extract_provider_error(exc)
+        raise AetherSearchError(
+            AetherSearchErrorCode.BAD_GATEWAY, _extract_provider_error(exc)
         ) from exc
 
     async def audio_stream() -> AsyncIterator[bytes]:
@@ -270,8 +270,8 @@ async def get_ws_token(
     try:
         await store_ws_token(token, str(user.id))
     except WsTokenRateLimitExceeded:
-        raise OnyxError(
-            OnyxErrorCode.RATE_LIMITED,
+        raise AetherSearchError(
+            AetherSearchErrorCode.RATE_LIMITED,
             "Too many token requests. Please wait before requesting another.",
         )
     return WSTokenResponse(token=token)

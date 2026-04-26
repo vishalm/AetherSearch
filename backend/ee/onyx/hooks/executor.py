@@ -47,7 +47,7 @@ The executor uses three sessions:
 
   3. Reachable session — a second short-lived session to update is_reachable on
      the Hook. Kept separate from the log session so a concurrent hook deletion
-     (which causes update_hook__no_commit to raise OnyxError(NOT_FOUND)) cannot
+     (which causes update_hook__no_commit to raise AetherSearchError(NOT_FOUND)) cannot
      prevent the execution log from being written. This update is best-effort.
 """
 
@@ -61,18 +61,18 @@ from pydantic import BaseModel
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import HookFailStrategy
-from onyx.db.enums import HookPoint
-from onyx.db.hook import create_hook_execution_log__no_commit
-from onyx.db.hook import get_non_deleted_hook_by_hook_point
-from onyx.db.hook import update_hook__no_commit
-from onyx.db.models import Hook
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.hooks.executor import HookSkipped
-from onyx.hooks.executor import HookSoftFailed
-from onyx.utils.logger import setup_logger
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import HookFailStrategy
+from aethersearch.db.enums import HookPoint
+from aethersearch.db.hook import create_hook_execution_log__no_commit
+from aethersearch.db.hook import get_non_deleted_hook_by_hook_point
+from aethersearch.db.hook import update_hook__no_commit
+from aethersearch.db.models import Hook
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.hooks.executor import HookSkipped
+from aethersearch.hooks.executor import HookSoftFailed
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()
@@ -248,7 +248,7 @@ def _persist_result(
 
     # Update is_reachable separately — best-effort, non-critical.
     # None means the value is unchanged (set by the caller to skip the no-op write).
-    # update_hook__no_commit can raise OnyxError(NOT_FOUND) if the hook was
+    # update_hook__no_commit can raise AetherSearchError(NOT_FOUND) if the hook was
     # concurrently deleted, so keep this isolated from the log write above.
     if outcome.updated_is_reachable is not None:
         try:
@@ -275,7 +275,7 @@ def _execute_hook_inner(
 ) -> T | HookSoftFailed:
     """Make the HTTP call, validate the response, and return a typed model.
 
-    Raises OnyxError on HARD failure. Returns HookSoftFailed on SOFT failure.
+    Raises AetherSearchError on HARD failure. Returns HookSoftFailed on SOFT failure.
     """
     timeout = hook.timeout_seconds
     hook_id = hook.id
@@ -337,8 +337,8 @@ def _execute_hook_inner(
 
     if not outcome.is_success:
         if fail_strategy == HookFailStrategy.HARD:
-            raise OnyxError(
-                OnyxErrorCode.HOOK_EXECUTION_FAILED,
+            raise AetherSearchError(
+                AetherSearchErrorCode.HOOK_EXECUTION_FAILED,
                 outcome.error_message or "Hook execution failed.",
             )
         logger.warning(
@@ -347,8 +347,8 @@ def _execute_hook_inner(
         return HookSoftFailed()
 
     if validated_model is None:
-        raise OnyxError(
-            OnyxErrorCode.INTERNAL_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.INTERNAL_ERROR,
             f"validated_model is None for successful hook call (hook_id={hook_id})",
         )
     return validated_model
@@ -365,7 +365,7 @@ def _execute_hook_impl(
 
     Returns HookSkipped if no active hook is configured, HookSoftFailed if the
     hook failed with SOFT fail strategy, or a validated response model on success.
-    Raises OnyxError on HARD failure or if the hook is misconfigured.
+    Raises AetherSearchError on HARD failure or if the hook is misconfigured.
     """
     hook = _lookup_hook(db_session, hook_point)
     if isinstance(hook, HookSkipped):

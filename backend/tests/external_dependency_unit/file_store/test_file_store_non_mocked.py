@@ -17,17 +17,17 @@ import pytest
 from botocore.exceptions import ClientError
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import FileOrigin
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.file_store.file_store import S3BackedFileStore
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.file_store.file_store import S3BackedFileStore
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import CURRENT_TENANT_ID_CONTEXTVAR
 from tests.external_dependency_unit.constants import TEST_TENANT_ID
 
 logger = setup_logger()
 
 
-TEST_BUCKET_NAME: str = "onyx-file-store-tests"
+TEST_BUCKET_NAME: str = "aethersearch-file-store-tests"
 TEST_FILE_PREFIX: str = "test-files"
 
 
@@ -57,8 +57,8 @@ class WorkerResult(TypedDict):
 
 def _get_all_backend_configs() -> List[BackendConfig]:
     """Get configurations for all available backends"""
-    from onyx.configs.app_configs import AWS_REGION_NAME
-    from onyx.configs.app_configs import S3_ENDPOINT_URL
+    from aethersearch.configs.app_configs import AWS_REGION_NAME
+    from aethersearch.configs.app_configs import S3_ENDPOINT_URL
 
     s3_aws_access_key_id = os.environ.get("S3_AWS_ACCESS_KEY_ID_FOR_TEST")
     s3_aws_secret_access_key = os.environ.get("S3_AWS_SECRET_ACCESS_KEY_FOR_TEST")

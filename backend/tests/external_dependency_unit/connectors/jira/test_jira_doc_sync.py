@@ -4,17 +4,17 @@ import pytest
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from ee.onyx.external_permissions.jira.doc_sync import jira_doc_sync
-from onyx.access.models import DocExternalAccess
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.models import InputType
-from onyx.db.enums import AccessType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.models import Connector
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import Credential
-from onyx.db.utils import DocumentRow
-from onyx.db.utils import SortOrder
+from ee.aethersearch.external_permissions.jira.doc_sync import jira_doc_sync
+from aethersearch.access.models import DocExternalAccess
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.models import InputType
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.models import Connector
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import Credential
+from aethersearch.db.utils import DocumentRow
+from aethersearch.db.utils import SortOrder
 
 # In order to get these tests to run, use the credentials from Bitwarden.
 # Search up "ENV vars for local and Github tests", and find the Jira relevant key-value pairs.
@@ -209,7 +209,7 @@ def test_jira_doc_sync_with_specific_permissions(
         assert len(docs) > 0, "Expected at least one document from SUP project"
 
         _EXPECTED_USER_EMAILS = set(
-            ["yuhong@onyx.app", "chris@onyx.app", "founders@onyx.app", "oauth@onyx.app"]
+            ["yuhong@aethersearch.app", "chris@aethersearch.app", "founders@aethersearch.app", "oauth@aethersearch.app"]
         )
         _EXPECTED_USER_GROUP_IDS = set(["jira-users-danswerai"])
 

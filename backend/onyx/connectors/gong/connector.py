@@ -13,18 +13,18 @@ from pydantic import BaseModel
 from requests.adapters import HTTPAdapter
 from urllib3.util import Retry
 
-from onyx.configs.app_configs import GONG_CONNECTOR_START_TIME
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.interfaces import CheckpointedConnector
-from onyx.connectors.interfaces import CheckpointOutput
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.models import ConnectorCheckpoint
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import ConnectorMissingCredentialError
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentFailure
-from onyx.connectors.models import TextSection
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import GONG_CONNECTOR_START_TIME
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.interfaces import CheckpointedConnector
+from aethersearch.connectors.interfaces import CheckpointOutput
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.models import ConnectorCheckpoint
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import ConnectorMissingCredentialError
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentFailure
+from aethersearch.connectors.models import TextSection
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

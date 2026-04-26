@@ -9,27 +9,27 @@ from celery.exceptions import SoftTimeLimitExceeded
 from redis import Redis
 from tenacity import RetryError
 
-from onyx.access.access import get_access_for_document
-from onyx.background.celery.apps.app_base import task_logger
-from onyx.background.celery.tasks.shared.RetryDocumentIndex import RetryDocumentIndex
-from onyx.configs.constants import ONYX_CELERY_BEAT_HEARTBEAT_KEY
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.db.document import delete_document_by_connector_credential_pair__no_commit
-from onyx.db.document import delete_documents_complete
-from onyx.db.document import fetch_chunk_count_for_document
-from onyx.db.document import get_document
-from onyx.db.document import get_document_connector_count
-from onyx.db.document import mark_document_as_modified
-from onyx.db.document import mark_document_as_synced
-from onyx.db.document_set import fetch_document_sets_for_document
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.relationships import delete_document_references_from_kg
-from onyx.db.search_settings import get_active_search_settings
-from onyx.document_index.factory import get_all_document_indices
-from onyx.document_index.interfaces import VespaDocumentFields
-from onyx.httpx.httpx_pool import HttpxPool
-from onyx.redis.redis_pool import get_redis_client
-from onyx.server.documents.models import ConnectorCredentialPairIdentifier
+from aethersearch.access.access import get_access_for_document
+from aethersearch.background.celery.apps.app_base import task_logger
+from aethersearch.background.celery.tasks.shared.RetryDocumentIndex import RetryDocumentIndex
+from aethersearch.configs.constants import AETHERSEARCH_CELERY_BEAT_HEARTBEAT_KEY
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.db.document import delete_document_by_connector_credential_pair__no_commit
+from aethersearch.db.document import delete_documents_complete
+from aethersearch.db.document import fetch_chunk_count_for_document
+from aethersearch.db.document import get_document
+from aethersearch.db.document import get_document_connector_count
+from aethersearch.db.document import mark_document_as_modified
+from aethersearch.db.document import mark_document_as_synced
+from aethersearch.db.document_set import fetch_document_sets_for_document
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.relationships import delete_document_references_from_kg
+from aethersearch.db.search_settings import get_active_search_settings
+from aethersearch.document_index.factory import get_all_document_indices
+from aethersearch.document_index.interfaces import VespaDocumentFields
+from aethersearch.httpx.httpx_pool import HttpxPool
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.server.documents.models import ConnectorCredentialPairIdentifier
 
 DOCUMENT_BY_CC_PAIR_CLEANUP_MAX_RETRIES = 3
 
@@ -39,7 +39,7 @@ LIGHT_SOFT_TIME_LIMIT = 105
 LIGHT_TIME_LIMIT = LIGHT_SOFT_TIME_LIMIT + 15
 
 
-class OnyxCeleryTaskCompletionStatus(str, Enum):
+class AetherSearchCeleryTaskCompletionStatus(str, Enum):
     """The different statuses the watchdog can finish with.
 
     TODO: create broader success/failure/abort categories
@@ -58,7 +58,7 @@ class OnyxCeleryTaskCompletionStatus(str, Enum):
 
 
 @shared_task(
-    name=OnyxCeleryTask.DOCUMENT_BY_CC_PAIR_CLEANUP_TASK,
+    name=AetherSearchCeleryTask.DOCUMENT_BY_CC_PAIR_CLEANUP_TASK,
     soft_time_limit=LIGHT_SOFT_TIME_LIMIT,
     time_limit=LIGHT_TIME_LIMIT,
     max_retries=DOCUMENT_BY_CC_PAIR_CLEANUP_MAX_RETRIES,
@@ -90,7 +90,7 @@ def document_by_cc_pair_cleanup_task(
 
     start = time.monotonic()
 
-    completion_status = OnyxCeleryTaskCompletionStatus.UNDEFINED
+    completion_status = AetherSearchCeleryTaskCompletionStatus.UNDEFINED
 
     try:
         with get_session_with_current_tenant() as db_session:
@@ -134,7 +134,7 @@ def document_by_cc_pair_cleanup_task(
                     document_ids=[document_id],
                 )
 
-                completion_status = OnyxCeleryTaskCompletionStatus.SUCCEEDED
+                completion_status = AetherSearchCeleryTaskCompletionStatus.SUCCEEDED
             elif count > 1:
                 action = "update"
 
@@ -185,9 +185,9 @@ def document_by_cc_pair_cleanup_task(
                 mark_document_as_synced(document_id, db_session)
                 db_session.commit()
 
-                completion_status = OnyxCeleryTaskCompletionStatus.SUCCEEDED
+                completion_status = AetherSearchCeleryTaskCompletionStatus.SUCCEEDED
             else:
-                completion_status = OnyxCeleryTaskCompletionStatus.SKIPPED
+                completion_status = AetherSearchCeleryTaskCompletionStatus.SKIPPED
 
             elapsed = time.monotonic() - start
             task_logger.info(
@@ -195,7 +195,7 @@ def document_by_cc_pair_cleanup_task(
             )
     except SoftTimeLimitExceeded:
         task_logger.info(f"SoftTimeLimitExceeded exception. doc={document_id}")
-        completion_status = OnyxCeleryTaskCompletionStatus.SOFT_TIME_LIMIT
+        completion_status = AetherSearchCeleryTaskCompletionStatus.SOFT_TIME_LIMIT
     except Exception as ex:
         e: Exception | None = None
         while True:
@@ -217,7 +217,7 @@ def document_by_cc_pair_cleanup_task(
                         f"Non-retryable HTTPStatusError: doc={document_id} status={e.response.status_code}"
                     )
                 completion_status = (
-                    OnyxCeleryTaskCompletionStatus.NON_RETRYABLE_EXCEPTION
+                    AetherSearchCeleryTaskCompletionStatus.NON_RETRYABLE_EXCEPTION
                 )
                 break
 
@@ -225,7 +225,7 @@ def document_by_cc_pair_cleanup_task(
                 f"document_by_cc_pair_cleanup_task exceptioned: doc={document_id}"
             )
 
-            completion_status = OnyxCeleryTaskCompletionStatus.RETRYABLE_EXCEPTION
+            completion_status = AetherSearchCeleryTaskCompletionStatus.RETRYABLE_EXCEPTION
             if (
                 self.max_retries is not None
                 and self.request.retries >= self.max_retries
@@ -249,7 +249,7 @@ def document_by_cc_pair_cleanup_task(
                     mark_document_as_modified(document_id, db_session)
                     db_session.commit()
                 completion_status = (
-                    OnyxCeleryTaskCompletionStatus.NON_RETRYABLE_EXCEPTION
+                    AetherSearchCeleryTaskCompletionStatus.NON_RETRYABLE_EXCEPTION
                 )
                 break
 
@@ -262,14 +262,14 @@ def document_by_cc_pair_cleanup_task(
             f"document_by_cc_pair_cleanup_task completed: status={completion_status.value} doc={document_id}"
         )
 
-    if completion_status != OnyxCeleryTaskCompletionStatus.SUCCEEDED:
+    if completion_status != AetherSearchCeleryTaskCompletionStatus.SUCCEEDED:
         return False
 
     task_logger.info(f"document_by_cc_pair_cleanup_task finished: doc={document_id}")
     return True
 
 
-@shared_task(name=OnyxCeleryTask.CELERY_BEAT_HEARTBEAT, ignore_result=True, bind=True)
+@shared_task(name=AetherSearchCeleryTask.CELERY_BEAT_HEARTBEAT, ignore_result=True, bind=True)
 def celery_beat_heartbeat(self: Task, *, tenant_id: str) -> None:  # noqa: ARG001
     """When this task runs, it writes a key to Redis with a TTL.
 
@@ -277,6 +277,6 @@ def celery_beat_heartbeat(self: Task, *, tenant_id: str) -> None:  # noqa: ARG00
     """
     time_start = time.monotonic()
     r: Redis = get_redis_client()
-    r.set(ONYX_CELERY_BEAT_HEARTBEAT_KEY, 1, ex=600)
+    r.set(AETHERSEARCH_CELERY_BEAT_HEARTBEAT_KEY, 1, ex=600)
     time_elapsed = time.monotonic() - time_start
     task_logger.info(f"celery_beat_heartbeat finished: elapsed={time_elapsed:.2f}")

@@ -1,27 +1,27 @@
 FROM python:3.11-slim-bookworm@sha256:9c6f90801e6b68e772b7c0ca74260cbf7af9f320acec894e26fccdaccfbe3b47
 
-LABEL com.danswer.maintainer="founders@onyx.app"
-LABEL com.danswer.description="This image is the web/frontend container of Onyx which \
-contains code for both the Community and Enterprise editions of Onyx. If you do not \
+LABEL com.danswer.maintainer="founders@aethersearch.app"
+LABEL com.danswer.description="This image is the web/frontend container of AetherSearch which \
+contains code for both the Community and Enterprise editions of AetherSearch. If you do not \
 have a contract or agreement with DanswerAI, you are not permitted to use the Enterprise \
 Edition features outside of personal development or testing purposes. Please reach out to \
-founders@onyx.app for more information. Please visit https://github.com/onyx-dot-app/onyx"
+founders@aethersearch.app for more information. Please visit https://github.com/aethersearch-dot-app/aethersearch"
 
 # Build argument for Craft support (disabled by default)
 # Use --build-arg ENABLE_CRAFT=true to include Node.js and opencode CLI
 ARG ENABLE_CRAFT=false
 
 # DO_NOT_TRACK is used to disable telemetry for Unstructured
-ENV ONYX_RUNNING_IN_DOCKER="true" \
+ENV AETHERSEARCH_RUNNING_IN_DOCKER="true" \
     DO_NOT_TRACK="true" \
     PLAYWRIGHT_BROWSERS_PATH="/app/.cache/ms-playwright"
 
 # Create non-root user for security best practices
-RUN groupadd -g 1001 onyx && \
-    useradd -u 1001 -g onyx -m -s /bin/bash onyx && \
-    mkdir -p /var/log/onyx && \
-    chmod 755 /var/log/onyx && \
-    chown onyx:onyx /var/log/onyx
+RUN groupadd -g 1001 aethersearch && \
+    useradd -u 1001 -g aethersearch -m -s /bin/bash aethersearch && \
+    mkdir -p /var/log/aethersearch && \
+    chmod 755 /var/log/aethersearch && \
+    chown aethersearch:aethersearch /var/log/aethersearch
 
 COPY --from=ghcr.io/astral-sh/uv:0.9.9 /uv /uvx /bin/
 
@@ -82,12 +82,12 @@ RUN uv pip install --system --no-cache-dir --upgrade \
     pip uninstall -y py && \
     playwright install chromium && \
     playwright install-deps chromium && \
-    chown -R onyx:onyx /app && \
+    chown -R aethersearch:aethersearch /app && \
     ln -s /usr/local/bin/supervisord /usr/bin/supervisord && \
     # Cleanup for CVEs and size reduction
     # https://github.com/tornadoweb/tornado/issues/3107
     # xserver-common and xvfb included by playwright installation but not needed after
-    # perl-base is part of the base Python Debian image but not needed for Onyx functionality
+    # perl-base is part of the base Python Debian image but not needed for AetherSearch functionality
     # perl-base could only be removed with --allow-remove-essential
     apt-get update && \
     apt-get remove -y --allow-remove-essential \
@@ -127,25 +127,25 @@ tiktoken.get_encoding('cl100k_base')"
 WORKDIR /app
 
 # Enterprise Version Files
-COPY --chown=onyx:onyx ./ee /app/ee
+COPY --chown=aethersearch:aethersearch ./ee /app/ee
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Set up application files
-COPY --chown=onyx:onyx ./onyx /app/onyx
-COPY --chown=onyx:onyx ./shared_configs /app/shared_configs
-COPY --chown=onyx:onyx ./alembic /app/alembic
-COPY --chown=onyx:onyx ./alembic_tenants /app/alembic_tenants
-COPY --chown=onyx:onyx ./alembic.ini /app/alembic.ini
+COPY --chown=aethersearch:aethersearch ./aethersearch /app/aethersearch
+COPY --chown=aethersearch:aethersearch ./shared_configs /app/shared_configs
+COPY --chown=aethersearch:aethersearch ./alembic /app/alembic
+COPY --chown=aethersearch:aethersearch ./alembic_tenants /app/alembic_tenants
+COPY --chown=aethersearch:aethersearch ./alembic.ini /app/alembic.ini
 COPY supervisord.conf /usr/etc/supervisord.conf
-COPY --chown=onyx:onyx ./static /app/static
-COPY --chown=onyx:onyx ./keys /app/keys
+COPY --chown=aethersearch:aethersearch ./static /app/static
+COPY --chown=aethersearch:aethersearch ./keys /app/keys
 
 # Escape hatch scripts
-COPY --chown=onyx:onyx ./scripts/debugging /app/scripts/debugging
-COPY --chown=onyx:onyx ./scripts/force_delete_connector_by_id.py /app/scripts/force_delete_connector_by_id.py
-COPY --chown=onyx:onyx ./scripts/supervisord_entrypoint.sh /app/scripts/supervisord_entrypoint.sh
-COPY --chown=onyx:onyx ./scripts/setup_craft_templates.sh /app/scripts/setup_craft_templates.sh
-COPY --chown=onyx:onyx ./scripts/reencrypt_secrets.py /app/scripts/reencrypt_secrets.py
+COPY --chown=aethersearch:aethersearch ./scripts/debugging /app/scripts/debugging
+COPY --chown=aethersearch:aethersearch ./scripts/force_delete_connector_by_id.py /app/scripts/force_delete_connector_by_id.py
+COPY --chown=aethersearch:aethersearch ./scripts/supervisord_entrypoint.sh /app/scripts/supervisord_entrypoint.sh
+COPY --chown=aethersearch:aethersearch ./scripts/setup_craft_templates.sh /app/scripts/setup_craft_templates.sh
+COPY --chown=aethersearch:aethersearch ./scripts/reencrypt_secrets.py /app/scripts/reencrypt_secrets.py
 RUN chmod +x /app/scripts/supervisord_entrypoint.sh /app/scripts/setup_craft_templates.sh
 
 # Run Craft template setup at build time when ENABLE_CRAFT=true
@@ -157,17 +157,17 @@ RUN if [ "$ENABLE_CRAFT" = "true" ]; then \
 
 # Set Craft template paths to the in-image locations
 # These match the paths where setup_craft_templates.sh creates the templates
-ENV OUTPUTS_TEMPLATE_PATH=/app/onyx/server/features/build/sandbox/kubernetes/docker/templates/outputs
-ENV VENV_TEMPLATE_PATH=/app/onyx/server/features/build/sandbox/kubernetes/docker/templates/venv
+ENV OUTPUTS_TEMPLATE_PATH=/app/aethersearch/server/features/build/sandbox/kubernetes/docker/templates/outputs
+ENV VENV_TEMPLATE_PATH=/app/aethersearch/server/features/build/sandbox/kubernetes/docker/templates/venv
 
 # Put logo in assets
-COPY --chown=onyx:onyx ./assets /app/assets
+COPY --chown=aethersearch:aethersearch ./assets /app/assets
 
 ENV PYTHONPATH=/app
 
-# Default ONYX_VERSION, typically overriden during builds by GitHub Actions.
-ARG ONYX_VERSION=0.0.0-dev
-ENV ONYX_VERSION=${ONYX_VERSION}
+# Default AETHERSEARCH_VERSION, typically overriden during builds by GitHub Actions.
+ARG AETHERSEARCH_VERSION=0.0.0-dev
+ENV AETHERSEARCH_VERSION=${AETHERSEARCH_VERSION}
 
 # Use jemalloc instead of glibc malloc to reduce memory fragmentation
 # in long-running Python processes (API server, Celery workers).

@@ -1,4 +1,4 @@
-from onyx.llm.constants import LlmProviderNames
+from aethersearch.llm.constants import LlmProviderNames
 
 OPENAI_PROVIDER_NAME = "openai"
 

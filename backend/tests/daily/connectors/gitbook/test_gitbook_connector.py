@@ -3,9 +3,9 @@ import time
 
 import pytest
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.gitbook.connector import GitbookConnector
-from onyx.connectors.models import HierarchyNode
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.gitbook.connector import GitbookConnector
+from aethersearch.connectors.models import HierarchyNode
 
 
 @pytest.fixture

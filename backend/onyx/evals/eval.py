@@ -10,29 +10,29 @@ from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import SessionTransaction
 
-from onyx.chat.chat_state import ChatStateContainer
-from onyx.chat.models import ChatFullResponse
-from onyx.chat.process_message import gather_stream_full
-from onyx.chat.process_message import handle_stream_message_objects
-from onyx.configs.constants import DEFAULT_PERSONA_ID
-from onyx.db.chat import create_chat_session
-from onyx.db.engine.sql_engine import get_sqlalchemy_engine
-from onyx.db.users import get_user_by_email
-from onyx.evals.models import ChatFullEvalResult
-from onyx.evals.models import EvalationAck
-from onyx.evals.models import EvalConfigurationOptions
-from onyx.evals.models import EvalMessage
-from onyx.evals.models import EvalProvider
-from onyx.evals.models import EvalTimings
-from onyx.evals.models import EvalToolResult
-from onyx.evals.models import MultiTurnEvalResult
-from onyx.evals.models import ToolAssertion
-from onyx.evals.provider import get_provider
-from onyx.llm.override_models import LLMOverride
-from onyx.server.query_and_chat.models import AUTO_PLACE_AFTER_LATEST_MESSAGE
-from onyx.server.query_and_chat.models import ChatSessionCreationRequest
-from onyx.server.query_and_chat.models import SendMessageRequest
-from onyx.utils.logger import setup_logger
+from aethersearch.chat.chat_state import ChatStateContainer
+from aethersearch.chat.models import ChatFullResponse
+from aethersearch.chat.process_message import gather_stream_full
+from aethersearch.chat.process_message import handle_stream_message_objects
+from aethersearch.configs.constants import DEFAULT_PERSONA_ID
+from aethersearch.db.chat import create_chat_session
+from aethersearch.db.engine.sql_engine import get_sqlalchemy_engine
+from aethersearch.db.users import get_user_by_email
+from aethersearch.evals.models import ChatFullEvalResult
+from aethersearch.evals.models import EvalationAck
+from aethersearch.evals.models import EvalConfigurationOptions
+from aethersearch.evals.models import EvalMessage
+from aethersearch.evals.models import EvalProvider
+from aethersearch.evals.models import EvalTimings
+from aethersearch.evals.models import EvalToolResult
+from aethersearch.evals.models import MultiTurnEvalResult
+from aethersearch.evals.models import ToolAssertion
+from aethersearch.evals.provider import get_provider
+from aethersearch.llm.override_models import LLMOverride
+from aethersearch.server.query_and_chat.models import AUTO_PLACE_AFTER_LATEST_MESSAGE
+from aethersearch.server.query_and_chat.models import ChatSessionCreationRequest
+from aethersearch.server.query_and_chat.models import SendMessageRequest
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()
@@ -175,8 +175,8 @@ def _get_answer_with_tools(
             forced_tool_ids: list[int] = []
             input_force_tools = eval_input.get("force_tools", [])
             if input_force_tools:
-                from onyx.db.tools import get_builtin_tool
-                from onyx.tools.built_in_tools import BUILT_IN_TOOL_MAP
+                from aethersearch.db.tools import get_builtin_tool
+                from aethersearch.tools.built_in_tools import BUILT_IN_TOOL_MAP
 
                 for tool_type in input_force_tools:
                     if tool_type in BUILT_IN_TOOL_MAP:
@@ -326,7 +326,7 @@ def _get_multi_turn_answer_with_tools(
                 description="Multi-turn eval session",
                 user_id=user_id,
                 persona_id=DEFAULT_PERSONA_ID,
-                onyxbot_flow=True,
+                aethersearchbot_flow=True,
             )
             chat_session_id = chat_session.id
 
@@ -339,8 +339,8 @@ def _get_multi_turn_answer_with_tools(
                 # Handle per-turn tool forcing
                 forced_tool_ids: list[int] = []
                 if msg.force_tools:
-                    from onyx.db.tools import get_builtin_tool
-                    from onyx.tools.built_in_tools import BUILT_IN_TOOL_MAP
+                    from aethersearch.db.tools import get_builtin_tool
+                    from aethersearch.tools.built_in_tools import BUILT_IN_TOOL_MAP
 
                     for tool_type in msg.force_tools:
                         if tool_type in BUILT_IN_TOOL_MAP:

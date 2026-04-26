@@ -22,13 +22,13 @@ from typing import Any
 from botocore.exceptions import ClientError
 from mypy_boto3_s3.client import S3Client
 
-from onyx.connectors.models import Document
-from onyx.server.features.build.configs import PERSISTENT_DOCUMENT_STORAGE_PATH
-from onyx.server.features.build.configs import SANDBOX_BACKEND
-from onyx.server.features.build.configs import SANDBOX_S3_BUCKET
-from onyx.server.features.build.configs import SandboxBackend
-from onyx.server.features.build.s3.s3_client import build_s3_client
-from onyx.utils.logger import setup_logger
+from aethersearch.connectors.models import Document
+from aethersearch.server.features.build.configs import PERSISTENT_DOCUMENT_STORAGE_PATH
+from aethersearch.server.features.build.configs import SANDBOX_BACKEND
+from aethersearch.server.features.build.configs import SANDBOX_S3_BUCKET
+from aethersearch.server.features.build.configs import SandboxBackend
+from aethersearch.server.features.build.s3.s3_client import build_s3_client
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

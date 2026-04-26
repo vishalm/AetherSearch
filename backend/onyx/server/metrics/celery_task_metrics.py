@@ -7,7 +7,7 @@ These fire for ALL tasks on the worker — no per-connector enrichment
 (see indexing_task_metrics.py for that).
 
 Usage in a worker app module:
-    from onyx.server.metrics.celery_task_metrics import (
+    from aethersearch.server.metrics.celery_task_metrics import (
         on_celery_task_prerun,
         on_celery_task_postrun,
         on_celery_task_retry,
@@ -25,55 +25,55 @@ from prometheus_client import Counter
 from prometheus_client import Gauge
 from prometheus_client import Histogram
 
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
 TASK_STARTED = Counter(
-    "onyx_celery_task_started_total",
+    "aethersearch_celery_task_started_total",
     "Total Celery tasks started",
     ["task_name", "queue"],
 )
 
 TASK_COMPLETED = Counter(
-    "onyx_celery_task_completed_total",
+    "aethersearch_celery_task_completed_total",
     "Total Celery tasks completed",
     ["task_name", "queue", "outcome"],
 )
 
 TASK_DURATION = Histogram(
-    "onyx_celery_task_duration_seconds",
+    "aethersearch_celery_task_duration_seconds",
     "Celery task execution duration in seconds",
     ["task_name", "queue"],
     buckets=[1, 5, 15, 30, 60, 120, 300, 600, 1800, 3600],
 )
 
 TASKS_ACTIVE = Gauge(
-    "onyx_celery_tasks_active",
+    "aethersearch_celery_tasks_active",
     "Currently executing Celery tasks",
     ["task_name", "queue"],
 )
 
 TASK_RETRIED = Counter(
-    "onyx_celery_task_retried_total",
+    "aethersearch_celery_task_retried_total",
     "Total Celery tasks retried",
     ["task_name", "queue"],
 )
 
 TASK_REVOKED = Counter(
-    "onyx_celery_task_revoked_total",
+    "aethersearch_celery_task_revoked_total",
     "Total Celery tasks revoked (cancelled)",
     ["task_name"],
 )
 
 TASK_REJECTED = Counter(
-    "onyx_celery_task_rejected_total",
+    "aethersearch_celery_task_rejected_total",
     "Total Celery tasks rejected by worker",
     ["task_name"],
 )
 
 TASK_QUEUE_WAIT = Histogram(
-    "onyx_celery_task_queue_wait_seconds",
+    "aethersearch_celery_task_queue_wait_seconds",
     "Time a Celery task spent waiting in the queue before execution started",
     ["task_name", "queue"],
     buckets=[

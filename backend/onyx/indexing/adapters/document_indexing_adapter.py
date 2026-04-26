@@ -4,29 +4,29 @@ from collections.abc import Generator
 from sqlalchemy.engine.util import TransactionalContext
 from sqlalchemy.orm import Session
 
-from onyx.access.access import get_access_for_documents
-from onyx.access.models import DocumentAccess
-from onyx.configs.constants import DEFAULT_BOOST
-from onyx.connectors.models import Document
-from onyx.connectors.models import IndexAttemptMetadata
-from onyx.db.chunk import update_chunk_boost_components__no_commit
-from onyx.db.document import fetch_chunk_counts_for_documents
-from onyx.db.document import mark_document_as_indexed_for_cc_pair__no_commit
-from onyx.db.document import prepare_to_modify_documents
-from onyx.db.document import update_docs_chunk_count__no_commit
-from onyx.db.document import update_docs_last_modified__no_commit
-from onyx.db.document import update_docs_updated_at__no_commit
-from onyx.db.document_set import fetch_document_sets_for_documents
-from onyx.indexing.indexing_pipeline import DocumentBatchPrepareContext
-from onyx.indexing.indexing_pipeline import index_doc_batch_prepare
-from onyx.indexing.models import ChunkEnrichmentContext
-from onyx.indexing.models import DocAwareChunk
-from onyx.indexing.models import DocMetadataAwareIndexChunk
-from onyx.indexing.models import IndexChunk
-from onyx.indexing.models import UpdatableChunkData
-from onyx.redis.redis_hierarchy import get_ancestors_from_raw_id
-from onyx.redis.redis_pool import get_redis_client
-from onyx.utils.logger import setup_logger
+from aethersearch.access.access import get_access_for_documents
+from aethersearch.access.models import DocumentAccess
+from aethersearch.configs.constants import DEFAULT_BOOST
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import IndexAttemptMetadata
+from aethersearch.db.chunk import update_chunk_boost_components__no_commit
+from aethersearch.db.document import fetch_chunk_counts_for_documents
+from aethersearch.db.document import mark_document_as_indexed_for_cc_pair__no_commit
+from aethersearch.db.document import prepare_to_modify_documents
+from aethersearch.db.document import update_docs_chunk_count__no_commit
+from aethersearch.db.document import update_docs_last_modified__no_commit
+from aethersearch.db.document import update_docs_updated_at__no_commit
+from aethersearch.db.document_set import fetch_document_sets_for_documents
+from aethersearch.indexing.indexing_pipeline import DocumentBatchPrepareContext
+from aethersearch.indexing.indexing_pipeline import index_doc_batch_prepare
+from aethersearch.indexing.models import ChunkEnrichmentContext
+from aethersearch.indexing.models import DocAwareChunk
+from aethersearch.indexing.models import DocMetadataAwareIndexChunk
+from aethersearch.indexing.models import IndexChunk
+from aethersearch.indexing.models import UpdatableChunkData
+from aethersearch.redis.redis_hierarchy import get_ancestors_from_raw_id
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

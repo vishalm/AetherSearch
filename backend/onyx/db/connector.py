@@ -8,19 +8,19 @@ from sqlalchemy import select
 from sqlalchemy.orm import aliased
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import DEFAULT_PRUNING_FREQ
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.models import InputType
-from onyx.db.enums import IndexingMode
-from onyx.db.models import Connector
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import FederatedConnector
-from onyx.db.models import IndexAttempt
-from onyx.kg.models import KGConnectorData
-from onyx.server.documents.models import ConnectorBase
-from onyx.server.documents.models import ObjectCreationIdResponse
-from onyx.server.models import StatusResponse
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import DEFAULT_PRUNING_FREQ
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.models import InputType
+from aethersearch.db.enums import IndexingMode
+from aethersearch.db.models import Connector
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import FederatedConnector
+from aethersearch.db.models import IndexAttempt
+from aethersearch.kg.models import KGConnectorData
+from aethersearch.server.documents.models import ConnectorBase
+from aethersearch.server.documents.models import ObjectCreationIdResponse
+from aethersearch.server.models import StatusResponse
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -46,8 +46,8 @@ def check_user_files_exist(db_session: Session) -> bool:
     when there are no regular connectors but there are user files
     (User Knowledge mode).
     """
-    from onyx.db.enums import UserFileStatus
-    from onyx.db.models import UserFile
+    from aethersearch.db.enums import UserFileStatus
+    from aethersearch.db.models import UserFile
 
     stmt = select(exists(UserFile).where(UserFile.status == UserFileStatus.COMPLETED))
     result = db_session.execute(stmt)

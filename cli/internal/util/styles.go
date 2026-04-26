@@ -1,4 +1,4 @@
-// Package util provides shared utilities for the Onyx CLI.
+// Package util provides shared utilities for the AetherSearch CLI.
 package util
 
 import "github.com/charmbracelet/lipgloss"

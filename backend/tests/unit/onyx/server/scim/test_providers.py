@@ -2,20 +2,20 @@ from unittest.mock import MagicMock
 from uuid import UUID
 from uuid import uuid4
 
-from ee.onyx.server.scim.models import SCIM_ENTERPRISE_USER_SCHEMA
-from ee.onyx.server.scim.models import SCIM_USER_SCHEMA
-from ee.onyx.server.scim.models import ScimEmail
-from ee.onyx.server.scim.models import ScimGroupMember
-from ee.onyx.server.scim.models import ScimGroupResource
-from ee.onyx.server.scim.models import ScimMeta
-from ee.onyx.server.scim.models import ScimName
-from ee.onyx.server.scim.models import ScimUserGroupRef
-from ee.onyx.server.scim.models import ScimUserResource
-from ee.onyx.server.scim.providers.base import COMMON_IGNORED_PATCH_PATHS
-from ee.onyx.server.scim.providers.base import get_default_provider
-from ee.onyx.server.scim.providers.entra import _ENTRA_IGNORED_PATCH_PATHS
-from ee.onyx.server.scim.providers.entra import EntraProvider
-from ee.onyx.server.scim.providers.okta import OktaProvider
+from ee.aethersearch.server.scim.models import SCIM_ENTERPRISE_USER_SCHEMA
+from ee.aethersearch.server.scim.models import SCIM_USER_SCHEMA
+from ee.aethersearch.server.scim.models import ScimEmail
+from ee.aethersearch.server.scim.models import ScimGroupMember
+from ee.aethersearch.server.scim.models import ScimGroupResource
+from ee.aethersearch.server.scim.models import ScimMeta
+from ee.aethersearch.server.scim.models import ScimName
+from ee.aethersearch.server.scim.models import ScimUserGroupRef
+from ee.aethersearch.server.scim.models import ScimUserResource
+from ee.aethersearch.server.scim.providers.base import COMMON_IGNORED_PATCH_PATHS
+from ee.aethersearch.server.scim.providers.base import get_default_provider
+from ee.aethersearch.server.scim.providers.entra import _ENTRA_IGNORED_PATCH_PATHS
+from ee.aethersearch.server.scim.providers.entra import EntraProvider
+from ee.aethersearch.server.scim.providers.okta import OktaProvider
 
 
 def _make_mock_user(

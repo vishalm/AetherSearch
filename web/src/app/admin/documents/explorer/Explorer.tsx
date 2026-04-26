@@ -3,7 +3,7 @@
 import { adminSearch } from "./lib";
 import { MagnifyingGlass } from "@phosphor-icons/react";
 import { useState, useEffect, useCallback } from "react";
-import { OnyxDocument } from "@/lib/search/interfaces";
+import { AetherSearchDocument } from "@/lib/search/interfaces";
 import { buildDocumentSummaryDisplay } from "@/components/search/DocumentDisplay";
 import { Checkbox } from "@opal/components";
 import { updateHiddenStatus } from "../lib";
@@ -25,7 +25,7 @@ const DocumentDisplay = ({
   document,
   refresh,
 }: {
-  document: OnyxDocument;
+  document: AetherSearchDocument;
   refresh: () => void;
 }) => {
   return (
@@ -112,7 +112,7 @@ export function Explorer({
 
   const [query, setQuery] = useState(initialSearchValue || "");
   const [timeoutId, setTimeoutId] = useState<number | null>(null);
-  const [results, setResults] = useState<OnyxDocument[]>([]);
+  const [results, setResults] = useState<AetherSearchDocument[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const filterManager = useFilters();

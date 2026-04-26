@@ -14,65 +14,65 @@ from pydantic import ValidationError
 from redis import Redis
 from redis.lock import Lock as RedisLock
 
-from ee.onyx.background.celery.tasks.external_group_syncing.group_sync_utils import (
+from ee.aethersearch.background.celery.tasks.external_group_syncing.group_sync_utils import (
     mark_all_relevant_cc_pairs_as_external_group_synced,
 )
-from ee.onyx.db.connector_credential_pair import get_all_auto_sync_cc_pairs
-from ee.onyx.db.connector_credential_pair import get_cc_pairs_by_source
-from ee.onyx.db.external_perm import ExternalUserGroup
-from ee.onyx.db.external_perm import mark_old_external_groups_as_stale
-from ee.onyx.db.external_perm import remove_stale_external_groups
-from ee.onyx.db.external_perm import upsert_external_groups
-from ee.onyx.external_permissions.sync_params import (
+from ee.aethersearch.db.connector_credential_pair import get_all_auto_sync_cc_pairs
+from ee.aethersearch.db.connector_credential_pair import get_cc_pairs_by_source
+from ee.aethersearch.db.external_perm import ExternalUserGroup
+from ee.aethersearch.db.external_perm import mark_old_external_groups_as_stale
+from ee.aethersearch.db.external_perm import remove_stale_external_groups
+from ee.aethersearch.db.external_perm import upsert_external_groups
+from ee.aethersearch.external_permissions.sync_params import (
     get_all_cc_pair_agnostic_group_sync_sources,
 )
-from ee.onyx.external_permissions.sync_params import get_source_perm_sync_config
-from onyx.background.celery.apps.app_base import task_logger
-from onyx.background.celery.celery_redis import celery_find_task
-from onyx.background.celery.celery_redis import celery_get_broker_client
-from onyx.background.celery.celery_redis import celery_get_unacked_task_ids
-from onyx.background.celery.tasks.beat_schedule import CLOUD_BEAT_MULTIPLIER_DEFAULT
-from onyx.background.error_logging import emit_background_error
-from onyx.configs.app_configs import JOB_TIMEOUT
-from onyx.configs.constants import CELERY_EXTERNAL_GROUP_SYNC_LOCK_TIMEOUT
-from onyx.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
-from onyx.configs.constants import CELERY_TASK_WAIT_FOR_FENCE_TIMEOUT
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import OnyxRedisConstants
-from onyx.configs.constants import OnyxRedisLocks
-from onyx.configs.constants import OnyxRedisSignals
-from onyx.db.connector_credential_pair import get_connector_credential_pair_from_id
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import AccessType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import SyncStatus
-from onyx.db.enums import SyncType
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.permission_sync_attempt import complete_external_group_sync_attempt
-from onyx.db.permission_sync_attempt import create_external_group_sync_attempt
-from onyx.db.permission_sync_attempt import mark_external_group_sync_attempt_failed
-from onyx.db.permission_sync_attempt import mark_external_group_sync_attempt_in_progress
-from onyx.db.sync_record import insert_sync_record
-from onyx.db.sync_record import update_sync_record_status
-from onyx.redis.redis_connector import RedisConnector
-from onyx.redis.redis_connector_ext_group_sync import RedisConnectorExternalGroupSync
-from onyx.redis.redis_connector_ext_group_sync import (
+from ee.aethersearch.external_permissions.sync_params import get_source_perm_sync_config
+from aethersearch.background.celery.apps.app_base import task_logger
+from aethersearch.background.celery.celery_redis import celery_find_task
+from aethersearch.background.celery.celery_redis import celery_get_broker_client
+from aethersearch.background.celery.celery_redis import celery_get_unacked_task_ids
+from aethersearch.background.celery.tasks.beat_schedule import CLOUD_BEAT_MULTIPLIER_DEFAULT
+from aethersearch.background.error_logging import emit_background_error
+from aethersearch.configs.app_configs import JOB_TIMEOUT
+from aethersearch.configs.constants import CELERY_EXTERNAL_GROUP_SYNC_LOCK_TIMEOUT
+from aethersearch.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
+from aethersearch.configs.constants import CELERY_TASK_WAIT_FOR_FENCE_TIMEOUT
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import AetherSearchRedisConstants
+from aethersearch.configs.constants import AetherSearchRedisLocks
+from aethersearch.configs.constants import AetherSearchRedisSignals
+from aethersearch.db.connector_credential_pair import get_connector_credential_pair_from_id
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import SyncStatus
+from aethersearch.db.enums import SyncType
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.permission_sync_attempt import complete_external_group_sync_attempt
+from aethersearch.db.permission_sync_attempt import create_external_group_sync_attempt
+from aethersearch.db.permission_sync_attempt import mark_external_group_sync_attempt_failed
+from aethersearch.db.permission_sync_attempt import mark_external_group_sync_attempt_in_progress
+from aethersearch.db.sync_record import insert_sync_record
+from aethersearch.db.sync_record import update_sync_record_status
+from aethersearch.redis.redis_connector import RedisConnector
+from aethersearch.redis.redis_connector_ext_group_sync import RedisConnectorExternalGroupSync
+from aethersearch.redis.redis_connector_ext_group_sync import (
     RedisConnectorExternalGroupSyncPayload,
 )
-from onyx.redis.redis_pool import get_redis_client
-from onyx.redis.redis_pool import get_redis_replica_client
-from onyx.redis.redis_tenant_work_gating import maybe_mark_tenant_active
-from onyx.server.metrics.perm_sync_metrics import inc_group_sync_errors
-from onyx.server.metrics.perm_sync_metrics import inc_group_sync_groups_processed
-from onyx.server.metrics.perm_sync_metrics import inc_group_sync_users_processed
-from onyx.server.metrics.perm_sync_metrics import observe_group_sync_duration
-from onyx.server.metrics.perm_sync_metrics import observe_group_sync_upsert_duration
-from onyx.server.runtime.onyx_runtime import OnyxRuntime
-from onyx.server.utils import make_short_id
-from onyx.utils.logger import format_error_for_logging
-from onyx.utils.logger import setup_logger
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.redis.redis_pool import get_redis_replica_client
+from aethersearch.redis.redis_tenant_work_gating import maybe_mark_tenant_active
+from aethersearch.server.metrics.perm_sync_metrics import inc_group_sync_errors
+from aethersearch.server.metrics.perm_sync_metrics import inc_group_sync_groups_processed
+from aethersearch.server.metrics.perm_sync_metrics import inc_group_sync_users_processed
+from aethersearch.server.metrics.perm_sync_metrics import observe_group_sync_duration
+from aethersearch.server.metrics.perm_sync_metrics import observe_group_sync_upsert_duration
+from aethersearch.server.runtime.aethersearch_runtime import AetherSearchRuntime
+from aethersearch.server.utils import make_short_id
+from aethersearch.utils.logger import format_error_for_logging
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()
@@ -100,7 +100,7 @@ def _get_fence_validation_block_expiration() -> int:
         return base_expiration
 
     try:
-        beat_multiplier = OnyxRuntime.get_beat_multiplier()
+        beat_multiplier = AetherSearchRuntime.get_beat_multiplier()
     except Exception:
         beat_multiplier = CLOUD_BEAT_MULTIPLIER_DEFAULT
 
@@ -153,7 +153,7 @@ def _is_external_group_sync_due(cc_pair: ConnectorCredentialPair) -> bool:
 
 
 @shared_task(
-    name=OnyxCeleryTask.CHECK_FOR_EXTERNAL_GROUP_SYNC,
+    name=AetherSearchCeleryTask.CHECK_FOR_EXTERNAL_GROUP_SYNC,
     ignore_result=True,
     soft_time_limit=JOB_TIMEOUT,
     bind=True,
@@ -165,7 +165,7 @@ def check_for_external_group_sync(self: Task, *, tenant_id: str) -> bool | None:
     r_replica = get_redis_replica_client()
 
     lock_beat: RedisLock = r.lock(
-        OnyxRedisLocks.CHECK_CONNECTOR_EXTERNAL_GROUP_SYNC_BEAT_LOCK,
+        AetherSearchRedisLocks.CHECK_CONNECTOR_EXTERNAL_GROUP_SYNC_BEAT_LOCK,
         timeout=CELERY_GENERIC_BEAT_LOCK_TIMEOUT,
     )
 
@@ -221,7 +221,7 @@ def check_for_external_group_sync(self: Task, *, tenant_id: str) -> bool | None:
 
         # we want to run this less frequently than the overall task
         lock_beat.reacquire()
-        if not r.exists(OnyxRedisSignals.BLOCK_VALIDATE_EXTERNAL_GROUP_SYNC_FENCES):
+        if not r.exists(AetherSearchRedisSignals.BLOCK_VALIDATE_EXTERNAL_GROUP_SYNC_FENCES):
             # clear fences that don't have associated celery tasks in progress
             # tasks can be in the queue in redis, in reserved tasks (prefetched by the worker),
             # or be currently executing
@@ -236,7 +236,7 @@ def check_for_external_group_sync(self: Task, *, tenant_id: str) -> bool | None:
                 )
 
             r.set(
-                OnyxRedisSignals.BLOCK_VALIDATE_EXTERNAL_GROUP_SYNC_FENCES,
+                AetherSearchRedisSignals.BLOCK_VALIDATE_EXTERNAL_GROUP_SYNC_FENCES,
                 1,
                 ex=_get_fence_validation_block_expiration(),
             )
@@ -307,14 +307,14 @@ def try_creating_external_group_sync_task(
         custom_task_id = f"{redis_connector.external_group_sync.taskset_key}_{uuid4()}"
 
         result = app.send_task(
-            OnyxCeleryTask.CONNECTOR_EXTERNAL_GROUP_SYNC_GENERATOR_TASK,
+            AetherSearchCeleryTask.CONNECTOR_EXTERNAL_GROUP_SYNC_GENERATOR_TASK,
             kwargs=dict(
                 cc_pair_id=cc_pair_id,
                 tenant_id=tenant_id,
             ),
-            queue=OnyxCeleryQueues.CONNECTOR_EXTERNAL_GROUP_SYNC,
+            queue=AetherSearchCeleryQueues.CONNECTOR_EXTERNAL_GROUP_SYNC,
             task_id=custom_task_id,
-            priority=OnyxCeleryPriority.MEDIUM,
+            priority=AetherSearchCeleryPriority.MEDIUM,
         )
 
         payload.celery_task_id = result.id
@@ -338,7 +338,7 @@ def try_creating_external_group_sync_task(
 
 
 @shared_task(
-    name=OnyxCeleryTask.CONNECTOR_EXTERNAL_GROUP_SYNC_GENERATOR_TASK,
+    name=AetherSearchCeleryTask.CONNECTOR_EXTERNAL_GROUP_SYNC_GENERATOR_TASK,
     acks_late=False,
     soft_time_limit=JOB_TIMEOUT,
     track_started=True,
@@ -402,7 +402,7 @@ def connector_external_group_sync_generator_task(
         break
 
     lock: RedisLock = r.lock(
-        OnyxRedisLocks.CONNECTOR_EXTERNAL_GROUP_SYNC_LOCK_PREFIX
+        AetherSearchRedisLocks.CONNECTOR_EXTERNAL_GROUP_SYNC_LOCK_PREFIX
         + f"_{redis_connector.cc_pair_id}",
         timeout=CELERY_EXTERNAL_GROUP_SYNC_LOCK_TIMEOUT,
     )
@@ -659,12 +659,12 @@ def validate_external_group_sync_fences(
     lock_beat: RedisLock,
 ) -> None:
     reserved_tasks = celery_get_unacked_task_ids(
-        OnyxCeleryQueues.CONNECTOR_EXTERNAL_GROUP_SYNC, r_celery
+        AetherSearchCeleryQueues.CONNECTOR_EXTERNAL_GROUP_SYNC, r_celery
     )
 
     # validate all existing external group sync tasks
     lock_beat.reacquire()
-    keys = cast(set[Any], r_replica.smembers(OnyxRedisConstants.ACTIVE_FENCES))
+    keys = cast(set[Any], r_replica.smembers(AetherSearchRedisConstants.ACTIVE_FENCES))
     for key in keys:
         key_bytes = cast(bytes, key)
         key_str = key_bytes.decode("utf-8")
@@ -754,7 +754,7 @@ def validate_external_group_sync_fence(
 
     # OK, there's actually something for us to validate
     found = celery_find_task(
-        payload.celery_task_id, OnyxCeleryQueues.CONNECTOR_EXTERNAL_GROUP_SYNC, r_celery
+        payload.celery_task_id, AetherSearchCeleryQueues.CONNECTOR_EXTERNAL_GROUP_SYNC, r_celery
     )
     if found:
         # the celery task exists in the redis queue

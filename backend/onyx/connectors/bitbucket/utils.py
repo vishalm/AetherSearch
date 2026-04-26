@@ -9,15 +9,15 @@ from typing import Any
 
 import httpx
 
-from onyx.configs.app_configs import REQUEST_TIMEOUT_SECONDS
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.cross_connector_utils.rate_limit_wrapper import rate_limit_builder
-from onyx.connectors.models import BasicExpertInfo
-from onyx.connectors.models import Document
-from onyx.connectors.models import ImageSection
-from onyx.connectors.models import TextSection
-from onyx.utils.logger import setup_logger
-from onyx.utils.retry_wrapper import retry_builder
+from aethersearch.configs.app_configs import REQUEST_TIMEOUT_SECONDS
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.cross_connector_utils.rate_limit_wrapper import rate_limit_builder
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import ImageSection
+from aethersearch.connectors.models import TextSection
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.retry_wrapper import retry_builder
 
 logger = setup_logger()
 
@@ -183,7 +183,7 @@ def list_repositories(
 
 
 def map_pr_to_document(pr: dict[str, Any], workspace: str, repo_slug: str) -> Document:
-    """Map a Bitbucket pull request JSON to Onyx Document."""
+    """Map a Bitbucket pull request JSON to AetherSearch Document."""
     pr_id = pr["id"]
     title = pr.get("title") or f"PR {pr_id}"
     description = pr.get("description") or ""

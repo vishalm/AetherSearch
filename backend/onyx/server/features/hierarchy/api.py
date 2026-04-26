@@ -3,28 +3,28 @@ from fastapi import Depends
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from onyx.access.hierarchy_access import get_user_external_group_ids
-from onyx.auth.permissions import require_permission
-from onyx.configs.app_configs import ENABLE_OPENSEARCH_INDEXING_FOR_ONYX
-from onyx.configs.constants import DocumentSource
-from onyx.db.document import get_accessible_documents_for_hierarchy_node_paginated
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.hierarchy import get_accessible_hierarchy_nodes_for_source
-from onyx.db.models import User
-from onyx.db.opensearch_migration import get_opensearch_retrieval_state
-from onyx.server.features.hierarchy.constants import DOCUMENT_PAGE_SIZE
-from onyx.server.features.hierarchy.constants import HIERARCHY_NODE_DOCUMENTS_PATH
-from onyx.server.features.hierarchy.constants import HIERARCHY_NODES_LIST_PATH
-from onyx.server.features.hierarchy.constants import HIERARCHY_NODES_PREFIX
-from onyx.server.features.hierarchy.models import DocumentPageCursor
-from onyx.server.features.hierarchy.models import DocumentSortDirection
-from onyx.server.features.hierarchy.models import DocumentSortField
-from onyx.server.features.hierarchy.models import DocumentSummary
-from onyx.server.features.hierarchy.models import HierarchyNodeDocumentsRequest
-from onyx.server.features.hierarchy.models import HierarchyNodeDocumentsResponse
-from onyx.server.features.hierarchy.models import HierarchyNodesResponse
-from onyx.server.features.hierarchy.models import HierarchyNodeSummary
+from aethersearch.access.hierarchy_access import get_user_external_group_ids
+from aethersearch.auth.permissions import require_permission
+from aethersearch.configs.app_configs import ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.db.document import get_accessible_documents_for_hierarchy_node_paginated
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.hierarchy import get_accessible_hierarchy_nodes_for_source
+from aethersearch.db.models import User
+from aethersearch.db.opensearch_migration import get_opensearch_retrieval_state
+from aethersearch.server.features.hierarchy.constants import DOCUMENT_PAGE_SIZE
+from aethersearch.server.features.hierarchy.constants import HIERARCHY_NODE_DOCUMENTS_PATH
+from aethersearch.server.features.hierarchy.constants import HIERARCHY_NODES_LIST_PATH
+from aethersearch.server.features.hierarchy.constants import HIERARCHY_NODES_PREFIX
+from aethersearch.server.features.hierarchy.models import DocumentPageCursor
+from aethersearch.server.features.hierarchy.models import DocumentSortDirection
+from aethersearch.server.features.hierarchy.models import DocumentSortField
+from aethersearch.server.features.hierarchy.models import DocumentSummary
+from aethersearch.server.features.hierarchy.models import HierarchyNodeDocumentsRequest
+from aethersearch.server.features.hierarchy.models import HierarchyNodeDocumentsResponse
+from aethersearch.server.features.hierarchy.models import HierarchyNodesResponse
+from aethersearch.server.features.hierarchy.models import HierarchyNodeSummary
 
 OPENSEARCH_NOT_ENABLED_MESSAGE = "Per-source knowledge selection is coming soon in v3.0! OpenSearch indexing must be enabled to use this feature."
 
@@ -40,7 +40,7 @@ router = APIRouter(prefix=HIERARCHY_NODES_PREFIX)
 
 
 def _require_opensearch(db_session: Session) -> None:
-    if not ENABLE_OPENSEARCH_INDEXING_FOR_ONYX:
+    if not ENABLE_OPENSEARCH_INDEXING_FOR_AETHERSEARCH:
         raise HTTPException(
             status_code=403,
             detail=OPENSEARCH_NOT_ENABLED_MESSAGE,

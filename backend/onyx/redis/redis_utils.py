@@ -1,8 +1,8 @@
-from onyx.redis.redis_connector_delete import RedisConnectorDelete
-from onyx.redis.redis_connector_doc_perm_sync import RedisConnectorPermissionSync
-from onyx.redis.redis_connector_prune import RedisConnectorPrune
-from onyx.redis.redis_document_set import RedisDocumentSet
-from onyx.redis.redis_usergroup import RedisUserGroup
+from aethersearch.redis.redis_connector_delete import RedisConnectorDelete
+from aethersearch.redis.redis_connector_doc_perm_sync import RedisConnectorPermissionSync
+from aethersearch.redis.redis_connector_prune import RedisConnectorPrune
+from aethersearch.redis.redis_document_set import RedisDocumentSet
+from aethersearch.redis.redis_usergroup import RedisUserGroup
 
 
 def is_fence(key_bytes: bytes) -> bool:

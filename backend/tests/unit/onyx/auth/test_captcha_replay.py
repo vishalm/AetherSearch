@@ -7,12 +7,12 @@ from unittest.mock import patch
 import httpx
 import pytest
 
-from onyx.auth import captcha as captcha_module
-from onyx.auth.captcha import _replay_cache_key
-from onyx.auth.captcha import _reserve_token_or_raise
-from onyx.auth.captcha import CaptchaAction
-from onyx.auth.captcha import CaptchaVerificationError
-from onyx.auth.captcha import verify_captcha_token
+from aethersearch.auth import captcha as captcha_module
+from aethersearch.auth.captcha import _replay_cache_key
+from aethersearch.auth.captcha import _reserve_token_or_raise
+from aethersearch.auth.captcha import CaptchaAction
+from aethersearch.auth.captcha import CaptchaVerificationError
+from aethersearch.auth.captcha import verify_captcha_token
 
 
 @pytest.mark.asyncio

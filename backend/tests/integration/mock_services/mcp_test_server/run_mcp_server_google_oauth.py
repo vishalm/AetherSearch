@@ -2,7 +2,7 @@
 MCP Test Server for Google OAuth Pass-Through Authentication
 
 This server validates Google OAuth access tokens that are passed through from
-Onyx. When users log into Onyx with Google OAuth, their access token is stored
+AetherSearch. When users log into AetherSearch with Google OAuth, their access token is stored
 and can be passed to MCP servers that require authentication.
 
 This server validates those tokens by calling Google's tokeninfo endpoint.
@@ -41,7 +41,7 @@ class GoogleOAuthTokenVerifier(TokenVerifier):
     validated by calling Google's tokeninfo endpoint. This verifier makes
     an HTTP request to Google to validate the token and extract user info.
 
-    This is useful for testing pass-through OAuth scenarios where Onyx
+    This is useful for testing pass-through OAuth scenarios where AetherSearch
     forwards the user's Google OAuth token to an MCP server.
     """
 
@@ -222,7 +222,7 @@ if __name__ == "__main__":
     # Create wrapper FastAPI app
     app = FastAPI(
         title="MCP Google OAuth Test Server",
-        description="MCP server that authenticates using Google OAuth tokens passed through from Onyx",
+        description="MCP server that authenticates using Google OAuth tokens passed through from AetherSearch",
         lifespan=mcp_app.lifespan,
     )
 
@@ -237,7 +237,7 @@ if __name__ == "__main__":
         return {
             "server": "Google OAuth MCP Test Server",
             "auth_type": "google_oauth_pass_through",
-            "description": "Validates Google OAuth tokens passed from Onyx",
+            "description": "Validates Google OAuth tokens passed from AetherSearch",
             "tokeninfo_endpoint": GOOGLE_TOKENINFO_URL,
             "required_scopes": required_scopes,
         }

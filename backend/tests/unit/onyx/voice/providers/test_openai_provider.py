@@ -2,10 +2,10 @@ import io
 import struct
 import wave
 
-from onyx.voice.providers.openai import _create_wav_header
-from onyx.voice.providers.openai import _http_to_ws_url
-from onyx.voice.providers.openai import OpenAIRealtimeMessageType
-from onyx.voice.providers.openai import OpenAIVoiceProvider
+from aethersearch.voice.providers.openai import _create_wav_header
+from aethersearch.voice.providers.openai import _http_to_ws_url
+from aethersearch.voice.providers.openai import OpenAIRealtimeMessageType
+from aethersearch.voice.providers.openai import OpenAIVoiceProvider
 
 # --- _http_to_ws_url ---
 

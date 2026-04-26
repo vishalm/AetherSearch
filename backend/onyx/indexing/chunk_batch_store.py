@@ -4,7 +4,7 @@ import tempfile
 from collections.abc import Iterator
 from pathlib import Path
 
-from onyx.indexing.models import IndexChunk
+from aethersearch.indexing.models import IndexChunk
 
 
 class ChunkBatchStore:
@@ -29,7 +29,7 @@ class ChunkBatchStore:
     # -- context manager -----------------------------------------------------
 
     def __enter__(self) -> "ChunkBatchStore":
-        self._tmpdir = Path(tempfile.mkdtemp(prefix="onyx_embeddings_"))
+        self._tmpdir = Path(tempfile.mkdtemp(prefix="aethersearch_embeddings_"))
         return self
 
     def __exit__(self, *_exc: object) -> None:

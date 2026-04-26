@@ -7,9 +7,9 @@ from typing import cast
 
 from jira import JIRA
 
-from onyx.access.models import ExternalAccess
-from onyx.utils.variable_functionality import fetch_versioned_implementation
-from onyx.utils.variable_functionality import global_version
+from aethersearch.access.models import ExternalAccess
+from aethersearch.utils.variable_functionality import fetch_versioned_implementation
+from aethersearch.utils.variable_functionality import global_version
 
 
 def get_project_permissions(
@@ -42,7 +42,7 @@ def get_project_permissions(
             ExternalAccess | None,
         ],
         fetch_versioned_implementation(
-            "onyx.external_permissions.jira.page_access", "get_project_permissions"
+            "aethersearch.external_permissions.jira.page_access", "get_project_permissions"
         ),
     )
 

@@ -7,22 +7,22 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 from typing_extensions import override
 
-from onyx.chat.emitter import Emitter
-from onyx.configs.app_configs import DISABLE_VECTOR_DB
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.file_processing.extract_file_text import extract_file_text
-from onyx.file_store.models import ChatFileType
-from onyx.file_store.models import InMemoryChatFile
-from onyx.file_store.utils import load_chat_file_by_id
-from onyx.file_store.utils import load_user_file
-from onyx.server.query_and_chat.placement import Placement
-from onyx.server.query_and_chat.streaming_models import FileReaderResult
-from onyx.server.query_and_chat.streaming_models import FileReaderStart
-from onyx.server.query_and_chat.streaming_models import Packet
-from onyx.tools.interface import Tool
-from onyx.tools.models import ToolCallException
-from onyx.tools.models import ToolResponse
-from onyx.utils.logger import setup_logger
+from aethersearch.chat.emitter import Emitter
+from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.file_processing.extract_file_text import extract_file_text
+from aethersearch.file_store.models import ChatFileType
+from aethersearch.file_store.models import InMemoryChatFile
+from aethersearch.file_store.utils import load_chat_file_by_id
+from aethersearch.file_store.utils import load_user_file
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.server.query_and_chat.streaming_models import FileReaderResult
+from aethersearch.server.query_and_chat.streaming_models import FileReaderStart
+from aethersearch.server.query_and_chat.streaming_models import Packet
+from aethersearch.tools.interface import Tool
+from aethersearch.tools.models import ToolCallException
+from aethersearch.tools.models import ToolResponse
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

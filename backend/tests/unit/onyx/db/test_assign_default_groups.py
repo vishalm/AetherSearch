@@ -1,5 +1,5 @@
 """
-Unit tests for assign_user_to_default_groups__no_commit in onyx.db.users.
+Unit tests for assign_user_to_default_groups__no_commit in aethersearch.db.users.
 
 Covers:
 1. Standard/service-account users get assigned to the correct default group
@@ -16,10 +16,10 @@ from uuid import uuid4
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from onyx.db.enums import AccountType
-from onyx.db.models import User__UserGroup
-from onyx.db.models import UserGroup
-from onyx.db.users import assign_user_to_default_groups__no_commit
+from aethersearch.db.enums import AccountType
+from aethersearch.db.models import User__UserGroup
+from aethersearch.db.models import UserGroup
+from aethersearch.db.users import assign_user_to_default_groups__no_commit
 
 
 def _mock_user(

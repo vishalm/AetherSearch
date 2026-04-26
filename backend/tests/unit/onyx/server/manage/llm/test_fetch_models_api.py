@@ -11,17 +11,17 @@ from unittest.mock import patch
 import httpx
 import pytest
 
-from onyx.error_handling.exceptions import OnyxError
-from onyx.server.manage.llm.models import BifrostFinalModelResponse
-from onyx.server.manage.llm.models import BifrostModelsRequest
-from onyx.server.manage.llm.models import LitellmFinalModelResponse
-from onyx.server.manage.llm.models import LitellmModelsRequest
-from onyx.server.manage.llm.models import LMStudioFinalModelResponse
-from onyx.server.manage.llm.models import LMStudioModelsRequest
-from onyx.server.manage.llm.models import OllamaFinalModelResponse
-from onyx.server.manage.llm.models import OllamaModelsRequest
-from onyx.server.manage.llm.models import OpenRouterFinalModelResponse
-from onyx.server.manage.llm.models import OpenRouterModelsRequest
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.server.manage.llm.models import BifrostFinalModelResponse
+from aethersearch.server.manage.llm.models import BifrostModelsRequest
+from aethersearch.server.manage.llm.models import LitellmFinalModelResponse
+from aethersearch.server.manage.llm.models import LitellmModelsRequest
+from aethersearch.server.manage.llm.models import LMStudioFinalModelResponse
+from aethersearch.server.manage.llm.models import LMStudioModelsRequest
+from aethersearch.server.manage.llm.models import OllamaFinalModelResponse
+from aethersearch.server.manage.llm.models import OllamaModelsRequest
+from aethersearch.server.manage.llm.models import OpenRouterFinalModelResponse
+from aethersearch.server.manage.llm.models import OpenRouterModelsRequest
 
 
 class TestGetOllamaAvailableModels:
@@ -56,11 +56,11 @@ class TestGetOllamaAvailableModels:
         self, mock_ollama_tags_response: dict, mock_ollama_show_response: dict
     ) -> None:
         """Test that endpoint returns properly formatted model list."""
-        from onyx.server.manage.llm.api import get_ollama_available_models
+        from aethersearch.server.manage.llm.api import get_ollama_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx") as mock_httpx:
+        with patch("aethersearch.server.manage.llm.api.httpx") as mock_httpx:
             # Mock GET for /api/tags
             mock_get_response = MagicMock()
             mock_get_response.json.return_value = mock_ollama_tags_response
@@ -90,7 +90,7 @@ class TestGetOllamaAvailableModels:
         self, mock_ollama_tags_response: dict, mock_ollama_show_response: dict
     ) -> None:
         """Test that models are synced to DB when provider_name is given."""
-        from onyx.server.manage.llm.api import get_ollama_available_models
+        from aethersearch.server.manage.llm.api import get_ollama_available_models
 
         mock_session = MagicMock()
         mock_provider = MagicMock()
@@ -98,9 +98,9 @@ class TestGetOllamaAvailableModels:
         mock_provider.model_configurations = []
 
         with (
-            patch("onyx.server.manage.llm.api.httpx") as mock_httpx,
+            patch("aethersearch.server.manage.llm.api.httpx") as mock_httpx,
             patch(
-                "onyx.db.llm.fetch_existing_llm_provider", return_value=mock_provider
+                "aethersearch.db.llm.fetch_existing_llm_provider", return_value=mock_provider
             ),
         ):
             mock_get_response = MagicMock()
@@ -127,11 +127,11 @@ class TestGetOllamaAvailableModels:
         self, mock_ollama_tags_response: dict, mock_ollama_show_response: dict
     ) -> None:
         """Test that models are NOT synced when provider_name is None."""
-        from onyx.server.manage.llm.api import get_ollama_available_models
+        from aethersearch.server.manage.llm.api import get_ollama_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx") as mock_httpx:
+        with patch("aethersearch.server.manage.llm.api.httpx") as mock_httpx:
             mock_get_response = MagicMock()
             mock_get_response.json.return_value = mock_ollama_tags_response
             mock_get_response.raise_for_status = MagicMock()
@@ -181,11 +181,11 @@ class TestGetOpenRouterAvailableModels:
 
     def test_returns_model_list(self, mock_openrouter_response: dict) -> None:
         """Test that endpoint returns properly formatted model list."""
-        from onyx.server.manage.llm.api import get_openrouter_available_models
+        from aethersearch.server.manage.llm.api import get_openrouter_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx.get") as mock_get:
+        with patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get:
             mock_response = MagicMock()
             mock_response.json.return_value = mock_openrouter_response
             mock_response.raise_for_status = MagicMock()
@@ -207,11 +207,11 @@ class TestGetOpenRouterAvailableModels:
 
     def test_infers_vision_support(self, mock_openrouter_response: dict) -> None:
         """Test that vision support is correctly inferred from modality."""
-        from onyx.server.manage.llm.api import get_openrouter_available_models
+        from aethersearch.server.manage.llm.api import get_openrouter_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx.get") as mock_get:
+        with patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get:
             mock_response = MagicMock()
             mock_response.json.return_value = mock_openrouter_response
             mock_response.raise_for_status = MagicMock()
@@ -236,7 +236,7 @@ class TestGetOpenRouterAvailableModels:
         self, mock_openrouter_response: dict
     ) -> None:
         """Test that models are synced to DB when provider_name is given."""
-        from onyx.server.manage.llm.api import get_openrouter_available_models
+        from aethersearch.server.manage.llm.api import get_openrouter_available_models
 
         mock_session = MagicMock()
         mock_provider = MagicMock()
@@ -244,9 +244,9 @@ class TestGetOpenRouterAvailableModels:
         mock_provider.model_configurations = []
 
         with (
-            patch("onyx.server.manage.llm.api.httpx.get") as mock_get,
+            patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get,
             patch(
-                "onyx.db.llm.fetch_existing_llm_provider", return_value=mock_provider
+                "aethersearch.db.llm.fetch_existing_llm_provider", return_value=mock_provider
             ),
         ):
             mock_response = MagicMock()
@@ -269,7 +269,7 @@ class TestGetOpenRouterAvailableModels:
         self, mock_openrouter_response: dict
     ) -> None:
         """Test that existing models are not overwritten during sync."""
-        from onyx.server.manage.llm.api import get_openrouter_available_models
+        from aethersearch.server.manage.llm.api import get_openrouter_available_models
 
         mock_session = MagicMock()
 
@@ -282,9 +282,9 @@ class TestGetOpenRouterAvailableModels:
         mock_provider.model_configurations = [existing_model]
 
         with (
-            patch("onyx.server.manage.llm.api.httpx.get") as mock_get,
+            patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get,
             patch(
-                "onyx.db.llm.fetch_existing_llm_provider", return_value=mock_provider
+                "aethersearch.db.llm.fetch_existing_llm_provider", return_value=mock_provider
             ),
         ):
             mock_response = MagicMock()
@@ -306,11 +306,11 @@ class TestGetOpenRouterAvailableModels:
         self, mock_openrouter_response: dict
     ) -> None:
         """Test that models are NOT synced when provider_name is None."""
-        from onyx.server.manage.llm.api import get_openrouter_available_models
+        from aethersearch.server.manage.llm.api import get_openrouter_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx.get") as mock_get:
+        with patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get:
             mock_response = MagicMock()
             mock_response.json.return_value = mock_openrouter_response
             mock_response.raise_for_status = MagicMock()
@@ -368,11 +368,11 @@ class TestGetLMStudioAvailableModels:
 
     def test_returns_model_list(self, mock_lm_studio_response: dict) -> None:
         """Test that endpoint returns properly formatted LLM-only model list."""
-        from onyx.server.manage.llm.api import get_lm_studio_available_models
+        from aethersearch.server.manage.llm.api import get_lm_studio_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx") as mock_httpx:
+        with patch("aethersearch.server.manage.llm.api.httpx") as mock_httpx:
             mock_response = MagicMock()
             mock_response.json.return_value = mock_lm_studio_response
             mock_response.raise_for_status = MagicMock()
@@ -391,11 +391,11 @@ class TestGetLMStudioAvailableModels:
 
     def test_infers_vision_support(self, mock_lm_studio_response: dict) -> None:
         """Test that vision support is correctly read from capabilities."""
-        from onyx.server.manage.llm.api import get_lm_studio_available_models
+        from aethersearch.server.manage.llm.api import get_lm_studio_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx") as mock_httpx:
+        with patch("aethersearch.server.manage.llm.api.httpx") as mock_httpx:
             mock_response = MagicMock()
             mock_response.json.return_value = mock_lm_studio_response
             mock_response.raise_for_status = MagicMock()
@@ -412,7 +412,7 @@ class TestGetLMStudioAvailableModels:
 
     def test_infers_reasoning_from_model_name(self) -> None:
         """Test that reasoning is inferred from model name when not in capabilities."""
-        from onyx.server.manage.llm.api import get_lm_studio_available_models
+        from aethersearch.server.manage.llm.api import get_lm_studio_available_models
 
         mock_session = MagicMock()
         response = {
@@ -434,7 +434,7 @@ class TestGetLMStudioAvailableModels:
             ]
         }
 
-        with patch("onyx.server.manage.llm.api.httpx") as mock_httpx:
+        with patch("aethersearch.server.manage.llm.api.httpx") as mock_httpx:
             mock_response = MagicMock()
             mock_response.json.return_value = response
             mock_response.raise_for_status = MagicMock()
@@ -451,11 +451,11 @@ class TestGetLMStudioAvailableModels:
 
     def test_uses_display_name_from_api(self, mock_lm_studio_response: dict) -> None:
         """Test that display_name from the API is used directly."""
-        from onyx.server.manage.llm.api import get_lm_studio_available_models
+        from aethersearch.server.manage.llm.api import get_lm_studio_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx") as mock_httpx:
+        with patch("aethersearch.server.manage.llm.api.httpx") as mock_httpx:
             mock_response = MagicMock()
             mock_response.json.return_value = mock_lm_studio_response
             mock_response.raise_for_status = MagicMock()
@@ -470,7 +470,7 @@ class TestGetLMStudioAvailableModels:
 
     def test_strips_trailing_v1_from_api_base(self) -> None:
         """Test that /v1 suffix is stripped before building the native API URL."""
-        from onyx.server.manage.llm.api import get_lm_studio_available_models
+        from aethersearch.server.manage.llm.api import get_lm_studio_available_models
 
         mock_session = MagicMock()
         response = {
@@ -485,7 +485,7 @@ class TestGetLMStudioAvailableModels:
             ]
         }
 
-        with patch("onyx.server.manage.llm.api.httpx") as mock_httpx:
+        with patch("aethersearch.server.manage.llm.api.httpx") as mock_httpx:
             mock_response = MagicMock()
             mock_response.json.return_value = response
             mock_response.raise_for_status = MagicMock()
@@ -501,7 +501,7 @@ class TestGetLMStudioAvailableModels:
 
     def test_falls_back_to_stored_api_key(self) -> None:
         """Test that stored API key is used when api_key_changed is False."""
-        from onyx.server.manage.llm.api import get_lm_studio_available_models
+        from aethersearch.server.manage.llm.api import get_lm_studio_available_models
 
         mock_session = MagicMock()
         mock_provider = MagicMock()
@@ -521,9 +521,9 @@ class TestGetLMStudioAvailableModels:
         }
 
         with (
-            patch("onyx.server.manage.llm.api.httpx") as mock_httpx,
+            patch("aethersearch.server.manage.llm.api.httpx") as mock_httpx,
             patch(
-                "onyx.server.manage.llm.api.fetch_existing_llm_provider",
+                "aethersearch.server.manage.llm.api.fetch_existing_llm_provider",
                 return_value=mock_provider,
             ),
         ):
@@ -545,7 +545,7 @@ class TestGetLMStudioAvailableModels:
 
     def test_uses_submitted_api_key_when_changed(self) -> None:
         """Test that submitted API key is used when api_key_changed is True."""
-        from onyx.server.manage.llm.api import get_lm_studio_available_models
+        from aethersearch.server.manage.llm.api import get_lm_studio_available_models
 
         mock_session = MagicMock()
         response = {
@@ -560,7 +560,7 @@ class TestGetLMStudioAvailableModels:
             ]
         }
 
-        with patch("onyx.server.manage.llm.api.httpx") as mock_httpx:
+        with patch("aethersearch.server.manage.llm.api.httpx") as mock_httpx:
             mock_response = MagicMock()
             mock_response.json.return_value = response
             mock_response.raise_for_status = MagicMock()
@@ -579,25 +579,25 @@ class TestGetLMStudioAvailableModels:
 
     def test_raises_on_empty_models(self) -> None:
         """Test that an error is raised when no models are returned."""
-        from onyx.error_handling.exceptions import OnyxError
-        from onyx.server.manage.llm.api import get_lm_studio_available_models
+        from aethersearch.error_handling.exceptions import AetherSearchError
+        from aethersearch.server.manage.llm.api import get_lm_studio_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx") as mock_httpx:
+        with patch("aethersearch.server.manage.llm.api.httpx") as mock_httpx:
             mock_response = MagicMock()
             mock_response.json.return_value = {"models": []}
             mock_response.raise_for_status = MagicMock()
             mock_httpx.get.return_value = mock_response
 
             request = LMStudioModelsRequest(api_base="http://localhost:1234")
-            with pytest.raises(OnyxError):
+            with pytest.raises(AetherSearchError):
                 get_lm_studio_available_models(request, MagicMock(), mock_session)
 
     def test_raises_on_only_non_llm_models(self) -> None:
         """Test that an error is raised when all models are non-LLM type."""
-        from onyx.error_handling.exceptions import OnyxError
-        from onyx.server.manage.llm.api import get_lm_studio_available_models
+        from aethersearch.error_handling.exceptions import AetherSearchError
+        from aethersearch.server.manage.llm.api import get_lm_studio_available_models
 
         mock_session = MagicMock()
         response = {
@@ -612,14 +612,14 @@ class TestGetLMStudioAvailableModels:
             ]
         }
 
-        with patch("onyx.server.manage.llm.api.httpx") as mock_httpx:
+        with patch("aethersearch.server.manage.llm.api.httpx") as mock_httpx:
             mock_response = MagicMock()
             mock_response.json.return_value = response
             mock_response.raise_for_status = MagicMock()
             mock_httpx.get.return_value = mock_response
 
             request = LMStudioModelsRequest(api_base="http://localhost:1234")
-            with pytest.raises(OnyxError):
+            with pytest.raises(AetherSearchError):
                 get_lm_studio_available_models(request, MagicMock(), mock_session)
 
 
@@ -654,11 +654,11 @@ class TestGetLitellmAvailableModels:
 
     def test_returns_model_list(self, mock_litellm_response: dict) -> None:
         """Test that endpoint returns properly formatted model list."""
-        from onyx.server.manage.llm.api import get_litellm_available_models
+        from aethersearch.server.manage.llm.api import get_litellm_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx.get") as mock_get:
+        with patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get:
             mock_response = MagicMock()
             mock_response.json.return_value = mock_litellm_response
             mock_response.raise_for_status = MagicMock()
@@ -675,11 +675,11 @@ class TestGetLitellmAvailableModels:
 
     def test_model_fields_parsed_correctly(self, mock_litellm_response: dict) -> None:
         """Test that provider_name and model_name are correctly extracted."""
-        from onyx.server.manage.llm.api import get_litellm_available_models
+        from aethersearch.server.manage.llm.api import get_litellm_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx.get") as mock_get:
+        with patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get:
             mock_response = MagicMock()
             mock_response.json.return_value = mock_litellm_response
             mock_response.raise_for_status = MagicMock()
@@ -699,11 +699,11 @@ class TestGetLitellmAvailableModels:
 
     def test_results_sorted_by_model_name(self, mock_litellm_response: dict) -> None:
         """Test that results are alphabetically sorted by model_name."""
-        from onyx.server.manage.llm.api import get_litellm_available_models
+        from aethersearch.server.manage.llm.api import get_litellm_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx.get") as mock_get:
+        with patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get:
             mock_response = MagicMock()
             mock_response.json.return_value = mock_litellm_response
             mock_response.raise_for_status = MagicMock()
@@ -718,13 +718,13 @@ class TestGetLitellmAvailableModels:
             model_names = [r.model_name for r in results]
             assert model_names == sorted(model_names, key=str.lower)
 
-    def test_empty_data_raises_onyx_error(self) -> None:
-        """Test that empty model list raises OnyxError."""
-        from onyx.server.manage.llm.api import get_litellm_available_models
+    def test_empty_data_raises_aethersearch_error(self) -> None:
+        """Test that empty model list raises AetherSearchError."""
+        from aethersearch.server.manage.llm.api import get_litellm_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx.get") as mock_get:
+        with patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get:
             mock_response = MagicMock()
             mock_response.json.return_value = {"data": []}
             mock_response.raise_for_status = MagicMock()
@@ -734,16 +734,16 @@ class TestGetLitellmAvailableModels:
                 api_base="http://localhost:4000",
                 api_key="test-key",
             )
-            with pytest.raises(OnyxError, match="No models found"):
+            with pytest.raises(AetherSearchError, match="No models found"):
                 get_litellm_available_models(request, MagicMock(), mock_session)
 
-    def test_missing_data_key_raises_onyx_error(self) -> None:
-        """Test that response without 'data' key raises OnyxError."""
-        from onyx.server.manage.llm.api import get_litellm_available_models
+    def test_missing_data_key_raises_aethersearch_error(self) -> None:
+        """Test that response without 'data' key raises AetherSearchError."""
+        from aethersearch.server.manage.llm.api import get_litellm_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx.get") as mock_get:
+        with patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get:
             mock_response = MagicMock()
             mock_response.json.return_value = {}
             mock_response.raise_for_status = MagicMock()
@@ -753,12 +753,12 @@ class TestGetLitellmAvailableModels:
                 api_base="http://localhost:4000",
                 api_key="test-key",
             )
-            with pytest.raises(OnyxError):
+            with pytest.raises(AetherSearchError):
                 get_litellm_available_models(request, MagicMock(), mock_session)
 
     def test_skips_unparseable_entries(self) -> None:
         """Test that malformed model entries are skipped without failing."""
-        from onyx.server.manage.llm.api import get_litellm_available_models
+        from aethersearch.server.manage.llm.api import get_litellm_available_models
 
         mock_session = MagicMock()
         response_with_bad_entry = {
@@ -774,7 +774,7 @@ class TestGetLitellmAvailableModels:
             ]
         }
 
-        with patch("onyx.server.manage.llm.api.httpx.get") as mock_get:
+        with patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get:
             mock_response = MagicMock()
             mock_response.json.return_value = response_with_bad_entry
             mock_response.raise_for_status = MagicMock()
@@ -789,9 +789,9 @@ class TestGetLitellmAvailableModels:
             assert len(results) == 1
             assert results[0].model_name == "gpt-4o"
 
-    def test_all_entries_unparseable_raises_onyx_error(self) -> None:
-        """Test that OnyxError is raised when all entries fail to parse."""
-        from onyx.server.manage.llm.api import get_litellm_available_models
+    def test_all_entries_unparseable_raises_aethersearch_error(self) -> None:
+        """Test that AetherSearchError is raised when all entries fail to parse."""
+        from aethersearch.server.manage.llm.api import get_litellm_available_models
 
         mock_session = MagicMock()
         response_all_bad = {
@@ -801,7 +801,7 @@ class TestGetLitellmAvailableModels:
             ]
         }
 
-        with patch("onyx.server.manage.llm.api.httpx.get") as mock_get:
+        with patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get:
             mock_response = MagicMock()
             mock_response.json.return_value = response_all_bad
             mock_response.raise_for_status = MagicMock()
@@ -811,12 +811,12 @@ class TestGetLitellmAvailableModels:
                 api_base="http://localhost:4000",
                 api_key="test-key",
             )
-            with pytest.raises(OnyxError, match="No compatible models"):
+            with pytest.raises(AetherSearchError, match="No compatible models"):
                 get_litellm_available_models(request, MagicMock(), mock_session)
 
     def test_api_base_trailing_slash_handled(self) -> None:
         """Test that trailing slashes in api_base are handled correctly."""
-        from onyx.server.manage.llm.api import get_litellm_available_models
+        from aethersearch.server.manage.llm.api import get_litellm_available_models
 
         mock_session = MagicMock()
         mock_litellm_response = {
@@ -830,7 +830,7 @@ class TestGetLitellmAvailableModels:
             ]
         }
 
-        with patch("onyx.server.manage.llm.api.httpx.get") as mock_get:
+        with patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get:
             mock_response = MagicMock()
             mock_response.json.return_value = mock_litellm_response
             mock_response.raise_for_status = MagicMock()
@@ -846,13 +846,13 @@ class TestGetLitellmAvailableModels:
             call_args = mock_get.call_args
             assert call_args[0][0] == "http://localhost:4000/v1/models"
 
-    def test_connection_failure_raises_onyx_error(self) -> None:
-        """Test that connection failures are wrapped in OnyxError."""
-        from onyx.server.manage.llm.api import get_litellm_available_models
+    def test_connection_failure_raises_aethersearch_error(self) -> None:
+        """Test that connection failures are wrapped in AetherSearchError."""
+        from aethersearch.server.manage.llm.api import get_litellm_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx.get") as mock_get:
+        with patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get:
             mock_get.side_effect = httpx.ConnectError(
                 "Connection refused", request=MagicMock()
             )
@@ -861,16 +861,16 @@ class TestGetLitellmAvailableModels:
                 api_base="http://localhost:4000",
                 api_key="test-key",
             )
-            with pytest.raises(OnyxError, match="Failed to fetch LiteLLM proxy models"):
+            with pytest.raises(AetherSearchError, match="Failed to fetch LiteLLM proxy models"):
                 get_litellm_available_models(request, MagicMock(), mock_session)
 
     def test_401_raises_authentication_error(self) -> None:
-        """Test that a 401 response raises OnyxError with authentication message."""
-        from onyx.server.manage.llm.api import get_litellm_available_models
+        """Test that a 401 response raises AetherSearchError with authentication message."""
+        from aethersearch.server.manage.llm.api import get_litellm_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx.get") as mock_get:
+        with patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get:
             mock_response = MagicMock()
             mock_response.status_code = 401
             mock_get.side_effect = httpx.HTTPStatusError(
@@ -881,16 +881,16 @@ class TestGetLitellmAvailableModels:
                 api_base="http://localhost:4000",
                 api_key="bad-key",
             )
-            with pytest.raises(OnyxError, match="Authentication failed"):
+            with pytest.raises(AetherSearchError, match="Authentication failed"):
                 get_litellm_available_models(request, MagicMock(), mock_session)
 
     def test_404_raises_not_found_error(self) -> None:
-        """Test that a 404 response raises OnyxError with endpoint not found message."""
-        from onyx.server.manage.llm.api import get_litellm_available_models
+        """Test that a 404 response raises AetherSearchError with endpoint not found message."""
+        from aethersearch.server.manage.llm.api import get_litellm_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx.get") as mock_get:
+        with patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get:
             mock_response = MagicMock()
             mock_response.status_code = 404
             mock_get.side_effect = httpx.HTTPStatusError(
@@ -901,7 +901,7 @@ class TestGetLitellmAvailableModels:
                 api_base="http://localhost:4000",
                 api_key="test-key",
             )
-            with pytest.raises(OnyxError, match="endpoint not found"):
+            with pytest.raises(AetherSearchError, match="endpoint not found"):
                 get_litellm_available_models(request, MagicMock(), mock_session)
 
 
@@ -933,11 +933,11 @@ class TestGetBifrostAvailableModels:
 
     def test_returns_model_list(self, mock_bifrost_response: dict) -> None:
         """Test that endpoint returns properly formatted non-embedding models."""
-        from onyx.server.manage.llm.api import get_bifrost_available_models
+        from aethersearch.server.manage.llm.api import get_bifrost_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx.get") as mock_get:
+        with patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get:
             mock_response = MagicMock()
             mock_response.json.return_value = mock_bifrost_response
             mock_response.raise_for_status = MagicMock()
@@ -954,11 +954,11 @@ class TestGetBifrostAvailableModels:
 
     def test_infers_vision_support(self, mock_bifrost_response: dict) -> None:
         """Test that vision support is inferred from provider/model IDs."""
-        from onyx.server.manage.llm.api import get_bifrost_available_models
+        from aethersearch.server.manage.llm.api import get_bifrost_available_models
 
         mock_session = MagicMock()
 
-        with patch("onyx.server.manage.llm.api.httpx.get") as mock_get:
+        with patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get:
             mock_response = MagicMock()
             mock_response.json.return_value = mock_bifrost_response
             mock_response.raise_for_status = MagicMock()
@@ -977,12 +977,12 @@ class TestGetBifrostAvailableModels:
 
     def test_existing_v1_suffix_is_not_duplicated(self) -> None:
         """Test that an existing /v1 suffix still hits a single /v1/models endpoint."""
-        from onyx.server.manage.llm.api import get_bifrost_available_models
+        from aethersearch.server.manage.llm.api import get_bifrost_available_models
 
         mock_session = MagicMock()
         response = {"data": [{"id": "openai/gpt-4o", "name": "GPT-4o"}]}
 
-        with patch("onyx.server.manage.llm.api.httpx.get") as mock_get:
+        with patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get:
             mock_response = MagicMock()
             mock_response.json.return_value = response
             mock_response.raise_for_status = MagicMock()
@@ -995,21 +995,21 @@ class TestGetBifrostAvailableModels:
             assert called_url == "https://bifrost.example.com/v1/models"
 
     def test_request_failure_is_logged_and_wrapped(self) -> None:
-        """Test that request-layer failures are logged before raising OnyxError."""
-        from onyx.server.manage.llm.api import get_bifrost_available_models
+        """Test that request-layer failures are logged before raising AetherSearchError."""
+        from aethersearch.server.manage.llm.api import get_bifrost_available_models
 
         mock_session = MagicMock()
 
         with (
-            patch("onyx.server.manage.llm.api.httpx.get") as mock_get,
-            patch("onyx.server.manage.llm.api.logger.warning") as mock_warning,
+            patch("aethersearch.server.manage.llm.api.httpx.get") as mock_get,
+            patch("aethersearch.server.manage.llm.api.logger.warning") as mock_warning,
         ):
             mock_get.side_effect = httpx.ConnectError(
                 "Connection refused", request=MagicMock()
             )
 
             request = BifrostModelsRequest(api_base="https://bifrost.example.com")
-            with pytest.raises(OnyxError, match="Failed to fetch Bifrost models"):
+            with pytest.raises(AetherSearchError, match="Failed to fetch Bifrost models"):
                 get_bifrost_available_models(request, MagicMock(), mock_session)
 
             mock_warning.assert_called_once()

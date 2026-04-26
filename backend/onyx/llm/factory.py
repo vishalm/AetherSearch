@@ -1,32 +1,32 @@
 from collections.abc import Callable
 from typing import Any
 
-from onyx.auth.schemas import UserRole
-from onyx.configs.model_configs import GEN_AI_TEMPERATURE
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import LLMModelFlowType
-from onyx.db.llm import can_user_access_llm_provider
-from onyx.db.llm import fetch_default_llm_model
-from onyx.db.llm import fetch_default_vision_model
-from onyx.db.llm import fetch_existing_llm_provider
-from onyx.db.llm import fetch_existing_models
-from onyx.db.llm import fetch_llm_provider_view
-from onyx.db.llm import fetch_user_group_ids
-from onyx.db.models import Persona
-from onyx.db.models import User
-from onyx.llm.constants import LlmProviderNames
-from onyx.llm.interfaces import LLM
-from onyx.llm.multi_llm import LitellmLLM
-from onyx.llm.override_models import LLMOverride
-from onyx.llm.utils import get_max_input_tokens_from_llm_provider
-from onyx.llm.utils import model_supports_image_input
-from onyx.llm.well_known_providers.constants import (
+from aethersearch.auth.schemas import UserRole
+from aethersearch.configs.model_configs import GEN_AI_TEMPERATURE
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import LLMModelFlowType
+from aethersearch.db.llm import can_user_access_llm_provider
+from aethersearch.db.llm import fetch_default_llm_model
+from aethersearch.db.llm import fetch_default_vision_model
+from aethersearch.db.llm import fetch_existing_llm_provider
+from aethersearch.db.llm import fetch_existing_models
+from aethersearch.db.llm import fetch_llm_provider_view
+from aethersearch.db.llm import fetch_user_group_ids
+from aethersearch.db.models import Persona
+from aethersearch.db.models import User
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.llm.interfaces import LLM
+from aethersearch.llm.multi_llm import LitellmLLM
+from aethersearch.llm.override_models import LLMOverride
+from aethersearch.llm.utils import get_max_input_tokens_from_llm_provider
+from aethersearch.llm.utils import model_supports_image_input
+from aethersearch.llm.well_known_providers.constants import (
     PROVIDERS_WITH_SPECIAL_API_KEY_HANDLING,
 )
-from onyx.natural_language_processing.utils import get_tokenizer
-from onyx.server.manage.llm.models import LLMProviderView
-from onyx.utils.headers import build_llm_extra_headers
-from onyx.utils.logger import setup_logger
+from aethersearch.natural_language_processing.utils import get_tokenizer
+from aethersearch.server.manage.llm.models import LLMProviderView
+from aethersearch.utils.headers import build_llm_extra_headers
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -47,11 +47,11 @@ def _build_provider_extra_headers(
             )
         }
 
-    # Passing these will put Onyx on the OpenRouter leaderboard
+    # Passing these will put AetherSearch on the OpenRouter leaderboard
     elif provider == LlmProviderNames.OPENROUTER:
         return {
-            "HTTP-Referer": "https://onyx.app",
-            "X-Title": "Onyx",
+            "HTTP-Referer": "https://aethersearch.app",
+            "X-Title": "AetherSearch",
         }
 
     return {}

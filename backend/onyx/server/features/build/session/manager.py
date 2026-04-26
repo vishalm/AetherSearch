@@ -25,70 +25,70 @@ from acp.schema import ToolCallProgress
 from acp.schema import ToolCallStart
 from sqlalchemy.orm import Session as DBSession
 
-from onyx.configs.app_configs import WEB_DOMAIN
-from onyx.configs.constants import MessageType
-from onyx.db.enums import SandboxStatus
-from onyx.db.llm import fetch_default_llm_model
-from onyx.db.models import BuildMessage
-from onyx.db.models import BuildSession
-from onyx.db.models import User
-from onyx.db.users import fetch_user_by_id
-from onyx.llm.factory import get_default_llm
-from onyx.llm.models import LanguageModelInput
-from onyx.llm.models import ReasoningEffort
-from onyx.llm.models import SystemMessage
-from onyx.llm.models import UserMessage
-from onyx.llm.utils import llm_response_to_string
-from onyx.server.features.build.api.models import DirectoryListing
-from onyx.server.features.build.api.models import FileSystemEntry
-from onyx.server.features.build.api.packet_logger import get_packet_logger
-from onyx.server.features.build.api.packet_logger import log_separator
-from onyx.server.features.build.api.packets import BuildPacket
-from onyx.server.features.build.api.packets import ErrorPacket
-from onyx.server.features.build.api.rate_limit import get_user_rate_limit_status
-from onyx.server.features.build.configs import MAX_TOTAL_UPLOAD_SIZE_BYTES
-from onyx.server.features.build.configs import MAX_UPLOAD_FILES_PER_SESSION
-from onyx.server.features.build.configs import PERSISTENT_DOCUMENT_STORAGE_PATH
-from onyx.server.features.build.configs import SANDBOX_BACKEND
-from onyx.server.features.build.configs import SandboxBackend
-from onyx.server.features.build.db.build_session import allocate_nextjs_port
-from onyx.server.features.build.db.build_session import create_build_session__no_commit
-from onyx.server.features.build.db.build_session import create_message
-from onyx.server.features.build.db.build_session import delete_build_session__no_commit
-from onyx.server.features.build.db.build_session import (
+from aethersearch.configs.app_configs import WEB_DOMAIN
+from aethersearch.configs.constants import MessageType
+from aethersearch.db.enums import SandboxStatus
+from aethersearch.db.llm import fetch_default_llm_model
+from aethersearch.db.models import BuildMessage
+from aethersearch.db.models import BuildSession
+from aethersearch.db.models import User
+from aethersearch.db.users import fetch_user_by_id
+from aethersearch.llm.factory import get_default_llm
+from aethersearch.llm.models import LanguageModelInput
+from aethersearch.llm.models import ReasoningEffort
+from aethersearch.llm.models import SystemMessage
+from aethersearch.llm.models import UserMessage
+from aethersearch.llm.utils import llm_response_to_string
+from aethersearch.server.features.build.api.models import DirectoryListing
+from aethersearch.server.features.build.api.models import FileSystemEntry
+from aethersearch.server.features.build.api.packet_logger import get_packet_logger
+from aethersearch.server.features.build.api.packet_logger import log_separator
+from aethersearch.server.features.build.api.packets import BuildPacket
+from aethersearch.server.features.build.api.packets import ErrorPacket
+from aethersearch.server.features.build.api.rate_limit import get_user_rate_limit_status
+from aethersearch.server.features.build.configs import MAX_TOTAL_UPLOAD_SIZE_BYTES
+from aethersearch.server.features.build.configs import MAX_UPLOAD_FILES_PER_SESSION
+from aethersearch.server.features.build.configs import PERSISTENT_DOCUMENT_STORAGE_PATH
+from aethersearch.server.features.build.configs import SANDBOX_BACKEND
+from aethersearch.server.features.build.configs import SandboxBackend
+from aethersearch.server.features.build.db.build_session import allocate_nextjs_port
+from aethersearch.server.features.build.db.build_session import create_build_session__no_commit
+from aethersearch.server.features.build.db.build_session import create_message
+from aethersearch.server.features.build.db.build_session import delete_build_session__no_commit
+from aethersearch.server.features.build.db.build_session import (
     fetch_llm_provider_by_type_for_build_mode,
 )
-from onyx.server.features.build.db.build_session import get_build_session
-from onyx.server.features.build.db.build_session import get_empty_session_for_user
-from onyx.server.features.build.db.build_session import get_session_messages
-from onyx.server.features.build.db.build_session import get_user_build_sessions
-from onyx.server.features.build.db.build_session import update_session_activity
-from onyx.server.features.build.db.build_session import upsert_agent_plan
-from onyx.server.features.build.db.sandbox import create_sandbox__no_commit
-from onyx.server.features.build.db.sandbox import get_running_sandbox_count_by_tenant
-from onyx.server.features.build.db.sandbox import get_sandbox_by_session_id
-from onyx.server.features.build.db.sandbox import get_sandbox_by_user_id
-from onyx.server.features.build.db.sandbox import get_snapshots_for_session
-from onyx.server.features.build.db.sandbox import update_sandbox_heartbeat
-from onyx.server.features.build.db.sandbox import update_sandbox_status__no_commit
-from onyx.server.features.build.sandbox import get_sandbox_manager
-from onyx.server.features.build.sandbox.kubernetes.internal.acp_exec_client import (
+from aethersearch.server.features.build.db.build_session import get_build_session
+from aethersearch.server.features.build.db.build_session import get_empty_session_for_user
+from aethersearch.server.features.build.db.build_session import get_session_messages
+from aethersearch.server.features.build.db.build_session import get_user_build_sessions
+from aethersearch.server.features.build.db.build_session import update_session_activity
+from aethersearch.server.features.build.db.build_session import upsert_agent_plan
+from aethersearch.server.features.build.db.sandbox import create_sandbox__no_commit
+from aethersearch.server.features.build.db.sandbox import get_running_sandbox_count_by_tenant
+from aethersearch.server.features.build.db.sandbox import get_sandbox_by_session_id
+from aethersearch.server.features.build.db.sandbox import get_sandbox_by_user_id
+from aethersearch.server.features.build.db.sandbox import get_snapshots_for_session
+from aethersearch.server.features.build.db.sandbox import update_sandbox_heartbeat
+from aethersearch.server.features.build.db.sandbox import update_sandbox_status__no_commit
+from aethersearch.server.features.build.sandbox import get_sandbox_manager
+from aethersearch.server.features.build.sandbox.kubernetes.internal.acp_exec_client import (
     SSEKeepalive,
 )
-from onyx.server.features.build.sandbox.models import LLMProviderConfig
-from onyx.server.features.build.sandbox.tasks.tasks import (
+from aethersearch.server.features.build.sandbox.models import LLMProviderConfig
+from aethersearch.server.features.build.sandbox.tasks.tasks import (
     _get_disabled_user_library_paths,
 )
-from onyx.server.features.build.session.prompts import BUILD_NAMING_SYSTEM_PROMPT
-from onyx.server.features.build.session.prompts import BUILD_NAMING_USER_PROMPT
-from onyx.server.features.build.session.prompts import (
+from aethersearch.server.features.build.session.prompts import BUILD_NAMING_SYSTEM_PROMPT
+from aethersearch.server.features.build.session.prompts import BUILD_NAMING_USER_PROMPT
+from aethersearch.server.features.build.session.prompts import (
     FOLLOWUP_SUGGESTIONS_SYSTEM_PROMPT,
 )
-from onyx.server.features.build.session.prompts import FOLLOWUP_SUGGESTIONS_USER_PROMPT
-from onyx.tracing.framework.create import ensure_trace
-from onyx.tracing.llm_utils import llm_generation_span
-from onyx.tracing.llm_utils import record_llm_response
-from onyx.utils.logger import setup_logger
+from aethersearch.server.features.build.session.prompts import FOLLOWUP_SUGGESTIONS_USER_PROMPT
+from aethersearch.tracing.framework.create import ensure_trace
+from aethersearch.tracing.llm_utils import llm_generation_span
+from aethersearch.tracing.llm_utils import record_llm_response
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.contextvars import get_current_tenant_id
 
@@ -415,7 +415,7 @@ class SessionManager:
 
         # Check sandbox limits for multi-tenant deployments
         if MULTI_TENANT:
-            from onyx.server.features.build.configs import (
+            from aethersearch.server.features.build.configs import (
                 SANDBOX_MAX_CONCURRENT_PER_ORG,
             )
 
@@ -443,7 +443,7 @@ class SessionManager:
             )
         else:
             # Fallback for local development without persistent storage
-            user_file_system_path = "/tmp/onyx-files"
+            user_file_system_path = "/tmp/aethersearch-files"
 
         # Ensure the user's document directory exists (if local)
         if SANDBOX_BACKEND == SandboxBackend.LOCAL:
@@ -1047,8 +1047,8 @@ class SessionManager:
         # Delete snapshot files from S3 before removing DB records
         snapshots = get_snapshots_for_session(self._db_session, session_id)
         if snapshots:
-            from onyx.file_store.file_store import get_default_file_store
-            from onyx.server.features.build.sandbox.manager.snapshot_manager import (
+            from aethersearch.file_store.file_store import get_default_file_store
+            from aethersearch.server.features.build.sandbox.manager.snapshot_manager import (
                 SnapshotManager,
             )
 
@@ -1830,7 +1830,7 @@ class SessionManager:
         """
         import httpx
 
-        from onyx.server.features.build.sandbox.base import get_sandbox_manager
+        from aethersearch.server.features.build.sandbox.base import get_sandbox_manager
 
         try:
             sandbox_manager = get_sandbox_manager()
@@ -2231,7 +2231,7 @@ class SessionManager:
         Returns:
             True if sandbox was terminated, False if user had no sandbox
         """
-        from onyx.server.features.build.db.sandbox import (
+        from aethersearch.server.features.build.db.sandbox import (
             update_sandbox_status__no_commit,
         )
 

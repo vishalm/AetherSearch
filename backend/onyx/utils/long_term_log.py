@@ -5,8 +5,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from onyx.utils.logger import setup_logger
-from onyx.utils.special_types import JSON_ro
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.special_types import JSON_ro
 
 logger = setup_logger()
 
@@ -90,7 +90,7 @@ class LongTermLogger:
             )
             thread.start()
         except Exception:
-            # Should never interfere with normal functions of Onyx
+            # Should never interfere with normal functions of AetherSearch
             pass
 
     def fetch_category(

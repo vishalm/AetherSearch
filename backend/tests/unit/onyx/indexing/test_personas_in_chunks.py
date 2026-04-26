@@ -8,13 +8,13 @@ from unittest.mock import MagicMock
 from unittest.mock import patch
 from uuid import uuid4
 
-from onyx.access.models import DocumentAccess
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentSource
-from onyx.connectors.models import TextSection
-from onyx.indexing.models import ChunkEmbedding
-from onyx.indexing.models import DocMetadataAwareIndexChunk
-from onyx.indexing.models import IndexChunk
+from aethersearch.access.models import DocumentAccess
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentSource
+from aethersearch.connectors.models import TextSection
+from aethersearch.indexing.models import ChunkEmbedding
+from aethersearch.indexing.models import DocMetadataAwareIndexChunk
+from aethersearch.indexing.models import IndexChunk
 
 
 def _make_index_chunk(
@@ -118,10 +118,10 @@ def _run_adapter_build(
 ) -> list[DocMetadataAwareIndexChunk]:
     """Helper that runs UserFileIndexingAdapter.prepare_enrichment + enrich_chunk
     with all external dependencies mocked."""
-    from onyx.indexing.adapters.user_file_indexing_adapter import (
+    from aethersearch.indexing.adapters.user_file_indexing_adapter import (
         UserFileIndexingAdapter,
     )
-    from onyx.indexing.indexing_pipeline import DocumentBatchPrepareContext
+    from aethersearch.indexing.indexing_pipeline import DocumentBatchPrepareContext
 
     chunk = _make_index_chunk(doc_id=file_id)
     doc = _make_document(doc_id=file_id)
@@ -135,23 +135,23 @@ def _run_adapter_build(
 
     with (
         patch(
-            "onyx.indexing.adapters.user_file_indexing_adapter.fetch_user_project_ids_for_user_files",
+            "aethersearch.indexing.adapters.user_file_indexing_adapter.fetch_user_project_ids_for_user_files",
             return_value=project_ids_map,
         ),
         patch(
-            "onyx.indexing.adapters.user_file_indexing_adapter.fetch_persona_ids_for_user_files",
+            "aethersearch.indexing.adapters.user_file_indexing_adapter.fetch_persona_ids_for_user_files",
             return_value=persona_ids_map,
         ),
         patch(
-            "onyx.indexing.adapters.user_file_indexing_adapter.get_access_for_user_files",
+            "aethersearch.indexing.adapters.user_file_indexing_adapter.get_access_for_user_files",
             return_value={file_id: _make_access()},
         ),
         patch(
-            "onyx.indexing.adapters.user_file_indexing_adapter.fetch_chunk_counts_for_user_files",
+            "aethersearch.indexing.adapters.user_file_indexing_adapter.fetch_chunk_counts_for_user_files",
             return_value=[(file_id, 0)],
         ),
         patch(
-            "onyx.indexing.adapters.user_file_indexing_adapter.get_default_llm",
+            "aethersearch.indexing.adapters.user_file_indexing_adapter.get_default_llm",
             side_effect=Exception("no LLM in tests"),
         ),
     ):

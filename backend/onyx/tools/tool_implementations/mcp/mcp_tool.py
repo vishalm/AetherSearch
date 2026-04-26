@@ -3,20 +3,20 @@ from typing import Any
 
 from mcp.client.auth import OAuthClientProvider
 
-from onyx.chat.emitter import Emitter
-from onyx.db.enums import MCPAuthenticationType
-from onyx.db.enums import MCPTransport
-from onyx.db.models import MCPConnectionConfig
-from onyx.db.models import MCPServer
-from onyx.server.query_and_chat.placement import Placement
-from onyx.server.query_and_chat.streaming_models import CustomToolDelta
-from onyx.server.query_and_chat.streaming_models import CustomToolStart
-from onyx.server.query_and_chat.streaming_models import Packet
-from onyx.tools.interface import Tool
-from onyx.tools.models import CustomToolCallSummary
-from onyx.tools.models import ToolResponse
-from onyx.tools.tool_implementations.mcp.mcp_client import call_mcp_tool
-from onyx.utils.logger import setup_logger
+from aethersearch.chat.emitter import Emitter
+from aethersearch.db.enums import MCPAuthenticationType
+from aethersearch.db.enums import MCPTransport
+from aethersearch.db.models import MCPConnectionConfig
+from aethersearch.db.models import MCPServer
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.server.query_and_chat.streaming_models import CustomToolDelta
+from aethersearch.server.query_and_chat.streaming_models import CustomToolStart
+from aethersearch.server.query_and_chat.streaming_models import Packet
+from aethersearch.tools.interface import Tool
+from aethersearch.tools.models import CustomToolCallSummary
+from aethersearch.tools.models import ToolResponse
+from aethersearch.tools.tool_implementations.mcp.mcp_client import call_mcp_tool
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -229,8 +229,8 @@ class MCPTool(Tool[None]):
                         f"Re-authentication may be required after token expiry."
                     )
                 else:
-                    from onyx.server.features.mcp.api import make_oauth_provider
-                    from onyx.server.features.mcp.api import UNUSED_RETURN_PATH
+                    from aethersearch.server.features.mcp.api import make_oauth_provider
+                    from aethersearch.server.features.mcp.api import UNUSED_RETURN_PATH
 
                     # user_id is the requesting user's UUID; safe here because
                     # UNUSED_RETURN_PATH ensures redirect_handler raises immediately

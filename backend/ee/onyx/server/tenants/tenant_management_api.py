@@ -1,12 +1,12 @@
 from fastapi import APIRouter
 from fastapi import Depends
 
-from ee.onyx.server.tenants.models import TenantByDomainResponse
-from ee.onyx.server.tenants.provisioning import get_tenant_by_domain_from_control_plane
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import User
-from onyx.db.enums import Permission
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.server.tenants.models import TenantByDomainResponse
+from ee.aethersearch.server.tenants.provisioning import get_tenant_by_domain_from_control_plane
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import User
+from aethersearch.db.enums import Permission
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()

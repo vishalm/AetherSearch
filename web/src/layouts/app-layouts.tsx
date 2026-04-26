@@ -461,9 +461,9 @@ function Footer() {
 
   const customFooterContent =
     settings?.enterpriseSettings?.custom_lower_disclaimer_content ||
-    `[Onyx ${
+    `[AetherSearch ${
       settings?.webVersion || "dev"
-    }](https://www.onyx.app/) - ${APP_SLOGAN}`;
+    }](https://www.aethersearch.app/) - ${APP_SLOGAN}`;
 
   return (
     <footer
@@ -544,7 +544,7 @@ function Root({ children, enableBackground }: AppRootProps) {
       const activeEl = document.activeElement;
       const isFocused =
         activeEl instanceof HTMLElement &&
-        activeEl.id === "onyx-chat-input-textarea";
+        activeEl.id === "aethersearch-chat-input-textarea";
       const target = event.target;
       const isInteractive =
         target instanceof HTMLElement && !!target.closest(INTERACTIVE_SELECTOR);
@@ -558,7 +558,7 @@ function Root({ children, enableBackground }: AppRootProps) {
     inputWasFocused.current = false;
     const sel = window.getSelection();
     if (sel && !sel.isCollapsed) return;
-    const textarea = document.getElementById("onyx-chat-input-textarea");
+    const textarea = document.getElementById("aethersearch-chat-input-textarea");
     // Only restore focus if no other element has grabbed it since mousedown.
     if (textarea && document.activeElement !== textarea) {
       textarea.focus();

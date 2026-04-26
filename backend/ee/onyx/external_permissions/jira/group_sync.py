@@ -4,10 +4,10 @@ from typing import Any
 from jira import JIRA
 from jira.exceptions import JIRAError
 
-from ee.onyx.db.external_perm import ExternalUserGroup
-from onyx.connectors.jira.utils import build_jira_client
-from onyx.db.models import ConnectorCredentialPair
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.db.external_perm import ExternalUserGroup
+from aethersearch.connectors.jira.utils import build_jira_client
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

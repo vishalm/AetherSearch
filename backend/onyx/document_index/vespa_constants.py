@@ -1,9 +1,9 @@
-from onyx.configs.app_configs import VESPA_CLOUD_URL
-from onyx.configs.app_configs import VESPA_CONFIG_SERVER_HOST
-from onyx.configs.app_configs import VESPA_HOST
-from onyx.configs.app_configs import VESPA_PORT
-from onyx.configs.app_configs import VESPA_TENANT_PORT
-from onyx.configs.constants import SOURCE_TYPE
+from aethersearch.configs.app_configs import VESPA_CLOUD_URL
+from aethersearch.configs.app_configs import VESPA_CONFIG_SERVER_HOST
+from aethersearch.configs.app_configs import VESPA_HOST
+from aethersearch.configs.app_configs import VESPA_PORT
+from aethersearch.configs.app_configs import VESPA_TENANT_PORT
+from aethersearch.configs.constants import SOURCE_TYPE
 
 # config server
 

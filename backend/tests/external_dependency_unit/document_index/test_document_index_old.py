@@ -9,16 +9,16 @@ from collections.abc import Iterator
 
 import pytest
 
-from onyx.context.search.models import IndexFilters
-from onyx.document_index.interfaces import DocumentIndex
-from onyx.document_index.interfaces import IndexBatchParams
-from onyx.document_index.interfaces import VespaChunkRequest
-from onyx.document_index.interfaces import VespaDocumentUserFields
-from onyx.document_index.opensearch.opensearch_document_index import (
+from aethersearch.context.search.models import IndexFilters
+from aethersearch.document_index.interfaces import DocumentIndex
+from aethersearch.document_index.interfaces import IndexBatchParams
+from aethersearch.document_index.interfaces import VespaChunkRequest
+from aethersearch.document_index.interfaces import VespaDocumentUserFields
+from aethersearch.document_index.opensearch.opensearch_document_index import (
     OpenSearchOldDocumentIndex,
 )
-from onyx.document_index.vespa.index import VespaIndex
-from onyx.indexing.models import DocMetadataAwareIndexChunk
+from aethersearch.document_index.vespa.index import VespaIndex
+from aethersearch.indexing.models import DocMetadataAwareIndexChunk
 from shared_configs.contextvars import get_current_tenant_id
 from tests.external_dependency_unit.document_index.conftest import make_chunk
 

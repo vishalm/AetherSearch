@@ -5,13 +5,13 @@ from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from onyx.db.engine.time_utils import get_db_current_time
-from onyx.db.enums import IndexingStatus
-from onyx.db.index_attempt import count_error_rows_for_index_attempt
-from onyx.db.index_attempt import create_index_attempt
-from onyx.db.index_attempt import get_index_attempt
-from onyx.db.models import IndexAttempt
-from onyx.utils.logger import setup_logger
+from aethersearch.db.engine.time_utils import get_db_current_time
+from aethersearch.db.enums import IndexingStatus
+from aethersearch.db.index_attempt import count_error_rows_for_index_attempt
+from aethersearch.db.index_attempt import create_index_attempt
+from aethersearch.db.index_attempt import get_index_attempt
+from aethersearch.db.models import IndexAttempt
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

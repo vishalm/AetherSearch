@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
 
-from onyx.db.index_attempt import get_last_attempt
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import IndexingStatus
-from onyx.db.search_settings import get_current_search_settings
+from aethersearch.db.index_attempt import get_last_attempt
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import IndexingStatus
+from aethersearch.db.search_settings import get_current_search_settings
 
 
 def check_deletion_attempt_is_allowed(

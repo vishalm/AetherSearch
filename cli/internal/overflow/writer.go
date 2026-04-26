@@ -42,7 +42,7 @@ func (w *Writer) Write(s string) {
 
 	// Truncation mode: stream all content to temp file on disk
 	if w.tmpFile == nil {
-		f, err := os.CreateTemp("", "onyx-ask-*.txt")
+		f, err := os.CreateTemp("", "aethersearch-ask-*.txt")
 		if err != nil {
 			// Fall back to no-truncation if we can't create the file
 			fmt.Fprintf(os.Stderr, "warning: could not create temp file: %v\n", err)

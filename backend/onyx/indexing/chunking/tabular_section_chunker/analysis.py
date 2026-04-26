@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
 
-from onyx.utils.csv_utils import ParsedRow
+from aethersearch.utils.csv_utils import ParsedRow
 
 CATEGORICAL_DISTINCT_THRESHOLD = 20
 ID_NAME_TOKENS = {"id", "uuid", "uid", "guid", "key"}

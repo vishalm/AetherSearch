@@ -3,9 +3,9 @@ import time
 
 import pytest
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.credentials_provider import OnyxStaticCredentialsProvider
-from onyx.connectors.imap.connector import ImapConnector
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.credentials_provider import AetherSearchStaticCredentialsProvider
+from aethersearch.connectors.imap.connector import ImapConnector
 from tests.daily.connectors.imap.models import EmailDoc
 from tests.daily.connectors.utils import load_all_from_connector
 
@@ -29,7 +29,7 @@ def imap_connector() -> ImapConnector:
         mailboxes=mailboxes,
     )
     imap_connector.set_credentials_provider(
-        OnyxStaticCredentialsProvider(
+        AetherSearchStaticCredentialsProvider(
             tenant_id=None,
             connector_name=DocumentSource.IMAP,
             credential_json={
@@ -48,12 +48,12 @@ def imap_connector() -> ImapConnector:
         [
             EmailDoc(
                 subject="Testing",
-                recipients=set(["admin@onyx-test.com", "raunak@onyx.app"]),
+                recipients=set(["admin@aethersearch-test.com", "raunak@aethersearch.app"]),
                 body="Hello, testing.",
             ),
             EmailDoc(
                 subject="Hello world",
-                recipients=set(["admin@onyx-test.com", "r@rabh.io", "raunak@onyx.app"]),
+                recipients=set(["admin@aethersearch-test.com", "r@rabh.io", "raunak@aethersearch.app"]),
                 body='Hello world, this is an email that contains multiple "To" recipients.',
             ),
         ]

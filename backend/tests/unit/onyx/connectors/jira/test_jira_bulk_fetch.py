@@ -6,8 +6,8 @@ import requests
 from jira import JIRA
 from jira.resources import Issue
 
-from onyx.connectors.jira.connector import _JIRA_BULK_FETCH_LIMIT
-from onyx.connectors.jira.connector import bulk_fetch_issues
+from aethersearch.connectors.jira.connector import _JIRA_BULK_FETCH_LIMIT
+from aethersearch.connectors.jira.connector import bulk_fetch_issues
 
 
 def _make_raw_issue(issue_id: str) -> dict[str, Any]:

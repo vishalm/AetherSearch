@@ -3,8 +3,8 @@ import os
 import pytest
 import requests
 
-from onyx.auth.schemas import UserRole
-from onyx.db.enums import AccountType
+from aethersearch.auth.schemas import UserRole
+from aethersearch.db.enums import AccountType
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.managers.user import UserManager
 from tests.integration.common_utils.managers.user_group import UserGroupManager

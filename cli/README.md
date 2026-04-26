@@ -1,9 +1,9 @@
 # AetherSearch CLI
 
-[![Release CLI](https://github.com/vishalm/ai-enterprise-search-chat-onyx/actions/workflows/release-cli.yml/badge.svg)](https://github.com/vishalm/ai-enterprise-search-chat-onyx/actions/workflows/release-cli.yml)
+[![Release CLI](https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/actions/workflows/release-cli.yml/badge.svg)](https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/actions/workflows/release-cli.yml)
 [![PyPI](https://img.shields.io/pypi/v/aethersearch-cli.svg)](https://pypi.org/project/aethersearch-cli/)
 
-A terminal interface for chatting with your [AetherSearch](https://github.com/vishalm/ai-enterprise-search-chat-onyx) agent. Built with Go using [Bubble Tea](https://github.com/charmbracelet/bubbletea) for the TUI framework.
+A terminal interface for chatting with your [AetherSearch](https://github.com/vishalm/ai-enterprise-search-chat-aethersearch) agent. Built with Go using [Bubble Tea](https://github.com/charmbracelet/bubbletea) for the TUI framework.
 
 ## Installation
 
@@ -31,9 +31,9 @@ Environment variables override config file values:
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `ONYX_SERVER_URL` | No | Server base URL (default: `https://cloud.aethersearch.app`) |
-| `ONYX_API_KEY` | Yes | API key for authentication |
-| `ONYX_PERSONA_ID` | No | Default agent/persona ID |
+| `AETHERSEARCH_SERVER_URL` | No | Server base URL (default: `https://cloud.aethersearch.app`) |
+| `AETHERSEARCH_API_KEY` | Yes | API key for authentication |
+| `AETHERSEARCH_PERSONA_ID` | No | Default agent/persona ID |
 
 ## Usage
 
@@ -75,11 +75,11 @@ ssh your-host -p 2222
 
 Clients can either:
 - paste an API key at the login prompt, or
-- skip the prompt by sending `ONYX_API_KEY` over SSH:
+- skip the prompt by sending `AETHERSEARCH_API_KEY` over SSH:
 
 ```shell
-export ONYX_API_KEY=your-key
-ssh -o SendEnv=ONYX_API_KEY your-host -p 2222
+export AETHERSEARCH_API_KEY=your-key
+ssh -o SendEnv=AETHERSEARCH_API_KEY your-host -p 2222
 ```
 
 Useful hardening flags:

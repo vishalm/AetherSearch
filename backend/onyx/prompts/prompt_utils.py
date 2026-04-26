@@ -3,18 +3,18 @@ from typing import cast
 
 from langchain_core.messages import BaseMessage
 
-from onyx.configs.constants import DocumentSource
-from onyx.prompts.chat_prompts import ADDITIONAL_INFO
-from onyx.prompts.chat_prompts import CITATION_GUIDANCE_REPLACEMENT_PAT
-from onyx.prompts.chat_prompts import COMPANY_DESCRIPTION_BLOCK
-from onyx.prompts.chat_prompts import COMPANY_NAME_BLOCK
-from onyx.prompts.chat_prompts import DATETIME_REPLACEMENT_PAT
-from onyx.prompts.chat_prompts import REMINDER_TAG_REPLACEMENT_PAT
-from onyx.prompts.chat_prompts import REQUIRE_CITATION_GUIDANCE
-from onyx.prompts.constants import CODE_BLOCK_PAT
-from onyx.prompts.constants import REMINDER_TAG_DESCRIPTION
-from onyx.server.settings.store import load_settings
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.prompts.chat_prompts import ADDITIONAL_INFO
+from aethersearch.prompts.chat_prompts import CITATION_GUIDANCE_REPLACEMENT_PAT
+from aethersearch.prompts.chat_prompts import COMPANY_DESCRIPTION_BLOCK
+from aethersearch.prompts.chat_prompts import COMPANY_NAME_BLOCK
+from aethersearch.prompts.chat_prompts import DATETIME_REPLACEMENT_PAT
+from aethersearch.prompts.chat_prompts import REMINDER_TAG_REPLACEMENT_PAT
+from aethersearch.prompts.chat_prompts import REQUIRE_CITATION_GUIDANCE
+from aethersearch.prompts.constants import CODE_BLOCK_PAT
+from aethersearch.prompts.constants import REMINDER_TAG_DESCRIPTION
+from aethersearch.server.settings.store import load_settings
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -107,7 +107,7 @@ def replace_reminder_tag(prompt_str: str) -> str:
     return prompt_str
 
 
-def handle_onyx_date_awareness(
+def handle_aethersearch_date_awareness(
     prompt_str: str,
     # We always replace the pattern {{CURRENT_DATETIME}} if it shows up
     # but if it doesn't show up and the prompt is datetime aware, add it to the prompt at the end.

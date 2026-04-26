@@ -29,7 +29,7 @@ def test_scim_token_lifecycle(admin_user: DATestUser) -> None:
     )
 
     assert token.raw_token is not None
-    assert token.raw_token.startswith("onyx_scim_")
+    assert token.raw_token.startswith("aethersearch_scim_")
     assert token.is_active is True
     assert "****" in token.token_display
 
@@ -85,7 +85,7 @@ def test_scim_request_with_bad_token_rejected(
     admin_user: DATestUser,  # noqa: ARG001
 ) -> None:
     """SCIM endpoints reject requests with an invalid token."""
-    assert ScimClient.get("/Users", "onyx_scim_bogus_token_value").status_code == 401
+    assert ScimClient.get("/Users", "aethersearch_scim_bogus_token_value").status_code == 401
 
 
 def test_non_admin_cannot_create_token(

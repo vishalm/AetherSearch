@@ -5,10 +5,10 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.connectors.gong.connector import GongConnector
-from onyx.connectors.gong.connector import GongConnectorCheckpoint
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import Document
+from aethersearch.connectors.gong.connector import GongConnector
+from aethersearch.connectors.gong.connector import GongConnectorCheckpoint
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import Document
 
 
 def _make_transcript(call_id: str) -> dict[str, Any]:
@@ -275,7 +275,7 @@ class TestGongConnectorCheckpoint:
 
         invocation_cap = GongConnector.MAX_CALL_DETAILS_ATTEMPTS + 5
         with patch(
-            "onyx.connectors.gong.connector.time.time", side_effect=_advance_clock
+            "aethersearch.connectors.gong.connector.time.time", side_effect=_advance_clock
         ):
             for _ in range(invocation_cap):
                 if not checkpoint.has_more:
@@ -460,7 +460,7 @@ class TestGongConnectorCheckpoint:
             return fake_now[0]
 
         with patch(
-            "onyx.connectors.gong.connector.time.time", side_effect=_advance_clock
+            "aethersearch.connectors.gong.connector.time.time", side_effect=_advance_clock
         ):
             # Invocation 1: fetches page + details, yields call1, stashes call2
             generator = connector.load_from_checkpoint(0, fake_now[0], checkpoint)
@@ -525,7 +525,7 @@ class TestGongConnectorCheckpoint:
             pending_retry_after=retry_after,
         )
 
-        with patch("onyx.connectors.gong.connector.time.time", return_value=fixed_now):
+        with patch("aethersearch.connectors.gong.connector.time.time", return_value=fixed_now):
             generator = connector.load_from_checkpoint(0, fixed_now, checkpoint)
             try:
                 while True:
@@ -579,9 +579,9 @@ class TestGongConnectorCheckpoint:
             return fake_now[0]
 
         with (
-            patch("onyx.connectors.gong.connector.time.sleep") as mock_sleep,
+            patch("aethersearch.connectors.gong.connector.time.sleep") as mock_sleep,
             patch(
-                "onyx.connectors.gong.connector.time.time", side_effect=_advance_clock
+                "aethersearch.connectors.gong.connector.time.time", side_effect=_advance_clock
             ),
         ):
             invocation_cap = GongConnector.MAX_CALL_DETAILS_ATTEMPTS + 5

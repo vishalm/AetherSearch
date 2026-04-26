@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import pytest
 
-from onyx.connectors.sharepoint.connector import _build_item_relative_path
-from onyx.connectors.sharepoint.connector import _is_path_excluded
-from onyx.connectors.sharepoint.connector import _is_site_excluded
-from onyx.connectors.sharepoint.connector import DriveItemData
-from onyx.connectors.sharepoint.connector import SharepointConnector
-from onyx.connectors.sharepoint.connector import SiteDescriptor
+from aethersearch.connectors.sharepoint.connector import _build_item_relative_path
+from aethersearch.connectors.sharepoint.connector import _is_path_excluded
+from aethersearch.connectors.sharepoint.connector import _is_site_excluded
+from aethersearch.connectors.sharepoint.connector import DriveItemData
+from aethersearch.connectors.sharepoint.connector import SharepointConnector
+from aethersearch.connectors.sharepoint.connector import SiteDescriptor
 
 
 class TestIsSiteExcluded:

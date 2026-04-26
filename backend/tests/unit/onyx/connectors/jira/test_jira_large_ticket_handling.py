@@ -7,8 +7,8 @@ import pytest
 from jira.resources import Issue
 from pytest_mock import MockFixture
 
-from onyx.connectors.jira.connector import _perform_jql_search
-from onyx.connectors.jira.connector import process_jira_issue
+from aethersearch.connectors.jira.connector import _perform_jql_search
+from aethersearch.connectors.jira.connector import process_jira_issue
 
 
 @pytest.fixture
@@ -68,8 +68,8 @@ def mock_issue_large() -> MagicMock:
 
 @pytest.fixture
 def mock_jira_api_version() -> Generator[Any, Any, Any]:
-    with patch("onyx.connectors.jira.utils.JIRA_CLOUD_API_VERSION", "3"):
-        with patch("onyx.connectors.jira.utils.JIRA_SERVER_API_VERSION", "2"):
+    with patch("aethersearch.connectors.jira.utils.JIRA_CLOUD_API_VERSION", "3"):
+        with patch("aethersearch.connectors.jira.utils.JIRA_SERVER_API_VERSION", "2"):
             yield
 
 
@@ -145,7 +145,7 @@ def test_fetch_jira_issues_batch_mixed_tickets(
     assert doc.id.endswith("/SMALL-1")
 
 
-@patch("onyx.connectors.jira.connector.JIRA_CONNECTOR_MAX_TICKET_SIZE", 50)
+@patch("aethersearch.connectors.jira.connector.JIRA_CONNECTOR_MAX_TICKET_SIZE", 50)
 def test_fetch_jira_issues_batch_custom_size_limit(
     mock_jira_client: MagicMock,
     mock_issue_small: MagicMock,

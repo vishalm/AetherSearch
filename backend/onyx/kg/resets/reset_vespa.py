@@ -3,19 +3,19 @@ from typing import Any
 
 from redis.lock import Lock as RedisLock
 
-from onyx.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
-from onyx.configs.constants import DocumentSource
-from onyx.db.document import get_num_chunks_for_document
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.models import Connector
-from onyx.db.models import DocumentByConnectorCredentialPair
-from onyx.db.models import KGEntityType
-from onyx.document_index.document_index_utils import get_uuid_from_chunk_info
-from onyx.document_index.vespa.index import KGVespaChunkUpdateRequest
-from onyx.document_index.vespa.index import VespaIndex
-from onyx.document_index.vespa_constants import DOCUMENT_ID_ENDPOINT
-from onyx.kg.utils.lock_utils import extend_lock
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.db.document import get_num_chunks_for_document
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.models import Connector
+from aethersearch.db.models import DocumentByConnectorCredentialPair
+from aethersearch.db.models import KGEntityType
+from aethersearch.document_index.document_index_utils import get_uuid_from_chunk_info
+from aethersearch.document_index.vespa.index import KGVespaChunkUpdateRequest
+from aethersearch.document_index.vespa.index import VespaIndex
+from aethersearch.document_index.vespa_constants import DOCUMENT_ID_ENDPOINT
+from aethersearch.kg.utils.lock_utils import extend_lock
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()

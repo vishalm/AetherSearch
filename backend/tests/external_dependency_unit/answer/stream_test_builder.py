@@ -2,13 +2,13 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 
-from onyx.chat.models import AnswerStreamPart
-from onyx.context.search.models import SearchDoc
-from onyx.server.query_and_chat.streaming_models import AgentResponseStart
-from onyx.server.query_and_chat.streaming_models import OverallStop
-from onyx.server.query_and_chat.streaming_models import Packet
-from onyx.server.query_and_chat.streaming_models import ReasoningDone
-from onyx.server.query_and_chat.streaming_models import ReasoningStart
+from aethersearch.chat.models import AnswerStreamPart
+from aethersearch.context.search.models import SearchDoc
+from aethersearch.server.query_and_chat.streaming_models import AgentResponseStart
+from aethersearch.server.query_and_chat.streaming_models import OverallStop
+from aethersearch.server.query_and_chat.streaming_models import Packet
+from aethersearch.server.query_and_chat.streaming_models import ReasoningDone
+from aethersearch.server.query_and_chat.streaming_models import ReasoningStart
 from tests.external_dependency_unit.answer.stream_test_assertions import (
     assert_answer_stream_part_correct,
 )

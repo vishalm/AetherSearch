@@ -1,8 +1,8 @@
 import threading
 from queue import Queue
 
-from onyx.server.query_and_chat.placement import Placement
-from onyx.server.query_and_chat.streaming_models import Packet
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.server.query_and_chat.streaming_models import Packet
 
 
 class Emitter:

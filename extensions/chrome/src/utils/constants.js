@@ -3,19 +3,19 @@ export const THEMES = {
   DARK: "dark",
 };
 
-export const DEFAULT_ONYX_DOMAIN = "http://localhost:3000";
+export const DEFAULT_AETHERSEARCH_DOMAIN = "http://localhost:3000";
 
 export const SIDE_PANEL_PATH = "/nrf/side-panel";
 
 export const ACTIONS = {
   GET_SELECTED_TEXT: "getSelectedText",
-  GET_CURRENT_ONYX_DOMAIN: "getCurrentOnyxDomain",
+  GET_CURRENT_AETHERSEARCH_DOMAIN: "getCurrentAetherSearchDomain",
   UPDATE_PAGE_URL: "updatePageUrl",
-  SEND_TO_ONYX: "sendToOnyx",
+  SEND_TO_AETHERSEARCH: "sendToAetherSearch",
   OPEN_SIDE_PANEL: "openSidePanel",
   TOGGLE_NEW_TAB_OVERRIDE: "toggleNewTabOverride",
   OPEN_SIDE_PANEL_WITH_INPUT: "openSidePanelWithInput",
-  OPEN_ONYX_WITH_INPUT: "openOnyxWithInput",
+  OPEN_AETHERSEARCH_WITH_INPUT: "openAetherSearchWithInput",
   CLOSE_SIDE_PANEL: "closeSidePanel",
   TAB_URL_UPDATED: "tabUrlUpdated",
   TAB_READING_ENABLED: "tabReadingEnabled",
@@ -23,18 +23,18 @@ export const ACTIONS = {
 };
 
 export const CHROME_SPECIFIC_STORAGE_KEYS = {
-  ONYX_DOMAIN: "onyxExtensionDomain",
-  USE_ONYX_AS_DEFAULT_NEW_TAB: "onyxExtensionDefaultNewTab",
-  THEME: "onyxExtensionTheme",
-  BACKGROUND_IMAGE: "onyxExtensionBackgroundImage",
-  DARK_BG_URL: "onyxExtensionDarkBgUrl",
-  LIGHT_BG_URL: "onyxExtensionLightBgUrl",
-  ONBOARDING_COMPLETE: "onyxExtensionOnboardingComplete",
+  AETHERSEARCH_DOMAIN: "aethersearchExtensionDomain",
+  USE_AETHERSEARCH_AS_DEFAULT_NEW_TAB: "aethersearchExtensionDefaultNewTab",
+  THEME: "aethersearchExtensionTheme",
+  BACKGROUND_IMAGE: "aethersearchExtensionBackgroundImage",
+  DARK_BG_URL: "aethersearchExtensionDarkBgUrl",
+  LIGHT_BG_URL: "aethersearchExtensionLightBgUrl",
+  ONBOARDING_COMPLETE: "aethersearchExtensionOnboardingComplete",
 };
 
 export const CHROME_MESSAGE = {
   PREFERENCES_UPDATED: "PREFERENCES_UPDATED",
-  ONYX_APP_LOADED: "ONYX_APP_LOADED",
+  AETHERSEARCH_APP_LOADED: "AETHERSEARCH_APP_LOADED",
   SET_DEFAULT_NEW_TAB: "SET_DEFAULT_NEW_TAB",
   LOAD_NEW_CHAT_PAGE: "LOAD_NEW_CHAT_PAGE",
   LOAD_NEW_PAGE: "LOAD_NEW_PAGE",

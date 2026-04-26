@@ -18,20 +18,20 @@ from urllib.parse import urlparse
 import requests
 from pydantic import BaseModel
 
-from onyx.configs.app_configs import (
+from aethersearch.configs.app_configs import (
     CONFLUENCE_CONNECTOR_ATTACHMENT_CHAR_COUNT_THRESHOLD,
 )
-from onyx.configs.app_configs import CONFLUENCE_CONNECTOR_ATTACHMENT_SIZE_THRESHOLD
-from onyx.configs.constants import FileOrigin
-from onyx.file_processing.extract_file_text import extract_file_text
-from onyx.file_processing.extract_file_text import get_file_ext
-from onyx.file_processing.file_types import OnyxFileExtensions
-from onyx.file_processing.file_types import OnyxMimeTypes
-from onyx.file_processing.image_utils import store_image_and_create_section
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import CONFLUENCE_CONNECTOR_ATTACHMENT_SIZE_THRESHOLD
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.file_processing.extract_file_text import extract_file_text
+from aethersearch.file_processing.extract_file_text import get_file_ext
+from aethersearch.file_processing.file_types import AetherSearchFileExtensions
+from aethersearch.file_processing.file_types import AetherSearchMimeTypes
+from aethersearch.file_processing.image_utils import store_image_and_create_section
+from aethersearch.utils.logger import setup_logger
 
 if TYPE_CHECKING:
-    from onyx.connectors.confluence.onyx_confluence import OnyxConfluence
+    from aethersearch.connectors.confluence.aethersearch_confluence import AetherSearchConfluence
 
 
 logger = setup_logger()
@@ -56,13 +56,13 @@ def validate_attachment_filetype(
     """
     media_type = attachment.get("metadata", {}).get("mediaType", "")
     if media_type.startswith("image/"):
-        return media_type in OnyxMimeTypes.IMAGE_MIME_TYPES
+        return media_type in AetherSearchMimeTypes.IMAGE_MIME_TYPES
 
     # For non-image files, check if we support the extension
     title = attachment.get("title", "")
     extension = get_file_ext(title)
 
-    return extension in OnyxFileExtensions.ALL_ALLOWED_EXTENSIONS
+    return extension in AetherSearchFileExtensions.ALL_ALLOWED_EXTENSIONS
 
 
 class AttachmentProcessingResult(BaseModel):
@@ -79,7 +79,7 @@ class AttachmentProcessingResult(BaseModel):
 
 
 def _make_attachment_link(
-    confluence_client: "OnyxConfluence",
+    confluence_client: "AetherSearchConfluence",
     attachment: dict[str, Any],
     parent_content_id: str | None = None,
 ) -> str | None:
@@ -104,7 +104,7 @@ def _make_attachment_link(
 
 
 def process_attachment(
-    confluence_client: "OnyxConfluence",
+    confluence_client: "AetherSearchConfluence",
     attachment: dict[str, Any],
     parent_content_id: str | None,
     allow_images: bool,
@@ -210,7 +210,7 @@ def process_attachment(
 
 
 def _process_image_attachment(
-    confluence_client: "OnyxConfluence",  # noqa: ARG001
+    confluence_client: "AetherSearchConfluence",  # noqa: ARG001
     attachment: dict[str, Any],
     raw_bytes: bytes,
     media_type: str,
@@ -236,7 +236,7 @@ def _process_image_attachment(
 
 
 def convert_attachment_to_content(
-    confluence_client: "OnyxConfluence",
+    confluence_client: "AetherSearchConfluence",
     attachment: dict[str, Any],
     page_id: str,
     allow_images: bool,

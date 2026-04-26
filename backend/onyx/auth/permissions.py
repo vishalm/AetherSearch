@@ -12,12 +12,12 @@ from typing import Any
 
 from fastapi import Depends
 
-from onyx.auth.users import current_user
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.users import current_user
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -114,8 +114,8 @@ def require_permission(
             return user
 
         if required not in effective:
-            raise OnyxError(
-                OnyxErrorCode.INSUFFICIENT_PERMISSIONS,
+            raise AetherSearchError(
+                AetherSearchErrorCode.INSUFFICIENT_PERMISSIONS,
                 "You do not have the required permissions for this action.",
             )
 

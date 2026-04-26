@@ -5,16 +5,16 @@ from fastapi import Depends
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.db.persona import get_default_assistant
-from onyx.db.persona import update_default_assistant_configuration
-from onyx.prompts.chat_prompts import DEFAULT_SYSTEM_PROMPT
-from onyx.server.features.default_assistant.models import DefaultAssistantConfiguration
-from onyx.server.features.default_assistant.models import DefaultAssistantUpdateRequest
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.permissions import require_permission
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.db.persona import get_default_assistant
+from aethersearch.db.persona import update_default_assistant_configuration
+from aethersearch.prompts.chat_prompts import DEFAULT_SYSTEM_PROMPT
+from aethersearch.server.features.default_assistant.models import DefaultAssistantConfiguration
+from aethersearch.server.features.default_assistant.models import DefaultAssistantUpdateRequest
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

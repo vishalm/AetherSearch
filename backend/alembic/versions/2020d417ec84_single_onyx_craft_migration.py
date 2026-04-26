@@ -1,6 +1,6 @@
-"""single onyx craft migration
+"""single aethersearch craft migration
 
-Consolidates all buildmode/onyx craft tables into a single migration.
+Consolidates all buildmode/aethersearch craft tables into a single migration.
 
 Tables created:
 - build_session: User build sessions with status tracking

@@ -5,15 +5,15 @@ from unittest.mock import patch
 
 import pytest
 
-from onyx.server.query_and_chat.placement import Placement
-from onyx.tools.models import DynamicSchemaInfo
-from onyx.tools.models import ToolResponse
-from onyx.tools.tool_implementations.custom.custom_tool import (
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.tools.models import DynamicSchemaInfo
+from aethersearch.tools.models import ToolResponse
+from aethersearch.tools.tool_implementations.custom.custom_tool import (
     build_custom_tools_from_openapi_schema_and_headers,
 )
-from onyx.tools.tool_implementations.custom.custom_tool import CustomToolCallSummary
-from onyx.tools.tool_implementations.custom.custom_tool import validate_openapi_schema
-from onyx.utils.headers import HeaderItemDict
+from aethersearch.tools.tool_implementations.custom.custom_tool import CustomToolCallSummary
+from aethersearch.tools.tool_implementations.custom.custom_tool import validate_openapi_schema
+from aethersearch.utils.headers import HeaderItemDict
 
 
 class TestCustomTool(unittest.TestCase):
@@ -78,7 +78,7 @@ class TestCustomTool(unittest.TestCase):
             chat_session_id=uuid.uuid4(), message_id=20
         )
 
-    @patch("onyx.tools.tool_implementations.custom.custom_tool.requests.request")
+    @patch("aethersearch.tools.tool_implementations.custom.custom_tool.requests.request")
     def test_custom_tool_run_get(self, mock_request: unittest.mock.MagicMock) -> None:
         """
         Test the GET method of a custom tool.
@@ -116,7 +116,7 @@ class TestCustomTool(unittest.TestCase):
             "Tool name in response does not match expected value",
         )
 
-    @patch("onyx.tools.tool_implementations.custom.custom_tool.requests.request")
+    @patch("aethersearch.tools.tool_implementations.custom.custom_tool.requests.request")
     def test_custom_tool_run_post(self, mock_request: unittest.mock.MagicMock) -> None:
         """
         Test the POST method of a custom tool.
@@ -156,7 +156,7 @@ class TestCustomTool(unittest.TestCase):
             "Tool name in response does not match expected value",
         )
 
-    @patch("onyx.tools.tool_implementations.custom.custom_tool.requests.request")
+    @patch("aethersearch.tools.tool_implementations.custom.custom_tool.requests.request")
     def test_custom_tool_with_headers(
         self, mock_request: unittest.mock.MagicMock
     ) -> None:
@@ -195,7 +195,7 @@ class TestCustomTool(unittest.TestCase):
             "GET", expected_url, json=None, headers=expected_headers
         )
 
-    @patch("onyx.tools.tool_implementations.custom.custom_tool.requests.request")
+    @patch("aethersearch.tools.tool_implementations.custom.custom_tool.requests.request")
     def test_custom_tool_with_empty_headers(
         self, mock_request: unittest.mock.MagicMock
     ) -> None:
@@ -241,7 +241,7 @@ class TestCustomTool(unittest.TestCase):
         with self.assertRaises(ValueError) as _:
             validate_openapi_schema(invalid_schema)
 
-    @patch("onyx.tools.tool_implementations.custom.custom_tool.requests.request")
+    @patch("aethersearch.tools.tool_implementations.custom.custom_tool.requests.request")
     def test_custom_tool_user_placeholders(
         self, mock_request: unittest.mock.MagicMock
     ) -> None:
@@ -289,9 +289,9 @@ class TestCustomTool(unittest.TestCase):
             tool_id=-1,
             openapi_schema=schema,
             custom_headers=[
-                {"key": "X-Onyx-User-Id", "value": "USER_ID"},
+                {"key": "X-AetherSearch-User-Id", "value": "USER_ID"},
                 {
-                    "key": "X-Onyx-User-Email",  # pragma: allowlist secret
+                    "key": "X-AetherSearch-User-Email",  # pragma: allowlist secret
                     "value": "USER_EMAIL",
                 },
             ],
@@ -313,14 +313,14 @@ class TestCustomTool(unittest.TestCase):
         # Custom headers do NOT receive placeholder substitution today;
         # only the OpenAPI schema string is templated.
         expected_headers = {
-            "X-Onyx-User-Id": "USER_ID",
-            "X-Onyx-User-Email": "USER_EMAIL",
+            "X-AetherSearch-User-Id": "USER_ID",
+            "X-AetherSearch-User-Email": "USER_EMAIL",
         }
         mock_request.assert_called_once_with(
             "GET", expected_url, json=None, headers=expected_headers
         )
 
-    @patch("onyx.tools.tool_implementations.custom.custom_tool.requests.request")
+    @patch("aethersearch.tools.tool_implementations.custom.custom_tool.requests.request")
     def test_custom_tool_user_placeholders_unset_are_left_alone(
         self, mock_request: unittest.mock.MagicMock
     ) -> None:

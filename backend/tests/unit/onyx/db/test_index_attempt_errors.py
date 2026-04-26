@@ -4,8 +4,8 @@ from datetime import datetime
 from datetime import timezone
 from unittest.mock import MagicMock
 
-from onyx.db.index_attempt import get_index_attempt_errors_across_connectors
-from onyx.db.models import IndexAttemptError
+from aethersearch.db.index_attempt import get_index_attempt_errors_across_connectors
+from aethersearch.db.models import IndexAttemptError
 
 
 def _make_error(

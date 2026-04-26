@@ -2,8 +2,8 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from onyx.db.models import Tool
-from onyx.server.features.tool.tool_visibility import get_tool_visibility_config
+from aethersearch.db.models import Tool
+from aethersearch.server.features.tool.tool_visibility import get_tool_visibility_config
 
 
 class ToolSnapshot(BaseModel):

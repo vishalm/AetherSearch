@@ -8,9 +8,9 @@ from unittest.mock import patch
 
 from sqlalchemy.orm import Session
 
-from onyx.db.code_interpreter import fetch_code_interpreter_server
-from onyx.db.code_interpreter import update_code_interpreter_server_enabled
-from onyx.tools.tool_implementations.python.python_tool import PythonTool
+from aethersearch.db.code_interpreter import fetch_code_interpreter_server
+from aethersearch.db.code_interpreter import update_code_interpreter_server_enabled
+from aethersearch.tools.tool_implementations.python.python_tool import PythonTool
 
 
 def test_python_tool_unavailable_when_server_disabled(
@@ -25,7 +25,7 @@ def test_python_tool_unavailable_when_server_disabled(
         update_code_interpreter_server_enabled(db_session, enabled=False)
 
         with patch(
-            "onyx.tools.tool_implementations.python.python_tool.CODE_INTERPRETER_BASE_URL",
+            "aethersearch.tools.tool_implementations.python.python_tool.CODE_INTERPRETER_BASE_URL",
             "http://fake:8888",
         ):
             assert PythonTool.is_available(db_session) is False
@@ -45,7 +45,7 @@ def test_python_tool_available_when_server_enabled(
         update_code_interpreter_server_enabled(db_session, enabled=True)
 
         with patch(
-            "onyx.tools.tool_implementations.python.python_tool.CODE_INTERPRETER_BASE_URL",
+            "aethersearch.tools.tool_implementations.python.python_tool.CODE_INTERPRETER_BASE_URL",
             "http://fake:8888",
         ):
             assert PythonTool.is_available(db_session) is True

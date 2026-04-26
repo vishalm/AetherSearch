@@ -9,11 +9,11 @@ import (
 )
 
 const (
-	EnvServerURL      = "ONYX_SERVER_URL"
-	EnvAPIKey         = "ONYX_API_KEY"
-	EnvAgentID        = "ONYX_PERSONA_ID"
-	EnvSSHHostKey     = "ONYX_SSH_HOST_KEY"
-	EnvStreamMarkdown = "ONYX_STREAM_MARKDOWN"
+	EnvServerURL      = "AETHERSEARCH_SERVER_URL"
+	EnvAPIKey         = "AETHERSEARCH_API_KEY"
+	EnvAgentID        = "AETHERSEARCH_PERSONA_ID"
+	EnvSSHHostKey     = "AETHERSEARCH_SSH_HOST_KEY"
+	EnvStreamMarkdown = "AETHERSEARCH_STREAM_MARKDOWN"
 )
 
 // Features holds experimental feature flags for the CLI.
@@ -24,8 +24,8 @@ type Features struct {
 	StreamMarkdown *bool `json:"stream_markdown,omitempty"`
 }
 
-// OnyxCliConfig holds the CLI configuration.
-type OnyxCliConfig struct {
+// AetherSearchCliConfig holds the CLI configuration.
+type AetherSearchCliConfig struct {
 	ServerURL      string   `json:"server_url"`
 	APIKey         string   `json:"api_key"`
 	DefaultAgentID int      `json:"default_persona_id"`
@@ -33,9 +33,9 @@ type OnyxCliConfig struct {
 }
 
 // DefaultConfig returns a config with default values.
-func DefaultConfig() OnyxCliConfig {
-	return OnyxCliConfig{
-		ServerURL:      "https://cloud.onyx.app",
+func DefaultConfig() AetherSearchCliConfig {
+	return AetherSearchCliConfig{
+		ServerURL:      "https://cloud.aethersearch.app",
 		APIKey:         "",
 		DefaultAgentID: 0,
 	}
@@ -51,20 +51,20 @@ func (f Features) StreamMarkdownEnabled() bool {
 }
 
 // IsConfigured returns true if the config has an API key.
-func (c OnyxCliConfig) IsConfigured() bool {
+func (c AetherSearchCliConfig) IsConfigured() bool {
 	return c.APIKey != ""
 }
 
-// ConfigDir returns ~/.config/onyx-cli
+// ConfigDir returns ~/.config/aethersearch-cli
 func ConfigDir() string {
 	if xdg := os.Getenv("XDG_CONFIG_HOME"); xdg != "" {
-		return filepath.Join(xdg, "onyx-cli")
+		return filepath.Join(xdg, "aethersearch-cli")
 	}
 	home, err := os.UserHomeDir()
 	if err != nil {
-		return filepath.Join(".", ".config", "onyx-cli")
+		return filepath.Join(".", ".config", "aethersearch-cli")
 	}
-	return filepath.Join(home, ".config", "onyx-cli")
+	return filepath.Join(home, ".config", "aethersearch-cli")
 }
 
 // ConfigFilePath returns the full path to the config file.
@@ -81,7 +81,7 @@ func ConfigExists() bool {
 // LoadFromDisk reads config from the file only, without applying environment
 // variable overrides. Use this when you need the persisted config values
 // (e.g., to preserve them during a save operation).
-func LoadFromDisk() OnyxCliConfig {
+func LoadFromDisk() AetherSearchCliConfig {
 	cfg := DefaultConfig()
 
 	data, err := os.ReadFile(ConfigFilePath())
@@ -95,7 +95,7 @@ func LoadFromDisk() OnyxCliConfig {
 }
 
 // Load reads config from file and applies environment variable overrides.
-func Load() OnyxCliConfig {
+func Load() AetherSearchCliConfig {
 	cfg := LoadFromDisk()
 
 	// Environment overrides
@@ -122,7 +122,7 @@ func Load() OnyxCliConfig {
 }
 
 // Save writes the config to disk, creating parent directories if needed.
-func Save(cfg OnyxCliConfig) error {
+func Save(cfg AetherSearchCliConfig) error {
 	dir := ConfigDir()
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return err

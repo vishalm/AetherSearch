@@ -7,23 +7,23 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import Session
 
-from onyx.auth.api_key import ApiKeyDescriptor
-from onyx.auth.api_key import build_displayable_api_key
-from onyx.auth.api_key import generate_api_key
-from onyx.auth.api_key import hash_api_key
-from onyx.auth.schemas import UserRole
-from onyx.configs.constants import DANSWER_API_KEY_DUMMY_EMAIL_DOMAIN
-from onyx.configs.constants import DANSWER_API_KEY_PREFIX
-from onyx.configs.constants import UNNAMED_KEY_PLACEHOLDER
-from onyx.db.enums import AccountType
-from onyx.db.models import ApiKey
-from onyx.db.models import User
-from onyx.db.models import User__UserGroup
-from onyx.db.models import UserGroup
-from onyx.db.permissions import recompute_user_permissions__no_commit
-from onyx.db.users import assign_user_to_default_groups__no_commit
-from onyx.server.api_key.models import APIKeyArgs
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.api_key import ApiKeyDescriptor
+from aethersearch.auth.api_key import build_displayable_api_key
+from aethersearch.auth.api_key import generate_api_key
+from aethersearch.auth.api_key import hash_api_key
+from aethersearch.auth.schemas import UserRole
+from aethersearch.configs.constants import DANSWER_API_KEY_DUMMY_EMAIL_DOMAIN
+from aethersearch.configs.constants import DANSWER_API_KEY_PREFIX
+from aethersearch.configs.constants import UNNAMED_KEY_PLACEHOLDER
+from aethersearch.db.enums import AccountType
+from aethersearch.db.models import ApiKey
+from aethersearch.db.models import User
+from aethersearch.db.models import User__UserGroup
+from aethersearch.db.models import UserGroup
+from aethersearch.db.permissions import recompute_user_permissions__no_commit
+from aethersearch.db.users import assign_user_to_default_groups__no_commit
+from aethersearch.server.api_key.models import APIKeyArgs
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()

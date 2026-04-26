@@ -8,50 +8,50 @@ from typing import cast
 from typing import TYPE_CHECKING
 from typing import Union
 
-from onyx.configs.app_configs import MOCK_LLM_RESPONSE
-from onyx.configs.chat_configs import LLM_SOCKET_READ_TIMEOUT
-from onyx.configs.model_configs import GEN_AI_TEMPERATURE
-from onyx.configs.model_configs import LITELLM_EXTRA_BODY
-from onyx.llm.constants import LlmProviderNames
-from onyx.llm.cost import calculate_llm_cost_cents
-from onyx.llm.interfaces import LanguageModelInput
-from onyx.llm.interfaces import LLM
-from onyx.llm.interfaces import LLMConfig
-from onyx.llm.interfaces import LLMUserIdentity
-from onyx.llm.interfaces import ReasoningEffort
-from onyx.llm.interfaces import ToolChoiceOptions
-from onyx.llm.model_response import ModelResponse
-from onyx.llm.model_response import ModelResponseStream
-from onyx.llm.model_response import Usage
-from onyx.llm.models import ANTHROPIC_ADAPTIVE_REASONING_EFFORT
-from onyx.llm.models import ANTHROPIC_REASONING_EFFORT_BUDGET
-from onyx.llm.models import OPENAI_REASONING_EFFORT
-from onyx.llm.request_context import get_llm_mock_response
-from onyx.llm.utils import build_litellm_passthrough_kwargs
-from onyx.llm.utils import is_true_openai_model
-from onyx.llm.utils import model_is_reasoning_model
-from onyx.llm.well_known_providers.constants import AWS_ACCESS_KEY_ID_KWARG
-from onyx.llm.well_known_providers.constants import (
+from aethersearch.configs.app_configs import MOCK_LLM_RESPONSE
+from aethersearch.configs.chat_configs import LLM_SOCKET_READ_TIMEOUT
+from aethersearch.configs.model_configs import GEN_AI_TEMPERATURE
+from aethersearch.configs.model_configs import LITELLM_EXTRA_BODY
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.llm.cost import calculate_llm_cost_cents
+from aethersearch.llm.interfaces import LanguageModelInput
+from aethersearch.llm.interfaces import LLM
+from aethersearch.llm.interfaces import LLMConfig
+from aethersearch.llm.interfaces import LLMUserIdentity
+from aethersearch.llm.interfaces import ReasoningEffort
+from aethersearch.llm.interfaces import ToolChoiceOptions
+from aethersearch.llm.model_response import ModelResponse
+from aethersearch.llm.model_response import ModelResponseStream
+from aethersearch.llm.model_response import Usage
+from aethersearch.llm.models import ANTHROPIC_ADAPTIVE_REASONING_EFFORT
+from aethersearch.llm.models import ANTHROPIC_REASONING_EFFORT_BUDGET
+from aethersearch.llm.models import OPENAI_REASONING_EFFORT
+from aethersearch.llm.request_context import get_llm_mock_response
+from aethersearch.llm.utils import build_litellm_passthrough_kwargs
+from aethersearch.llm.utils import is_true_openai_model
+from aethersearch.llm.utils import model_is_reasoning_model
+from aethersearch.llm.well_known_providers.constants import AWS_ACCESS_KEY_ID_KWARG
+from aethersearch.llm.well_known_providers.constants import (
     AWS_ACCESS_KEY_ID_KWARG_ENV_VAR_FORMAT,
 )
-from onyx.llm.well_known_providers.constants import (
+from aethersearch.llm.well_known_providers.constants import (
     AWS_BEARER_TOKEN_BEDROCK_KWARG_ENV_VAR_FORMAT,
 )
-from onyx.llm.well_known_providers.constants import AWS_REGION_NAME_KWARG
-from onyx.llm.well_known_providers.constants import AWS_REGION_NAME_KWARG_ENV_VAR_FORMAT
-from onyx.llm.well_known_providers.constants import AWS_SECRET_ACCESS_KEY_KWARG
-from onyx.llm.well_known_providers.constants import (
+from aethersearch.llm.well_known_providers.constants import AWS_REGION_NAME_KWARG
+from aethersearch.llm.well_known_providers.constants import AWS_REGION_NAME_KWARG_ENV_VAR_FORMAT
+from aethersearch.llm.well_known_providers.constants import AWS_SECRET_ACCESS_KEY_KWARG
+from aethersearch.llm.well_known_providers.constants import (
     AWS_SECRET_ACCESS_KEY_KWARG_ENV_VAR_FORMAT,
 )
-from onyx.llm.well_known_providers.constants import LM_STUDIO_API_KEY_CONFIG_KEY
-from onyx.llm.well_known_providers.constants import OLLAMA_API_KEY_CONFIG_KEY
-from onyx.llm.well_known_providers.constants import VERTEX_CREDENTIALS_FILE_KWARG
-from onyx.llm.well_known_providers.constants import (
+from aethersearch.llm.well_known_providers.constants import LM_STUDIO_API_KEY_CONFIG_KEY
+from aethersearch.llm.well_known_providers.constants import OLLAMA_API_KEY_CONFIG_KEY
+from aethersearch.llm.well_known_providers.constants import VERTEX_CREDENTIALS_FILE_KWARG
+from aethersearch.llm.well_known_providers.constants import (
     VERTEX_CREDENTIALS_FILE_KWARG_ENV_VAR_FORMAT,
 )
-from onyx.llm.well_known_providers.constants import VERTEX_LOCATION_KWARG
-from onyx.utils.encryption import mask_string
-from onyx.utils.logger import setup_logger
+from aethersearch.llm.well_known_providers.constants import VERTEX_LOCATION_KWARG
+from aethersearch.utils.encryption import mask_string
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -222,7 +222,7 @@ def _prompt_contains_tool_call_history(prompt: LanguageModelInput) -> bool:
     cryptographic signatures that can't be reconstructed), we must skip
     the thinking param whenever history contains prior tool-calling turns.
     """
-    from onyx.llm.models import AssistantMessage
+    from aethersearch.llm.models import AssistantMessage
 
     msgs = prompt if isinstance(prompt, list) else [prompt]
     return any(isinstance(msg, AssistantMessage) and msg.tool_calls for msg in msgs)
@@ -383,27 +383,27 @@ class LitellmLLM(LLM):
 
     def _track_llm_cost(self, usage: Usage) -> None:
         """
-        Track LLM usage cost for Onyx-managed API keys.
+        Track LLM usage cost for AetherSearch-managed API keys.
 
         This is called after every LLM call completes (streaming or non-streaming).
         Cost is only tracked if:
         1. Usage limits are enabled for this deployment
-        2. The API key is one of Onyx's managed default keys
+        2. The API key is one of AetherSearch's managed default keys
         """
 
-        from onyx.server.usage_limits import is_usage_limits_enabled
+        from aethersearch.server.usage_limits import is_usage_limits_enabled
 
         if not is_usage_limits_enabled():
             return
 
-        from onyx.server.usage_limits import is_onyx_managed_api_key
+        from aethersearch.server.usage_limits import is_aethersearch_managed_api_key
 
-        if not is_onyx_managed_api_key(self._api_key):
+        if not is_aethersearch_managed_api_key(self._api_key):
             return
         # Import here to avoid circular imports
-        from onyx.db.engine.sql_engine import get_session_with_current_tenant
-        from onyx.db.usage import increment_usage
-        from onyx.db.usage import UsageType
+        from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+        from aethersearch.db.usage import increment_usage
+        from aethersearch.db.usage import UsageType
 
         # Calculate cost in cents
         cost_cents = calculate_llm_cost_cents(
@@ -441,7 +441,7 @@ class LitellmLLM(LLM):
         from litellm.exceptions import RateLimitError
         from litellm.exceptions import Timeout
 
-        from onyx.llm.litellm_singleton import litellm
+        from aethersearch.llm.litellm_singleton import litellm
 
         #########################
         # Flags that modify the final arguments
@@ -706,7 +706,7 @@ class LitellmLLM(LLM):
         from litellm import HTTPHandler
         from litellm import ModelResponse as LiteLLMModelResponse
 
-        from onyx.llm.model_response import from_litellm_model_response
+        from aethersearch.llm.model_response import from_litellm_model_response
 
         # HTTPHandler Threading & Connection Pool Notes:
         # =============================================
@@ -779,7 +779,7 @@ class LitellmLLM(LLM):
 
             model_response = from_litellm_model_response(response)
 
-            # Track LLM cost for Onyx-managed API keys
+            # Track LLM cost for AetherSearch-managed API keys
             if model_response.usage:
                 self._track_llm_cost(model_response.usage)
 
@@ -802,7 +802,7 @@ class LitellmLLM(LLM):
         from litellm import CustomStreamWrapper as LiteLLMCustomStreamWrapper
         from litellm import HTTPHandler
 
-        from onyx.llm.model_response import from_litellm_model_response_stream
+        from aethersearch.llm.model_response import from_litellm_model_response_stream
 
         # HTTPHandler Threading & Connection Pool Notes:
         # =============================================

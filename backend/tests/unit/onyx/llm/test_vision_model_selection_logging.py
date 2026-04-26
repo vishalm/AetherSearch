@@ -10,9 +10,9 @@ Verifies that operators get clear feedback about:
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from onyx.llm.factory import get_default_llm_with_vision
+from aethersearch.llm.factory import get_default_llm_with_vision
 
-_FACTORY = "onyx.llm.factory"
+_FACTORY = "aethersearch.llm.factory"
 
 
 def _make_mock_model(

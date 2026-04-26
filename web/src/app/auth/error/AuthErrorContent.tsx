@@ -74,9 +74,9 @@ function AuthErrorContent({ message: rawMessage }: AuthErrorContentProps) {
           {NEXT_PUBLIC_CLOUD_ENABLED ? (
             <>
               If you continue to experience problems, please reach out to the
-              Onyx team at{" "}
-              <a href="mailto:support@onyx.app" className="text-action-link-05">
-                support@onyx.app
+              AetherSearch team at{" "}
+              <a href="mailto:support@aethersearch.app" className="text-action-link-05">
+                support@aethersearch.app
               </a>
             </>
           ) : (

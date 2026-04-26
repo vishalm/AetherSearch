@@ -10,15 +10,15 @@ from uuid import uuid4
 import pytest
 import requests
 
-from onyx.configs.constants import AuthType
-from onyx.db.discord_bot import get_guild_config_by_registration_key
-from onyx.db.discord_bot import register_guild
-from onyx.db.engine.sql_engine import get_session_with_tenant
-from onyx.db.models import UserRole
-from onyx.onyxbot.discord.cache import DiscordCacheManager
-from onyx.server.manage.discord_bot.utils import generate_discord_registration_key
-from onyx.server.manage.discord_bot.utils import parse_discord_registration_key
-from onyx.server.manage.discord_bot.utils import REGISTRATION_KEY_PREFIX
+from aethersearch.configs.constants import AuthType
+from aethersearch.db.discord_bot import get_guild_config_by_registration_key
+from aethersearch.db.discord_bot import register_guild
+from aethersearch.db.engine.sql_engine import get_session_with_tenant
+from aethersearch.db.models import UserRole
+from aethersearch.aethersearchbot.discord.cache import DiscordCacheManager
+from aethersearch.server.manage.discord_bot.utils import generate_discord_registration_key
+from aethersearch.server.manage.discord_bot.utils import parse_discord_registration_key
+from aethersearch.server.manage.discord_bot.utils import REGISTRATION_KEY_PREFIX
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.managers.user import UserManager
 from tests.integration.common_utils.test_models import DATestUser
@@ -29,10 +29,10 @@ class TestBotConfigIsolationCloudMode:
 
     def test_cannot_create_bot_config_in_cloud_mode(self) -> None:
         """Bot config creation is blocked in cloud mode."""
-        with patch("onyx.configs.app_configs.AUTH_TYPE", AuthType.CLOUD):
+        with patch("aethersearch.configs.app_configs.AUTH_TYPE", AuthType.CLOUD):
             from fastapi import HTTPException
 
-            from onyx.server.manage.discord_bot.api import _check_bot_config_api_access
+            from aethersearch.server.manage.discord_bot.api import _check_bot_config_api_access
 
             with pytest.raises(HTTPException) as exc_info:
                 _check_bot_config_api_access()
@@ -42,11 +42,11 @@ class TestBotConfigIsolationCloudMode:
 
     def test_bot_token_from_env_only_in_cloud(self) -> None:
         """Bot token comes from env var in cloud mode, ignores DB."""
-        from onyx.onyxbot.discord.utils import get_bot_token
+        from aethersearch.aethersearchbot.discord.utils import get_bot_token
 
         with (
-            patch("onyx.onyxbot.discord.utils.DISCORD_BOT_TOKEN", "env_token"),
-            patch("onyx.onyxbot.discord.utils.AUTH_TYPE", AuthType.CLOUD),
+            patch("aethersearch.aethersearchbot.discord.utils.DISCORD_BOT_TOKEN", "env_token"),
+            patch("aethersearch.aethersearchbot.discord.utils.AUTH_TYPE", AuthType.CLOUD),
         ):
             result = get_bot_token()
 

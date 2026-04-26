@@ -1,6 +1,6 @@
 from enum import Enum as PyEnum
 
-from onyx.configs.constants import DocumentSource
+from aethersearch.configs.constants import DocumentSource
 
 # NOTE: do not need https://www.googleapis.com/auth/documents.readonly
 # this is counted under `/auth/drive.readonly`
@@ -44,9 +44,9 @@ USER_FIELDS = "nextPageToken, users(primaryEmail)"
 MISSING_SCOPES_ERROR_STR = "client not authorized for any of the scopes requested"
 
 # Documentation and error messages
-SCOPE_DOC_URL = "https://docs.onyx.app/admins/connectors/official/google_drive/overview"
-ONYX_SCOPE_INSTRUCTIONS = (
-    "You have upgraded Onyx without updating the Google Auth scopes. "
+SCOPE_DOC_URL = "https://docs.aethersearch.app/admins/connectors/official/google_drive/overview"
+AETHERSEARCH_SCOPE_INSTRUCTIONS = (
+    "You have upgraded AetherSearch without updating the Google Auth scopes. "
     f"Please refer to the documentation to learn how to update the scopes: {SCOPE_DOC_URL}"
 )
 

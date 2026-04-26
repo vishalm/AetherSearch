@@ -1,30 +1,30 @@
-"""Async HTTP client for communicating with Onyx API pods."""
+"""Async HTTP client for communicating with AetherSearch API pods."""
 
 import aiohttp
 
-from onyx.chat.models import ChatFullResponse
-from onyx.onyxbot.discord.constants import API_REQUEST_TIMEOUT
-from onyx.onyxbot.discord.exceptions import APIConnectionError
-from onyx.onyxbot.discord.exceptions import APIResponseError
-from onyx.onyxbot.discord.exceptions import APITimeoutError
-from onyx.server.query_and_chat.models import ChatSessionCreationRequest
-from onyx.server.query_and_chat.models import MessageOrigin
-from onyx.server.query_and_chat.models import SendMessageRequest
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import build_api_server_url_for_http_requests
+from aethersearch.chat.models import ChatFullResponse
+from aethersearch.aethersearchbot.discord.constants import API_REQUEST_TIMEOUT
+from aethersearch.aethersearchbot.discord.exceptions import APIConnectionError
+from aethersearch.aethersearchbot.discord.exceptions import APIResponseError
+from aethersearch.aethersearchbot.discord.exceptions import APITimeoutError
+from aethersearch.server.query_and_chat.models import ChatSessionCreationRequest
+from aethersearch.server.query_and_chat.models import MessageOrigin
+from aethersearch.server.query_and_chat.models import SendMessageRequest
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import build_api_server_url_for_http_requests
 
 logger = setup_logger()
 
 
-class OnyxAPIClient:
-    """Async HTTP client for sending chat requests to Onyx API pods.
+class AetherSearchAPIClient:
+    """Async HTTP client for sending chat requests to AetherSearch API pods.
 
     This client manages an aiohttp session for making non-blocking HTTP
-    requests to the Onyx API server. It handles authentication with per-tenant
+    requests to the AetherSearch API server. It handles authentication with per-tenant
     API keys and multi-tenant routing.
 
     Usage:
-        client = OnyxAPIClient()
+        client = AetherSearchAPIClient()
         await client.initialize()
         try:
             response = await client.send_chat_message(
@@ -48,7 +48,7 @@ class OnyxAPIClient:
             timeout: Request timeout in seconds.
         """
         # Helm chart uses API_SERVER_URL_OVERRIDE_FOR_HTTP_REQUESTS to set the base URL
-        # TODO: Ideally, this override is only used when someone is launching an Onyx service independently
+        # TODO: Ideally, this override is only used when someone is launching an AetherSearch service independently
         self._base_url = build_api_server_url_for_http_requests(
             respect_env_override_if_set=True
         ).rstrip("/")
@@ -94,7 +94,7 @@ class OnyxAPIClient:
         api_key: str,
         persona_id: int | None = None,
     ) -> ChatFullResponse:
-        """Send a chat message to the Onyx API server and get a response.
+        """Send a chat message to the AetherSearch API server and get a response.
 
         This method sends a non-streaming chat request to the API server. The response
         contains the complete answer with any citations and metadata.

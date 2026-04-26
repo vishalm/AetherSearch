@@ -9,7 +9,7 @@ field is populated correctly.
 
 import requests
 
-from onyx.configs.constants import DocumentSource
+from aethersearch.configs.constants import DocumentSource
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.managers.file import FileManager
 from tests.integration.common_utils.managers.persona import PersonaManager

@@ -4,8 +4,8 @@ from contextlib import contextmanager
 from typing import Any
 from typing import IO
 
-from onyx.file_processing.extract_file_text import get_file_ext
-from onyx.utils.logger import setup_logger
+from aethersearch.file_processing.extract_file_text import get_file_ext
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -39,7 +39,7 @@ def is_pdf_protected(file: IO[Any]) -> bool:
         # PDFs with only an owner password (permission restrictions like
         # print/copy disabled) use an empty user password — any viewer can open
         # them without prompting.  decrypt("") returns 0 only when a real user
-        # password is required.  See https://github.com/onyx-dot-app/onyx/issues/9754
+        # password is required.  See https://github.com/aethersearch-dot-app/aethersearch/issues/9754
         try:
             return reader.decrypt("") == 0
         except Exception:

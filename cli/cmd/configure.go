@@ -9,10 +9,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/onyx-dot-app/onyx/cli/internal/api"
-	"github.com/onyx-dot-app/onyx/cli/internal/config"
-	"github.com/onyx-dot-app/onyx/cli/internal/exitcodes"
-	"github.com/onyx-dot-app/onyx/cli/internal/onboarding"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/api"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/config"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/exitcodes"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/onboarding"
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
 )
@@ -41,8 +41,8 @@ This avoids leaking the key in shell history.
 Use --dry-run to test the connection without saving the configuration.`,
 		Example: `  aethersearch-cli configure
   aethersearch-cli configure --server-url https://my-aethersearch.com --api-key sk-...
-  echo "$ONYX_API_KEY" | aethersearch-cli configure --server-url https://my-aethersearch.com
-  echo "$ONYX_API_KEY" | aethersearch-cli configure --server-url https://my-aethersearch.com --api-key-stdin
+  echo "$AETHERSEARCH_API_KEY" | aethersearch-cli configure --server-url https://my-aethersearch.com
+  echo "$AETHERSEARCH_API_KEY" | aethersearch-cli configure --server-url https://my-aethersearch.com --api-key-stdin
   aethersearch-cli configure --server-url https://my-aethersearch.com --api-key sk-... --dry-run`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Read API key from stdin if piped (implicit) or --api-key-stdin (explicit)
@@ -84,7 +84,7 @@ Use --dry-run to test the connection without saving the configuration.`,
 }
 
 func configureNonInteractive(serverURL, apiKey string, dryRun bool) error {
-	cfg := config.OnyxCliConfig{
+	cfg := config.AetherSearchCliConfig{
 		ServerURL:      serverURL,
 		APIKey:         apiKey,
 		DefaultAgentID: 0,

@@ -5,18 +5,18 @@ import asyncio
 import discord
 from pydantic import BaseModel
 
-from onyx.chat.models import ChatFullResponse
-from onyx.db.discord_bot import get_channel_config_by_discord_ids
-from onyx.db.discord_bot import get_guild_config_by_discord_id
-from onyx.db.engine.sql_engine import get_session_with_tenant
-from onyx.db.models import DiscordChannelConfig
-from onyx.db.models import DiscordGuildConfig
-from onyx.onyxbot.discord.api_client import OnyxAPIClient
-from onyx.onyxbot.discord.constants import MAX_CONTEXT_MESSAGES
-from onyx.onyxbot.discord.constants import MAX_MESSAGE_LENGTH
-from onyx.onyxbot.discord.constants import THINKING_EMOJI
-from onyx.onyxbot.discord.exceptions import APIError
-from onyx.utils.logger import setup_logger
+from aethersearch.chat.models import ChatFullResponse
+from aethersearch.db.discord_bot import get_channel_config_by_discord_ids
+from aethersearch.db.discord_bot import get_guild_config_by_discord_id
+from aethersearch.db.engine.sql_engine import get_session_with_tenant
+from aethersearch.db.models import DiscordChannelConfig
+from aethersearch.db.models import DiscordGuildConfig
+from aethersearch.aethersearchbot.discord.api_client import AetherSearchAPIClient
+from aethersearch.aethersearchbot.discord.constants import MAX_CONTEXT_MESSAGES
+from aethersearch.aethersearchbot.discord.constants import MAX_MESSAGE_LENGTH
+from aethersearch.aethersearchbot.discord.constants import THINKING_EMOJI
+from aethersearch.aethersearchbot.discord.exceptions import APIError
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -158,7 +158,7 @@ async def process_chat_message(
     api_key: str,
     persona_id: int | None,
     thread_only_mode: bool,
-    api_client: OnyxAPIClient,
+    api_client: AetherSearchAPIClient,
     bot_user: discord.ClientUser,
 ) -> None:
     """Process a message and send response."""
@@ -379,7 +379,7 @@ def _format_messages_as_context(
             continue
 
         sender = (
-            "OnyxBot" if msg.author.id == bot_user.id else f"@{msg.author.display_name}"
+            "AetherSearchBot" if msg.author.id == bot_user.id else f"@{msg.author.display_name}"
         )
         formatted.append(f"{sender}: {format_message_content(msg)}")
 
@@ -387,7 +387,7 @@ def _format_messages_as_context(
         return None
 
     return (
-        "You are a Discord bot named OnyxBot.\n"
+        "You are a Discord bot named AetherSearchBot.\n"
         'Always assume that [user] is the same as the "Current message" author.'
         "Conversation history:\n"
         "---\n" + "\n".join(formatted) + "\n---"
@@ -433,7 +433,7 @@ async def send_response(
         for chunk in chunks:
             await message.channel.send(chunk)
     elif thread_only_mode:
-        thread_name = f"OnyxBot <> {message.author.display_name}"[:100]
+        thread_name = f"AetherSearchBot <> {message.author.display_name}"[:100]
         thread = await message.create_thread(name=thread_name)
         for chunk in chunks:
             await thread.send(chunk)
@@ -477,7 +477,7 @@ async def send_error_response(
     except discord.DiscordException:
         pass
 
-    error_msg = "Sorry, I encountered an error processing your message. You may want to contact Onyx for support :sweat_smile:"
+    error_msg = "Sorry, I encountered an error processing your message. You may want to contact AetherSearch for support :sweat_smile:"
 
     try:
         if isinstance(message.channel, discord.Thread):

@@ -18,7 +18,7 @@ This /admin/billing/* API replaces the older /tenants/* billing endpoints:
 - /tenants/create-subscription-session    -> /admin/billing/create-checkout-session
 - /tenants/stripe-publishable-key         -> /admin/billing/stripe-publishable-key
 
-See: https://linear.app/onyx-app/issue/ENG-3533/migrate-tenantsbilling-adminbilling
+See: https://linear.app/aethersearch-app/issue/ENG-3533/migrate-tenantsbilling-adminbilling
 """
 
 import asyncio
@@ -29,38 +29,38 @@ from fastapi import Depends
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from ee.onyx.db.license import get_license
-from ee.onyx.db.license import get_used_seats
-from ee.onyx.server.billing.models import BillingInformationResponse
-from ee.onyx.server.billing.models import CreateCheckoutSessionRequest
-from ee.onyx.server.billing.models import CreateCheckoutSessionResponse
-from ee.onyx.server.billing.models import CreateCustomerPortalSessionRequest
-from ee.onyx.server.billing.models import CreateCustomerPortalSessionResponse
-from ee.onyx.server.billing.models import SeatUpdateRequest
-from ee.onyx.server.billing.models import SeatUpdateResponse
-from ee.onyx.server.billing.models import StripePublishableKeyResponse
-from ee.onyx.server.billing.models import SubscriptionStatusResponse
-from ee.onyx.server.billing.service import (
+from ee.aethersearch.db.license import get_license
+from ee.aethersearch.db.license import get_used_seats
+from ee.aethersearch.server.billing.models import BillingInformationResponse
+from ee.aethersearch.server.billing.models import CreateCheckoutSessionRequest
+from ee.aethersearch.server.billing.models import CreateCheckoutSessionResponse
+from ee.aethersearch.server.billing.models import CreateCustomerPortalSessionRequest
+from ee.aethersearch.server.billing.models import CreateCustomerPortalSessionResponse
+from ee.aethersearch.server.billing.models import SeatUpdateRequest
+from ee.aethersearch.server.billing.models import SeatUpdateResponse
+from ee.aethersearch.server.billing.models import StripePublishableKeyResponse
+from ee.aethersearch.server.billing.models import SubscriptionStatusResponse
+from ee.aethersearch.server.billing.service import (
     create_checkout_session as create_checkout_service,
 )
-from ee.onyx.server.billing.service import (
+from ee.aethersearch.server.billing.service import (
     create_customer_portal_session as create_portal_service,
 )
-from ee.onyx.server.billing.service import (
+from ee.aethersearch.server.billing.service import (
     get_billing_information as get_billing_service,
 )
-from ee.onyx.server.billing.service import update_seat_count as update_seat_service
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import User
-from onyx.configs.app_configs import STRIPE_PUBLISHABLE_KEY_OVERRIDE
-from onyx.configs.app_configs import STRIPE_PUBLISHABLE_KEY_URL
-from onyx.configs.app_configs import WEB_DOMAIN
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.redis.redis_pool import get_shared_redis_client
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.server.billing.service import update_seat_count as update_seat_service
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import User
+from aethersearch.configs.app_configs import STRIPE_PUBLISHABLE_KEY_OVERRIDE
+from aethersearch.configs.app_configs import STRIPE_PUBLISHABLE_KEY_URL
+from aethersearch.configs.app_configs import WEB_DOMAIN
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.redis.redis_pool import get_shared_redis_client
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.contextvars import get_current_tenant_id
 
@@ -170,8 +170,8 @@ async def create_checkout_session(
     if seats is not None:
         used_seats = get_used_seats(tenant_id)
         if seats < used_seats:
-            raise OnyxError(
-                OnyxErrorCode.VALIDATION_ERROR,
+            raise AetherSearchError(
+                AetherSearchErrorCode.VALIDATION_ERROR,
                 f"Cannot subscribe with fewer seats than current usage. "
                 f"You have {used_seats} active users/integrations but requested {seats} seats.",
             )
@@ -204,7 +204,7 @@ async def create_customer_portal_session(
 
     # Self-hosted requires license
     if not MULTI_TENANT and not license_data:
-        raise OnyxError(OnyxErrorCode.VALIDATION_ERROR, "No license found")
+        raise AetherSearchError(AetherSearchErrorCode.VALIDATION_ERROR, "No license found")
 
     return_url = request.return_url if request else f"{WEB_DOMAIN}/admin/billing"
 
@@ -235,8 +235,8 @@ async def get_billing_information(
 
     # Check circuit breaker (self-hosted only)
     if _is_billing_circuit_open():
-        raise OnyxError(
-            OnyxErrorCode.SERVICE_UNAVAILABLE,
+        raise AetherSearchError(
+            AetherSearchErrorCode.SERVICE_UNAVAILABLE,
             "Stripe connection temporarily disabled. Click 'Connect to Stripe' to retry.",
         )
 
@@ -245,12 +245,12 @@ async def get_billing_information(
             license_data=license_data,
             tenant_id=tenant_id,
         )
-    except OnyxError as e:
+    except AetherSearchError as e:
         # Open circuit breaker on connection failures (self-hosted only)
         if e.status_code in (
-            OnyxErrorCode.BAD_GATEWAY.status_code,
-            OnyxErrorCode.SERVICE_UNAVAILABLE.status_code,
-            OnyxErrorCode.GATEWAY_TIMEOUT.status_code,
+            AetherSearchErrorCode.BAD_GATEWAY.status_code,
+            AetherSearchErrorCode.SERVICE_UNAVAILABLE.status_code,
+            AetherSearchErrorCode.GATEWAY_TIMEOUT.status_code,
         ):
             _open_billing_circuit()
         raise
@@ -273,13 +273,13 @@ async def update_seats(
 
     # Self-hosted requires license
     if not MULTI_TENANT and not license_data:
-        raise OnyxError(OnyxErrorCode.VALIDATION_ERROR, "No license found")
+        raise AetherSearchError(AetherSearchErrorCode.VALIDATION_ERROR, "No license found")
 
     # Validate that new seat count is not less than current used seats
     used_seats = get_used_seats(tenant_id)
     if request.new_seat_count < used_seats:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             f"Cannot reduce seats below current usage. "
             f"You have {used_seats} active users/integrations but requested {request.new_seat_count} seats.",
         )
@@ -322,8 +322,8 @@ async def get_stripe_publishable_key() -> StripePublishableKeyResponse:
         if STRIPE_PUBLISHABLE_KEY_OVERRIDE:
             key = STRIPE_PUBLISHABLE_KEY_OVERRIDE.strip()
             if not key.startswith("pk_"):
-                raise OnyxError(
-                    OnyxErrorCode.INTERNAL_ERROR,
+                raise AetherSearchError(
+                    AetherSearchErrorCode.INTERNAL_ERROR,
                     "Invalid Stripe publishable key format",
                 )
             _stripe_publishable_key_cache = key
@@ -331,8 +331,8 @@ async def get_stripe_publishable_key() -> StripePublishableKeyResponse:
 
         # Fall back to S3 bucket
         if not STRIPE_PUBLISHABLE_KEY_URL:
-            raise OnyxError(
-                OnyxErrorCode.INTERNAL_ERROR,
+            raise AetherSearchError(
+                AetherSearchErrorCode.INTERNAL_ERROR,
                 "Stripe publishable key is not configured",
             )
 
@@ -344,16 +344,16 @@ async def get_stripe_publishable_key() -> StripePublishableKeyResponse:
 
                 # Validate key format
                 if not key.startswith("pk_"):
-                    raise OnyxError(
-                        OnyxErrorCode.INTERNAL_ERROR,
+                    raise AetherSearchError(
+                        AetherSearchErrorCode.INTERNAL_ERROR,
                         "Invalid Stripe publishable key format",
                     )
 
                 _stripe_publishable_key_cache = key
                 return StripePublishableKeyResponse(publishable_key=key)
         except httpx.HTTPError:
-            raise OnyxError(
-                OnyxErrorCode.INTERNAL_ERROR,
+            raise AetherSearchError(
+                AetherSearchErrorCode.INTERNAL_ERROR,
                 "Failed to fetch Stripe publishable key",
             )
 

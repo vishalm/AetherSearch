@@ -92,7 +92,7 @@
       "pluginVersion": "10.4.1",
       "targets": [
         {
-          "expr": "onyx_celery_active_worker_count",
+          "expr": "aethersearch_celery_active_worker_count",
           "legendFormat": "Active workers",
           "refId": "A"
         }
@@ -158,7 +158,7 @@
       "pluginVersion": "10.4.1",
       "targets": [
         {
-          "expr": "count(max by (cc_pair_id, connector_name, source, tenant_id) (onyx_connector_in_error_state{tenant_id=~\"$tenant_id\"}) == 1)",
+          "expr": "count(max by (cc_pair_id, connector_name, source, tenant_id) (aethersearch_connector_in_error_state{tenant_id=~\"$tenant_id\"}) == 1)",
           "legendFormat": "Connectors in error",
           "refId": "A"
         }
@@ -224,7 +224,7 @@
       "pluginVersion": "10.4.1",
       "targets": [
         {
-          "expr": "sum(onyx_queue_depth)",
+          "expr": "sum(aethersearch_queue_depth)",
           "legendFormat": "Queue depth",
           "refId": "A"
         }
@@ -290,7 +290,7 @@
       "pluginVersion": "10.4.1",
       "targets": [
         {
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(onyx_indexing_task_duration_seconds_bucket{tenant_id=~\"$tenant_id\"}[5m])))",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(aethersearch_indexing_task_duration_seconds_bucket{tenant_id=~\"$tenant_id\"}[5m])))",
           "legendFormat": "p95 duration",
           "refId": "A"
         }
@@ -356,7 +356,7 @@
       "pluginVersion": "10.4.1",
       "targets": [
         {
-          "expr": "100 * sum(rate(onyx_indexing_task_completed_total{outcome=\"failure\", tenant_id=~\"$tenant_id\"}[5m])) / sum(rate(onyx_indexing_task_completed_total{tenant_id=~\"$tenant_id\"}[5m]))",
+          "expr": "100 * sum(rate(aethersearch_indexing_task_completed_total{outcome=\"failure\", tenant_id=~\"$tenant_id\"}[5m])) / sum(rate(aethersearch_indexing_task_completed_total{tenant_id=~\"$tenant_id\"}[5m]))",
           "legendFormat": "Error rate",
           "refId": "A"
         }
@@ -436,7 +436,7 @@
       "pluginVersion": "10.4.1",
       "targets": [
         {
-          "expr": "onyx_celery_worker_up",
+          "expr": "aethersearch_celery_worker_up",
           "legendFormat": "{{worker}}",
           "refId": "A"
         }
@@ -516,7 +516,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (status) (rate(onyx_index_attempt_transitions_total{tenant_id=~\"$tenant_id\", source=~\"$source\"}[5m])) * 60",
+          "expr": "sum by (status) (rate(aethersearch_index_attempt_transitions_total{tenant_id=~\"$tenant_id\", source=~\"$source\"}[5m])) * 60",
           "legendFormat": "{{status}}",
           "refId": "A"
         }
@@ -567,7 +567,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (status) (increase(onyx_index_attempt_transitions_total{tenant_id=~\"$tenant_id\", source=~\"$source\"}[1h]))",
+          "expr": "sum by (status) (increase(aethersearch_index_attempt_transitions_total{tenant_id=~\"$tenant_id\", source=~\"$source\"}[1h]))",
           "legendFormat": "{{status}}",
           "refId": "A"
         }
@@ -699,19 +699,19 @@
       },
       "targets": [
         {
-          "expr": "topk(20, time() - max by (cc_pair_id, connector_name, source, tenant_id) (onyx_connector_last_success_timestamp_seconds{tenant_id=~\"$tenant_id\", source=~\"$source\", connector_name=~\"$connector_name\"}))",
+          "expr": "topk(20, time() - max by (cc_pair_id, connector_name, source, tenant_id) (aethersearch_connector_last_success_timestamp_seconds{tenant_id=~\"$tenant_id\", source=~\"$source\", connector_name=~\"$connector_name\"}))",
           "format": "table",
           "instant": true,
           "refId": "A"
         },
         {
-          "expr": "onyx_connector_indexing_errors_total{tenant_id=~\"$tenant_id\", source=~\"$source\", connector_name=~\"$connector_name\"}",
+          "expr": "aethersearch_connector_indexing_errors_total{tenant_id=~\"$tenant_id\", source=~\"$source\", connector_name=~\"$connector_name\"}",
           "format": "table",
           "instant": true,
           "refId": "B"
         },
         {
-          "expr": "onyx_connector_docs_indexed_total{tenant_id=~\"$tenant_id\", source=~\"$source\", connector_name=~\"$connector_name\"}",
+          "expr": "aethersearch_connector_docs_indexed_total{tenant_id=~\"$tenant_id\", source=~\"$source\", connector_name=~\"$connector_name\"}",
           "format": "table",
           "instant": true,
           "refId": "C"
@@ -809,7 +809,7 @@
       },
       "targets": [
         {
-          "expr": "max by (cc_pair_id, connector_name, source, tenant_id) (onyx_connector_in_error_state{tenant_id=~\"$tenant_id\", source=~\"$source\", connector_name=~\"$connector_name\"}) == 1",
+          "expr": "max by (cc_pair_id, connector_name, source, tenant_id) (aethersearch_connector_in_error_state{tenant_id=~\"$tenant_id\", source=~\"$source\", connector_name=~\"$connector_name\"}) == 1",
           "format": "table",
           "instant": true,
           "refId": "A"
@@ -921,13 +921,13 @@
       },
       "targets": [
         {
-          "expr": "onyx_connector_docs_indexed_total{tenant_id=~\"$tenant_id\", source=~\"$source\", connector_name=~\"$connector_name\"}",
+          "expr": "aethersearch_connector_docs_indexed_total{tenant_id=~\"$tenant_id\", source=~\"$source\", connector_name=~\"$connector_name\"}",
           "format": "table",
           "instant": true,
           "refId": "A"
         },
         {
-          "expr": "onyx_connector_indexing_errors_total{tenant_id=~\"$tenant_id\", source=~\"$source\", connector_name=~\"$connector_name\"}",
+          "expr": "aethersearch_connector_indexing_errors_total{tenant_id=~\"$tenant_id\", source=~\"$source\", connector_name=~\"$connector_name\"}",
           "format": "table",
           "instant": true,
           "refId": "B"
@@ -1065,12 +1065,12 @@
       },
       "targets": [
         {
-          "expr": "sum by (source) (rate(onyx_indexing_task_completed_total{outcome=\"success\", source=~\"$source\", tenant_id=~\"$tenant_id\"}[5m])) * 60",
+          "expr": "sum by (source) (rate(aethersearch_indexing_task_completed_total{outcome=\"success\", source=~\"$source\", tenant_id=~\"$tenant_id\"}[5m])) * 60",
           "legendFormat": "{{source}} (success)",
           "refId": "A"
         },
         {
-          "expr": "sum by (source) (rate(onyx_indexing_task_completed_total{outcome=\"failure\", source=~\"$source\", tenant_id=~\"$tenant_id\"}[5m])) * 60",
+          "expr": "sum by (source) (rate(aethersearch_indexing_task_completed_total{outcome=\"failure\", source=~\"$source\", tenant_id=~\"$tenant_id\"}[5m])) * 60",
           "legendFormat": "{{source}} (failure)",
           "refId": "B"
         }
@@ -1134,12 +1134,12 @@
       },
       "targets": [
         {
-          "expr": "histogram_quantile(0.95, sum by (source, le) (rate(onyx_indexing_task_duration_seconds_bucket{source=~\"$source\", tenant_id=~\"$tenant_id\"}[5m])))",
+          "expr": "histogram_quantile(0.95, sum by (source, le) (rate(aethersearch_indexing_task_duration_seconds_bucket{source=~\"$source\", tenant_id=~\"$tenant_id\"}[5m])))",
           "legendFormat": "p95 {{source}}",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.50, sum by (source, le) (rate(onyx_indexing_task_duration_seconds_bucket{source=~\"$source\", tenant_id=~\"$tenant_id\"}[5m])))",
+          "expr": "histogram_quantile(0.50, sum by (source, le) (rate(aethersearch_indexing_task_duration_seconds_bucket{source=~\"$source\", tenant_id=~\"$tenant_id\"}[5m])))",
           "legendFormat": "p50 {{source}}",
           "refId": "B"
         }
@@ -1203,7 +1203,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (source, cc_pair_id, outcome) (rate(onyx_indexing_task_completed_total{source=~\"$source\", tenant_id=~\"$tenant_id\", cc_pair_id=~\"$cc_pair_id\"}[5m])) * 60",
+          "expr": "sum by (source, cc_pair_id, outcome) (rate(aethersearch_indexing_task_completed_total{source=~\"$source\", tenant_id=~\"$tenant_id\", cc_pair_id=~\"$cc_pair_id\"}[5m])) * 60",
           "legendFormat": "{{source}} / {{cc_pair_id}} ({{outcome}})",
           "refId": "A"
         }
@@ -1267,7 +1267,7 @@
       },
       "targets": [
         {
-          "expr": "histogram_quantile(0.95, sum by (source, le) (rate(onyx_indexing_task_duration_seconds_bucket{source=~\"$source\", tenant_id=~\"$tenant_id\"}[5m])))",
+          "expr": "histogram_quantile(0.95, sum by (source, le) (rate(aethersearch_indexing_task_duration_seconds_bucket{source=~\"$source\", tenant_id=~\"$tenant_id\"}[5m])))",
           "legendFormat": "p95 {{source}}",
           "refId": "A"
         }
@@ -1339,7 +1339,7 @@
       },
       "targets": [
         {
-          "expr": "sum(increase(onyx_indexing_task_duration_seconds_bucket{source=~\"$source\", tenant_id=~\"$tenant_id\"}[5m])) by (le)",
+          "expr": "sum(increase(aethersearch_indexing_task_duration_seconds_bucket{source=~\"$source\", tenant_id=~\"$tenant_id\"}[5m])) by (le)",
           "format": "heatmap",
           "legendFormat": "{{le}}",
           "refId": "A"
@@ -1405,17 +1405,17 @@
       },
       "targets": [
         {
-          "expr": "rate(onyx_celery_task_retried_total[5m]) * 60",
+          "expr": "rate(aethersearch_celery_task_retried_total[5m]) * 60",
           "legendFormat": "retry: {{task_name}}",
           "refId": "A"
         },
         {
-          "expr": "rate(onyx_celery_task_revoked_total[5m]) * 60",
+          "expr": "rate(aethersearch_celery_task_revoked_total[5m]) * 60",
           "legendFormat": "revoked: {{task_name}}",
           "refId": "B"
         },
         {
-          "expr": "rate(onyx_celery_task_rejected_total[5m]) * 60",
+          "expr": "rate(aethersearch_celery_task_rejected_total[5m]) * 60",
           "legendFormat": "rejected: {{task_name}}",
           "refId": "C"
         }
@@ -1492,7 +1492,7 @@
       },
       "targets": [
         {
-          "expr": "onyx_queue_depth",
+          "expr": "aethersearch_queue_depth",
           "legendFormat": "{{queue}}",
           "refId": "A"
         }
@@ -1564,7 +1564,7 @@
       },
       "targets": [
         {
-          "expr": "deriv(onyx_queue_depth[5m]) * 60",
+          "expr": "deriv(aethersearch_queue_depth[5m]) * 60",
           "legendFormat": "{{queue}}",
           "refId": "A"
         }
@@ -1633,7 +1633,7 @@
       },
       "targets": [
         {
-          "expr": "onyx_queue_oldest_task_age_seconds > 0",
+          "expr": "aethersearch_queue_oldest_task_age_seconds > 0",
           "legendFormat": "{{queue}}",
           "refId": "A"
         }
@@ -1734,12 +1734,12 @@
       },
       "targets": [
         {
-          "expr": "onyx_redis_memory_used_bytes",
+          "expr": "aethersearch_redis_memory_used_bytes",
           "legendFormat": "Used",
           "refId": "A"
         },
         {
-          "expr": "onyx_redis_memory_peak_bytes",
+          "expr": "aethersearch_redis_memory_peak_bytes",
           "legendFormat": "Peak",
           "refId": "B"
         }
@@ -1807,7 +1807,7 @@
       },
       "targets": [
         {
-          "expr": "max(last_over_time(onyx_redis_memory_fragmentation_ratio[2m]))",
+          "expr": "max(last_over_time(aethersearch_redis_memory_fragmentation_ratio[2m]))",
           "legendFormat": "Fragmentation",
           "refId": "A"
         }
@@ -1871,7 +1871,7 @@
       },
       "targets": [
         {
-          "expr": "onyx_redis_connected_clients",
+          "expr": "aethersearch_redis_connected_clients",
           "legendFormat": "Clients",
           "refId": "A"
         }
@@ -1950,7 +1950,7 @@
       },
       "targets": [
         {
-          "expr": "up{job=~\"onyx-.*\"}",
+          "expr": "up{job=~\"aethersearch-.*\"}",
           "legendFormat": "{{job}}",
           "refId": "A"
         }
@@ -1961,7 +1961,7 @@
   ],
   "refresh": "10s",
   "schemaVersion": 39,
-  "tags": ["onyx", "indexing", "prometheus"],
+  "tags": ["aethersearch", "indexing", "prometheus"],
   "templating": {
     "list": [
       {
@@ -1980,13 +1980,13 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(onyx_index_attempt_transitions_total, source)",
+        "definition": "label_values(aethersearch_index_attempt_transitions_total, source)",
         "hide": 0,
         "includeAll": true,
         "multi": true,
         "name": "source",
         "options": [],
-        "query": "label_values(onyx_index_attempt_transitions_total, source)",
+        "query": "label_values(aethersearch_index_attempt_transitions_total, source)",
         "refresh": 1,
         "type": "query"
       },
@@ -1996,13 +1996,13 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(onyx_index_attempt_transitions_total, connector_name)",
+        "definition": "label_values(aethersearch_index_attempt_transitions_total, connector_name)",
         "hide": 0,
         "includeAll": true,
         "multi": true,
         "name": "connector_name",
         "options": [],
-        "query": "label_values(onyx_index_attempt_transitions_total, connector_name)",
+        "query": "label_values(aethersearch_index_attempt_transitions_total, connector_name)",
         "refresh": 1,
         "type": "query"
       },
@@ -2012,13 +2012,13 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(onyx_indexing_task_completed_total, cc_pair_id)",
+        "definition": "label_values(aethersearch_indexing_task_completed_total, cc_pair_id)",
         "hide": 0,
         "includeAll": true,
         "multi": true,
         "name": "cc_pair_id",
         "options": [],
-        "query": "label_values(onyx_indexing_task_completed_total, cc_pair_id)",
+        "query": "label_values(aethersearch_indexing_task_completed_total, cc_pair_id)",
         "refresh": 1,
         "type": "query"
       },
@@ -2028,13 +2028,13 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(onyx_index_attempt_transitions_total, tenant_id)",
+        "definition": "label_values(aethersearch_index_attempt_transitions_total, tenant_id)",
         "hide": 0,
         "includeAll": true,
         "multi": true,
         "name": "tenant_id",
         "options": [],
-        "query": "label_values(onyx_index_attempt_transitions_total, tenant_id)",
+        "query": "label_values(aethersearch_index_attempt_transitions_total, tenant_id)",
         "refresh": 1,
         "type": "query"
       }
@@ -2046,8 +2046,8 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Onyx Indexing Pipeline",
-  "uid": "onyx-indexing-pipeline",
+  "title": "AetherSearch Indexing Pipeline",
+  "uid": "aethersearch-indexing-pipeline",
   "version": 1,
   "weekStart": ""
 }

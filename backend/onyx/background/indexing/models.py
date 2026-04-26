@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from onyx.db.models import IndexAttemptError
+from aethersearch.db.models import IndexAttemptError
 
 
 class IndexAttemptErrorPydantic(BaseModel):

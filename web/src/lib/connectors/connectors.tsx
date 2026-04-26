@@ -151,7 +151,7 @@ export const connectorConfigs: Record<
     values: [
       {
         type: "text",
-        query: "Enter the website URL to scrape e.g. https://docs.onyx.app/:",
+        query: "Enter the website URL to scrape e.g. https://docs.aethersearch.app/:",
         label: "Base URL",
         name: "base_url",
         optional: false,
@@ -422,8 +422,8 @@ export const connectorConfigs: Record<
                 label: "Include shared drives?",
                 description: (currentCredential) => {
                   return currentCredential?.credential_json?.google_tokens
-                    ? "This will allow Onyx to index everything in the shared drives you have access to."
-                    : "This will allow Onyx to index everything in your Organization's shared drives.";
+                    ? "This will allow AetherSearch to index everything in the shared drives you have access to."
+                    : "This will allow AetherSearch to index everything in your Organization's shared drives.";
                 },
                 name: "include_shared_drives",
                 default: false,
@@ -437,8 +437,8 @@ export const connectorConfigs: Record<
                 },
                 description: (currentCredential) => {
                   return currentCredential?.credential_json?.google_tokens
-                    ? "This will allow Onyx to index everything in your My Drive."
-                    : "This will allow Onyx to index everything in everyone's My Drives.";
+                    ? "This will allow AetherSearch to index everything in your My Drive."
+                    : "This will allow AetherSearch to index everything in everyone's My Drives.";
                 },
                 name: "include_my_drives",
                 default: false,
@@ -446,7 +446,7 @@ export const connectorConfigs: Record<
               {
                 type: "checkbox",
                 description:
-                  "This will allow Onyx to index all files shared with you.",
+                  "This will allow AetherSearch to index all files shared with you.",
                 label: "Include All Files Shared With You?",
                 name: "include_files_shared_with_me",
                 visibleCondition: (values, currentCredential) =>
@@ -514,7 +514,7 @@ export const connectorConfigs: Record<
         type: "checkbox",
         label: "Hide domain link-only files?",
         description:
-          "When enabled, Onyx skips files that are shared broadly (domain or public) but require the link to access.",
+          "When enabled, AetherSearch skips files that are shared broadly (domain or public) but require the link to access.",
         name: "exclude_domain_link_only",
         optional: true,
         default: false,
@@ -765,7 +765,7 @@ export const connectorConfigs: Record<
                 name: "requested_objects",
                 optional: true,
                 description:
-                  "Specify the Salesforce object types you want us to index. If unsure, don't specify any objects and Onyx will default to indexing by 'Account'." +
+                  "Specify the Salesforce object types you want us to index. If unsure, don't specify any objects and AetherSearch will default to indexing by 'Account'." +
                   "\n\nHint: Use the singular form of the object name (e.g., 'Opportunity' instead of 'Opportunities').",
               },
             ],
@@ -812,9 +812,9 @@ export const connectorConfigs: Record<
         name: "sites",
         optional: true,
         description: `• If no sites are specified, all sites in your organization will be indexed (Sites.Read.All permission required).
-• Specifying 'https://onyxai.sharepoint.com/sites/support' for example only indexes this site.
-• Specifying 'https://onyxai.sharepoint.com/sites/support/subfolder' for example only indexes this folder.
-• Specifying sites currently works for SharePoint instances using English, Spanish, or German. Contact the Onyx team if you need another language supported.
+• Specifying 'https://aethersearchai.sharepoint.com/sites/support' for example only indexes this site.
+• Specifying 'https://aethersearchai.sharepoint.com/sites/support/subfolder' for example only indexes this folder.
+• Specifying sites currently works for SharePoint instances using English, Spanish, or German. Contact the AetherSearch team if you need another language supported.
 `,
       },
     ],
@@ -844,7 +844,7 @@ export const connectorConfigs: Record<
         label: "Treat sharing links as public?",
         description:
           "When enabled, documents with a sharing link (anonymous or organization-wide) " +
-          "are treated as public (visible to all Onyx users). " +
+          "are treated as public (visible to all AetherSearch users). " +
           "When disabled, only users and groups with explicit role assignments can see the document.",
         name: "treat_sharing_link_as_public",
         optional: true,
@@ -920,7 +920,7 @@ export const connectorConfigs: Record<
         label: "Teams",
         name: "teams",
         optional: true,
-        description: `Specify 0 or more Teams to index. For example, specifying the Team 'Support' for the 'onyxai' Org will cause us to only index messages sent in channels belonging to the 'Support' Team. If no Teams are specified, all Teams in your organization will be indexed.`,
+        description: `Specify 0 or more Teams to index. For example, specifying the Team 'Support' for the 'aethersearchai' Org will cause us to only index messages sent in channels belonging to the 'Support' Team. If no Teams are specified, all Teams in your organization will be indexed.`,
       },
     ],
     advanced_values: [
@@ -1107,7 +1107,7 @@ For example, specifying .*-support.* as a "channel" will cause the connector to 
         label: "Base URL",
         name: "base_url",
         optional: false,
-        description: `Specify the base URL for your Slab team. This will look something like: https://onyx.slab.com/`,
+        description: `Specify the base URL for your Slab team. This will look something like: https://aethersearch.slab.com/`,
       },
     ],
     advanced_values: [],

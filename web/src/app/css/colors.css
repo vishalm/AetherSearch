@@ -240,15 +240,15 @@
 
 /* Brand Colors */
 :root {
-  /* Onyx / Ink */
-  --onyx-ink-100: #000000;
-  --onyx-ink-95: #1c1c1c;
-  --onyx-ink-90: #333333;
+  /* AetherSearch / Ink */
+  --aethersearch-ink-100: #000000;
+  --aethersearch-ink-95: #1c1c1c;
+  --aethersearch-ink-90: #333333;
 
-  /* Onyx / Chrome */
-  --onyx-chrome-20: #cacaca;
-  --onyx-chrome-10: #e9e9e9;
-  --onyx-chrome-00: #ffffff;
+  /* AetherSearch / Chrome */
+  --aethersearch-chrome-20: #cacaca;
+  --aethersearch-chrome-10: #e9e9e9;
+  --aethersearch-chrome-00: #ffffff;
 
   /* Tint (referencing Stone variables) */
   --tint-98: var(--stone-98);
@@ -329,9 +329,9 @@
   --border-inverted-01: var(--grey-80);
 
   /* Theme */
-  --theme-primary-06: var(--onyx-ink-100);
-  --theme-primary-05: var(--onyx-ink-95);
-  --theme-primary-04: var(--onyx-ink-90);
+  --theme-primary-06: var(--aethersearch-ink-100);
+  --theme-primary-05: var(--aethersearch-ink-95);
+  --theme-primary-04: var(--aethersearch-ink-90);
 
   /* Theme / Gradient */
   --theme-gradient-05: var(--tint-50);
@@ -537,9 +537,9 @@
   --border-inverted-01: var(--grey-10);
 
   /* Theme */
-  --theme-primary-06: var(--onyx-chrome-00);
-  --theme-primary-05: var(--onyx-chrome-10);
-  --theme-primary-04: var(--onyx-chrome-20);
+  --theme-primary-06: var(--aethersearch-chrome-00);
+  --theme-primary-05: var(--aethersearch-chrome-10);
+  --theme-primary-04: var(--aethersearch-chrome-20);
 
   /* Theme / Gradient */
   --theme-gradient-05: var(--grey-100);

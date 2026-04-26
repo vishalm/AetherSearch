@@ -56,45 +56,45 @@ from kubernetes import config
 from kubernetes.client.rest import ApiException
 from kubernetes.stream import stream as k8s_stream
 
-from onyx.db.enums import SandboxStatus
-from onyx.server.features.build.api.packet_logger import get_packet_logger
-from onyx.server.features.build.configs import OPENCODE_DISABLED_TOOLS
-from onyx.server.features.build.configs import SANDBOX_CONTAINER_IMAGE
-from onyx.server.features.build.configs import SANDBOX_FILE_SYNC_SERVICE_ACCOUNT
-from onyx.server.features.build.configs import SANDBOX_NAMESPACE
-from onyx.server.features.build.configs import SANDBOX_NEXTJS_PORT_END
-from onyx.server.features.build.configs import SANDBOX_NEXTJS_PORT_START
-from onyx.server.features.build.configs import SANDBOX_S3_BUCKET
-from onyx.server.features.build.configs import SANDBOX_SERVICE_ACCOUNT_NAME
-from onyx.server.features.build.sandbox.base import SandboxManager
-from onyx.server.features.build.sandbox.kubernetes.internal.acp_exec_client import (
+from aethersearch.db.enums import SandboxStatus
+from aethersearch.server.features.build.api.packet_logger import get_packet_logger
+from aethersearch.server.features.build.configs import OPENCODE_DISABLED_TOOLS
+from aethersearch.server.features.build.configs import SANDBOX_CONTAINER_IMAGE
+from aethersearch.server.features.build.configs import SANDBOX_FILE_SYNC_SERVICE_ACCOUNT
+from aethersearch.server.features.build.configs import SANDBOX_NAMESPACE
+from aethersearch.server.features.build.configs import SANDBOX_NEXTJS_PORT_END
+from aethersearch.server.features.build.configs import SANDBOX_NEXTJS_PORT_START
+from aethersearch.server.features.build.configs import SANDBOX_S3_BUCKET
+from aethersearch.server.features.build.configs import SANDBOX_SERVICE_ACCOUNT_NAME
+from aethersearch.server.features.build.sandbox.base import SandboxManager
+from aethersearch.server.features.build.sandbox.kubernetes.internal.acp_exec_client import (
     ACPEvent,
 )
-from onyx.server.features.build.sandbox.kubernetes.internal.acp_exec_client import (
+from aethersearch.server.features.build.sandbox.kubernetes.internal.acp_exec_client import (
     ACPExecClient,
 )
-from onyx.server.features.build.sandbox.models import FilesystemEntry
-from onyx.server.features.build.sandbox.models import LLMProviderConfig
-from onyx.server.features.build.sandbox.models import SandboxInfo
-from onyx.server.features.build.sandbox.models import SnapshotResult
-from onyx.server.features.build.sandbox.util.agent_instructions import (
+from aethersearch.server.features.build.sandbox.models import FilesystemEntry
+from aethersearch.server.features.build.sandbox.models import LLMProviderConfig
+from aethersearch.server.features.build.sandbox.models import SandboxInfo
+from aethersearch.server.features.build.sandbox.models import SnapshotResult
+from aethersearch.server.features.build.sandbox.util.agent_instructions import (
     ATTACHMENTS_SECTION_CONTENT,
 )
-from onyx.server.features.build.sandbox.util.agent_instructions import (
+from aethersearch.server.features.build.sandbox.util.agent_instructions import (
     generate_agent_instructions,
 )
-from onyx.server.features.build.sandbox.util.opencode_config import (
+from aethersearch.server.features.build.sandbox.util.opencode_config import (
     build_opencode_config,
 )
-from onyx.server.features.build.sandbox.util.persona_mapping import (
+from aethersearch.server.features.build.sandbox.util.persona_mapping import (
     generate_user_identity_content,
 )
-from onyx.server.features.build.sandbox.util.persona_mapping import get_persona_info
-from onyx.server.features.build.sandbox.util.persona_mapping import ORG_INFO_AGENTS_MD
-from onyx.server.features.build.sandbox.util.persona_mapping import (
+from aethersearch.server.features.build.sandbox.util.persona_mapping import get_persona_info
+from aethersearch.server.features.build.sandbox.util.persona_mapping import ORG_INFO_AGENTS_MD
+from aethersearch.server.features.build.sandbox.util.persona_mapping import (
     ORGANIZATION_STRUCTURE,
 )
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -354,7 +354,7 @@ class KubernetesSandboxManager(SandboxManager):
         self._file_sync_service_account = SANDBOX_FILE_SYNC_SERVICE_ACCOUNT
 
         # Load AGENTS.md template path
-        build_dir = Path(__file__).parent.parent.parent  # /onyx/server/features/build/
+        build_dir = Path(__file__).parent.parent.parent  # /aethersearch/server/features/build/
         self._agent_instructions_template_path = build_dir / "AGENTS.template.md"
         self._skills_path = Path(__file__).parent / "docker" / "skills"
 
@@ -585,7 +585,7 @@ done
             # This causes "exec /bin/sh: argument list too long" errors.
             enable_service_links=False,
             # Node selection for sandbox nodes
-            node_selector={"onyx.app/workload": "sandbox"},
+            node_selector={"aethersearch.app/workload": "sandbox"},
             tolerations=[
                 client.V1Toleration(
                     key="workload",
@@ -615,9 +615,9 @@ done
                 namespace=self._namespace,
                 labels={
                     "app.kubernetes.io/component": "sandbox",
-                    "app.kubernetes.io/managed-by": "onyx",
-                    "onyx.app/sandbox-id": sandbox_id,
-                    "onyx.app/tenant-id": tenant_id,
+                    "app.kubernetes.io/managed-by": "aethersearch",
+                    "aethersearch.app/sandbox-id": sandbox_id,
+                    "aethersearch.app/tenant-id": tenant_id,
                     "admission.datadoghq.com/enabled": "false",
                 },
             ),
@@ -663,14 +663,14 @@ done
                 namespace=self._namespace,
                 labels={
                     "app.kubernetes.io/component": "sandbox",
-                    "app.kubernetes.io/managed-by": "onyx",
-                    "onyx.app/sandbox-id": sandbox_id_str,
-                    "onyx.app/tenant-id": tenant_id_str,
+                    "app.kubernetes.io/managed-by": "aethersearch",
+                    "aethersearch.app/sandbox-id": sandbox_id_str,
+                    "aethersearch.app/tenant-id": tenant_id_str,
                 },
             ),
             spec=client.V1ServiceSpec(
                 type="ClusterIP",
-                selector={"onyx.app/sandbox-id": sandbox_id_str},
+                selector={"aethersearch.app/sandbox-id": sandbox_id_str},
                 ports=ports,
             ),
         )

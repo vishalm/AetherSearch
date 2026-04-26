@@ -10,19 +10,19 @@ from alembic import op
 import sqlalchemy as sa
 from sqlalchemy import table, column, String, Integer, Boolean
 
-from onyx.configs.model_configs import ASYM_PASSAGE_PREFIX
-from onyx.configs.model_configs import ASYM_QUERY_PREFIX
-from onyx.configs.model_configs import DOC_EMBEDDING_DIM
-from onyx.configs.model_configs import DOCUMENT_ENCODER_MODEL
-from onyx.configs.model_configs import NORMALIZE_EMBEDDINGS
-from onyx.configs.model_configs import OLD_DEFAULT_DOCUMENT_ENCODER_MODEL
-from onyx.configs.model_configs import OLD_DEFAULT_MODEL_DOC_EMBEDDING_DIM
-from onyx.configs.model_configs import OLD_DEFAULT_MODEL_NORMALIZE_EMBEDDINGS
-from onyx.db.enums import EmbeddingPrecision
-from onyx.db.models import IndexModelStatus
-from onyx.db.search_settings import user_has_overridden_embedding_model
-from onyx.indexing.models import IndexingSetting
-from onyx.natural_language_processing.search_nlp_models import clean_model_name
+from aethersearch.configs.model_configs import ASYM_PASSAGE_PREFIX
+from aethersearch.configs.model_configs import ASYM_QUERY_PREFIX
+from aethersearch.configs.model_configs import DOC_EMBEDDING_DIM
+from aethersearch.configs.model_configs import DOCUMENT_ENCODER_MODEL
+from aethersearch.configs.model_configs import NORMALIZE_EMBEDDINGS
+from aethersearch.configs.model_configs import OLD_DEFAULT_DOCUMENT_ENCODER_MODEL
+from aethersearch.configs.model_configs import OLD_DEFAULT_MODEL_DOC_EMBEDDING_DIM
+from aethersearch.configs.model_configs import OLD_DEFAULT_MODEL_NORMALIZE_EMBEDDINGS
+from aethersearch.db.enums import EmbeddingPrecision
+from aethersearch.db.models import IndexModelStatus
+from aethersearch.db.search_settings import user_has_overridden_embedding_model
+from aethersearch.indexing.models import IndexingSetting
+from aethersearch.natural_language_processing.search_nlp_models import clean_model_name
 
 # revision identifiers, used by Alembic.
 revision = "dbaa756c2ccf"

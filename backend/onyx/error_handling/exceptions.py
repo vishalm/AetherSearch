@@ -1,22 +1,22 @@
-"""OnyxError — the single exception type for all Onyx business errors.
+"""AetherSearchError — the single exception type for all AetherSearch business errors.
 
-Raise ``OnyxError`` instead of ``HTTPException`` in business code.  A global
-FastAPI exception handler (registered via ``register_onyx_exception_handlers``)
+Raise ``AetherSearchError`` instead of ``HTTPException`` in business code.  A global
+FastAPI exception handler (registered via ``register_aethersearch_exception_handlers``)
 converts it into a JSON response with the standard
 ``{"error_code": "...", "detail": "..."}`` shape.
 
 Usage::
 
-    from onyx.error_handling.error_codes import OnyxErrorCode
-    from onyx.error_handling.exceptions import OnyxError
+    from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+    from aethersearch.error_handling.exceptions import AetherSearchError
 
-    raise OnyxError(OnyxErrorCode.NOT_FOUND, "Session not found")
+    raise AetherSearchError(AetherSearchErrorCode.NOT_FOUND, "Session not found")
 
 For upstream errors with a dynamic HTTP status (e.g. billing service),
 use ``status_code_override``::
 
-    raise OnyxError(
-        OnyxErrorCode.BAD_GATEWAY,
+    raise AetherSearchError(
+        AetherSearchErrorCode.BAD_GATEWAY,
         detail,
         status_code_override=upstream_status,
     )
@@ -26,24 +26,24 @@ from fastapi import FastAPI
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.utils.logger import setup_logger
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
 
-class OnyxError(Exception):
-    """Structured error that maps to a specific ``OnyxErrorCode``.
+class AetherSearchError(Exception):
+    """Structured error that maps to a specific ``AetherSearchErrorCode``.
 
     Attributes:
-        error_code: The ``OnyxErrorCode`` enum member.
+        error_code: The ``AetherSearchErrorCode`` enum member.
         detail: Human-readable detail (defaults to the error code string).
         status_code: HTTP status — either overridden or from the error code.
     """
 
     def __init__(
         self,
-        error_code: OnyxErrorCode,
+        error_code: AetherSearchErrorCode,
         detail: str | None = None,
         *,
         status_code_override: int | None = None,
@@ -59,33 +59,33 @@ class OnyxError(Exception):
         return self._status_code_override or self.error_code.status_code
 
 
-def log_onyx_error(exc: OnyxError) -> None:
+def log_aethersearch_error(exc: AetherSearchError) -> None:
     detail = exc.detail
     status_code = exc.status_code
     if status_code >= 500:
-        logger.error(f"OnyxError {exc.error_code.code}: {detail}")
+        logger.error(f"AetherSearchError {exc.error_code.code}: {detail}")
     elif status_code >= 400:
-        logger.warning(f"OnyxError {exc.error_code.code}: {detail}")
+        logger.warning(f"AetherSearchError {exc.error_code.code}: {detail}")
 
 
-def onyx_error_to_json_response(exc: OnyxError) -> JSONResponse:
+def aethersearch_error_to_json_response(exc: AetherSearchError) -> JSONResponse:
     return JSONResponse(
         status_code=exc.status_code,
         content=exc.error_code.detail(exc.detail),
     )
 
 
-def register_onyx_exception_handlers(app: FastAPI) -> None:
-    """Register a global handler that converts ``OnyxError`` to JSON responses.
+def register_aethersearch_exception_handlers(app: FastAPI) -> None:
+    """Register a global handler that converts ``AetherSearchError`` to JSON responses.
 
     Must be called *after* the app is created but *before* it starts serving.
     The handler logs at WARNING for 4xx and ERROR for 5xx.
     """
 
-    @app.exception_handler(OnyxError)
-    async def _handle_onyx_error(
+    @app.exception_handler(AetherSearchError)
+    async def _handle_aethersearch_error(
         request: Request,  # noqa: ARG001
-        exc: OnyxError,
+        exc: AetherSearchError,
     ) -> JSONResponse:
-        log_onyx_error(exc)
-        return onyx_error_to_json_response(exc)
+        log_aethersearch_error(exc)
+        return aethersearch_error_to_json_response(exc)

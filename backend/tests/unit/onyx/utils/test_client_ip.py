@@ -6,9 +6,9 @@ from fastapi import FastAPI
 from fastapi import Request
 from fastapi.testclient import TestClient
 
-from onyx.utils.client_ip import ClientIPMiddleware
-from onyx.utils.client_ip import current_client_ip
-from onyx.utils.client_ip import get_client_ip
+from aethersearch.utils.client_ip import ClientIPMiddleware
+from aethersearch.utils.client_ip import current_client_ip
+from aethersearch.utils.client_ip import get_client_ip
 
 
 def _fake_request(

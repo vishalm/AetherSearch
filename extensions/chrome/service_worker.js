@@ -1,5 +1,5 @@
 import {
-  DEFAULT_ONYX_DOMAIN,
+  DEFAULT_AETHERSEARCH_DOMAIN,
   CHROME_SPECIFIC_STORAGE_KEYS,
   ACTIONS,
   SIDE_PANEL_PATH,
@@ -47,16 +47,16 @@ function encodeUserPrompt(text) {
   return encodeURIComponent(text).replace(/\(/g, "%28").replace(/\)/g, "%29");
 }
 
-async function sendToOnyx(info, tab) {
+async function sendToAetherSearch(info, tab) {
   const selectedText = encodeUserPrompt(info.selectionText);
   const currentUrl = encodeURIComponent(tab.url);
 
   try {
     const result = await chrome.storage.local.get({
-      [CHROME_SPECIFIC_STORAGE_KEYS.ONYX_DOMAIN]: DEFAULT_ONYX_DOMAIN,
+      [CHROME_SPECIFIC_STORAGE_KEYS.AETHERSEARCH_DOMAIN]: DEFAULT_AETHERSEARCH_DOMAIN,
     });
     const url = `${
-      result[CHROME_SPECIFIC_STORAGE_KEYS.ONYX_DOMAIN]
+      result[CHROME_SPECIFIC_STORAGE_KEYS.AETHERSEARCH_DOMAIN]
     }${SIDE_PANEL_PATH}?user-prompt=${selectedText}`;
 
     await openSidePanel(tab.id);
@@ -66,25 +66,25 @@ async function sendToOnyx(info, tab) {
       pageUrl: tab.url,
     });
   } catch (error) {
-    console.error("Error sending to Onyx:", error);
+    console.error("Error sending to AetherSearch:", error);
   }
 }
 
 async function toggleNewTabOverride() {
   try {
     const result = await chrome.storage.local.get(
-      CHROME_SPECIFIC_STORAGE_KEYS.USE_ONYX_AS_DEFAULT_NEW_TAB,
+      CHROME_SPECIFIC_STORAGE_KEYS.USE_AETHERSEARCH_AS_DEFAULT_NEW_TAB,
     );
     const newValue =
-      !result[CHROME_SPECIFIC_STORAGE_KEYS.USE_ONYX_AS_DEFAULT_NEW_TAB];
+      !result[CHROME_SPECIFIC_STORAGE_KEYS.USE_AETHERSEARCH_AS_DEFAULT_NEW_TAB];
     await chrome.storage.local.set({
-      [CHROME_SPECIFIC_STORAGE_KEYS.USE_ONYX_AS_DEFAULT_NEW_TAB]: newValue,
+      [CHROME_SPECIFIC_STORAGE_KEYS.USE_AETHERSEARCH_AS_DEFAULT_NEW_TAB]: newValue,
     });
 
     chrome.notifications.create({
       type: "basic",
       iconUrl: "icon.png",
-      title: "Onyx New Tab",
+      title: "AetherSearch New Tab",
       message: `New Tab Override ${newValue ? "enabled" : "disabled"}`,
     });
 
@@ -109,7 +109,7 @@ chrome.action.onClicked.addListener((tab) => {
 });
 
 chrome.commands.onCommand.addListener(async (command) => {
-  if (command === ACTIONS.SEND_TO_ONYX) {
+  if (command === ACTIONS.SEND_TO_AETHERSEARCH) {
     try {
       const [tab] = await chrome.tabs.query({
         active: true,
@@ -120,10 +120,10 @@ chrome.commands.onCommand.addListener(async (command) => {
           action: ACTIONS.GET_SELECTED_TEXT,
         });
         const selectedText = response?.selectedText || "";
-        sendToOnyx({ selectionText: selectedText }, tab);
+        sendToAetherSearch({ selectionText: selectedText }, tab);
       }
     } catch (error) {
-      console.error("Error sending to Onyx:", error);
+      console.error("Error sending to AetherSearch:", error);
     }
   } else if (command === ACTIONS.TOGGLE_NEW_TAB_OVERRIDE) {
     toggleNewTabOverride();
@@ -170,18 +170,18 @@ async function sendActiveTabUrlToPanel() {
       });
     }
   } catch (error) {
-    console.error("[Onyx SW] Error sending tab URL:", error);
+    console.error("[AetherSearch SW] Error sending tab URL:", error);
   }
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === ACTIONS.GET_CURRENT_ONYX_DOMAIN) {
+  if (request.action === ACTIONS.GET_CURRENT_AETHERSEARCH_DOMAIN) {
     chrome.storage.local.get(
-      { [CHROME_SPECIFIC_STORAGE_KEYS.ONYX_DOMAIN]: DEFAULT_ONYX_DOMAIN },
+      { [CHROME_SPECIFIC_STORAGE_KEYS.AETHERSEARCH_DOMAIN]: DEFAULT_AETHERSEARCH_DOMAIN },
       (result) => {
         sendResponse({
-          [CHROME_SPECIFIC_STORAGE_KEYS.ONYX_DOMAIN]:
-            result[CHROME_SPECIFIC_STORAGE_KEYS.ONYX_DOMAIN],
+          [CHROME_SPECIFIC_STORAGE_KEYS.AETHERSEARCH_DOMAIN]:
+            result[CHROME_SPECIFIC_STORAGE_KEYS.AETHERSEARCH_DOMAIN],
         });
       },
     );
@@ -190,10 +190,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === ACTIONS.CLOSE_SIDE_PANEL) {
     closeSidePanel();
     chrome.storage.local.get(
-      { [CHROME_SPECIFIC_STORAGE_KEYS.ONYX_DOMAIN]: DEFAULT_ONYX_DOMAIN },
+      { [CHROME_SPECIFIC_STORAGE_KEYS.AETHERSEARCH_DOMAIN]: DEFAULT_AETHERSEARCH_DOMAIN },
       (result) => {
         chrome.tabs.create({
-          url: `${result[CHROME_SPECIFIC_STORAGE_KEYS.ONYX_DOMAIN]}/auth/login`,
+          url: `${result[CHROME_SPECIFIC_STORAGE_KEYS.AETHERSEARCH_DOMAIN]}/auth/login`,
           active: true,
         });
       },
@@ -207,11 +207,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     if (tabId && windowId) {
       chrome.storage.local.get(
-        { [CHROME_SPECIFIC_STORAGE_KEYS.ONYX_DOMAIN]: DEFAULT_ONYX_DOMAIN },
+        { [CHROME_SPECIFIC_STORAGE_KEYS.AETHERSEARCH_DOMAIN]: DEFAULT_AETHERSEARCH_DOMAIN },
         (result) => {
           const encodedText = encodeUserPrompt(selectedText);
-          const onyxDomain = result[CHROME_SPECIFIC_STORAGE_KEYS.ONYX_DOMAIN];
-          const url = `${onyxDomain}${SIDE_PANEL_PATH}?user-prompt=${encodedText}`;
+          const aethersearchDomain = result[CHROME_SPECIFIC_STORAGE_KEYS.AETHERSEARCH_DOMAIN];
+          const url = `${aethersearchDomain}${SIDE_PANEL_PATH}?user-prompt=${encodedText}`;
 
           chrome.storage.session.set({
             pendingInput: {
@@ -225,21 +225,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             .open({ windowId })
             .then(() => {
               chrome.runtime.sendMessage({
-                action: ACTIONS.OPEN_ONYX_WITH_INPUT,
+                action: ACTIONS.OPEN_AETHERSEARCH_WITH_INPUT,
                 url: url,
                 pageUrl: pageUrl,
               });
             })
             .catch((error) => {
               console.error(
-                "[Onyx SW] Error opening side panel with text:",
+                "[AetherSearch SW] Error opening side panel with text:",
                 error,
               );
             });
         },
       );
     } else {
-      console.error("[Onyx SW] Missing tabId or windowId");
+      console.error("[AetherSearch SW] Missing tabId or windowId");
     }
     return true;
   }
@@ -257,10 +257,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 chrome.storage.onChanged.addListener((changes, namespace) => {
   if (
     namespace === "local" &&
-    changes[CHROME_SPECIFIC_STORAGE_KEYS.USE_ONYX_AS_DEFAULT_NEW_TAB]
+    changes[CHROME_SPECIFIC_STORAGE_KEYS.USE_AETHERSEARCH_AS_DEFAULT_NEW_TAB]
   ) {
     const newValue =
-      changes[CHROME_SPECIFIC_STORAGE_KEYS.USE_ONYX_AS_DEFAULT_NEW_TAB]
+      changes[CHROME_SPECIFIC_STORAGE_KEYS.USE_AETHERSEARCH_AS_DEFAULT_NEW_TAB]
         .newValue;
 
     if (newValue === false) {
@@ -274,16 +274,16 @@ chrome.windows.onRemoved.addListener((windowId) => {
 });
 
 chrome.omnibox.setDefaultSuggestion({
-  description: 'Search Onyx for "%s"',
+  description: 'Search AetherSearch for "%s"',
 });
 
 chrome.omnibox.onInputEntered.addListener(async (text) => {
   try {
     const result = await chrome.storage.local.get({
-      [CHROME_SPECIFIC_STORAGE_KEYS.ONYX_DOMAIN]: DEFAULT_ONYX_DOMAIN,
+      [CHROME_SPECIFIC_STORAGE_KEYS.AETHERSEARCH_DOMAIN]: DEFAULT_AETHERSEARCH_DOMAIN,
     });
 
-    const domain = result[CHROME_SPECIFIC_STORAGE_KEYS.ONYX_DOMAIN];
+    const domain = result[CHROME_SPECIFIC_STORAGE_KEYS.AETHERSEARCH_DOMAIN];
     const searchUrl = `${domain}/chat?user-prompt=${encodeURIComponent(text)}`;
 
     chrome.tabs.update({ url: searchUrl });
@@ -297,7 +297,7 @@ chrome.omnibox.onInputChanged.addListener((text, suggest) => {
     suggest([
       {
         content: text,
-        description: `Search Onyx for "<match>${text}</match>"`,
+        description: `Search AetherSearch for "<match>${text}</match>"`,
       },
     ]);
   }
@@ -315,7 +315,7 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
       });
     }
   } catch (error) {
-    console.error("[Onyx SW] Error on tab activated:", error);
+    console.error("[AetherSearch SW] Error on tab activated:", error);
   }
 });
 
@@ -335,7 +335,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       });
     }
   } catch (error) {
-    console.error("[Onyx SW] Error on tab updated:", error);
+    console.error("[AetherSearch SW] Error on tab updated:", error);
   }
 });
 

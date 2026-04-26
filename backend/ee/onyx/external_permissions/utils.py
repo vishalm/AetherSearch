@@ -1,17 +1,17 @@
 from collections.abc import Generator
 
-from ee.onyx.external_permissions.perm_sync_types import FetchAllDocumentsIdsFunction
-from onyx.access.models import DocExternalAccess
-from onyx.access.models import ElementExternalAccess
-from onyx.access.models import ExternalAccess
-from onyx.access.models import NodeExternalAccess
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.interfaces import SlimConnectorWithPermSync
-from onyx.connectors.models import HierarchyNode
-from onyx.db.models import ConnectorCredentialPair
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.external_permissions.perm_sync_types import FetchAllDocumentsIdsFunction
+from aethersearch.access.models import DocExternalAccess
+from aethersearch.access.models import ElementExternalAccess
+from aethersearch.access.models import ExternalAccess
+from aethersearch.access.models import NodeExternalAccess
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.interfaces import SlimConnectorWithPermSync
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

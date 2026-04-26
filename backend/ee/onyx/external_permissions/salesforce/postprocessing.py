@@ -1,17 +1,17 @@
 import time
 
-from ee.onyx.db.external_perm import fetch_external_groups_for_user_email_and_group_ids
-from ee.onyx.external_permissions.salesforce.utils import (
+from ee.aethersearch.db.external_perm import fetch_external_groups_for_user_email_and_group_ids
+from ee.aethersearch.external_permissions.salesforce.utils import (
     get_any_salesforce_client_for_doc_id,
 )
-from ee.onyx.external_permissions.salesforce.utils import get_objects_access_for_user_id
-from ee.onyx.external_permissions.salesforce.utils import (
+from ee.aethersearch.external_permissions.salesforce.utils import get_objects_access_for_user_id
+from ee.aethersearch.external_permissions.salesforce.utils import (
     get_salesforce_user_id_from_email,
 )
-from onyx.configs.app_configs import BLURB_SIZE
-from onyx.context.search.models import InferenceChunk
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import BLURB_SIZE
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

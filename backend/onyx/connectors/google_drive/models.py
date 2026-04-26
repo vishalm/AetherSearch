@@ -7,10 +7,10 @@ from pydantic import Field
 from pydantic import field_serializer
 from pydantic import field_validator
 
-from onyx.connectors.interfaces import ConnectorCheckpoint
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.utils.threadpool_concurrency import ThreadSafeDict
-from onyx.utils.threadpool_concurrency import ThreadSafeSet
+from aethersearch.connectors.interfaces import ConnectorCheckpoint
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.utils.threadpool_concurrency import ThreadSafeDict
+from aethersearch.utils.threadpool_concurrency import ThreadSafeSet
 
 
 class GDriveMimeType(str, Enum):

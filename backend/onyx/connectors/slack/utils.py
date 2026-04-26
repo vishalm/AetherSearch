@@ -10,10 +10,10 @@ from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from slack_sdk.web import SlackResponse
 
-from onyx.connectors.models import BasicExpertInfo
-from onyx.connectors.slack.models import MessageType
-from onyx.utils.logger import setup_logger
-from onyx.utils.retry_wrapper import retry_builder
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.connectors.slack.models import MessageType
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.retry_wrapper import retry_builder
 
 logger = setup_logger()
 
@@ -23,9 +23,9 @@ basic_retry_wrapper = retry_builder(tries=7)
 _SLACK_LIMIT = 900
 
 # used to serialize access to the retry TTL
-ONYX_SLACK_LOCK_TTL = 1800  # how long the lock is allowed to idle before it expires
-ONYX_SLACK_LOCK_BLOCKING_TIMEOUT = 60  # how long to wait for the lock per wait attempt
-ONYX_SLACK_LOCK_TOTAL_BLOCKING_TIMEOUT = 3600  # how long to wait for the lock in total
+AETHERSEARCH_SLACK_LOCK_TTL = 1800  # how long the lock is allowed to idle before it expires
+AETHERSEARCH_SLACK_LOCK_BLOCKING_TIMEOUT = 60  # how long to wait for the lock per wait attempt
+AETHERSEARCH_SLACK_LOCK_TOTAL_BLOCKING_TIMEOUT = 3600  # how long to wait for the lock in total
 
 
 @lru_cache()
@@ -204,7 +204,7 @@ class SlackTextCleaner:
                 # fallback so we don't re-hit the API for the same bad id on
                 # every message, and keep the event out of Sentry — the
                 # message indexing path continues with the id in place of
-                # the display name (ONYX-BACKEND-H6FN).
+                # the display name (AETHERSEARCH-BACKEND-H6FN).
                 logger.warning(
                     f"Error fetching data for user {user_id}: {e.response['error']}"
                 )

@@ -12,23 +12,23 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
 
-from onyx.configs.app_configs import MASK_CREDENTIAL_PREFIX
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.models import InputType
-from onyx.db.enums import AccessType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import PermissionSyncStatus
-from onyx.db.enums import ProcessingMode
-from onyx.db.models import Connector
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import Credential
-from onyx.db.models import DocPermissionSyncAttempt
-from onyx.db.models import Document as DbDocument
-from onyx.db.models import IndexAttempt
-from onyx.db.models import IndexingStatus
-from onyx.db.models import TaskStatus
-from onyx.server.federated.models import FederatedConnectorStatus
-from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
+from aethersearch.configs.app_configs import MASK_CREDENTIAL_PREFIX
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.models import InputType
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import PermissionSyncStatus
+from aethersearch.db.enums import ProcessingMode
+from aethersearch.db.models import Connector
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import Credential
+from aethersearch.db.models import DocPermissionSyncAttempt
+from aethersearch.db.models import Document as DbDocument
+from aethersearch.db.models import IndexAttempt
+from aethersearch.db.models import IndexingStatus
+from aethersearch.db.models import TaskStatus
+from aethersearch.server.federated.models import FederatedConnectorStatus
+from aethersearch.utils.variable_functionality import fetch_ee_implementation_or_noop
 
 
 class DocumentSyncStatus(BaseModel):
@@ -287,12 +287,12 @@ class CCPairFullInfo(BaseModel):
         cls, cc_pair_model: ConnectorCredentialPair
     ) -> datetime | None:
         check_if_source_requires_external_group_sync = fetch_ee_implementation_or_noop(
-            "onyx.external_permissions.sync_params",
+            "aethersearch.external_permissions.sync_params",
             "source_requires_external_group_sync",
             noop_return_value=False,
         )
         check_if_source_requires_doc_sync = fetch_ee_implementation_or_noop(
-            "onyx.external_permissions.sync_params",
+            "aethersearch.external_permissions.sync_params",
             "source_requires_doc_sync",
             noop_return_value=False,
         )

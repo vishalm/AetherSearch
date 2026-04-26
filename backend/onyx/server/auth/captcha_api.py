@@ -21,21 +21,21 @@ from pydantic import BaseModel
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.base import RequestResponseEndpoint
 
-from onyx.auth.captcha import CAPTCHA_COOKIE_NAME
-from onyx.auth.captcha import CaptchaAction
-from onyx.auth.captcha import CaptchaVerificationError
-from onyx.auth.captcha import is_captcha_enabled
-from onyx.auth.captcha import issue_captcha_cookie_value
-from onyx.auth.captcha import validate_captcha_cookie_value
-from onyx.auth.captcha import verify_captcha_token
-from onyx.configs.app_configs import CAPTCHA_COOKIE_TTL_SECONDS
-from onyx.configs.app_configs import HEALTH_CHECK_BYPASS_TOKEN
-from onyx.configs.constants import PUBLIC_API_TAGS
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import onyx_error_to_json_response
-from onyx.error_handling.exceptions import OnyxError
-from onyx.utils.client_ip import get_client_ip
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.captcha import CAPTCHA_COOKIE_NAME
+from aethersearch.auth.captcha import CaptchaAction
+from aethersearch.auth.captcha import CaptchaVerificationError
+from aethersearch.auth.captcha import is_captcha_enabled
+from aethersearch.auth.captcha import issue_captcha_cookie_value
+from aethersearch.auth.captcha import validate_captcha_cookie_value
+from aethersearch.auth.captcha import verify_captcha_token
+from aethersearch.configs.app_configs import CAPTCHA_COOKIE_TTL_SECONDS
+from aethersearch.configs.app_configs import HEALTH_CHECK_BYPASS_TOKEN
+from aethersearch.configs.constants import PUBLIC_API_TAGS
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import aethersearch_error_to_json_response
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.utils.client_ip import get_client_ip
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -73,7 +73,7 @@ async def verify_oauth_captcha(
     try:
         await verify_captcha_token(body.token, CaptchaAction.OAUTH)
     except CaptchaVerificationError as exc:
-        raise OnyxError(OnyxErrorCode.UNAUTHORIZED, str(exc))
+        raise AetherSearchError(AetherSearchErrorCode.UNAUTHORIZED, str(exc))
 
     response.set_cookie(
         key=CAPTCHA_COOKIE_NAME,
@@ -106,9 +106,9 @@ class CaptchaCookieMiddleware(BaseHTTPMiddleware):
         if is_guarded_callback:
             cookie_value = request.cookies.get(CAPTCHA_COOKIE_NAME)
             if not validate_captcha_cookie_value(cookie_value):
-                return onyx_error_to_json_response(
-                    OnyxError(
-                        OnyxErrorCode.UNAUTHORIZED,
+                return aethersearch_error_to_json_response(
+                    AetherSearchError(
+                        AetherSearchErrorCode.UNAUTHORIZED,
                         "Captcha challenge required. Refresh the page and try again.",
                     )
                 )
@@ -181,8 +181,8 @@ class LoginCaptchaMiddleware(BaseHTTPMiddleware):
                 try:
                     await verify_captcha_token(token, CaptchaAction.LOGIN)
                 except CaptchaVerificationError as exc:
-                    return onyx_error_to_json_response(
-                        OnyxError(OnyxErrorCode.UNAUTHORIZED, str(exc))
+                    return aethersearch_error_to_json_response(
+                        AetherSearchError(AetherSearchErrorCode.UNAUTHORIZED, str(exc))
                     )
 
         return await call_next(request)

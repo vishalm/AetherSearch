@@ -7,15 +7,15 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import selectinload
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import FederatedConnectorSource
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.models import DocumentSet
-from onyx.db.models import FederatedConnector
-from onyx.db.models import FederatedConnector__DocumentSet
-from onyx.db.models import FederatedConnectorOAuthToken
-from onyx.federated_connectors.factory import get_federated_connector
-from onyx.utils.encryption import reject_masked_credentials
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import FederatedConnectorSource
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.models import DocumentSet
+from aethersearch.db.models import FederatedConnector
+from aethersearch.db.models import FederatedConnector__DocumentSet
+from aethersearch.db.models import FederatedConnectorOAuthToken
+from aethersearch.federated_connectors.factory import get_federated_connector
+from aethersearch.utils.encryption import reject_masked_credentials
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

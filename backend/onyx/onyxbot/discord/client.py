@@ -6,22 +6,22 @@ import time
 import discord
 from discord.ext import commands
 
-from onyx.configs.app_configs import DISCORD_BOT_INVOKE_CHAR
-from onyx.onyxbot.discord.api_client import OnyxAPIClient
-from onyx.onyxbot.discord.cache import DiscordCacheManager
-from onyx.onyxbot.discord.constants import CACHE_REFRESH_INTERVAL
-from onyx.onyxbot.discord.handle_commands import handle_dm
-from onyx.onyxbot.discord.handle_commands import handle_registration_command
-from onyx.onyxbot.discord.handle_commands import handle_sync_channels_command
-from onyx.onyxbot.discord.handle_message import process_chat_message
-from onyx.onyxbot.discord.handle_message import should_respond
-from onyx.onyxbot.discord.utils import get_bot_token
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import DISCORD_BOT_INVOKE_CHAR
+from aethersearch.aethersearchbot.discord.api_client import AetherSearchAPIClient
+from aethersearch.aethersearchbot.discord.cache import DiscordCacheManager
+from aethersearch.aethersearchbot.discord.constants import CACHE_REFRESH_INTERVAL
+from aethersearch.aethersearchbot.discord.handle_commands import handle_dm
+from aethersearch.aethersearchbot.discord.handle_commands import handle_registration_command
+from aethersearch.aethersearchbot.discord.handle_commands import handle_sync_channels_command
+from aethersearch.aethersearchbot.discord.handle_message import process_chat_message
+from aethersearch.aethersearchbot.discord.handle_message import should_respond
+from aethersearch.aethersearchbot.discord.utils import get_bot_token
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
 
-class OnyxDiscordClient(commands.Bot):
+class AetherSearchDiscordClient(commands.Bot):
     """Discord bot client with integrated cache, API client, and message handling.
 
     This client handles:
@@ -40,7 +40,7 @@ class OnyxDiscordClient(commands.Bot):
 
         self.ready = False
         self.cache = DiscordCacheManager()
-        self.api_client = OnyxAPIClient()
+        self.api_client = AetherSearchAPIClient()
         self._cache_refresh_task: asyncio.Task | None = None
 
     # -------------------------------------------------------------------------
@@ -194,10 +194,10 @@ class OnyxDiscordClient(commands.Bot):
 
 def main() -> None:
     """Main entry point for Discord bot."""
-    from onyx.db.engine.sql_engine import SqlEngine
-    from onyx.utils.variable_functionality import set_is_ee_based_on_env_variable
+    from aethersearch.db.engine.sql_engine import SqlEngine
+    from aethersearch.utils.variable_functionality import set_is_ee_based_on_env_variable
 
-    logger.info("Starting Onyx Discord Bot...")
+    logger.info("Starting AetherSearch Discord Bot...")
 
     # Initialize the database engine (required before any DB operations)
     SqlEngine.init_engine(pool_size=20, max_overflow=5)
@@ -217,7 +217,7 @@ def main() -> None:
             time.sleep(5)
             continue
         counter = 0
-        bot = OnyxDiscordClient()
+        bot = AetherSearchDiscordClient()
 
         try:
             # bot.run() handles SIGINT/SIGTERM and calls close() automatically

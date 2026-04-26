@@ -1,8 +1,8 @@
 from typing import Any
 
-from ee.onyx.utils.posthog_client import posthog
-from onyx.utils.client_ip import current_client_ip
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.utils.posthog_client import posthog
+from aethersearch.utils.client_ip import current_client_ip
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

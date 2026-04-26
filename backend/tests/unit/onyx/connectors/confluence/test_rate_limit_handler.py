@@ -3,7 +3,7 @@ from unittest.mock import Mock
 import pytest
 from requests import HTTPError
 
-from onyx.connectors.confluence.utils import handle_confluence_rate_limit
+from aethersearch.connectors.confluence.utils import handle_confluence_rate_limit
 
 
 @pytest.fixture

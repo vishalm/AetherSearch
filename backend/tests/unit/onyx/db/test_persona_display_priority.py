@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from onyx.db.persona import update_personas_display_priority
+from aethersearch.db.persona import update_personas_display_priority
 
 
 def _persona(persona_id: int, display_priority: int) -> SimpleNamespace:
@@ -19,7 +19,7 @@ def test_update_display_priority_updates_subset(
     db_session = MagicMock()
     user = MagicMock()
     monkeypatch.setattr(
-        "onyx.db.persona.get_raw_personas_for_user",
+        "aethersearch.db.persona.get_raw_personas_for_user",
         lambda user, db_session, **kwargs: [persona_a, persona_b],  # noqa: ARG005
     )
 
@@ -40,7 +40,7 @@ def test_update_display_priority_invalid_ids(monkeypatch: pytest.MonkeyPatch) ->
     db_session = MagicMock()
     user = MagicMock()
     monkeypatch.setattr(
-        "onyx.db.persona.get_raw_personas_for_user",
+        "aethersearch.db.persona.get_raw_personas_for_user",
         lambda user, db_session, **kwargs: [persona_a],  # noqa: ARG005
     )
 

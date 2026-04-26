@@ -4,16 +4,16 @@ from typing import TypeVar
 
 from sqlalchemy.orm import Session
 
-from onyx.context.search.models import InferenceChunk
-from onyx.context.search.models import InferenceSection
-from onyx.context.search.models import SavedSearchDoc
-from onyx.context.search.models import SavedSearchDocWithContent
-from onyx.context.search.models import SearchDoc
-from onyx.db.document import get_document_id_to_file_id_map
-from onyx.db.search_settings import get_current_search_settings
-from onyx.natural_language_processing.search_nlp_models import EmbeddingModel
-from onyx.utils.logger import setup_logger
-from onyx.utils.timing import log_function_time
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.context.search.models import InferenceSection
+from aethersearch.context.search.models import SavedSearchDoc
+from aethersearch.context.search.models import SavedSearchDocWithContent
+from aethersearch.context.search.models import SearchDoc
+from aethersearch.db.document import get_document_id_to_file_id_map
+from aethersearch.db.search_settings import get_current_search_settings
+from aethersearch.natural_language_processing.search_nlp_models import EmbeddingModel
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.timing import log_function_time
 from shared_configs.configs import MODEL_SERVER_HOST
 from shared_configs.configs import MODEL_SERVER_PORT
 from shared_configs.enums import EmbedTextType

@@ -7,68 +7,68 @@ import time
 from collections.abc import Callable
 from typing import cast
 
-from onyx.chat.chat_state import ChatStateContainer
-from onyx.chat.citation_processor import CitationMapping
-from onyx.chat.citation_processor import DynamicCitationProcessor
-from onyx.chat.emitter import Emitter
-from onyx.chat.llm_loop import construct_message_history
-from onyx.chat.llm_step import run_llm_step
-from onyx.chat.llm_step import run_llm_step_pkt_generator
-from onyx.chat.models import ChatMessageSimple
-from onyx.chat.models import FileToolMetadata
-from onyx.chat.models import LlmStepResult
-from onyx.chat.models import ToolCallSimple
-from onyx.configs.chat_configs import SKIP_DEEP_RESEARCH_CLARIFICATION
-from onyx.configs.constants import MessageType
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.tools import get_tool_by_name
-from onyx.deep_research.dr_mock_tools import get_clarification_tool_definitions
-from onyx.deep_research.dr_mock_tools import get_orchestrator_tools
-from onyx.deep_research.dr_mock_tools import RESEARCH_AGENT_TOOL_NAME
-from onyx.deep_research.dr_mock_tools import THINK_TOOL_RESPONSE_MESSAGE
-from onyx.deep_research.dr_mock_tools import THINK_TOOL_RESPONSE_TOKEN_COUNT
-from onyx.deep_research.utils import check_special_tool_calls
-from onyx.deep_research.utils import create_think_tool_token_processor
-from onyx.llm.interfaces import LLM
-from onyx.llm.interfaces import LLMUserIdentity
-from onyx.llm.models import ToolChoiceOptions
-from onyx.llm.utils import model_is_reasoning_model
-from onyx.prompts.deep_research.orchestration_layer import CLARIFICATION_PROMPT
-from onyx.prompts.deep_research.orchestration_layer import FINAL_REPORT_PROMPT
-from onyx.prompts.deep_research.orchestration_layer import FIRST_CYCLE_REMINDER
-from onyx.prompts.deep_research.orchestration_layer import FIRST_CYCLE_REMINDER_TOKENS
-from onyx.prompts.deep_research.orchestration_layer import (
+from aethersearch.chat.chat_state import ChatStateContainer
+from aethersearch.chat.citation_processor import CitationMapping
+from aethersearch.chat.citation_processor import DynamicCitationProcessor
+from aethersearch.chat.emitter import Emitter
+from aethersearch.chat.llm_loop import construct_message_history
+from aethersearch.chat.llm_step import run_llm_step
+from aethersearch.chat.llm_step import run_llm_step_pkt_generator
+from aethersearch.chat.models import ChatMessageSimple
+from aethersearch.chat.models import FileToolMetadata
+from aethersearch.chat.models import LlmStepResult
+from aethersearch.chat.models import ToolCallSimple
+from aethersearch.configs.chat_configs import SKIP_DEEP_RESEARCH_CLARIFICATION
+from aethersearch.configs.constants import MessageType
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.tools import get_tool_by_name
+from aethersearch.deep_research.dr_mock_tools import get_clarification_tool_definitions
+from aethersearch.deep_research.dr_mock_tools import get_orchestrator_tools
+from aethersearch.deep_research.dr_mock_tools import RESEARCH_AGENT_TOOL_NAME
+from aethersearch.deep_research.dr_mock_tools import THINK_TOOL_RESPONSE_MESSAGE
+from aethersearch.deep_research.dr_mock_tools import THINK_TOOL_RESPONSE_TOKEN_COUNT
+from aethersearch.deep_research.utils import check_special_tool_calls
+from aethersearch.deep_research.utils import create_think_tool_token_processor
+from aethersearch.llm.interfaces import LLM
+from aethersearch.llm.interfaces import LLMUserIdentity
+from aethersearch.llm.models import ToolChoiceOptions
+from aethersearch.llm.utils import model_is_reasoning_model
+from aethersearch.prompts.deep_research.orchestration_layer import CLARIFICATION_PROMPT
+from aethersearch.prompts.deep_research.orchestration_layer import FINAL_REPORT_PROMPT
+from aethersearch.prompts.deep_research.orchestration_layer import FIRST_CYCLE_REMINDER
+from aethersearch.prompts.deep_research.orchestration_layer import FIRST_CYCLE_REMINDER_TOKENS
+from aethersearch.prompts.deep_research.orchestration_layer import (
     INTERNAL_SEARCH_CLARIFICATION_GUIDANCE,
 )
-from onyx.prompts.deep_research.orchestration_layer import (
+from aethersearch.prompts.deep_research.orchestration_layer import (
     INTERNAL_SEARCH_RESEARCH_TASK_GUIDANCE,
 )
-from onyx.prompts.deep_research.orchestration_layer import ORCHESTRATOR_PROMPT
-from onyx.prompts.deep_research.orchestration_layer import ORCHESTRATOR_PROMPT_REASONING
-from onyx.prompts.deep_research.orchestration_layer import RESEARCH_PLAN_PROMPT
-from onyx.prompts.deep_research.orchestration_layer import RESEARCH_PLAN_REMINDER
-from onyx.prompts.deep_research.orchestration_layer import USER_FINAL_REPORT_QUERY
-from onyx.prompts.prompt_utils import get_current_llm_day_time
-from onyx.server.query_and_chat.placement import Placement
-from onyx.server.query_and_chat.streaming_models import AgentResponseDelta
-from onyx.server.query_and_chat.streaming_models import AgentResponseStart
-from onyx.server.query_and_chat.streaming_models import DeepResearchPlanDelta
-from onyx.server.query_and_chat.streaming_models import DeepResearchPlanStart
-from onyx.server.query_and_chat.streaming_models import OverallStop
-from onyx.server.query_and_chat.streaming_models import Packet
-from onyx.server.query_and_chat.streaming_models import SectionEnd
-from onyx.server.query_and_chat.streaming_models import TopLevelBranching
-from onyx.tools.fake_tools.research_agent import run_research_agent_calls
-from onyx.tools.interface import Tool
-from onyx.tools.models import ToolCallInfo
-from onyx.tools.models import ToolCallKickoff
-from onyx.tools.tool_implementations.open_url.open_url_tool import OpenURLTool
-from onyx.tools.tool_implementations.search.search_tool import SearchTool
-from onyx.tools.tool_implementations.web_search.web_search_tool import WebSearchTool
-from onyx.tracing.framework.create import function_span
-from onyx.tracing.framework.create import trace
-from onyx.utils.logger import setup_logger
-from onyx.utils.timing import log_function_time
+from aethersearch.prompts.deep_research.orchestration_layer import ORCHESTRATOR_PROMPT
+from aethersearch.prompts.deep_research.orchestration_layer import ORCHESTRATOR_PROMPT_REASONING
+from aethersearch.prompts.deep_research.orchestration_layer import RESEARCH_PLAN_PROMPT
+from aethersearch.prompts.deep_research.orchestration_layer import RESEARCH_PLAN_REMINDER
+from aethersearch.prompts.deep_research.orchestration_layer import USER_FINAL_REPORT_QUERY
+from aethersearch.prompts.prompt_utils import get_current_llm_day_time
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.server.query_and_chat.streaming_models import AgentResponseDelta
+from aethersearch.server.query_and_chat.streaming_models import AgentResponseStart
+from aethersearch.server.query_and_chat.streaming_models import DeepResearchPlanDelta
+from aethersearch.server.query_and_chat.streaming_models import DeepResearchPlanStart
+from aethersearch.server.query_and_chat.streaming_models import OverallStop
+from aethersearch.server.query_and_chat.streaming_models import Packet
+from aethersearch.server.query_and_chat.streaming_models import SectionEnd
+from aethersearch.server.query_and_chat.streaming_models import TopLevelBranching
+from aethersearch.tools.fake_tools.research_agent import run_research_agent_calls
+from aethersearch.tools.interface import Tool
+from aethersearch.tools.models import ToolCallInfo
+from aethersearch.tools.models import ToolCallKickoff
+from aethersearch.tools.tool_implementations.open_url.open_url_tool import OpenURLTool
+from aethersearch.tools.tool_implementations.search.search_tool import SearchTool
+from aethersearch.tools.tool_implementations.web_search.web_search_tool import WebSearchTool
+from aethersearch.tracing.framework.create import function_span
+from aethersearch.tracing.framework.create import trace
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.timing import log_function_time
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()
@@ -214,7 +214,7 @@ def run_deep_research_llm_loop(
         },
     ):
         # Here for lazy load LiteLLM
-        from onyx.llm.litellm_singleton.config import initialize_litellm
+        from aethersearch.llm.litellm_singleton.config import initialize_litellm
 
         # An approximate limit. In extreme cases it may still fail but this should allow deep research
         # to work in most cases.

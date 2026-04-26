@@ -15,7 +15,7 @@ All metrics are labeled by tenant_id. cc_pair_id is intentionally excluded
 to avoid unbounded cardinality.
 
 Usage:
-    from onyx.server.metrics.deletion_metrics import (
+    from aethersearch.server.metrics.deletion_metrics import (
         inc_deletion_started,
         inc_deletion_completed,
         observe_deletion_taskset_duration,
@@ -27,24 +27,24 @@ Usage:
 from prometheus_client import Counter
 from prometheus_client import Histogram
 
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
 DELETION_STARTED = Counter(
-    "onyx_deletion_started_total",
+    "aethersearch_deletion_started_total",
     "Connector deletions initiated (taskset generated)",
     ["tenant_id"],
 )
 
 DELETION_COMPLETED = Counter(
-    "onyx_deletion_completed_total",
+    "aethersearch_deletion_completed_total",
     "Connector deletions completed",
     ["tenant_id", "outcome"],
 )
 
 DELETION_TASKSET_DURATION = Histogram(
-    "onyx_deletion_taskset_duration_seconds",
+    "aethersearch_deletion_taskset_duration_seconds",
     "Duration of a connector deletion taskset, from taskset generation "
     "to completion or failure. Does not include time spent blocked on "
     "indexing/pruning/permissions before the taskset was generated.",
@@ -53,13 +53,13 @@ DELETION_TASKSET_DURATION = Histogram(
 )
 
 DELETION_BLOCKED = Counter(
-    "onyx_deletion_blocked_total",
+    "aethersearch_deletion_blocked_total",
     "Times deletion was blocked by a dependency",
     ["tenant_id", "blocker"],
 )
 
 DELETION_FENCE_RESET = Counter(
-    "onyx_deletion_fence_reset_total",
+    "aethersearch_deletion_fence_reset_total",
     "Deletion fences reset due to missing celery tasks",
     ["tenant_id"],
 )

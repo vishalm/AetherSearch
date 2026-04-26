@@ -8,14 +8,14 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import selectinload
 from sqlalchemy.orm import Session
 
-from onyx.db.constants import UNSET
-from onyx.db.constants import UnsetType
-from onyx.db.enums import HookFailStrategy
-from onyx.db.enums import HookPoint
-from onyx.db.models import Hook
-from onyx.db.models import HookExecutionLog
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
+from aethersearch.db.constants import UNSET
+from aethersearch.db.constants import UnsetType
+from aethersearch.db.enums import HookFailStrategy
+from aethersearch.db.enums import HookPoint
+from aethersearch.db.models import Hook
+from aethersearch.db.models import HookExecutionLog
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
 
 # ── Hook CRUD ────────────────────────────────────────────────────────────
 
@@ -80,15 +80,15 @@ def create_hook__no_commit(
     """Create a new hook for the given hook point.
 
     At most one non-deleted hook per hook point is allowed. Raises
-    OnyxError(CONFLICT) if a hook already exists, including under concurrent
+    AetherSearchError(CONFLICT) if a hook already exists, including under concurrent
     duplicate creates where the partial unique index fires an IntegrityError.
     """
     existing = get_non_deleted_hook_by_hook_point(
         db_session=db_session, hook_point=hook_point
     )
     if existing:
-        raise OnyxError(
-            OnyxErrorCode.CONFLICT,
+        raise AetherSearchError(
+            AetherSearchErrorCode.CONFLICT,
             f"A hook for '{hook_point.value}' already exists (id={existing.id}).",
         )
 
@@ -112,8 +112,8 @@ def create_hook__no_commit(
     except IntegrityError as exc:
         savepoint.rollback()
         if "ix_hook_one_non_deleted_per_point" in str(exc.orig):
-            raise OnyxError(
-                OnyxErrorCode.CONFLICT,
+            raise AetherSearchError(
+                AetherSearchErrorCode.CONFLICT,
                 f"A hook for '{hook_point.value}' already exists.",
             )
         raise  # re-raise unrelated integrity errors (FK violations, etc.)
@@ -143,7 +143,7 @@ def update_hook__no_commit(
         db_session=db_session, hook_id=hook_id, include_creator=include_creator
     )
     if hook is None:
-        raise OnyxError(OnyxErrorCode.NOT_FOUND, f"Hook with id {hook_id} not found.")
+        raise AetherSearchError(AetherSearchErrorCode.NOT_FOUND, f"Hook with id {hook_id} not found.")
 
     if name is not None:
         hook.name = name
@@ -171,7 +171,7 @@ def delete_hook__no_commit(
 ) -> None:
     hook = get_hook_by_id(db_session=db_session, hook_id=hook_id)
     if hook is None:
-        raise OnyxError(OnyxErrorCode.NOT_FOUND, f"Hook with id {hook_id} not found.")
+        raise AetherSearchError(AetherSearchErrorCode.NOT_FOUND, f"Hook with id {hook_id} not found.")
 
     hook.deleted = True
     hook.is_active = False

@@ -4,12 +4,12 @@ import time
 
 from fastapi import Request
 
-from onyx.configs.app_configs import SIGNUP_RATE_LIMIT_ENABLED
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.redis.redis_pool import get_async_redis_connection
-from onyx.utils.client_ip import get_client_ip
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import SIGNUP_RATE_LIMIT_ENABLED
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.redis.redis_pool import get_async_redis_connection
+from aethersearch.utils.client_ip import get_client_ip
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()
@@ -37,7 +37,7 @@ def _bucket_key(ip: str) -> str:
 
 
 async def enforce_signup_rate_limit(request: Request) -> None:
-    """Raise OnyxError(RATE_LIMITED) when the client exceeds the signup cap."""
+    """Raise AetherSearchError(RATE_LIMITED) when the client exceeds the signup cap."""
     if not (MULTI_TENANT and SIGNUP_RATE_LIMIT_ENABLED):
         return
 
@@ -57,8 +57,8 @@ async def enforce_signup_rate_limit(request: Request) -> None:
 
     if count > _PER_IP_PER_HOUR:
         logger.warning(f"Signup rate limit exceeded for ip={ip} count={count}")
-        raise OnyxError(
-            OnyxErrorCode.RATE_LIMITED,
+        raise AetherSearchError(
+            AetherSearchErrorCode.RATE_LIMITED,
             "Too many signup attempts from this network. Please wait before trying again.",
         )
 

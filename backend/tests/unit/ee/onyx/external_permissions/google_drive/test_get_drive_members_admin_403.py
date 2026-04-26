@@ -4,7 +4,7 @@ from unittest.mock import patch
 import pytest
 from googleapiclient.errors import HttpError
 
-from ee.onyx.external_permissions.google_drive.group_sync import _get_drive_members
+from ee.aethersearch.external_permissions.google_drive.group_sync import _get_drive_members
 
 
 def _make_http_error(status: int) -> HttpError:
@@ -22,7 +22,7 @@ def _make_connector() -> MagicMock:
     return connector
 
 
-@patch("ee.onyx.external_permissions.google_drive.group_sync.get_drive_service")
+@patch("ee.aethersearch.external_permissions.google_drive.group_sync.get_drive_service")
 def test_get_drive_members_admin_403_raises_permission_error(
     mock_get_drive_service: MagicMock,
 ) -> None:
@@ -43,7 +43,7 @@ def test_get_drive_members_admin_403_raises_permission_error(
     assert connector.primary_admin_email in str(exc_info.value)
 
 
-@patch("ee.onyx.external_permissions.google_drive.group_sync.get_drive_service")
+@patch("ee.aethersearch.external_permissions.google_drive.group_sync.get_drive_service")
 def test_get_drive_members_admin_non_403_reraised(
     mock_get_drive_service: MagicMock,
 ) -> None:

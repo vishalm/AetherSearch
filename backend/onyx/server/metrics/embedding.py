@@ -42,32 +42,32 @@ TEXT_TYPE_LABEL_NAME = "text_type"
 STATUS_LABEL_NAME = "status"
 
 _client_duration = Histogram(
-    "onyx_embedding_client_duration_seconds",
+    "aethersearch_embedding_client_duration_seconds",
     "Client-side end-to-end latency of an embedding batch as seen by the caller.",
     [PROVIDER_LABEL_NAME, TEXT_TYPE_LABEL_NAME],
     buckets=_EMBEDDING_LATENCY_BUCKETS,
 )
 
 _embedding_requests_total = Counter(
-    "onyx_embedding_requests_total",
+    "aethersearch_embedding_requests_total",
     "Total embedding batch requests, labeled by outcome.",
     [PROVIDER_LABEL_NAME, TEXT_TYPE_LABEL_NAME, STATUS_LABEL_NAME],
 )
 
 _embedding_texts_total = Counter(
-    "onyx_embedding_texts_total",
+    "aethersearch_embedding_texts_total",
     "Total number of individual texts submitted for embedding.",
     [PROVIDER_LABEL_NAME, TEXT_TYPE_LABEL_NAME],
 )
 
 _embedding_input_chars_total = Counter(
-    "onyx_embedding_input_chars_total",
+    "aethersearch_embedding_input_chars_total",
     "Total number of input characters submitted for embedding.",
     [PROVIDER_LABEL_NAME, TEXT_TYPE_LABEL_NAME],
 )
 
 _embeddings_in_progress = Gauge(
-    "onyx_embeddings_in_progress",
+    "aethersearch_embeddings_in_progress",
     "Number of embedding batches currently in-flight.",
     [PROVIDER_LABEL_NAME, TEXT_TYPE_LABEL_NAME],
 )

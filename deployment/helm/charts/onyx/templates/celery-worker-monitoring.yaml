@@ -2,9 +2,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "onyx.fullname" . }}-celery-worker-monitoring
+  name: {{ include "aethersearch.fullname" . }}-celery-worker-monitoring
   labels:
-    {{- include "onyx.labels" . | nindent 4 }}
+    {{- include "aethersearch.labels" . | nindent 4 }}
     {{- with .Values.celery_worker_monitoring.deploymentLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -14,7 +14,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "onyx.selectorLabels" . | nindent 6 }}
+      {{- include "aethersearch.selectorLabels" . | nindent 6 }}
       {{- if .Values.celery_worker_monitoring.deploymentLabels }}
       {{- toYaml .Values.celery_worker_monitoring.deploymentLabels | nindent 6 }}
       {{- end }}
@@ -26,7 +26,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "onyx.labels" . | nindent 8 }}
+        {{- include "aethersearch.labels" . | nindent 8 }}
         {{- with .Values.celery_worker_monitoring.deploymentLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -38,7 +38,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "onyx.serviceAccountName" . }}
+      serviceAccountName: {{ include "aethersearch.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.celery_shared.podSecurityContext | nindent 8 }}
       {{- with .Values.celery_worker_monitoring.nodeSelector }}
@@ -63,7 +63,7 @@ spec:
             [
               "celery",
               "-A",
-              "onyx.background.celery.versioned_apps.monitoring",
+              "aethersearch.background.celery.versioned_apps.monitoring",
               "worker",
               {{ printf "--loglevel=%s" .Values.celery_worker_monitoring.logLevel | quote }},
               "--hostname=monitoring@%n",
@@ -80,7 +80,7 @@ spec:
             - configMapRef:
                 name: {{ .Values.config.envConfigMapName }}
           env:
-            {{- include "onyx.envSecrets" . | nindent 12}}
+            {{- include "aethersearch.envSecrets" . | nindent 12}}
             {{- with .Values.celery_worker_monitoring.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -97,9 +97,9 @@ spec:
                 - /bin/bash
                 - -c
                 - >
-                    python onyx/background/celery/celery_k8s_probe.py
+                    python aethersearch/background/celery/celery_k8s_probe.py
                     --probe readiness
-                    --filename /tmp/onyx_k8s_monitoring_readiness.txt
+                    --filename /tmp/aethersearch_k8s_monitoring_readiness.txt
           livenessProbe:
             {{ .Values.celery_shared.livenessProbe | toYaml | nindent 12}}
             exec:
@@ -107,9 +107,9 @@ spec:
                 - /bin/bash
                 - -c
                 - >
-                    python onyx/background/celery/celery_k8s_probe.py
+                    python aethersearch/background/celery/celery_k8s_probe.py
                     --probe liveness
-                    --filename /tmp/onyx_k8s_monitoring_liveness.txt
+                    --filename /tmp/aethersearch_k8s_monitoring_liveness.txt
       {{- with .Values.celery_worker_monitoring.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}

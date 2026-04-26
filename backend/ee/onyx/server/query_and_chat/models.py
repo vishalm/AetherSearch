@@ -4,10 +4,10 @@ from datetime import datetime
 from pydantic import BaseModel
 from pydantic import Field
 
-from onyx.context.search.models import BaseFilters
-from onyx.context.search.models import InferenceSection
-from onyx.context.search.models import SearchDoc
-from onyx.server.manage.models import StandardAnswer
+from aethersearch.context.search.models import BaseFilters
+from aethersearch.context.search.models import InferenceSection
+from aethersearch.context.search.models import SearchDoc
+from aethersearch.server.manage.models import StandardAnswer
 
 
 class StandardAnswerRequest(BaseModel):
@@ -27,7 +27,7 @@ class SearchFlowClassificationResponse(BaseModel):
     is_search_flow: bool
 
 
-# NOTE: This model is used for the core flow of the Onyx application, any
+# NOTE: This model is used for the core flow of the AetherSearch application, any
 # changes to it should be reviewed and approved by an experienced team member.
 # It is very important to 1. avoid bloat and 2. that this remains backwards
 # compatible across versions.

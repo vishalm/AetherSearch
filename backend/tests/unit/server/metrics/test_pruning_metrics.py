@@ -2,12 +2,12 @@
 
 import pytest
 
-from onyx.server.metrics.pruning_metrics import inc_pruning_rate_limit_error
-from onyx.server.metrics.pruning_metrics import observe_pruning_diff_duration
-from onyx.server.metrics.pruning_metrics import observe_pruning_enumeration_duration
-from onyx.server.metrics.pruning_metrics import PRUNING_DIFF_DURATION
-from onyx.server.metrics.pruning_metrics import PRUNING_ENUMERATION_DURATION
-from onyx.server.metrics.pruning_metrics import PRUNING_RATE_LIMIT_ERRORS
+from aethersearch.server.metrics.pruning_metrics import inc_pruning_rate_limit_error
+from aethersearch.server.metrics.pruning_metrics import observe_pruning_diff_duration
+from aethersearch.server.metrics.pruning_metrics import observe_pruning_enumeration_duration
+from aethersearch.server.metrics.pruning_metrics import PRUNING_DIFF_DURATION
+from aethersearch.server.metrics.pruning_metrics import PRUNING_ENUMERATION_DURATION
+from aethersearch.server.metrics.pruning_metrics import PRUNING_RATE_LIMIT_ERRORS
 
 
 class TestObservePruningEnumerationDuration:

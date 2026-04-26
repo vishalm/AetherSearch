@@ -10,25 +10,25 @@ from pydantic import Field
 from pydantic import field_validator
 from pydantic import model_validator
 
-from onyx.auth.schemas import UserRole
-from onyx.configs.app_configs import TRACK_EXTERNAL_IDP_EXPIRY
-from onyx.configs.constants import AuthType
-from onyx.context.search.models import SavedSearchSettings
-from onyx.db.enums import DefaultAppMode
-from onyx.db.enums import ThemePreference
-from onyx.db.memory import MAX_MEMORIES_PER_USER
-from onyx.db.models import AllowedAnswerFilters
-from onyx.db.models import ChannelConfig
-from onyx.db.models import SlackBot as SlackAppModel
-from onyx.db.models import SlackChannelConfig as SlackChannelConfigModel
-from onyx.db.models import StandardAnswer as StandardAnswerModel
-from onyx.db.models import StandardAnswerCategory as StandardAnswerCategoryModel
-from onyx.db.models import User
-from onyx.onyxbot.slack.config import VALID_SLACK_FILTERS
-from onyx.server.features.persona.models import FullPersonaSnapshot
-from onyx.server.features.persona.models import PersonaSnapshot
-from onyx.server.models import FullUserSnapshot
-from onyx.server.models import InvitedUserSnapshot
+from aethersearch.auth.schemas import UserRole
+from aethersearch.configs.app_configs import TRACK_EXTERNAL_IDP_EXPIRY
+from aethersearch.configs.constants import AuthType
+from aethersearch.context.search.models import SavedSearchSettings
+from aethersearch.db.enums import DefaultAppMode
+from aethersearch.db.enums import ThemePreference
+from aethersearch.db.memory import MAX_MEMORIES_PER_USER
+from aethersearch.db.models import AllowedAnswerFilters
+from aethersearch.db.models import ChannelConfig
+from aethersearch.db.models import SlackBot as SlackAppModel
+from aethersearch.db.models import SlackChannelConfig as SlackChannelConfigModel
+from aethersearch.db.models import StandardAnswer as StandardAnswerModel
+from aethersearch.db.models import StandardAnswerCategory as StandardAnswerCategoryModel
+from aethersearch.db.models import User
+from aethersearch.aethersearchbot.slack.config import VALID_SLACK_FILTERS
+from aethersearch.server.features.persona.models import FullPersonaSnapshot
+from aethersearch.server.features.persona.models import PersonaSnapshot
+from aethersearch.server.models import FullUserSnapshot
+from aethersearch.server.models import InvitedUserSnapshot
 
 if TYPE_CHECKING:
     pass
@@ -529,7 +529,7 @@ class StandardAnswerCreationRequest(BaseModel):
 
 
 class ContainerVersions(BaseModel):
-    onyx: str
+    aethersearch: str
     relational_db: str
     index: str
     nginx: str

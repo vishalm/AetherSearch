@@ -3,15 +3,15 @@ from collections.abc import Generator
 from typing import Optional
 from typing import Protocol
 
-from ee.onyx.db.external_perm import ExternalUserGroup  # noqa
-from onyx.access.models import DocExternalAccess  # noqa
-from onyx.access.models import ElementExternalAccess  # noqa
-from onyx.access.models import NodeExternalAccess  # noqa
-from onyx.context.search.models import InferenceChunk
-from onyx.db.models import ConnectorCredentialPair  # noqa
-from onyx.db.utils import DocumentRow
-from onyx.db.utils import SortOrder
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface  # noqa
+from ee.aethersearch.db.external_perm import ExternalUserGroup  # noqa
+from aethersearch.access.models import DocExternalAccess  # noqa
+from aethersearch.access.models import ElementExternalAccess  # noqa
+from aethersearch.access.models import NodeExternalAccess  # noqa
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.db.models import ConnectorCredentialPair  # noqa
+from aethersearch.db.utils import DocumentRow
+from aethersearch.db.utils import SortOrder
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface  # noqa
 
 
 class FetchAllDocumentsFunction(Protocol):

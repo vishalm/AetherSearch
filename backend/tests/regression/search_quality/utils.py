@@ -15,17 +15,17 @@ from ragas.metrics import Faithfulness  # ty: ignore[unresolved-import]
 from ragas.metrics import ResponseRelevancy  # ty: ignore[unresolved-import]
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import DocumentSource
-from onyx.context.search.models import IndexFilters
-from onyx.context.search.models import SavedSearchDoc
-from onyx.db.engine.sql_engine import get_session_with_tenant
-from onyx.db.models import Document
-from onyx.db.models import FederatedConnector
-from onyx.db.search_settings import get_current_search_settings
-from onyx.document_index.factory import get_default_document_index
-from onyx.document_index.interfaces import VespaChunkRequest
-from onyx.prompts.prompt_utils import build_doc_context_str
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.context.search.models import IndexFilters
+from aethersearch.context.search.models import SavedSearchDoc
+from aethersearch.db.engine.sql_engine import get_session_with_tenant
+from aethersearch.db.models import Document
+from aethersearch.db.models import FederatedConnector
+from aethersearch.db.search_settings import get_current_search_settings
+from aethersearch.document_index.factory import get_default_document_index
+from aethersearch.document_index.interfaces import VespaChunkRequest
+from aethersearch.prompts.prompt_utils import build_doc_context_str
+from aethersearch.utils.logger import setup_logger
 from tests.regression.search_quality.models import CombinedMetrics
 from tests.regression.search_quality.models import GroundTruth
 from tests.regression.search_quality.models import RetrievedDocument

@@ -5,7 +5,7 @@
 </h2>
 
 <p align="center">
-    <a href="https://github.com/vishalm/ai-enterprise-search-chat-onyx/blob/main/LICENSE" target="_blank">
+    <a href="https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/blob/main/LICENSE" target="_blank">
         <img src="https://img.shields.io/static/v1?label=license&message=MIT&color=blue" alt="License" />
     </a>
 </p>

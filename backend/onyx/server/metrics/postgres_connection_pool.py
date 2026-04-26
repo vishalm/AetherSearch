@@ -30,7 +30,7 @@ from sqlalchemy.pool import ConnectionPoolEntry
 from sqlalchemy.pool import PoolProxiedConnection
 from sqlalchemy.pool import QueuePool
 
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import CURRENT_ENDPOINT_CONTEXTVAR
 from shared_configs.contextvars import CURRENT_TENANT_ID_CONTEXTVAR
 
@@ -39,31 +39,31 @@ logger = setup_logger()
 # --- Pool lifecycle counters (event-driven) ---
 
 _checkout_total = Counter(
-    "onyx_db_pool_checkout_total",
+    "aethersearch_db_pool_checkout_total",
     "Total connection checkouts from the pool",
     ["engine"],
 )
 
 _checkin_total = Counter(
-    "onyx_db_pool_checkin_total",
+    "aethersearch_db_pool_checkin_total",
     "Total connection checkins to the pool",
     ["engine"],
 )
 
 _connections_created_total = Counter(
-    "onyx_db_pool_connections_created_total",
+    "aethersearch_db_pool_connections_created_total",
     "Total new database connections created",
     ["engine"],
 )
 
 _invalidations_total = Counter(
-    "onyx_db_pool_invalidations_total",
+    "aethersearch_db_pool_invalidations_total",
     "Total connection invalidations",
     ["engine"],
 )
 
 _checkout_timeout_total = Counter(
-    "onyx_db_pool_checkout_timeout_total",
+    "aethersearch_db_pool_checkout_timeout_total",
     "Total connection checkout timeouts",
     ["engine"],
 )
@@ -71,13 +71,13 @@ _checkout_timeout_total = Counter(
 # --- Per-endpoint attribution (event-driven) ---
 
 _connections_held = Gauge(
-    "onyx_db_connections_held_by_endpoint",
+    "aethersearch_db_connections_held_by_endpoint",
     "Number of DB connections currently held, by endpoint and engine",
     ["handler", "engine", "tenant_id"],
 )
 
 _hold_seconds = Histogram(
-    "onyx_db_connection_hold_seconds",
+    "aethersearch_db_connection_hold_seconds",
     "Duration a DB connection is held by an endpoint",
     ["handler", "engine"],
 )
@@ -114,22 +114,22 @@ class PoolStateCollector(Collector):
 
     def collect(self) -> list[GaugeMetricFamily]:
         checked_out = GaugeMetricFamily(
-            "onyx_db_pool_checked_out",
+            "aethersearch_db_pool_checked_out",
             "Currently checked-out connections",
             labels=["engine"],
         )
         checked_in = GaugeMetricFamily(
-            "onyx_db_pool_checked_in",
+            "aethersearch_db_pool_checked_in",
             "Idle connections available in the pool",
             labels=["engine"],
         )
         overflow = GaugeMetricFamily(
-            "onyx_db_pool_overflow",
+            "aethersearch_db_pool_overflow",
             "Current overflow connections beyond pool_size",
             labels=["engine"],
         )
         size = GaugeMetricFamily(
-            "onyx_db_pool_size",
+            "aethersearch_db_pool_size",
             "Configured pool size",
             labels=["engine"],
         )

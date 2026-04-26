@@ -10,7 +10,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/onyx-dot-app/onyx/tools/ods/internal/paths"
+	"github.com/aethersearch-dot-app/aethersearch/tools/ods/internal/paths"
 )
 
 //go:embed openapi_schema.py

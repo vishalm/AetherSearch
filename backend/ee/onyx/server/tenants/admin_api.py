@@ -4,15 +4,15 @@ from fastapi import HTTPException
 from fastapi import Response
 from fastapi_users import exceptions
 
-from ee.onyx.auth.users import current_cloud_superuser
-from ee.onyx.server.tenants.models import ImpersonateRequest
-from ee.onyx.server.tenants.user_mapping import get_tenant_id_for_email
-from onyx.auth.users import auth_backend
-from onyx.auth.users import get_redis_strategy
-from onyx.auth.users import User
-from onyx.db.engine.sql_engine import get_session_with_tenant
-from onyx.db.users import get_user_by_email
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.auth.users import current_cloud_superuser
+from ee.aethersearch.server.tenants.models import ImpersonateRequest
+from ee.aethersearch.server.tenants.user_mapping import get_tenant_id_for_email
+from aethersearch.auth.users import auth_backend
+from aethersearch.auth.users import get_redis_strategy
+from aethersearch.auth.users import User
+from aethersearch.db.engine.sql_engine import get_session_with_tenant
+from aethersearch.db.users import get_user_by_email
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

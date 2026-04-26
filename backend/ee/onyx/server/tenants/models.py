@@ -3,7 +3,7 @@ from typing import Literal
 
 from pydantic import BaseModel
 
-from onyx.server.settings.models import ApplicationStatus
+from aethersearch.server.settings.models import ApplicationStatus
 
 
 class CheckoutSessionCreationRequest(BaseModel):

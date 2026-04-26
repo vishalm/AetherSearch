@@ -3,21 +3,21 @@ from io import BytesIO
 
 from PIL import Image
 
-from onyx.configs.app_configs import IMAGE_SUMMARIZATION_SYSTEM_PROMPT
-from onyx.configs.app_configs import IMAGE_SUMMARIZATION_USER_PROMPT
-from onyx.llm.interfaces import LLM
-from onyx.llm.models import ChatCompletionMessage
-from onyx.llm.models import ContentPart
-from onyx.llm.models import ImageContentPart
-from onyx.llm.models import ImageUrlDetail
-from onyx.llm.models import SystemMessage
-from onyx.llm.models import TextContentPart
-from onyx.llm.models import UserMessage
-from onyx.llm.utils import llm_response_to_string
-from onyx.tracing.llm_utils import llm_generation_span
-from onyx.tracing.llm_utils import record_llm_response
-from onyx.utils.b64 import get_image_type_from_bytes
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import IMAGE_SUMMARIZATION_SYSTEM_PROMPT
+from aethersearch.configs.app_configs import IMAGE_SUMMARIZATION_USER_PROMPT
+from aethersearch.llm.interfaces import LLM
+from aethersearch.llm.models import ChatCompletionMessage
+from aethersearch.llm.models import ContentPart
+from aethersearch.llm.models import ImageContentPart
+from aethersearch.llm.models import ImageUrlDetail
+from aethersearch.llm.models import SystemMessage
+from aethersearch.llm.models import TextContentPart
+from aethersearch.llm.models import UserMessage
+from aethersearch.llm.utils import llm_response_to_string
+from aethersearch.tracing.llm_utils import llm_generation_span
+from aethersearch.tracing.llm_utils import record_llm_response
+from aethersearch.utils.b64 import get_image_type_from_bytes
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

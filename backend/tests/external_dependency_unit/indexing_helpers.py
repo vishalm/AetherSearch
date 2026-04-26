@@ -14,21 +14,21 @@ from uuid import uuid4
 
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import FileOrigin
-from onyx.connectors.models import Document
-from onyx.connectors.models import InputType
-from onyx.connectors.models import TextSection
-from onyx.db.enums import AccessType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.file_record import get_filerecord_by_file_id_optional
-from onyx.db.models import Connector
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import Credential
-from onyx.db.models import Document as DBDocument
-from onyx.db.models import DocumentByConnectorCredentialPair
-from onyx.db.models import FileRecord
-from onyx.file_store.file_store import get_default_file_store
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import InputType
+from aethersearch.connectors.models import TextSection
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.file_record import get_filerecord_by_file_id_optional
+from aethersearch.db.models import Connector
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import Credential
+from aethersearch.db.models import Document as DBDocument
+from aethersearch.db.models import DocumentByConnectorCredentialPair
+from aethersearch.db.models import FileRecord
+from aethersearch.file_store.file_store import get_default_file_store
 
 
 def make_doc(

@@ -2,9 +2,9 @@
 
 from pydantic import BaseModel
 
-from onyx.db.models import Tool
-from onyx.tools.constants import MEMORY_TOOL_ID
-from onyx.tools.constants import OPEN_URL_TOOL_ID
+from aethersearch.db.models import Tool
+from aethersearch.tools.constants import MEMORY_TOOL_ID
+from aethersearch.tools.constants import OPEN_URL_TOOL_ID
 
 # Tool class name constant for OktaProfileTool (not in main constants.py as it's hidden)
 OKTA_PROFILE_TOOL_ID = "OktaProfileTool"

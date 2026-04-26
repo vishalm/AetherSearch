@@ -8,14 +8,14 @@ from sqlalchemy import update
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm import Session
 
-from onyx.access.utils import build_ext_group_name_for_onyx
-from onyx.configs.constants import DocumentSource
-from onyx.db.models import PublicExternalUserGroup
-from onyx.db.models import User
-from onyx.db.models import User__ExternalUserGroupId
-from onyx.db.users import batch_add_ext_perm_user_if_not_exists
-from onyx.db.users import get_user_by_email
-from onyx.utils.logger import setup_logger
+from aethersearch.access.utils import build_ext_group_name_for_aethersearch
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.db.models import PublicExternalUserGroup
+from aethersearch.db.models import User
+from aethersearch.db.models import User__ExternalUserGroupId
+from aethersearch.db.users import batch_add_ext_perm_user_if_not_exists
+from aethersearch.db.users import get_user_by_email
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -123,7 +123,7 @@ def upsert_external_groups(
     public_group_mappings: list[dict] = []
 
     for external_group in external_groups:
-        external_group_id = build_ext_group_name_for_onyx(
+        external_group_id = build_ext_group_name_for_aethersearch(
             ext_group_name=external_group.id,
             source=source,
         )

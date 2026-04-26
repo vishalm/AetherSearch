@@ -7,26 +7,26 @@ from sqlalchemy import select
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Session
 
-from onyx.access.models import DocumentAccess
-from onyx.access.utils import prefix_user_email
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import FileOrigin
-from onyx.configs.constants import PUBLIC_DOC_PAT
-from onyx.db.document import get_access_info_for_document
-from onyx.db.document import get_access_info_for_documents
-from onyx.db.models import ChatMessage
-from onyx.db.models import ChatSession
-from onyx.db.models import ChatSessionSharedStatus
-from onyx.db.models import Connector
-from onyx.db.models import Document
-from onyx.db.models import DocumentByConnectorCredentialPair
-from onyx.db.models import FileRecord
-from onyx.db.models import Persona
-from onyx.db.models import User
-from onyx.db.models import UserFile
-from onyx.db.user_file import fetch_user_files_with_access_relationships
-from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
-from onyx.utils.variable_functionality import fetch_versioned_implementation
+from aethersearch.access.models import DocumentAccess
+from aethersearch.access.utils import prefix_user_email
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.configs.constants import PUBLIC_DOC_PAT
+from aethersearch.db.document import get_access_info_for_document
+from aethersearch.db.document import get_access_info_for_documents
+from aethersearch.db.models import ChatMessage
+from aethersearch.db.models import ChatSession
+from aethersearch.db.models import ChatSessionSharedStatus
+from aethersearch.db.models import Connector
+from aethersearch.db.models import Document
+from aethersearch.db.models import DocumentByConnectorCredentialPair
+from aethersearch.db.models import FileRecord
+from aethersearch.db.models import Persona
+from aethersearch.db.models import User
+from aethersearch.db.models import UserFile
+from aethersearch.db.user_file import fetch_user_files_with_access_relationships
+from aethersearch.utils.variable_functionality import fetch_ee_implementation_or_noop
+from aethersearch.utils.variable_functionality import fetch_versioned_implementation
 
 
 def _get_access_for_document(
@@ -54,7 +54,7 @@ def get_access_for_document(
     db_session: Session,
 ) -> DocumentAccess:
     versioned_get_access_for_document_fn = fetch_versioned_implementation(
-        "onyx.access.access", "_get_access_for_document"
+        "aethersearch.access.access", "_get_access_for_document"
     )
     return versioned_get_access_for_document_fn(document_id, db_session)
 
@@ -104,7 +104,7 @@ def get_access_for_documents(
 ) -> dict[str, DocumentAccess]:
     """Fetches all access information for the given documents."""
     versioned_get_access_for_documents_fn = fetch_versioned_implementation(
-        "onyx.access.access", "_get_access_for_documents"
+        "aethersearch.access.access", "_get_access_for_documents"
     )
     return versioned_get_access_for_documents_fn(document_ids, db_session)
 
@@ -126,7 +126,7 @@ def _get_acl_for_user(
 
 def get_acl_for_user(user: User, db_session: Session | None = None) -> set[str]:
     versioned_acl_for_user_fn = fetch_versioned_implementation(
-        "onyx.access.access", "_get_acl_for_user"
+        "aethersearch.access.access", "_get_acl_for_user"
     )
     return versioned_acl_for_user_fn(user, db_session)
 
@@ -135,7 +135,7 @@ def source_should_fetch_permissions_during_indexing(source: DocumentSource) -> b
     _source_should_fetch_permissions_during_indexing_func = cast(
         Callable[[DocumentSource], bool],
         fetch_ee_implementation_or_noop(
-            "onyx.external_permissions.sync_params",
+            "aethersearch.external_permissions.sync_params",
             "source_should_fetch_permissions_during_indexing",
             False,
         ),
@@ -148,7 +148,7 @@ def get_access_for_user_files(
     db_session: Session,
 ) -> dict[str, DocumentAccess]:
     versioned_fn = fetch_versioned_implementation(
-        "onyx.access.access", "get_access_for_user_files_impl"
+        "aethersearch.access.access", "get_access_for_user_files_impl"
     )
     return versioned_fn(user_file_ids, db_session)
 
@@ -168,7 +168,7 @@ def build_access_for_user_files(
     Callers must ensure UserFile.user, Persona.users, and Persona.user are
     eagerly loaded (and Persona.groups for the EE path)."""
     versioned_fn = fetch_versioned_implementation(
-        "onyx.access.access", "build_access_for_user_files_impl"
+        "aethersearch.access.access", "build_access_for_user_files_impl"
     )
     return versioned_fn(user_files)
 
@@ -330,7 +330,7 @@ def _documents_from_file_connector_config(
 
     TODO(delete-me): exists only because the File connector leaves
     `Document.file_id=NULL` for non-tabular uploads (see comment in
-    `onyx/connectors/file/connector.py`). The `@>` lookup also can't use
+    `aethersearch/connectors/file/connector.py`). The `@>` lookup also can't use
     a btree index, so every fast-path miss does a JSONB scan. Once the
     connector stamps `Document.file_id` unconditionally and a backfill
     runs, this helper and its caller branch can go away.

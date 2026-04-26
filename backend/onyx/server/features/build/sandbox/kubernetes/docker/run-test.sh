@@ -2,7 +2,7 @@
 # Run Kubernetes sandbox integration tests
 #
 # This script:
-# 1. Builds the onyx-backend Docker image
+# 1. Builds the aethersearch-backend Docker image
 # 2. Loads it into the kind cluster
 # 3. Deletes/recreates the test pod
 # 4. Waits for the pod to be ready
@@ -19,10 +19,10 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../../../../../../.." && pwd)"
-NAMESPACE="onyx-sandboxes"
+NAMESPACE="aethersearch-sandboxes"
 POD_NAME="sandbox-test"
-IMAGE_NAME="onyxdotapp/onyx-backend:latest"
-TEST_FILE="onyx/server/features/build/sandbox/kubernetes/test_kubernetes_sandbox.py"
+IMAGE_NAME="aethersearchdotapp/aethersearch-backend:latest"
+TEST_FILE="aethersearch/server/features/build/sandbox/kubernetes/test_kubernetes_sandbox.py"
 ENV_FILE="$PROJECT_ROOT/.vscode/.env"
 
 ORIGINAL_TEST_FILE="$PROJECT_ROOT/backend/tests/external_dependency_unit/craft/test_kubernetes_sandbox.py"
@@ -48,14 +48,14 @@ else
     echo "Warning: .vscode/.env not found, running without additional env vars"
 fi
 
-echo "=== Building onyx-backend Docker image ==="
+echo "=== Building aethersearch-backend Docker image ==="
 cd "$PROJECT_ROOT/backend"
 docker build -t "$IMAGE_NAME" -f Dockerfile .
 
 rm "$PROJECT_ROOT/backend/$TEST_FILE"
 
 echo "=== Loading image into kind cluster ==="
-kind load docker-image "$IMAGE_NAME" --name onyx 2>/dev/null || \
+kind load docker-image "$IMAGE_NAME" --name aethersearch 2>/dev/null || \
     kind load docker-image "$IMAGE_NAME" 2>/dev/null || \
     echo "Warning: Could not load into kind. If using minikube, run: minikube image load $IMAGE_NAME"
 

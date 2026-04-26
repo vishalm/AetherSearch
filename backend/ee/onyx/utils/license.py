@@ -13,10 +13,10 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 
-from ee.onyx.server.license.models import LicenseData
-from ee.onyx.server.license.models import LicensePayload
-from onyx.server.settings.models import ApplicationStatus
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.server.license.models import LicenseData
+from ee.aethersearch.server.license.models import LicensePayload
+from aethersearch.server.settings.models import ApplicationStatus
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

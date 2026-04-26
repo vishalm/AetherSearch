@@ -4,13 +4,13 @@ from jira import JIRA
 from jira.resources import PermissionScheme
 from pydantic import ValidationError
 
-from ee.onyx.external_permissions.jira.models import Holder
-from ee.onyx.external_permissions.jira.models import Permission
-from ee.onyx.external_permissions.jira.models import User
-from onyx.access.models import ExternalAccess
-from onyx.access.utils import build_ext_group_name_for_onyx
-from onyx.configs.constants import DocumentSource
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.external_permissions.jira.models import Holder
+from ee.aethersearch.external_permissions.jira.models import Permission
+from ee.aethersearch.external_permissions.jira.models import User
+from aethersearch.access.models import ExternalAccess
+from aethersearch.access.utils import build_ext_group_name_for_aethersearch
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.utils.logger import setup_logger
 
 HolderMap = dict[str, list[Holder]]
 
@@ -283,7 +283,7 @@ def get_project_permissions(
     # Prefix group IDs with source type if requested (for indexing path)
     if add_prefix and external_access and external_access.external_user_group_ids:
         prefixed_groups = {
-            build_ext_group_name_for_onyx(g, DocumentSource.JIRA)
+            build_ext_group_name_for_aethersearch(g, DocumentSource.JIRA)
             for g in external_access.external_user_group_ids
         }
         return ExternalAccess(

@@ -15,16 +15,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import Session
 
-from onyx.auth.schemas import UserRole
-from onyx.configs.constants import ANONYMOUS_USER_EMAIL
-from onyx.configs.constants import NO_AUTH_PLACEHOLDER_USER_EMAIL
-from onyx.db.api_key import get_api_key_email_pattern
-from onyx.db.engine.async_sql_engine import get_async_session
-from onyx.db.engine.async_sql_engine import get_async_session_context_manager
-from onyx.db.models import AccessToken
-from onyx.db.models import OAuthAccount
-from onyx.db.models import User
-from onyx.utils.variable_functionality import (
+from aethersearch.auth.schemas import UserRole
+from aethersearch.configs.constants import ANONYMOUS_USER_EMAIL
+from aethersearch.configs.constants import NO_AUTH_PLACEHOLDER_USER_EMAIL
+from aethersearch.db.api_key import get_api_key_email_pattern
+from aethersearch.db.engine.async_sql_engine import get_async_session
+from aethersearch.db.engine.async_sql_engine import get_async_session_context_manager
+from aethersearch.db.models import AccessToken
+from aethersearch.db.models import OAuthAccount
+from aethersearch.db.models import User
+from aethersearch.utils.variable_functionality import (
     fetch_versioned_implementation_with_fallback,
 )
 
@@ -36,7 +36,7 @@ def get_default_admin_user_emails() -> list[str]:
     Only used in the EE version. For MIT, just return empty list."""
     get_default_admin_user_emails_fn: Callable[[], list[str]] = (
         fetch_versioned_implementation_with_fallback(
-            "onyx.auth.users", "get_default_admin_user_emails_", lambda: list[str]()
+            "aethersearch.auth.users", "get_default_admin_user_emails_", lambda: list[str]()
         )
     )
     return get_default_admin_user_emails_fn()

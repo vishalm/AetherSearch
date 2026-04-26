@@ -14,9 +14,9 @@ import pytest
 from requests import Response
 from requests.exceptions import HTTPError
 
-from onyx.connectors.sharepoint.connector import GRAPH_INVALID_REQUEST_CODE
-from onyx.connectors.sharepoint.connector import SharepointConnector
-from onyx.connectors.sharepoint.connector import SiteDescriptor
+from aethersearch.connectors.sharepoint.connector import GRAPH_INVALID_REQUEST_CODE
+from aethersearch.connectors.sharepoint.connector import SharepointConnector
+from aethersearch.connectors.sharepoint.connector import SiteDescriptor
 
 SITE_URL = "https://tenant.sharepoint.com/sites/ClassicSite"
 FAKE_SITE_ID = "tenant.sharepoint.com,abc123,def456"

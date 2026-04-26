@@ -6,39 +6,39 @@ from fastapi import Depends
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from onyx.auth.users import current_curator_or_admin_user
-from onyx.configs.constants import DEFAULT_CC_PAIR_ID
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import PUBLIC_API_TAGS
-from onyx.connectors.models import Document
-from onyx.connectors.models import IndexAttemptMetadata
-from onyx.db.connector_credential_pair import get_connector_credential_pair_from_id
-from onyx.db.document import delete_documents_complete
-from onyx.db.document import get_document
-from onyx.db.document import get_documents_by_cc_pair
-from onyx.db.document import get_ingestion_documents
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.models import User
-from onyx.db.search_settings import get_active_search_settings
-from onyx.db.search_settings import get_current_search_settings
-from onyx.db.search_settings import get_secondary_search_settings
-from onyx.document_index.factory import get_all_document_indices
-from onyx.indexing.adapters.document_indexing_adapter import (
+from aethersearch.auth.users import current_curator_or_admin_user
+from aethersearch.configs.constants import DEFAULT_CC_PAIR_ID
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import PUBLIC_API_TAGS
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import IndexAttemptMetadata
+from aethersearch.db.connector_credential_pair import get_connector_credential_pair_from_id
+from aethersearch.db.document import delete_documents_complete
+from aethersearch.db.document import get_document
+from aethersearch.db.document import get_documents_by_cc_pair
+from aethersearch.db.document import get_ingestion_documents
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.models import User
+from aethersearch.db.search_settings import get_active_search_settings
+from aethersearch.db.search_settings import get_current_search_settings
+from aethersearch.db.search_settings import get_secondary_search_settings
+from aethersearch.document_index.factory import get_all_document_indices
+from aethersearch.indexing.adapters.document_indexing_adapter import (
     DocumentIndexingBatchAdapter,
 )
-from onyx.indexing.embedder import DefaultIndexingEmbedder
-from onyx.indexing.indexing_pipeline import run_indexing_pipeline
-from onyx.server.onyx_api.models import DocMinimalInfo
-from onyx.server.onyx_api.models import IngestionDocument
-from onyx.server.onyx_api.models import IngestionResult
-from onyx.server.utils_vector_db import require_vector_db
-from onyx.utils.logger import setup_logger
+from aethersearch.indexing.embedder import DefaultIndexingEmbedder
+from aethersearch.indexing.indexing_pipeline import run_indexing_pipeline
+from aethersearch.server.aethersearch_api.models import DocMinimalInfo
+from aethersearch.server.aethersearch_api.models import IngestionDocument
+from aethersearch.server.aethersearch_api.models import IngestionResult
+from aethersearch.server.utils_vector_db import require_vector_db
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()
 
 # not using /api to avoid confusion with nginx api path routing
-router = APIRouter(prefix="/onyx-api", tags=PUBLIC_API_TAGS)
+router = APIRouter(prefix="/aethersearch-api", tags=PUBLIC_API_TAGS)
 
 
 @router.get("/connector-docs/{cc_pair_id}")

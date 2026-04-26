@@ -15,36 +15,36 @@ from slack_sdk.models.blocks import SectionBlock
 from slack_sdk.models.blocks.basic_components import MarkdownTextObject
 from slack_sdk.models.blocks.block_elements import ImageElement
 
-from onyx.chat.models import ChatBasicResponse
-from onyx.configs.app_configs import WEB_DOMAIN
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import SearchFeedbackType
-from onyx.configs.onyxbot_configs import ONYX_BOT_NUM_DOCS_TO_DISPLAY
-from onyx.context.search.models import SearchDoc
-from onyx.db.chat import get_chat_session_by_message_id
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.models import ChannelConfig
-from onyx.onyxbot.slack.constants import CONTINUE_IN_WEB_UI_ACTION_ID
-from onyx.onyxbot.slack.constants import DISLIKE_BLOCK_ACTION_ID
-from onyx.onyxbot.slack.constants import FEEDBACK_DOC_BUTTON_BLOCK_ACTION_ID
-from onyx.onyxbot.slack.constants import FOLLOWUP_BUTTON_ACTION_ID
-from onyx.onyxbot.slack.constants import FOLLOWUP_BUTTON_RESOLVED_ACTION_ID
-from onyx.onyxbot.slack.constants import IMMEDIATE_RESOLVED_BUTTON_ACTION_ID
-from onyx.onyxbot.slack.constants import KEEP_TO_YOURSELF_ACTION_ID
-from onyx.onyxbot.slack.constants import LIKE_BLOCK_ACTION_ID
-from onyx.onyxbot.slack.constants import SHOW_EVERYONE_ACTION_ID
-from onyx.onyxbot.slack.formatting import format_slack_message
-from onyx.onyxbot.slack.icons import source_to_github_img_link
-from onyx.onyxbot.slack.models import ActionValuesEphemeralMessage
-from onyx.onyxbot.slack.models import ActionValuesEphemeralMessageChannelConfig
-from onyx.onyxbot.slack.models import ActionValuesEphemeralMessageMessageInfo
-from onyx.onyxbot.slack.models import SlackMessageInfo
-from onyx.onyxbot.slack.utils import build_continue_in_web_ui_id
-from onyx.onyxbot.slack.utils import build_feedback_id
-from onyx.onyxbot.slack.utils import build_publish_ephemeral_message_id
-from onyx.onyxbot.slack.utils import remove_slack_text_interactions
-from onyx.onyxbot.slack.utils import translate_vespa_highlight_to_slack
-from onyx.utils.text_processing import decode_escapes
+from aethersearch.chat.models import ChatBasicResponse
+from aethersearch.configs.app_configs import WEB_DOMAIN
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import SearchFeedbackType
+from aethersearch.configs.aethersearchbot_configs import AETHERSEARCH_BOT_NUM_DOCS_TO_DISPLAY
+from aethersearch.context.search.models import SearchDoc
+from aethersearch.db.chat import get_chat_session_by_message_id
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.models import ChannelConfig
+from aethersearch.aethersearchbot.slack.constants import CONTINUE_IN_WEB_UI_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import DISLIKE_BLOCK_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import FEEDBACK_DOC_BUTTON_BLOCK_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import FOLLOWUP_BUTTON_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import FOLLOWUP_BUTTON_RESOLVED_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import IMMEDIATE_RESOLVED_BUTTON_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import KEEP_TO_YOURSELF_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import LIKE_BLOCK_ACTION_ID
+from aethersearch.aethersearchbot.slack.constants import SHOW_EVERYONE_ACTION_ID
+from aethersearch.aethersearchbot.slack.formatting import format_slack_message
+from aethersearch.aethersearchbot.slack.icons import source_to_github_img_link
+from aethersearch.aethersearchbot.slack.models import ActionValuesEphemeralMessage
+from aethersearch.aethersearchbot.slack.models import ActionValuesEphemeralMessageChannelConfig
+from aethersearch.aethersearchbot.slack.models import ActionValuesEphemeralMessageMessageInfo
+from aethersearch.aethersearchbot.slack.models import SlackMessageInfo
+from aethersearch.aethersearchbot.slack.utils import build_continue_in_web_ui_id
+from aethersearch.aethersearchbot.slack.utils import build_feedback_id
+from aethersearch.aethersearchbot.slack.utils import build_publish_ephemeral_message_id
+from aethersearch.aethersearchbot.slack.utils import remove_slack_text_interactions
+from aethersearch.aethersearchbot.slack.utils import translate_vespa_highlight_to_slack
+from aethersearch.utils.text_processing import decode_escapes
 
 _MAX_BLURB_LEN = 45
 
@@ -252,7 +252,7 @@ def get_restate_blocks(
 def _build_documents_blocks(
     documents: list[SearchDoc],
     message_id: int | None,
-    num_docs_to_display: int = ONYX_BOT_NUM_DOCS_TO_DISPLAY,
+    num_docs_to_display: int = AETHERSEARCH_BOT_NUM_DOCS_TO_DISPLAY,
 ) -> list[Block]:
     header_text = "Reference Documents"
     seen_docs_identifiers = set()
@@ -308,7 +308,7 @@ def _build_documents_blocks(
 
 def _build_sources_blocks(
     cited_documents: list[tuple[int, SearchDoc]],
-    num_docs_to_display: int = ONYX_BOT_NUM_DOCS_TO_DISPLAY,
+    num_docs_to_display: int = AETHERSEARCH_BOT_NUM_DOCS_TO_DISPLAY,
 ) -> list[Block]:
     if not cited_documents:
         return [
@@ -468,7 +468,7 @@ def _build_continue_in_web_ui_block(
             elements=[
                 ButtonElement(
                     action_id=CONTINUE_IN_WEB_UI_ACTION_ID,
-                    text="Continue Chat in Onyx!",
+                    text="Continue Chat in AetherSearch!",
                     style="primary",
                     url=f"{WEB_DOMAIN}/chat?slackChatId={chat_session.id}",
                 ),
@@ -536,7 +536,7 @@ def build_slack_response_blocks(
     This function is a top level function that builds all the blocks for the Slack response.
     It also handles combining all the blocks together.
     """
-    # If called with the OnyxBot slash command, the question is lost so we have to reshow it
+    # If called with the AetherSearchBot slash command, the question is lost so we have to reshow it
     if not skip_restated_question:
         restate_question_block = get_restate_blocks(
             message_info.thread_messages[-1].message, message_info.is_slash_command

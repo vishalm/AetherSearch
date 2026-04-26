@@ -7,10 +7,10 @@ from typing import cast
 from celery import Celery
 from redis import Redis
 
-from onyx.background.celery.configs.base import CELERY_SEPARATOR
-from onyx.configs.app_configs import REDIS_HEALTH_CHECK_INTERVAL
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import REDIS_SOCKET_KEEPALIVE_OPTIONS
+from aethersearch.background.celery.configs.base import CELERY_SEPARATOR
+from aethersearch.configs.app_configs import REDIS_HEALTH_CHECK_INTERVAL
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import REDIS_SOCKET_KEEPALIVE_OPTIONS
 
 _broker_client: Redis | None = None
 _broker_url: str | None = None
@@ -109,7 +109,7 @@ def celery_get_queue_length(queue: str, r: Redis) -> int:
     used to implement task prioritization.
     This operation is not atomic."""
     total_length = 0
-    for i in range(len(OnyxCeleryPriority)):
+    for i in range(len(AetherSearchCeleryPriority)):
         queue_name = queue
         if i > 0:
             queue_name += CELERY_SEPARATOR
@@ -131,7 +131,7 @@ def celery_find_task(task_id: str, queue: str, r: Redis) -> int:
 
     Returns true if the id is in the queue, False if not.
     """
-    for priority in range(len(OnyxCeleryPriority)):
+    for priority in range(len(AetherSearchCeleryPriority)):
         queue_name = f"{queue}{CELERY_SEPARATOR}{priority}" if priority > 0 else queue
 
         tasks = cast(list[bytes], r.lrange(queue_name, 0, -1))
@@ -153,7 +153,7 @@ def celery_get_queued_task_ids(queue: str, r: Redis) -> set[str]:
 
     task_set: set[str] = set()
 
-    for priority in range(len(OnyxCeleryPriority)):
+    for priority in range(len(AetherSearchCeleryPriority)):
         queue_name = f"{queue}{CELERY_SEPARATOR}{priority}" if priority > 0 else queue
 
         tasks = cast(list[bytes], r.lrange(queue_name, 0, -1))

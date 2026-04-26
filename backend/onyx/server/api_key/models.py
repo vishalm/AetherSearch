@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from onyx.auth.schemas import UserRole
+from aethersearch.auth.schemas import UserRole
 
 
 class APIKeyArgs(BaseModel):

@@ -4,9 +4,9 @@ Logs all packets, JSON-RPC messages, and ACP events during build mode streaming.
 Provides detailed tracing for the entire agent loop and communication flow.
 
 Log output locations (in priority order):
-1. /var/log/onyx/packets.log (for Docker - mounted to host via docker-compose volumes)
+1. /var/log/aethersearch/packets.log (for Docker - mounted to host via docker-compose volumes)
 2. backend/log/packets.log (for local dev without Docker)
-3. backend/onyx/server/features/build/packets.log (fallback)
+3. backend/aethersearch/server/features/build/packets.log (fallback)
 
 Enable logging by setting LOG_LEVEL=DEBUG or BUILD_PACKET_LOGGING=true.
 
@@ -89,12 +89,12 @@ class PacketLogger:
         """Determine the best log file path based on environment.
 
         Priority:
-        1. /var/log/onyx/packets.log - Docker environment (mounted to host)
+        1. /var/log/aethersearch/packets.log - Docker environment (mounted to host)
         2. backend/log/packets.log - Local dev (same dir as other logs)
-        3. backend/onyx/server/features/build/packets.log - Fallback
+        3. backend/aethersearch/server/features/build/packets.log - Fallback
         """
-        # Option 1: Docker environment - use /var/log/onyx which is mounted
-        docker_log_dir = Path("/var/log/onyx")
+        # Option 1: Docker environment - use /var/log/aethersearch which is mounted
+        docker_log_dir = Path("/var/log/aethersearch")
         if docker_log_dir.exists() and docker_log_dir.is_dir():
             return docker_log_dir / "packets.log"
 

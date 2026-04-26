@@ -7,11 +7,11 @@ from concurrent.futures import ThreadPoolExecutor
 
 import pytest
 
-from onyx.utils.threadpool_concurrency import parallel_yield
-from onyx.utils.threadpool_concurrency import run_in_background
-from onyx.utils.threadpool_concurrency import run_with_timeout
-from onyx.utils.threadpool_concurrency import ThreadSafeDict
-from onyx.utils.threadpool_concurrency import wait_on_background
+from aethersearch.utils.threadpool_concurrency import parallel_yield
+from aethersearch.utils.threadpool_concurrency import run_in_background
+from aethersearch.utils.threadpool_concurrency import run_with_timeout
+from aethersearch.utils.threadpool_concurrency import ThreadSafeDict
+from aethersearch.utils.threadpool_concurrency import wait_on_background
 
 # Create a context variable for testing
 test_context_var = contextvars.ContextVar("test_var", default="default")

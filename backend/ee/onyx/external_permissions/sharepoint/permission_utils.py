@@ -16,16 +16,16 @@ from office365.sharepoint.permissions.securable_object import RoleAssignmentColl
 from office365.sharepoint.principal.users.collection import UserCollection
 from pydantic import BaseModel
 
-from ee.onyx.db.external_perm import ExternalUserGroup
-from onyx.access.models import ExternalAccess
-from onyx.access.utils import build_ext_group_name_for_onyx
-from onyx.configs.app_configs import REQUEST_TIMEOUT_SECONDS
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.sharepoint.connector import GRAPH_API_MAX_RETRIES
-from onyx.connectors.sharepoint.connector import GRAPH_API_RETRYABLE_STATUSES
-from onyx.connectors.sharepoint.connector import SHARED_DOCUMENTS_MAP_REVERSE
-from onyx.connectors.sharepoint.connector import sleep_and_retry
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.db.external_perm import ExternalUserGroup
+from aethersearch.access.models import ExternalAccess
+from aethersearch.access.utils import build_ext_group_name_for_aethersearch
+from aethersearch.configs.app_configs import REQUEST_TIMEOUT_SECONDS
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.sharepoint.connector import GRAPH_API_MAX_RETRIES
+from aethersearch.connectors.sharepoint.connector import GRAPH_API_RETRYABLE_STATUSES
+from aethersearch.connectors.sharepoint.connector import SHARED_DOCUMENTS_MAP_REVERSE
+from aethersearch.connectors.sharepoint.connector import sleep_and_retry
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -647,7 +647,7 @@ def get_external_access_from_sharepoint(
 
     for group_name, _ in groups_and_members.groups_to_emails.items():
         if add_prefix:
-            group_name = build_ext_group_name_for_onyx(
+            group_name = build_ext_group_name_for_aethersearch(
                 group_name, DocumentSource.SHAREPOINT
             )
         group_ids.add(group_name.lower())

@@ -10,19 +10,19 @@ from celery import shared_task
 from celery import Task
 from redis.lock import Lock as RedisLock
 
-from ee.onyx.server.tenants.provisioning import setup_tenant
-from ee.onyx.server.tenants.schema_management import create_schema_if_not_exists
-from ee.onyx.server.tenants.schema_management import get_current_alembic_version
-from ee.onyx.server.tenants.schema_management import run_alembic_migrations
-from onyx.background.celery.apps.app_base import task_logger
-from onyx.configs.app_configs import TARGET_AVAILABLE_TENANTS
-from onyx.configs.constants import ONYX_CLOUD_TENANT_ID
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import OnyxRedisLocks
-from onyx.db.engine.sql_engine import get_session_with_shared_schema
-from onyx.db.models import AvailableTenant
-from onyx.redis.redis_pool import get_redis_client
+from ee.aethersearch.server.tenants.provisioning import setup_tenant
+from ee.aethersearch.server.tenants.schema_management import create_schema_if_not_exists
+from ee.aethersearch.server.tenants.schema_management import get_current_alembic_version
+from ee.aethersearch.server.tenants.schema_management import run_alembic_migrations
+from aethersearch.background.celery.apps.app_base import task_logger
+from aethersearch.configs.app_configs import TARGET_AVAILABLE_TENANTS
+from aethersearch.configs.constants import AETHERSEARCH_CLOUD_TENANT_ID
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import AetherSearchRedisLocks
+from aethersearch.db.engine.sql_engine import get_session_with_shared_schema
+from aethersearch.db.models import AvailableTenant
+from aethersearch.redis.redis_pool import get_redis_client
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.configs import TENANT_ID_PREFIX
 
@@ -37,8 +37,8 @@ _TENANT_PROVISIONING_TIME_LIMIT = 60 * 45  # 45 minutes
 
 
 @shared_task(
-    name=OnyxCeleryTask.CLOUD_CHECK_AVAILABLE_TENANTS,
-    queue=OnyxCeleryQueues.MONITORING,
+    name=AetherSearchCeleryTask.CLOUD_CHECK_AVAILABLE_TENANTS,
+    queue=AetherSearchCeleryQueues.MONITORING,
     ignore_result=True,
     soft_time_limit=_TENANT_PROVISIONING_SOFT_TIME_LIMIT,
     time_limit=_TENANT_PROVISIONING_TIME_LIMIT,
@@ -57,9 +57,9 @@ def check_available_tenants(self: Task) -> None:  # noqa: ARG001
         )
         return
 
-    r = get_redis_client(tenant_id=ONYX_CLOUD_TENANT_ID)
+    r = get_redis_client(tenant_id=AETHERSEARCH_CLOUD_TENANT_ID)
     lock_check: RedisLock = r.lock(
-        OnyxRedisLocks.CHECK_AVAILABLE_TENANTS_LOCK,
+        AetherSearchRedisLocks.CHECK_AVAILABLE_TENANTS_LOCK,
         timeout=_TENANT_PROVISIONING_TIME_LIMIT,
     )
 
@@ -175,9 +175,9 @@ def pre_provision_tenant() -> bool:
     # The MULTI_TENANT check is now done at the caller level (check_available_tenants)
     # rather than inside this function
 
-    r = get_redis_client(tenant_id=ONYX_CLOUD_TENANT_ID)
+    r = get_redis_client(tenant_id=AETHERSEARCH_CLOUD_TENANT_ID)
     lock_provision: RedisLock = r.lock(
-        OnyxRedisLocks.CLOUD_PRE_PROVISION_TENANT_LOCK,
+        AetherSearchRedisLocks.CLOUD_PRE_PROVISION_TENANT_LOCK,
         timeout=_TENANT_PROVISIONING_TIME_LIMIT,
     )
 
@@ -243,7 +243,7 @@ def pre_provision_tenant() -> bool:
                 f"Rolling back failed tenant provisioning for: {tenant_id}"
             )
             try:
-                from ee.onyx.server.tenants.provisioning import (
+                from ee.aethersearch.server.tenants.provisioning import (
                     rollback_tenant_provisioning,
                 )
 

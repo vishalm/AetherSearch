@@ -5,7 +5,7 @@ import { useDropzone } from "react-dropzone";
 import { useProjectsContext } from "@/providers/ProjectsContext";
 import FilePickerPopover from "@/refresh-components/popovers/FilePickerPopover";
 import type { ProjectFile } from "../../projects/projectsService";
-import { MinimalOnyxDocument } from "@/lib/search/interfaces";
+import { MinimalAetherSearchDocument } from "@/lib/search/interfaces";
 import { Button, Divider } from "@opal/components";
 
 import AddInstructionModal from "@/components/modals/AddInstructionModal";
@@ -24,7 +24,7 @@ import { Hoverable } from "@opal/core";
 export interface ProjectContextPanelProps {
   projectTokenCount?: number;
   availableContextTokens?: number;
-  setPresentingDocument?: (document: MinimalOnyxDocument) => void;
+  setPresentingDocument?: (document: MinimalAetherSearchDocument) => void;
 }
 export default function ProjectContextPanel({
   projectTokenCount = 0,
@@ -35,12 +35,12 @@ export default function ProjectContextPanel({
   const projectFilesModal = useCreateModal();
   // Edit project name state
   const [isEditingName, setIsEditingName] = useState(false);
-  // Convert ProjectFile to MinimalOnyxDocument format for viewing
+  // Convert ProjectFile to MinimalAetherSearchDocument format for viewing
   const handleOnView = useCallback(
     (file: ProjectFile) => {
       if (!setPresentingDocument) return;
 
-      const documentForViewer: MinimalOnyxDocument = {
+      const documentForViewer: MinimalAetherSearchDocument = {
         document_id: `project_file__${file.file_id}`,
         semantic_identifier: file.name,
       };

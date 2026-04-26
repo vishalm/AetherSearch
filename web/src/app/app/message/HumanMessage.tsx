@@ -200,7 +200,7 @@ const HumanMessage = React.memo(function HumanMessage({
   return (
     <Hoverable.Root group="humanMessage" width="full">
       <div
-        id="onyx-human-message"
+        id="aethersearch-human-message"
         className="flex flex-col justify-end w-full relative"
       >
         <FileDisplay files={files || []} />

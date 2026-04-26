@@ -9,14 +9,14 @@ from pydantic import BaseModel
 from redis.lock import Lock as RedisLock
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
-from onyx.configs.constants import CELERY_PRUNING_LOCK_TIMEOUT
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import OnyxRedisConstants
-from onyx.db.connector_credential_pair import get_connector_credential_pair_from_id
-from onyx.redis.redis_pool import SCAN_ITER_COUNT_DEFAULT
+from aethersearch.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
+from aethersearch.configs.constants import CELERY_PRUNING_LOCK_TIMEOUT
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import AetherSearchRedisConstants
+from aethersearch.db.connector_credential_pair import get_connector_credential_pair_from_id
+from aethersearch.redis.redis_pool import SCAN_ITER_COUNT_DEFAULT
 
 
 class RedisConnectorPrunePayload(BaseModel):
@@ -85,7 +85,7 @@ class RedisConnectorPrune:
         """Count of active pruning tasks"""
         count = 0
         for _ in self.redis.sscan_iter(
-            OnyxRedisConstants.ACTIVE_FENCES,
+            AetherSearchRedisConstants.ACTIVE_FENCES,
             RedisConnectorPrune.FENCE_PREFIX + "*",
             count=SCAN_ITER_COUNT_DEFAULT,
         ):
@@ -113,12 +113,12 @@ class RedisConnectorPrune:
         payload: RedisConnectorPrunePayload | None,
     ) -> None:
         if not payload:
-            self.redis.srem(OnyxRedisConstants.ACTIVE_FENCES, self.fence_key)
+            self.redis.srem(AetherSearchRedisConstants.ACTIVE_FENCES, self.fence_key)
             self.redis.delete(self.fence_key)
             return
 
         self.redis.set(self.fence_key, payload.model_dump_json(), ex=self.FENCE_TTL)
-        self.redis.sadd(OnyxRedisConstants.ACTIVE_FENCES, self.fence_key)
+        self.redis.sadd(AetherSearchRedisConstants.ACTIVE_FENCES, self.fence_key)
 
     def set_active(self) -> None:
         """This sets a signal to keep the permissioning flow from getting cleaned up within
@@ -189,16 +189,16 @@ class RedisConnectorPrune:
 
             # Priority on sync's triggered by new indexing should be medium
             result = celery_app.send_task(
-                OnyxCeleryTask.DOCUMENT_BY_CC_PAIR_CLEANUP_TASK,
+                AetherSearchCeleryTask.DOCUMENT_BY_CC_PAIR_CLEANUP_TASK,
                 kwargs=dict(
                     document_id=doc_id,
                     connector_id=cc_pair.connector_id,
                     credential_id=cc_pair.credential_id,
                     tenant_id=self.tenant_id,
                 ),
-                queue=OnyxCeleryQueues.CONNECTOR_DELETION,
+                queue=AetherSearchCeleryQueues.CONNECTOR_DELETION,
                 task_id=custom_task_id,
-                priority=OnyxCeleryPriority.MEDIUM,
+                priority=AetherSearchCeleryPriority.MEDIUM,
                 ignore_result=True,
             )
 
@@ -207,7 +207,7 @@ class RedisConnectorPrune:
         return len(async_results)
 
     def reset(self) -> None:
-        self.redis.srem(OnyxRedisConstants.ACTIVE_FENCES, self.fence_key)
+        self.redis.srem(AetherSearchRedisConstants.ACTIVE_FENCES, self.fence_key)
         self.redis.delete(self.active_key)
         self.redis.delete(self.generator_progress_key)
         self.redis.delete(self.generator_complete_key)

@@ -6,14 +6,14 @@ import pytest
 import requests
 from requests import HTTPError
 
-from onyx.auth.schemas import UserRole
-from onyx.configs.constants import ANONYMOUS_USER_EMAIL
-from onyx.configs.constants import ANONYMOUS_USER_UUID
-from onyx.configs.constants import FASTAPI_USERS_AUTH_COOKIE_NAME
-from onyx.server.documents.models import PaginatedReturn
-from onyx.server.manage.models import UserInfo
-from onyx.server.models import FullUserSnapshot
-from onyx.server.models import InvitedUserSnapshot
+from aethersearch.auth.schemas import UserRole
+from aethersearch.configs.constants import ANONYMOUS_USER_EMAIL
+from aethersearch.configs.constants import ANONYMOUS_USER_UUID
+from aethersearch.configs.constants import FASTAPI_USERS_AUTH_COOKIE_NAME
+from aethersearch.server.documents.models import PaginatedReturn
+from aethersearch.server.manage.models import UserInfo
+from aethersearch.server.models import FullUserSnapshot
+from aethersearch.server.models import InvitedUserSnapshot
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.constants import GENERAL_HEADERS
 from tests.integration.common_utils.test_models import DATestUser

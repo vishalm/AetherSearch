@@ -3,29 +3,29 @@ import pathlib
 import threading
 import time
 
-from onyx.llm.constants import LlmProviderNames
-from onyx.llm.constants import PROVIDER_DISPLAY_NAMES
-from onyx.llm.constants import WELL_KNOWN_PROVIDER_NAMES
-from onyx.llm.utils import get_max_input_tokens
-from onyx.llm.utils import model_supports_image_input
-from onyx.llm.well_known_providers.auto_update_models import LLMRecommendations
-from onyx.llm.well_known_providers.auto_update_service import (
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.llm.constants import PROVIDER_DISPLAY_NAMES
+from aethersearch.llm.constants import WELL_KNOWN_PROVIDER_NAMES
+from aethersearch.llm.utils import get_max_input_tokens
+from aethersearch.llm.utils import model_supports_image_input
+from aethersearch.llm.well_known_providers.auto_update_models import LLMRecommendations
+from aethersearch.llm.well_known_providers.auto_update_service import (
     fetch_llm_recommendations_from_github,
 )
-from onyx.llm.well_known_providers.constants import ANTHROPIC_PROVIDER_NAME
-from onyx.llm.well_known_providers.constants import AZURE_PROVIDER_NAME
-from onyx.llm.well_known_providers.constants import BEDROCK_PROVIDER_NAME
-from onyx.llm.well_known_providers.constants import BIFROST_PROVIDER_NAME
-from onyx.llm.well_known_providers.constants import LITELLM_PROXY_PROVIDER_NAME
-from onyx.llm.well_known_providers.constants import LM_STUDIO_PROVIDER_NAME
-from onyx.llm.well_known_providers.constants import OLLAMA_PROVIDER_NAME
-from onyx.llm.well_known_providers.constants import OPENAI_COMPATIBLE_PROVIDER_NAME
-from onyx.llm.well_known_providers.constants import OPENAI_PROVIDER_NAME
-from onyx.llm.well_known_providers.constants import OPENROUTER_PROVIDER_NAME
-from onyx.llm.well_known_providers.constants import VERTEXAI_PROVIDER_NAME
-from onyx.llm.well_known_providers.models import WellKnownLLMProviderDescriptor
-from onyx.server.manage.llm.models import ModelConfigurationView
-from onyx.utils.logger import setup_logger
+from aethersearch.llm.well_known_providers.constants import ANTHROPIC_PROVIDER_NAME
+from aethersearch.llm.well_known_providers.constants import AZURE_PROVIDER_NAME
+from aethersearch.llm.well_known_providers.constants import BEDROCK_PROVIDER_NAME
+from aethersearch.llm.well_known_providers.constants import BIFROST_PROVIDER_NAME
+from aethersearch.llm.well_known_providers.constants import LITELLM_PROXY_PROVIDER_NAME
+from aethersearch.llm.well_known_providers.constants import LM_STUDIO_PROVIDER_NAME
+from aethersearch.llm.well_known_providers.constants import OLLAMA_PROVIDER_NAME
+from aethersearch.llm.well_known_providers.constants import OPENAI_COMPATIBLE_PROVIDER_NAME
+from aethersearch.llm.well_known_providers.constants import OPENAI_PROVIDER_NAME
+from aethersearch.llm.well_known_providers.constants import OPENROUTER_PROVIDER_NAME
+from aethersearch.llm.well_known_providers.constants import VERTEXAI_PROVIDER_NAME
+from aethersearch.llm.well_known_providers.models import WellKnownLLMProviderDescriptor
+from aethersearch.server.manage.llm.models import ModelConfigurationView
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -322,14 +322,14 @@ def fetch_visible_model_names_for_provider_as_set(
 
 
 def get_provider_display_name(provider_name: str) -> str:
-    """Get human-friendly display name for an Onyx-supported provider.
+    """Get human-friendly display name for an AetherSearch-supported provider.
 
-    First checks Onyx-specific display names, then falls back to
+    First checks AetherSearch-specific display names, then falls back to
     PROVIDER_DISPLAY_NAMES from constants.
     """
-    # Display names for Onyx-supported LLM providers (used in admin UI provider selection).
-    # These override PROVIDER_DISPLAY_NAMES for Onyx-specific branding.
-    _ONYX_PROVIDER_DISPLAY_NAMES: dict[str, str] = {
+    # Display names for AetherSearch-supported LLM providers (used in admin UI provider selection).
+    # These override PROVIDER_DISPLAY_NAMES for AetherSearch-specific branding.
+    _AETHERSEARCH_PROVIDER_DISPLAY_NAMES: dict[str, str] = {
         OPENAI_PROVIDER_NAME: "ChatGPT (OpenAI)",
         OLLAMA_PROVIDER_NAME: "Ollama",
         LM_STUDIO_PROVIDER_NAME: "LM Studio",
@@ -342,8 +342,8 @@ def get_provider_display_name(provider_name: str) -> str:
         OPENAI_COMPATIBLE_PROVIDER_NAME: "OpenAI-Compatible",
     }
 
-    if provider_name in _ONYX_PROVIDER_DISPLAY_NAMES:
-        return _ONYX_PROVIDER_DISPLAY_NAMES[provider_name]
+    if provider_name in _AETHERSEARCH_PROVIDER_DISPLAY_NAMES:
+        return _AETHERSEARCH_PROVIDER_DISPLAY_NAMES[provider_name]
     return PROVIDER_DISPLAY_NAMES.get(
         provider_name.lower(), provider_name.replace("_", " ").title()
     )

@@ -1,14 +1,14 @@
 from sqlalchemy.orm import Session
 
-from onyx.db.document import reset_all_document_kg_stages
-from onyx.db.models import Connector
-from onyx.db.models import KGEntity
-from onyx.db.models import KGEntityExtractionStaging
-from onyx.db.models import KGEntityType
-from onyx.db.models import KGRelationship
-from onyx.db.models import KGRelationshipExtractionStaging
-from onyx.db.models import KGRelationshipType
-from onyx.db.models import KGRelationshipTypeExtractionStaging
+from aethersearch.db.document import reset_all_document_kg_stages
+from aethersearch.db.models import Connector
+from aethersearch.db.models import KGEntity
+from aethersearch.db.models import KGEntityExtractionStaging
+from aethersearch.db.models import KGEntityType
+from aethersearch.db.models import KGRelationship
+from aethersearch.db.models import KGRelationshipExtractionStaging
+from aethersearch.db.models import KGRelationshipType
+from aethersearch.db.models import KGRelationshipTypeExtractionStaging
 
 
 def reset_full_kg_index__commit(db_session: Session) -> None:

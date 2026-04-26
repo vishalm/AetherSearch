@@ -6,9 +6,9 @@ from collections.abc import Callable
 from collections.abc import Sequence
 from typing import Any
 
-from onyx.llm.models import ChatCompletionMessage
-from onyx.llm.models import LanguageModelInput
-from onyx.utils.logger import setup_logger
+from aethersearch.llm.models import ChatCompletionMessage
+from aethersearch.llm.models import LanguageModelInput
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

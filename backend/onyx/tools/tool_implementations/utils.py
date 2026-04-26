@@ -1,7 +1,7 @@
 import json
 
-from onyx.context.search.models import InferenceSection
-from onyx.context.search.utils import sandbox_filename_for_document
+from aethersearch.context.search.models import InferenceSection
+from aethersearch.context.search.utils import sandbox_filename_for_document
 
 FILE_ASSOCIATED_GUIDANCE = (
     "Only a short excerpt from this document is shown below. The complete "

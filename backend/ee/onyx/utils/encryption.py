@@ -7,9 +7,9 @@ from cryptography.hazmat.primitives.ciphers import algorithms
 from cryptography.hazmat.primitives.ciphers import Cipher
 from cryptography.hazmat.primitives.ciphers import modes
 
-from onyx.configs.app_configs import ENCRYPTION_KEY_SECRET
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import fetch_versioned_implementation
+from aethersearch.configs.app_configs import ENCRYPTION_KEY_SECRET
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import fetch_versioned_implementation
 
 logger = setup_logger()
 
@@ -88,20 +88,20 @@ def _decrypt_bytes(input_bytes: bytes, key: str | None = None) -> str:
 
 def encrypt_string_to_bytes(input_str: str, key: str | None = None) -> bytes:
     versioned_encryption_fn = fetch_versioned_implementation(
-        "onyx.utils.encryption", "_encrypt_string"
+        "aethersearch.utils.encryption", "_encrypt_string"
     )
     return versioned_encryption_fn(input_str, key=key)
 
 
 def decrypt_bytes_to_string(input_bytes: bytes, key: str | None = None) -> str:
     versioned_decryption_fn = fetch_versioned_implementation(
-        "onyx.utils.encryption", "_decrypt_bytes"
+        "aethersearch.utils.encryption", "_decrypt_bytes"
     )
     return versioned_decryption_fn(input_bytes, key=key)
 
 
 def test_encryption() -> None:
-    test_string = "Onyx is the BEST!"
+    test_string = "AetherSearch is the BEST!"
     encrypted_bytes = encrypt_string_to_bytes(test_string)
     decrypted_string = decrypt_bytes_to_string(encrypted_bytes)
     if test_string != decrypted_string:

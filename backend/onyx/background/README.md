@@ -1,4 +1,4 @@
-# Overview of Onyx Background Jobs
+# Overview of AetherSearch Background Jobs
 
 The background jobs take care of:
 
@@ -63,7 +63,7 @@ Then it cycles through its tasks as scheduled by Celery Beat:
 | `check_for_index_attempt_cleanup` | 30m       | Cleans up old index attempts                                                               |
 | `celery_beat_heartbeat`           | 1m        | Heartbeat for Beat watchdog                                                                |
 
-Watchdog is a separate Python process managed by supervisord which runs alongside celery workers. It checks the ONYX_CELERY_BEAT_HEARTBEAT_KEY in
+Watchdog is a separate Python process managed by supervisord which runs alongside celery workers. It checks the AETHERSEARCH_CELERY_BEAT_HEARTBEAT_KEY in
 Redis to ensure Celery Beat is not dead. Beat schedules the celery_beat_heartbeat for Primary to touch the key and share that it's still alive.
 See supervisord.conf for watchdog config.
 

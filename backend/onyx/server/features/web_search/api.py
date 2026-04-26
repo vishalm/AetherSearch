@@ -2,50 +2,50 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.configs.constants import PUBLIC_API_TAGS
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.db.web_search import fetch_active_web_content_provider
-from onyx.db.web_search import fetch_active_web_search_provider
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.server.features.web_search.models import OpenUrlsToolRequest
-from onyx.server.features.web_search.models import OpenUrlsToolResponse
-from onyx.server.features.web_search.models import WebSearchToolRequest
-from onyx.server.features.web_search.models import WebSearchToolResponse
-from onyx.server.features.web_search.models import WebSearchWithContentResponse
-from onyx.server.manage.web_search.models import WebContentProviderView
-from onyx.server.manage.web_search.models import WebSearchProviderView
-from onyx.tools.models import LlmOpenUrlResult
-from onyx.tools.models import LlmWebSearchResult
-from onyx.tools.tool_implementations.open_url.models import WebContentProvider
-from onyx.tools.tool_implementations.open_url.onyx_web_crawler import (
+from aethersearch.auth.permissions import require_permission
+from aethersearch.configs.constants import PUBLIC_API_TAGS
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.db.web_search import fetch_active_web_content_provider
+from aethersearch.db.web_search import fetch_active_web_search_provider
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.server.features.web_search.models import OpenUrlsToolRequest
+from aethersearch.server.features.web_search.models import OpenUrlsToolResponse
+from aethersearch.server.features.web_search.models import WebSearchToolRequest
+from aethersearch.server.features.web_search.models import WebSearchToolResponse
+from aethersearch.server.features.web_search.models import WebSearchWithContentResponse
+from aethersearch.server.manage.web_search.models import WebContentProviderView
+from aethersearch.server.manage.web_search.models import WebSearchProviderView
+from aethersearch.tools.models import LlmOpenUrlResult
+from aethersearch.tools.models import LlmWebSearchResult
+from aethersearch.tools.tool_implementations.open_url.models import WebContentProvider
+from aethersearch.tools.tool_implementations.open_url.aethersearch_web_crawler import (
     DEFAULT_MAX_HTML_SIZE_BYTES,
 )
-from onyx.tools.tool_implementations.open_url.onyx_web_crawler import (
+from aethersearch.tools.tool_implementations.open_url.aethersearch_web_crawler import (
     DEFAULT_MAX_PDF_SIZE_BYTES,
 )
-from onyx.tools.tool_implementations.open_url.onyx_web_crawler import OnyxWebCrawler
-from onyx.tools.tool_implementations.open_url.utils import (
+from aethersearch.tools.tool_implementations.open_url.aethersearch_web_crawler import AetherSearchWebCrawler
+from aethersearch.tools.tool_implementations.open_url.utils import (
     filter_web_contents_with_no_title_or_content,
 )
-from onyx.tools.tool_implementations.web_search.models import WebContentProviderConfig
-from onyx.tools.tool_implementations.web_search.models import WebSearchProvider
-from onyx.tools.tool_implementations.web_search.providers import (
+from aethersearch.tools.tool_implementations.web_search.models import WebContentProviderConfig
+from aethersearch.tools.tool_implementations.web_search.models import WebSearchProvider
+from aethersearch.tools.tool_implementations.web_search.providers import (
     build_content_provider_from_config,
 )
-from onyx.tools.tool_implementations.web_search.providers import (
+from aethersearch.tools.tool_implementations.web_search.providers import (
     build_search_provider_from_config,
 )
-from onyx.tools.tool_implementations.web_search.utils import (
+from aethersearch.tools.tool_implementations.web_search.utils import (
     filter_web_search_results_with_no_title_or_snippet,
 )
-from onyx.tools.tool_implementations.web_search.utils import (
+from aethersearch.tools.tool_implementations.web_search.utils import (
     truncate_search_result_content,
 )
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 from shared_configs.enums import WebContentProviderType
 from shared_configs.enums import WebSearchProviderType
 
@@ -61,8 +61,8 @@ def _get_active_search_provider(
 ) -> tuple[WebSearchProviderView, WebSearchProvider]:
     provider_model = fetch_active_web_search_provider(db_session)
     if provider_model is None:
-        raise OnyxError(
-            OnyxErrorCode.INVALID_INPUT,
+        raise AetherSearchError(
+            AetherSearchErrorCode.INVALID_INPUT,
             "No web search provider configured. Please configure one in "
             "Admin > Web Search settings.",
         )
@@ -77,8 +77,8 @@ def _get_active_search_provider(
     )
 
     if provider_model.api_key is None:
-        raise OnyxError(
-            OnyxErrorCode.INVALID_INPUT,
+        raise AetherSearchError(
+            AetherSearchErrorCode.INVALID_INPUT,
             "Web search provider requires an API key. Please configure one in "
             "Admin > Web Search settings.",
         )
@@ -90,7 +90,7 @@ def _get_active_search_provider(
             config=provider_model.config or {},
         )
     except ValueError as exc:
-        raise OnyxError(OnyxErrorCode.INVALID_INPUT, str(exc)) from exc
+        raise AetherSearchError(AetherSearchErrorCode.INVALID_INPUT, str(exc)) from exc
 
     return provider_view, provider
 
@@ -102,18 +102,18 @@ def _get_active_content_provider(
 
     if provider_model is None:
         # Default to the built-in crawler if nothing is configured. Always available.
-        # NOTE: the OnyxWebCrawler is not stored in the content provider table,
+        # NOTE: the AetherSearchWebCrawler is not stored in the content provider table,
         # so we need to return it directly.
 
-        return None, OnyxWebCrawler(
+        return None, AetherSearchWebCrawler(
             max_pdf_size_bytes=DEFAULT_MAX_PDF_SIZE_BYTES,
             max_html_size_bytes=DEFAULT_MAX_HTML_SIZE_BYTES,
         )
 
     if provider_model.api_key is None:
         # TODO - this is not a great error, in fact, this key should not be nullable.
-        raise OnyxError(
-            OnyxErrorCode.INVALID_INPUT,
+        raise AetherSearchError(
+            AetherSearchErrorCode.INVALID_INPUT,
             "Web content provider requires an API key.",
         )
 
@@ -127,11 +127,11 @@ def _get_active_content_provider(
             config=config,
         )
     except ValueError as exc:
-        raise OnyxError(OnyxErrorCode.INVALID_INPUT, str(exc)) from exc
+        raise AetherSearchError(AetherSearchErrorCode.INVALID_INPUT, str(exc)) from exc
 
     if provider is None:
-        raise OnyxError(
-            OnyxErrorCode.INVALID_INPUT,
+        raise AetherSearchError(
+            AetherSearchErrorCode.INVALID_INPUT,
             "Unable to initialize the configured web content provider.",
         )
 
@@ -156,12 +156,12 @@ def _run_web_search(
     for query in request.queries:
         try:
             search_results = provider.search(query)
-        except OnyxError:
+        except AetherSearchError:
             raise
         except Exception as exc:
             logger.exception("Web search provider failed for query '%s'", query)
-            raise OnyxError(
-                OnyxErrorCode.BAD_GATEWAY,
+            raise AetherSearchError(
+                AetherSearchErrorCode.BAD_GATEWAY,
                 "Web search provider failed to execute query.",
             ) from exc
 
@@ -186,7 +186,7 @@ def _open_urls(
     urls: list[str],
     db_session: Session,
 ) -> tuple[WebContentProviderType | None, list[LlmOpenUrlResult]]:
-    # SSRF protection is handled inside the content provider (OnyxWebCrawler)
+    # SSRF protection is handled inside the content provider (AetherSearchWebCrawler)
     # which uses ssrf_safe_get() to validate and fetch atomically,
     # preventing DNS rebinding attacks
     provider_view, provider = _get_active_content_provider(db_session)
@@ -195,12 +195,12 @@ def _open_urls(
         docs = filter_web_contents_with_no_title_or_content(
             list(provider.contents(urls))
         )
-    except OnyxError:
+    except AetherSearchError:
         raise
     except Exception as exc:
         logger.exception("Web content provider failed to fetch URLs")
-        raise OnyxError(
-            OnyxErrorCode.BAD_GATEWAY,
+        raise AetherSearchError(
+            AetherSearchErrorCode.BAD_GATEWAY,
             "Web content provider failed to fetch URLs.",
         ) from exc
 
@@ -216,7 +216,7 @@ def _open_urls(
     provider_type = (
         provider_view.provider_type
         if provider_view
-        else WebContentProviderType.ONYX_WEB_CRAWLER
+        else WebContentProviderType.AETHERSEARCH_WEB_CRAWLER
     )
     return provider_type, results
 

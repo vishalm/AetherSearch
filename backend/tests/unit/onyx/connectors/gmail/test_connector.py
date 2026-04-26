@@ -7,15 +7,15 @@ from typing import cast
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from onyx.access.models import ExternalAccess
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.gmail.connector import _build_time_range_query
-from onyx.connectors.gmail.connector import GmailCheckpoint
-from onyx.connectors.gmail.connector import GmailConnector
-from onyx.connectors.gmail.connector import thread_to_document
-from onyx.connectors.models import Document
-from onyx.connectors.models import TextSection
-from tests.unit.onyx.connectors.utils import (
+from aethersearch.access.models import ExternalAccess
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.gmail.connector import _build_time_range_query
+from aethersearch.connectors.gmail.connector import GmailCheckpoint
+from aethersearch.connectors.gmail.connector import GmailConnector
+from aethersearch.connectors.gmail.connector import thread_to_document
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import TextSection
+from tests.unit.aethersearch.connectors.utils import (
     load_everything_from_checkpoint_connector_from_checkpoint,
 )
 
@@ -25,7 +25,7 @@ def test_thread_to_document() -> None:
     with open(json_path, "r") as f:
         full_email_thread = json.load(f)
 
-    doc = thread_to_document(full_email_thread, "admin@onyx-test.com")
+    doc = thread_to_document(full_email_thread, "admin@aethersearch-test.com")
     assert isinstance(doc, Document)
     assert doc.source == DocumentSource.GMAIL
     assert doc.semantic_identifier == "Email Chain 1"
@@ -204,11 +204,11 @@ def test_gmail_checkpoint_progression() -> None:
 
     with patch.object(GmailConnector, "_get_all_user_emails", return_value=user_emails):
         with patch(
-            "onyx.connectors.gmail.connector.get_gmail_service",
+            "aethersearch.connectors.gmail.connector.get_gmail_service",
             side_effect=fake_get_gmail_service,
         ):
             with patch(
-                "onyx.connectors.gmail.connector.thread_to_document",
+                "aethersearch.connectors.gmail.connector.thread_to_document",
                 side_effect=fake_thread_to_document,
             ) as mock_thread_to_document:
                 outputs = load_everything_from_checkpoint_connector_from_checkpoint(

@@ -2,18 +2,18 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.configs.constants import PUBLIC_API_TAGS
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.db.token_limit import delete_token_rate_limit
-from onyx.db.token_limit import fetch_all_global_token_rate_limits
-from onyx.db.token_limit import insert_global_token_rate_limit
-from onyx.db.token_limit import update_token_rate_limit
-from onyx.server.query_and_chat.token_limit import any_rate_limit_exists
-from onyx.server.token_rate_limits.models import TokenRateLimitArgs
-from onyx.server.token_rate_limits.models import TokenRateLimitDisplay
+from aethersearch.auth.permissions import require_permission
+from aethersearch.configs.constants import PUBLIC_API_TAGS
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.db.token_limit import delete_token_rate_limit
+from aethersearch.db.token_limit import fetch_all_global_token_rate_limits
+from aethersearch.db.token_limit import insert_global_token_rate_limit
+from aethersearch.db.token_limit import update_token_rate_limit
+from aethersearch.server.query_and_chat.token_limit import any_rate_limit_exists
+from aethersearch.server.token_rate_limits.models import TokenRateLimitArgs
+from aethersearch.server.token_rate_limits.models import TokenRateLimitDisplay
 
 router = APIRouter(prefix="/admin/token-rate-limits", tags=PUBLIC_API_TAGS)
 

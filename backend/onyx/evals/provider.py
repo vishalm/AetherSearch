@@ -1,6 +1,6 @@
-from onyx.evals.models import EvalProvider
-from onyx.evals.providers.braintrust import BraintrustEvalProvider
-from onyx.evals.providers.local import LocalEvalProvider
+from aethersearch.evals.models import EvalProvider
+from aethersearch.evals.providers.braintrust import BraintrustEvalProvider
+from aethersearch.evals.providers.local import LocalEvalProvider
 
 
 def get_provider(local_only: bool = False) -> EvalProvider:

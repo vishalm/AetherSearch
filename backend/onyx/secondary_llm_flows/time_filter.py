@@ -3,8 +3,8 @@ from datetime import timezone
 
 from dateutil.parser import parse
 
-from onyx.llm.interfaces import LLM
-from onyx.utils.logger import setup_logger
+from aethersearch.llm.interfaces import LLM
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

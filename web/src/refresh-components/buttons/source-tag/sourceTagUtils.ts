@@ -1,4 +1,4 @@
-import { OnyxDocument } from "@/lib/search/interfaces";
+import { AetherSearchDocument } from "@/lib/search/interfaces";
 import { SubQuestionDetail } from "@/app/app/interfaces";
 import { StreamingCitation } from "@/app/app/services/streamingModels";
 import { ValidSources } from "@/lib/types";
@@ -13,9 +13,9 @@ function truncateText(str: string, maxLength: number): string {
 }
 
 /**
- * Convert an OnyxDocument to a SourceInfo object for use with SourceTag
+ * Convert an AetherSearchDocument to a SourceInfo object for use with SourceTag
  */
-export function documentToSourceInfo(doc: OnyxDocument): SourceInfo {
+export function documentToSourceInfo(doc: AetherSearchDocument): SourceInfo {
   const sourceType = doc.source_type as ValidSources;
 
   return {
@@ -55,7 +55,7 @@ export function questionToSourceInfo(
  */
 export function citationsToSourceInfoArray(
   citations: StreamingCitation[],
-  documentMap: Map<string, OnyxDocument>
+  documentMap: Map<string, AetherSearchDocument>
 ): SourceInfo[] {
   const sources: SourceInfo[] = [];
   const seenDocIds = new Set<string>();
@@ -85,7 +85,7 @@ export function citationsToSourceInfoArray(
 /**
  * Get a display name for a source, used for inline citations
  */
-export function getDisplayNameForSource(doc: OnyxDocument): string {
+export function getDisplayNameForSource(doc: AetherSearchDocument): string {
   const sourceType = doc.source_type as ValidSources;
 
   if (sourceType === ValidSources.Web || doc.is_internet) {

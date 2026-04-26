@@ -3,10 +3,10 @@ from typing import cast
 from typing import IO
 from typing import TYPE_CHECKING
 
-from onyx.configs.constants import KV_UNSTRUCTURED_API_KEY
-from onyx.key_value_store.factory import get_kv_store
-from onyx.key_value_store.interface import KvKeyNotFoundError
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import KV_UNSTRUCTURED_API_KEY
+from aethersearch.key_value_store.factory import get_kv_store
+from aethersearch.key_value_store.interface import KvKeyNotFoundError
+from aethersearch.utils.logger import setup_logger
 
 if TYPE_CHECKING:
     from unstructured_client.models import operations

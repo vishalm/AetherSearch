@@ -1,4 +1,4 @@
-from onyx.indexing.chunking.tabular_section_chunker.tabular_section_chunker import (
+from aethersearch.indexing.chunking.tabular_section_chunker.tabular_section_chunker import (
     TabularChunker,
 )
 

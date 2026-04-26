@@ -5,7 +5,7 @@ Celery workers and other background processes use this module to expose their
 own /metrics endpoint on a configurable port.
 
 Usage:
-    from onyx.server.metrics.metrics_server import start_metrics_server
+    from aethersearch.server.metrics.metrics_server import start_metrics_server
     start_metrics_server("monitoring")  # reads port from env or uses default
 """
 
@@ -14,7 +14,7 @@ import threading
 
 from prometheus_client import start_http_server
 
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

@@ -9,9 +9,9 @@ from unittest.mock import patch
 
 from requests.exceptions import HTTPError
 
-from onyx.connectors.notion.connector import NotionConnector
-from onyx.connectors.notion.connector import NotionDataSource
-from onyx.connectors.notion.connector import NotionPage
+from aethersearch.connectors.notion.connector import NotionConnector
+from aethersearch.connectors.notion.connector import NotionDataSource
+from aethersearch.connectors.notion.connector import NotionPage
 
 
 def _make_connector() -> NotionConnector:
@@ -47,7 +47,7 @@ class TestFetchDataSourcesForDatabase:
             }
         )
         with patch(
-            "onyx.connectors.notion.connector.rl_requests.get", return_value=resp
+            "aethersearch.connectors.notion.connector.rl_requests.get", return_value=resp
         ):
             result = connector._fetch_data_sources_for_database("db-1")
 
@@ -66,7 +66,7 @@ class TestFetchDataSourcesForDatabase:
             }
         )
         with patch(
-            "onyx.connectors.notion.connector.rl_requests.get", return_value=resp
+            "aethersearch.connectors.notion.connector.rl_requests.get", return_value=resp
         ):
             result = connector._fetch_data_sources_for_database("db-1")
 
@@ -76,7 +76,7 @@ class TestFetchDataSourcesForDatabase:
         connector = _make_connector()
         resp = _mock_response({"object": "error"}, status_code=404)
         with patch(
-            "onyx.connectors.notion.connector.rl_requests.get", return_value=resp
+            "aethersearch.connectors.notion.connector.rl_requests.get", return_value=resp
         ):
             result = connector._fetch_data_sources_for_database("db-missing")
 
@@ -99,7 +99,7 @@ class TestFetchDataSource:
             }
         )
         with patch(
-            "onyx.connectors.notion.connector.rl_requests.post", return_value=resp
+            "aethersearch.connectors.notion.connector.rl_requests.post", return_value=resp
         ):
             result = connector._fetch_data_source("ds-1")
 
@@ -111,7 +111,7 @@ class TestFetchDataSource:
         connector = _make_connector()
         resp = _mock_response({"object": "error"}, status_code=404)
         with patch(
-            "onyx.connectors.notion.connector.rl_requests.post", return_value=resp
+            "aethersearch.connectors.notion.connector.rl_requests.post", return_value=resp
         ):
             result = connector._fetch_data_source("ds-missing")
 
@@ -312,7 +312,7 @@ class TestFetchDatabaseAsPage:
             }
         )
         with patch(
-            "onyx.connectors.notion.connector.rl_requests.get", return_value=resp
+            "aethersearch.connectors.notion.connector.rl_requests.get", return_value=resp
         ):
             page = connector._fetch_database_as_page("db-1")
 

@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from onyx.db.models import CodeInterpreterServer
+from aethersearch.db.models import CodeInterpreterServer
 
 
 def fetch_code_interpreter_server(

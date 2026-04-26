@@ -10,10 +10,10 @@
 # from pydantic import BaseModel
 
 # from model_server.constants import MODEL_WARM_UP_STRING
-# from model_server.legacy.onyx_torch_model import ConnectorClassifier
-# from model_server.legacy.onyx_torch_model import HybridClassifier
+# from model_server.legacy.aethersearch_torch_model import ConnectorClassifier
+# from model_server.legacy.aethersearch_torch_model import HybridClassifier
 # from model_server.utils import simple_log_function_time
-# from onyx.utils.logger import setup_logger
+# from aethersearch.utils.logger import setup_logger
 # from shared_configs.configs import CONNECTOR_CLASSIFIER_MODEL_REPO
 # from shared_configs.configs import CONNECTOR_CLASSIFIER_MODEL_TAG
 # from shared_configs.configs import INDEXING_ONLY
@@ -33,7 +33,7 @@
 # INDEXING_INFORMATION_CONTENT_CLASSIFICATION_MIN = 0.7
 # INDEXING_INFORMATION_CONTENT_CLASSIFICATION_TEMPERATURE = 4.0
 # INDEXING_INFORMATION_CONTENT_CLASSIFICATION_CUTOFF_LENGTH = 10
-# INFORMATION_CONTENT_MODEL_VERSION = "onyx-dot-app/information-content-model"
+# INFORMATION_CONTENT_MODEL_VERSION = "aethersearch-dot-app/information-content-model"
 # INFORMATION_CONTENT_MODEL_TAG: str | None = None
 
 
@@ -254,7 +254,7 @@
 
 #     input_ids, attention_mask = tokenize_connector_classification_query(
 #         ["GitHub"],
-#         "onyx classifier query google doc",
+#         "aethersearch classifier query google doc",
 #         connector_classifier_tokenizer,
 #         connector_classifier.connector_end_token_id,
 #     )

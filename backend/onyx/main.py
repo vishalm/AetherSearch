@@ -25,141 +25,141 @@ from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.starlette import StarletteIntegration
 from starlette.types import Lifespan
 
-from onyx import __version__
-from onyx.auth.schemas import UserCreate
-from onyx.auth.schemas import UserRead
-from onyx.auth.schemas import UserUpdate
-from onyx.auth.users import auth_backend
-from onyx.auth.users import create_onyx_oauth_router
-from onyx.auth.users import fastapi_users
-from onyx.cache.interface import CacheBackendType
-from onyx.configs.app_configs import APP_API_PREFIX
-from onyx.configs.app_configs import APP_HOST
-from onyx.configs.app_configs import APP_PORT
-from onyx.configs.app_configs import AUTH_RATE_LIMITING_ENABLED
-from onyx.configs.app_configs import AUTH_TYPE
-from onyx.configs.app_configs import CACHE_BACKEND
-from onyx.configs.app_configs import DISABLE_VECTOR_DB
-from onyx.configs.app_configs import GOOGLE_LOGIN_BASE_SCOPES
-from onyx.configs.app_configs import GOOGLE_OAUTH_SCOPE_OVERRIDE
-from onyx.configs.app_configs import LOG_ENDPOINT_LATENCY
-from onyx.configs.app_configs import OAUTH_CLIENT_ID
-from onyx.configs.app_configs import OAUTH_CLIENT_SECRET
-from onyx.configs.app_configs import OAUTH_ENABLED
-from onyx.configs.app_configs import OIDC_PKCE_ENABLED
-from onyx.configs.app_configs import OIDC_SCOPE_OVERRIDE
-from onyx.configs.app_configs import OPENID_CONFIG_URL
-from onyx.configs.app_configs import POSTGRES_API_SERVER_POOL_OVERFLOW
-from onyx.configs.app_configs import POSTGRES_API_SERVER_POOL_SIZE
-from onyx.configs.app_configs import POSTGRES_API_SERVER_READ_ONLY_POOL_OVERFLOW
-from onyx.configs.app_configs import POSTGRES_API_SERVER_READ_ONLY_POOL_SIZE
-from onyx.configs.app_configs import SYSTEM_RECURSION_LIMIT
-from onyx.configs.app_configs import USER_AUTH_SECRET
-from onyx.configs.app_configs import WEB_DOMAIN
-from onyx.configs.constants import AuthType
-from onyx.configs.constants import POSTGRES_WEB_APP_NAME
-from onyx.db.engine.async_sql_engine import get_sqlalchemy_async_engine
-from onyx.db.engine.connection_warmup import warm_up_connections
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.engine.sql_engine import SqlEngine
-from onyx.error_handling.exceptions import register_onyx_exception_handlers
-from onyx.file_store.file_store import get_default_file_store
-from onyx.hooks.registry import validate_registry
-from onyx.server.api_key.api import router as api_key_router
-from onyx.server.auth.captcha_api import CaptchaCookieMiddleware
-from onyx.server.auth.captcha_api import LoginCaptchaMiddleware
-from onyx.server.auth.captcha_api import router as captcha_router
-from onyx.server.auth_check import check_router_auth
-from onyx.server.documents.cc_pair import router as cc_pair_router
-from onyx.server.documents.connector import router as connector_router
-from onyx.server.documents.credential import router as credential_router
-from onyx.server.documents.document import router as document_router
-from onyx.server.documents.standard_oauth import router as standard_oauth_router
-from onyx.server.features.build.api.api import public_build_router
-from onyx.server.features.build.api.api import router as build_router
-from onyx.server.features.default_assistant.api import (
+from aethersearch import __version__
+from aethersearch.auth.schemas import UserCreate
+from aethersearch.auth.schemas import UserRead
+from aethersearch.auth.schemas import UserUpdate
+from aethersearch.auth.users import auth_backend
+from aethersearch.auth.users import create_aethersearch_oauth_router
+from aethersearch.auth.users import fastapi_users
+from aethersearch.cache.interface import CacheBackendType
+from aethersearch.configs.app_configs import APP_API_PREFIX
+from aethersearch.configs.app_configs import APP_HOST
+from aethersearch.configs.app_configs import APP_PORT
+from aethersearch.configs.app_configs import AUTH_RATE_LIMITING_ENABLED
+from aethersearch.configs.app_configs import AUTH_TYPE
+from aethersearch.configs.app_configs import CACHE_BACKEND
+from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
+from aethersearch.configs.app_configs import GOOGLE_LOGIN_BASE_SCOPES
+from aethersearch.configs.app_configs import GOOGLE_OAUTH_SCOPE_OVERRIDE
+from aethersearch.configs.app_configs import LOG_ENDPOINT_LATENCY
+from aethersearch.configs.app_configs import OAUTH_CLIENT_ID
+from aethersearch.configs.app_configs import OAUTH_CLIENT_SECRET
+from aethersearch.configs.app_configs import OAUTH_ENABLED
+from aethersearch.configs.app_configs import OIDC_PKCE_ENABLED
+from aethersearch.configs.app_configs import OIDC_SCOPE_OVERRIDE
+from aethersearch.configs.app_configs import OPENID_CONFIG_URL
+from aethersearch.configs.app_configs import POSTGRES_API_SERVER_POOL_OVERFLOW
+from aethersearch.configs.app_configs import POSTGRES_API_SERVER_POOL_SIZE
+from aethersearch.configs.app_configs import POSTGRES_API_SERVER_READ_ONLY_POOL_OVERFLOW
+from aethersearch.configs.app_configs import POSTGRES_API_SERVER_READ_ONLY_POOL_SIZE
+from aethersearch.configs.app_configs import SYSTEM_RECURSION_LIMIT
+from aethersearch.configs.app_configs import USER_AUTH_SECRET
+from aethersearch.configs.app_configs import WEB_DOMAIN
+from aethersearch.configs.constants import AuthType
+from aethersearch.configs.constants import POSTGRES_WEB_APP_NAME
+from aethersearch.db.engine.async_sql_engine import get_sqlalchemy_async_engine
+from aethersearch.db.engine.connection_warmup import warm_up_connections
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.engine.sql_engine import SqlEngine
+from aethersearch.error_handling.exceptions import register_aethersearch_exception_handlers
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.hooks.registry import validate_registry
+from aethersearch.server.api_key.api import router as api_key_router
+from aethersearch.server.auth.captcha_api import CaptchaCookieMiddleware
+from aethersearch.server.auth.captcha_api import LoginCaptchaMiddleware
+from aethersearch.server.auth.captcha_api import router as captcha_router
+from aethersearch.server.auth_check import check_router_auth
+from aethersearch.server.documents.cc_pair import router as cc_pair_router
+from aethersearch.server.documents.connector import router as connector_router
+from aethersearch.server.documents.credential import router as credential_router
+from aethersearch.server.documents.document import router as document_router
+from aethersearch.server.documents.standard_oauth import router as standard_oauth_router
+from aethersearch.server.features.build.api.api import public_build_router
+from aethersearch.server.features.build.api.api import router as build_router
+from aethersearch.server.features.default_assistant.api import (
     router as default_assistant_router,
 )
-from onyx.server.features.document_set.api import router as document_set_router
-from onyx.server.features.hierarchy.api import router as hierarchy_router
-from onyx.server.features.input_prompt.api import (
+from aethersearch.server.features.document_set.api import router as document_set_router
+from aethersearch.server.features.hierarchy.api import router as hierarchy_router
+from aethersearch.server.features.input_prompt.api import (
     admin_router as admin_input_prompt_router,
 )
-from onyx.server.features.input_prompt.api import basic_router as input_prompt_router
-from onyx.server.features.mcp.api import admin_router as mcp_admin_router
-from onyx.server.features.mcp.api import router as mcp_router
-from onyx.server.features.notifications.api import router as notification_router
-from onyx.server.features.oauth_config.api import (
+from aethersearch.server.features.input_prompt.api import basic_router as input_prompt_router
+from aethersearch.server.features.mcp.api import admin_router as mcp_admin_router
+from aethersearch.server.features.mcp.api import router as mcp_router
+from aethersearch.server.features.notifications.api import router as notification_router
+from aethersearch.server.features.oauth_config.api import (
     admin_router as admin_oauth_config_router,
 )
-from onyx.server.features.oauth_config.api import router as oauth_config_router
-from onyx.server.features.password.api import router as password_router
-from onyx.server.features.persona.api import admin_agents_router
-from onyx.server.features.persona.api import admin_router as admin_persona_router
-from onyx.server.features.persona.api import agents_router
-from onyx.server.features.persona.api import basic_router as persona_router
-from onyx.server.features.projects.api import router as projects_router
-from onyx.server.features.tool.api import admin_router as admin_tool_router
-from onyx.server.features.tool.api import router as tool_router
-from onyx.server.features.user_oauth_token.api import router as user_oauth_token_router
-from onyx.server.features.web_search.api import router as web_search_router
-from onyx.server.federated.api import router as federated_router
-from onyx.server.kg.api import admin_router as kg_admin_router
-from onyx.server.manage.administrative import router as admin_router
-from onyx.server.manage.code_interpreter.api import (
+from aethersearch.server.features.oauth_config.api import router as oauth_config_router
+from aethersearch.server.features.password.api import router as password_router
+from aethersearch.server.features.persona.api import admin_agents_router
+from aethersearch.server.features.persona.api import admin_router as admin_persona_router
+from aethersearch.server.features.persona.api import agents_router
+from aethersearch.server.features.persona.api import basic_router as persona_router
+from aethersearch.server.features.projects.api import router as projects_router
+from aethersearch.server.features.tool.api import admin_router as admin_tool_router
+from aethersearch.server.features.tool.api import router as tool_router
+from aethersearch.server.features.user_oauth_token.api import router as user_oauth_token_router
+from aethersearch.server.features.web_search.api import router as web_search_router
+from aethersearch.server.federated.api import router as federated_router
+from aethersearch.server.kg.api import admin_router as kg_admin_router
+from aethersearch.server.manage.administrative import router as admin_router
+from aethersearch.server.manage.code_interpreter.api import (
     admin_router as code_interpreter_admin_router,
 )
-from onyx.server.manage.discord_bot.api import router as discord_bot_router
-from onyx.server.manage.embedding.api import admin_router as embedding_admin_router
-from onyx.server.manage.embedding.api import basic_router as embedding_router
-from onyx.server.manage.get_state import router as state_router
-from onyx.server.manage.image_generation.api import (
+from aethersearch.server.manage.discord_bot.api import router as discord_bot_router
+from aethersearch.server.manage.embedding.api import admin_router as embedding_admin_router
+from aethersearch.server.manage.embedding.api import basic_router as embedding_router
+from aethersearch.server.manage.get_state import router as state_router
+from aethersearch.server.manage.image_generation.api import (
     admin_router as image_generation_admin_router,
 )
-from onyx.server.manage.llm.api import admin_router as llm_admin_router
-from onyx.server.manage.llm.api import basic_router as llm_router
-from onyx.server.manage.opensearch_migration.api import (
+from aethersearch.server.manage.llm.api import admin_router as llm_admin_router
+from aethersearch.server.manage.llm.api import basic_router as llm_router
+from aethersearch.server.manage.opensearch_migration.api import (
     admin_router as opensearch_migration_admin_router,
 )
-from onyx.server.manage.search_settings import router as search_settings_router
-from onyx.server.manage.slack_bot import router as slack_bot_management_router
-from onyx.server.manage.users import router as user_router
-from onyx.server.manage.voice.api import admin_router as voice_admin_router
-from onyx.server.manage.voice.user_api import router as voice_router
-from onyx.server.manage.voice.websocket_api import router as voice_websocket_router
-from onyx.server.manage.web_search.api import admin_router as web_search_admin_router
-from onyx.server.metrics.postgres_connection_pool import (
+from aethersearch.server.manage.search_settings import router as search_settings_router
+from aethersearch.server.manage.slack_bot import router as slack_bot_management_router
+from aethersearch.server.manage.users import router as user_router
+from aethersearch.server.manage.voice.api import admin_router as voice_admin_router
+from aethersearch.server.manage.voice.user_api import router as voice_router
+from aethersearch.server.manage.voice.websocket_api import router as voice_websocket_router
+from aethersearch.server.manage.web_search.api import admin_router as web_search_admin_router
+from aethersearch.server.metrics.postgres_connection_pool import (
     setup_postgres_connection_pool_metrics,
 )
-from onyx.server.metrics.prometheus_setup import setup_prometheus_metrics
-from onyx.server.middleware.latency_logging import add_latency_logging_middleware
-from onyx.server.middleware.rate_limiting import close_auth_limiter
-from onyx.server.middleware.rate_limiting import get_auth_rate_limiters
-from onyx.server.middleware.rate_limiting import setup_auth_limiter
-from onyx.server.onyx_api.ingestion import router as onyx_api_router
-from onyx.server.pat.api import router as pat_router
-from onyx.server.query_and_chat.chat_backend import router as chat_router
-from onyx.server.query_and_chat.query_backend import admin_router as admin_query_router
-from onyx.server.query_and_chat.query_backend import basic_router as query_router
-from onyx.server.saml import router as saml_router
-from onyx.server.settings.api import admin_router as settings_admin_router
-from onyx.server.settings.api import basic_router as settings_router
-from onyx.server.token_rate_limits.api import router as token_rate_limit_settings_router
-from onyx.server.utils import BasicAuthenticationError
-from onyx.setup import setup_multitenant_onyx
-from onyx.setup import setup_onyx
-from onyx.tracing.setup import setup_tracing
-from onyx.utils.client_ip import ClientIPMiddleware
-from onyx.utils.logger import setup_logger
-from onyx.utils.logger import setup_uvicorn_logger
-from onyx.utils.middleware import add_endpoint_context_middleware
-from onyx.utils.middleware import add_onyx_request_id_middleware
-from onyx.utils.telemetry import get_or_generate_uuid
-from onyx.utils.telemetry import optional_telemetry
-from onyx.utils.telemetry import RecordType
-from onyx.utils.variable_functionality import fetch_versioned_implementation
-from onyx.utils.variable_functionality import global_version
-from onyx.utils.variable_functionality import set_is_ee_based_on_env_variable
+from aethersearch.server.metrics.prometheus_setup import setup_prometheus_metrics
+from aethersearch.server.middleware.latency_logging import add_latency_logging_middleware
+from aethersearch.server.middleware.rate_limiting import close_auth_limiter
+from aethersearch.server.middleware.rate_limiting import get_auth_rate_limiters
+from aethersearch.server.middleware.rate_limiting import setup_auth_limiter
+from aethersearch.server.aethersearch_api.ingestion import router as aethersearch_api_router
+from aethersearch.server.pat.api import router as pat_router
+from aethersearch.server.query_and_chat.chat_backend import router as chat_router
+from aethersearch.server.query_and_chat.query_backend import admin_router as admin_query_router
+from aethersearch.server.query_and_chat.query_backend import basic_router as query_router
+from aethersearch.server.saml import router as saml_router
+from aethersearch.server.settings.api import admin_router as settings_admin_router
+from aethersearch.server.settings.api import basic_router as settings_router
+from aethersearch.server.token_rate_limits.api import router as token_rate_limit_settings_router
+from aethersearch.server.utils import BasicAuthenticationError
+from aethersearch.setup import setup_multitenant_aethersearch
+from aethersearch.setup import setup_aethersearch
+from aethersearch.tracing.setup import setup_tracing
+from aethersearch.utils.client_ip import ClientIPMiddleware
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_uvicorn_logger
+from aethersearch.utils.middleware import add_endpoint_context_middleware
+from aethersearch.utils.middleware import add_aethersearch_request_id_middleware
+from aethersearch.utils.telemetry import get_or_generate_uuid
+from aethersearch.utils.telemetry import optional_telemetry
+from aethersearch.utils.telemetry import RecordType
+from aethersearch.utils.variable_functionality import fetch_versioned_implementation
+from aethersearch.utils.variable_functionality import global_version
+from aethersearch.utils.variable_functionality import set_is_ee_based_on_env_variable
 from shared_configs.configs import CORS_ALLOWED_ORIGIN
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.configs import POSTGRES_DEFAULT_SCHEMA
@@ -293,12 +293,12 @@ def validate_no_vector_db_settings() -> None:
             "mode when disabling the vector database."
         )
 
-    from onyx.server.features.build.configs import ENABLE_CRAFT
+    from aethersearch.server.features.build.configs import ENABLE_CRAFT
 
     if ENABLE_CRAFT:
         raise RuntimeError(
             "DISABLE_VECTOR_DB cannot be used with ENABLE_CRAFT. "
-            "Onyx Craft requires background workers for sandbox lifecycle "
+            "AetherSearch Craft requires background workers for sandbox lifecycle "
             "management, which are removed in no-vector-DB deployments. "
             "Disable Craft (ENABLE_CRAFT=false) when disabling the vector database."
         )
@@ -340,7 +340,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:  # noqa: ARG001
     )
 
     verify_auth = fetch_versioned_implementation(
-        "onyx.auth.users", "verify_auth_setting"
+        "aethersearch.auth.users", "verify_auth_setting"
     )
 
     # Will throw exception if an issue is found
@@ -362,12 +362,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:  # noqa: ARG001
 
         # If we are multi-tenant, we need to only set up initial public tables
         with get_session_with_current_tenant() as db_session:
-            setup_onyx(db_session, POSTGRES_DEFAULT_SCHEMA)
+            setup_aethersearch(db_session, POSTGRES_DEFAULT_SCHEMA)
             # set up the file store (e.g. create bucket if needed). On multi-tenant,
             # this is done via IaC
             get_default_file_store().initialize()
     else:
-        setup_multitenant_onyx()
+        setup_multitenant_aethersearch()
 
     if not MULTI_TENANT:
         # don't emit a metric for every pod rollover/restart
@@ -379,8 +379,8 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:  # noqa: ARG001
         await setup_auth_limiter()
 
     if DISABLE_VECTOR_DB:
-        from onyx.background.periodic_poller import recover_stuck_user_files
-        from onyx.background.periodic_poller import start_periodic_poller
+        from aethersearch.background.periodic_poller import recover_stuck_user_files
+        from aethersearch.background.periodic_poller import start_periodic_poller
 
         recover_stuck_user_files(POSTGRES_DEFAULT_SCHEMA)
         start_periodic_poller(POSTGRES_DEFAULT_SCHEMA)
@@ -388,7 +388,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:  # noqa: ARG001
     yield
 
     if DISABLE_VECTOR_DB:
-        from onyx.background.periodic_poller import stop_periodic_poller
+        from aethersearch.background.periodic_poller import stop_periodic_poller
 
         stop_periodic_poller()
 
@@ -424,16 +424,16 @@ def log_http_error(request: Request, exc: Exception) -> JSONResponse:
 
 def get_application(lifespan_override: Lifespan | None = None) -> FastAPI:
     application = FastAPI(
-        title="Onyx Backend",
+        title="AetherSearch Backend",
         version=__version__,
-        description="Onyx API for AI-powered chat with search, document indexing, agents, actions, and more",
+        description="AetherSearch API for AI-powered chat with search, document indexing, agents, actions, and more",
         servers=[
-            {"url": f"{WEB_DOMAIN.rstrip('/')}/api", "description": "Onyx API Server"}
+            {"url": f"{WEB_DOMAIN.rstrip('/')}/api", "description": "AetherSearch API Server"}
         ],
         lifespan=lifespan_override or lifespan,
     )
     if SENTRY_DSN:
-        from onyx.configs.sentry import _add_instance_tags
+        from aethersearch.configs.sentry import _add_instance_tags
 
         sentry_sdk.init(
             dsn=SENTRY_DSN,
@@ -454,7 +454,7 @@ def get_application(lifespan_override: Lifespan | None = None) -> FastAPI:
         status.HTTP_500_INTERNAL_SERVER_ERROR, log_http_error
     )
 
-    register_onyx_exception_handlers(application)
+    register_aethersearch_exception_handlers(application)
 
     include_router_with_global_prefix_prepended(application, password_router)
     include_router_with_global_prefix_prepended(application, chat_router)
@@ -490,7 +490,7 @@ def get_application(lifespan_override: Lifespan | None = None) -> FastAPI:
     include_router_with_global_prefix_prepended(application, admin_oauth_config_router)
     include_router_with_global_prefix_prepended(application, user_oauth_token_router)
     include_router_with_global_prefix_prepended(application, state_router)
-    include_router_with_global_prefix_prepended(application, onyx_api_router)
+    include_router_with_global_prefix_prepended(application, aethersearch_api_router)
     include_router_with_global_prefix_prepended(application, settings_router)
     include_router_with_global_prefix_prepended(application, settings_admin_router)
     include_router_with_global_prefix_prepended(application, llm_admin_router)
@@ -569,7 +569,7 @@ def get_application(lifespan_override: Lifespan | None = None) -> FastAPI:
         )
         include_auth_router_with_prefix(
             application,
-            create_onyx_oauth_router(
+            create_aethersearch_oauth_router(
                 oauth_client,
                 auth_backend,
                 USER_AUTH_SECRET,
@@ -601,7 +601,7 @@ def get_application(lifespan_override: Lifespan | None = None) -> FastAPI:
 
         include_auth_router_with_prefix(
             application,
-            create_onyx_oauth_router(
+            create_aethersearch_oauth_router(
                 OpenID(
                     OAUTH_CLIENT_ID,
                     OAUTH_CLIENT_SECRET,
@@ -673,7 +673,7 @@ def get_application(lifespan_override: Lifespan | None = None) -> FastAPI:
     if LOG_ENDPOINT_LATENCY:
         add_latency_logging_middleware(application, logger)
 
-    add_onyx_request_id_middleware(application, "API", logger)
+    add_aethersearch_request_id_middleware(application, "API", logger)
 
     # Set endpoint context for per-endpoint DB pool attribution metrics.
     # Must be registered after all routes are added.
@@ -695,12 +695,12 @@ def get_application(lifespan_override: Lifespan | None = None) -> FastAPI:
 # NOTE: needs to be outside of the `if __name__ == "__main__"` block so that the
 # app is exportable
 set_is_ee_based_on_env_variable()
-app = fetch_versioned_implementation(module="onyx.main", attribute="get_application")
+app = fetch_versioned_implementation(module="aethersearch.main", attribute="get_application")
 
 
 if __name__ == "__main__":
     logger.notice(
-        f"Starting Onyx Backend version {__version__} on http://{APP_HOST}:{str(APP_PORT)}/"
+        f"Starting AetherSearch Backend version {__version__} on http://{APP_HOST}:{str(APP_PORT)}/"
     )
 
     if global_version.is_ee_version():

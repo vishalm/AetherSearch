@@ -15,8 +15,8 @@ from uuid import uuid4
 import pytest
 from sqlalchemy.orm import Session
 
-from onyx.db.chat import get_chat_sessions_by_user
-from onyx.db.models import ChatSession
+from aethersearch.db.chat import get_chat_sessions_by_user
+from aethersearch.db.models import ChatSession
 
 
 def _make_session(
@@ -33,7 +33,7 @@ def _make_session(
     session.time_updated = time_updated or session.time_created
     session.description = description
     session.deleted = False
-    session.onyxbot_flow = False
+    session.aethersearchbot_flow = False
     session.project_id = None
     return session
 

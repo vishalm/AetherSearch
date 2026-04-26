@@ -1,6 +1,6 @@
 # Sandbox Container Image
 
-This directory contains the Dockerfile and resources for building the Onyx Craft sandbox container image.
+This directory contains the Dockerfile and resources for building the AetherSearch Craft sandbox container image.
 
 ## Directory Structure
 
@@ -23,16 +23,16 @@ The sandbox image must be built for **amd64** architecture since our Kubernetes 
 ### Build for amd64 only (fastest)
 
 ```bash
-cd backend/onyx/server/features/build/sandbox/kubernetes/docker
-docker build --platform linux/amd64 -t onyxdotapp/sandbox:v0.1.x .
-docker push onyxdotapp/sandbox:v0.1.x
+cd backend/aethersearch/server/features/build/sandbox/kubernetes/docker
+docker build --platform linux/amd64 -t aethersearchdotapp/sandbox:v0.1.x .
+docker push aethersearchdotapp/sandbox:v0.1.x
 ```
 
 ### Build multi-arch (recommended for flexibility)
 
 ```bash
 docker buildx build --platform linux/amd64,linux/arm64 \
-  -t onyxdotapp/sandbox:v0.1.x \
+  -t aethersearchdotapp/sandbox:v0.1.x \
   --push .
 ```
 
@@ -41,16 +41,16 @@ docker buildx build --platform linux/amd64,linux/arm64 \
 After pushing a versioned tag, update `latest`:
 
 ```bash
-docker tag onyxdotapp/sandbox:v0.1.x onyxdotapp/sandbox:latest
-docker push onyxdotapp/sandbox:latest
+docker tag aethersearchdotapp/sandbox:v0.1.x aethersearchdotapp/sandbox:latest
+docker push aethersearchdotapp/sandbox:latest
 ```
 
 Or with buildx:
 
 ```bash
 docker buildx build --platform linux/amd64,linux/arm64 \
-  -t onyxdotapp/sandbox:v0.1.x \
-  -t onyxdotapp/sandbox:latest \
+  -t aethersearchdotapp/sandbox:v0.1.x \
+  -t aethersearchdotapp/sandbox:latest \
   --push .
 ```
 
@@ -60,7 +60,7 @@ docker buildx build --platform linux/amd64,linux/arm64 \
 
 2. **Update the ConfigMap** in in the internal repo
    ```yaml
-   SANDBOX_CONTAINER_IMAGE: "onyxdotapp/sandbox:v0.1.x"
+   SANDBOX_CONTAINER_IMAGE: "aethersearchdotapp/sandbox:v0.1.x"
    ```
 
 3. **Apply the ConfigMap**:
@@ -75,7 +75,7 @@ docker buildx build --platform linux/amd64,linux/arm64 \
 
 5. **Delete existing sandbox pods** (they will be recreated with the new image):
    ```bash
-   kubectl delete pods -n onyx-sandboxes -l app.kubernetes.io/component=sandbox
+   kubectl delete pods -n aethersearch-sandboxes -l app.kubernetes.io/component=sandbox
    ```
 
 ## What's Baked Into the Image
@@ -114,11 +114,11 @@ When a session is created, the following structure is set up in the pod:
 ### Verify image exists on Docker Hub
 
 ```bash
-curl -s "https://hub.docker.com/v2/repositories/onyxdotapp/sandbox/tags" | jq '.results[].name'
+curl -s "https://hub.docker.com/v2/repositories/aethersearchdotapp/sandbox/tags" | jq '.results[].name'
 ```
 
 ### Check what image a pod is using
 
 ```bash
-kubectl get pod <pod-name> -n onyx-sandboxes -o jsonpath='{.spec.containers[?(@.name=="sandbox")].image}'
+kubectl get pod <pod-name> -n aethersearch-sandboxes -o jsonpath='{.spec.containers[?(@.name=="sandbox")].image}'
 ```

@@ -4,12 +4,12 @@ from typing import IO
 
 from pydantic import BaseModel
 
-from onyx.connectors.models import TabularSection
-from onyx.file_processing.extract_file_text import file_io_to_text
-from onyx.file_processing.extract_file_text import xlsx_sheet_extraction
-from onyx.file_processing.file_types import OnyxFileExtensions
-from onyx.file_store.staging import RawFileCallback
-from onyx.utils.logger import setup_logger
+from aethersearch.connectors.models import TabularSection
+from aethersearch.file_processing.extract_file_text import file_io_to_text
+from aethersearch.file_processing.extract_file_text import xlsx_sheet_extraction
+from aethersearch.file_processing.file_types import AetherSearchFileExtensions
+from aethersearch.file_store.staging import RawFileCallback
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -21,7 +21,7 @@ class TabularExtractionResult(BaseModel):
 
 def is_tabular_file(file_name: str) -> bool:
     lowered = file_name.lower()
-    return any(lowered.endswith(ext) for ext in OnyxFileExtensions.TABULAR_EXTENSIONS)
+    return any(lowered.endswith(ext) for ext in AetherSearchFileExtensions.TABULAR_EXTENSIONS)
 
 
 def _tsv_to_csv(tsv_text: str) -> str:
@@ -49,10 +49,10 @@ def tabular_file_to_sections(
     """
     lowered = file_name.lower()
 
-    if not lowered.endswith(tuple(OnyxFileExtensions.TABULAR_EXTENSIONS)):
+    if not lowered.endswith(tuple(AetherSearchFileExtensions.TABULAR_EXTENSIONS)):
         raise ValueError(f"{file_name!r} is not a tabular file")
 
-    if lowered.endswith(tuple(OnyxFileExtensions.SPREADSHEET_EXTENSIONS)):
+    if lowered.endswith(tuple(AetherSearchFileExtensions.SPREADSHEET_EXTENSIONS)):
         return [
             TabularSection(
                 link=link or file_name,

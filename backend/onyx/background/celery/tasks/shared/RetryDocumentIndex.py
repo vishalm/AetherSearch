@@ -4,9 +4,9 @@ from tenacity import retry_if_exception_type
 from tenacity import stop_after_delay
 from tenacity import wait_random_exponential
 
-from onyx.document_index.interfaces import DocumentIndex
-from onyx.document_index.interfaces import VespaDocumentFields
-from onyx.document_index.interfaces import VespaDocumentUserFields
+from aethersearch.document_index.interfaces import DocumentIndex
+from aethersearch.document_index.interfaces import VespaDocumentFields
+from aethersearch.document_index.interfaces import VespaDocumentUserFields
 
 
 class RetryDocumentIndex:

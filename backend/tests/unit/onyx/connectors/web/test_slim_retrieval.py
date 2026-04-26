@@ -6,9 +6,9 @@ from typing import Any
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from onyx.connectors.models import SlimDocument
-from onyx.connectors.web.connector import WEB_CONNECTOR_VALID_SETTINGS
-from onyx.connectors.web.connector import WebConnector
+from aethersearch.connectors.models import SlimDocument
+from aethersearch.connectors.web.connector import WEB_CONNECTOR_VALID_SETTINGS
+from aethersearch.connectors.web.connector import WebConnector
 
 BASE_URL = "http://example.com"
 
@@ -76,9 +76,9 @@ def _make_page_mock(
     return page
 
 
-@patch("onyx.connectors.web.connector.check_internet_connection")
-@patch("onyx.connectors.web.connector.requests.head")
-@patch("onyx.connectors.web.connector.start_playwright")
+@patch("aethersearch.connectors.web.connector.check_internet_connection")
+@patch("aethersearch.connectors.web.connector.requests.head")
+@patch("aethersearch.connectors.web.connector.start_playwright")
 def test_slim_yields_slim_documents(
     mock_start_playwright: MagicMock,
     mock_head: MagicMock,
@@ -101,9 +101,9 @@ def test_slim_yields_slim_documents(
     assert docs[0].id == BASE_URL + "/"
 
 
-@patch("onyx.connectors.web.connector.check_internet_connection")
-@patch("onyx.connectors.web.connector.requests.head")
-@patch("onyx.connectors.web.connector.start_playwright")
+@patch("aethersearch.connectors.web.connector.check_internet_connection")
+@patch("aethersearch.connectors.web.connector.requests.head")
+@patch("aethersearch.connectors.web.connector.start_playwright")
 def test_slim_skips_content_extraction(
     mock_start_playwright: MagicMock,
     mock_head: MagicMock,
@@ -119,14 +119,14 @@ def test_slim_skips_content_extraction(
         web_connector_type=WEB_CONNECTOR_VALID_SETTINGS.SINGLE.value,
     )
 
-    with patch("onyx.connectors.web.connector.web_html_cleanup") as mock_cleanup:
+    with patch("aethersearch.connectors.web.connector.web_html_cleanup") as mock_cleanup:
         list(connector.retrieve_all_slim_docs())
         mock_cleanup.assert_not_called()
 
 
-@patch("onyx.connectors.web.connector.check_internet_connection")
-@patch("onyx.connectors.web.connector.requests.head")
-@patch("onyx.connectors.web.connector.start_playwright")
+@patch("aethersearch.connectors.web.connector.check_internet_connection")
+@patch("aethersearch.connectors.web.connector.requests.head")
+@patch("aethersearch.connectors.web.connector.start_playwright")
 def test_slim_discovers_links_recursively(
     mock_start_playwright: MagicMock,
     mock_head: MagicMock,
@@ -161,9 +161,9 @@ def test_slim_discovers_links_recursively(
     }
 
 
-@patch("onyx.connectors.web.connector.check_internet_connection")
-@patch("onyx.connectors.web.connector.requests.head")
-@patch("onyx.connectors.web.connector.start_playwright")
+@patch("aethersearch.connectors.web.connector.check_internet_connection")
+@patch("aethersearch.connectors.web.connector.requests.head")
+@patch("aethersearch.connectors.web.connector.start_playwright")
 def test_normal_200_skips_5s_wait(
     mock_start_playwright: MagicMock,
     mock_head: MagicMock,
@@ -186,9 +186,9 @@ def test_normal_200_skips_5s_wait(
     page.wait_for_timeout.assert_not_called()
 
 
-@patch("onyx.connectors.web.connector.check_internet_connection")
-@patch("onyx.connectors.web.connector.requests.head")
-@patch("onyx.connectors.web.connector.start_playwright")
+@patch("aethersearch.connectors.web.connector.check_internet_connection")
+@patch("aethersearch.connectors.web.connector.requests.head")
+@patch("aethersearch.connectors.web.connector.start_playwright")
 def test_cloudflare_applies_5s_wait(
     mock_start_playwright: MagicMock,
     mock_head: MagicMock,
@@ -211,10 +211,10 @@ def test_cloudflare_applies_5s_wait(
     page.wait_for_timeout.assert_called_once_with(5000)
 
 
-@patch("onyx.connectors.web.connector.time")
-@patch("onyx.connectors.web.connector.check_internet_connection")
-@patch("onyx.connectors.web.connector.requests.head")
-@patch("onyx.connectors.web.connector.start_playwright")
+@patch("aethersearch.connectors.web.connector.time")
+@patch("aethersearch.connectors.web.connector.check_internet_connection")
+@patch("aethersearch.connectors.web.connector.requests.head")
+@patch("aethersearch.connectors.web.connector.start_playwright")
 def test_403_applies_5s_wait(
     mock_start_playwright: MagicMock,
     mock_head: MagicMock,

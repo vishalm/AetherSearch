@@ -8,14 +8,14 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.engine import CursorResult
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.models import HierarchyNode as PydanticHierarchyNode
-from onyx.db.enums import HierarchyNodeType
-from onyx.db.models import Document
-from onyx.db.models import HierarchyNode
-from onyx.db.models import HierarchyNodeByConnectorCredentialPair
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import fetch_versioned_implementation
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.models import HierarchyNode as PydanticHierarchyNode
+from aethersearch.db.enums import HierarchyNodeType
+from aethersearch.db.models import Document
+from aethersearch.db.models import HierarchyNode
+from aethersearch.db.models import HierarchyNodeByConnectorCredentialPair
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import fetch_versioned_implementation
 
 logger = setup_logger()
 
@@ -497,7 +497,7 @@ def get_accessible_hierarchy_nodes_for_source(
     - EE version: Filters based on user email and external group IDs
     """
     versioned_fn = fetch_versioned_implementation(
-        "onyx.db.hierarchy", "_get_accessible_hierarchy_nodes_for_source"
+        "aethersearch.db.hierarchy", "_get_accessible_hierarchy_nodes_for_source"
     )
     return versioned_fn(db_session, source, user_email, external_group_ids)
 

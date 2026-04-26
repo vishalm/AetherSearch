@@ -15,37 +15,37 @@ from sqlalchemy.orm import aliased
 from sqlalchemy.orm import selectinload
 from sqlalchemy.orm import Session
 
-from onyx.access.hierarchy_access import get_user_external_group_ids
-from onyx.auth.schemas import UserRole
-from onyx.configs.app_configs import CURATORS_CANNOT_VIEW_OR_EDIT_NON_OWNED_ASSISTANTS
-from onyx.configs.constants import DEFAULT_PERSONA_ID
-from onyx.configs.constants import NotificationType
-from onyx.db.constants import SLACK_BOT_PERSONA_PREFIX
-from onyx.db.document_access import get_accessible_documents_by_ids
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import Document
-from onyx.db.models import DocumentSet
-from onyx.db.models import FederatedConnector__DocumentSet
-from onyx.db.models import HierarchyNode
-from onyx.db.models import Persona
-from onyx.db.models import Persona__User
-from onyx.db.models import Persona__UserGroup
-from onyx.db.models import PersonaLabel
-from onyx.db.models import StarterMessage
-from onyx.db.models import Tool
-from onyx.db.models import User
-from onyx.db.models import User__UserGroup
-from onyx.db.models import UserFile
-from onyx.db.models import UserGroup
-from onyx.db.notification import create_notification
-from onyx.server.features.persona.models import FullPersonaSnapshot
-from onyx.server.features.persona.models import MinimalPersonaSnapshot
-from onyx.server.features.persona.models import PersonaSharedNotificationData
-from onyx.server.features.persona.models import PersonaSnapshot
-from onyx.server.features.persona.models import PersonaUpsertRequest
-from onyx.server.features.tool.tool_visibility import should_expose_tool_to_fe
-from onyx.utils.logger import setup_logger
-from onyx.utils.variable_functionality import fetch_versioned_implementation
+from aethersearch.access.hierarchy_access import get_user_external_group_ids
+from aethersearch.auth.schemas import UserRole
+from aethersearch.configs.app_configs import CURATORS_CANNOT_VIEW_OR_EDIT_NON_OWNED_ASSISTANTS
+from aethersearch.configs.constants import DEFAULT_PERSONA_ID
+from aethersearch.configs.constants import NotificationType
+from aethersearch.db.constants import SLACK_BOT_PERSONA_PREFIX
+from aethersearch.db.document_access import get_accessible_documents_by_ids
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import Document
+from aethersearch.db.models import DocumentSet
+from aethersearch.db.models import FederatedConnector__DocumentSet
+from aethersearch.db.models import HierarchyNode
+from aethersearch.db.models import Persona
+from aethersearch.db.models import Persona__User
+from aethersearch.db.models import Persona__UserGroup
+from aethersearch.db.models import PersonaLabel
+from aethersearch.db.models import StarterMessage
+from aethersearch.db.models import Tool
+from aethersearch.db.models import User
+from aethersearch.db.models import User__UserGroup
+from aethersearch.db.models import UserFile
+from aethersearch.db.models import UserGroup
+from aethersearch.db.notification import create_notification
+from aethersearch.server.features.persona.models import FullPersonaSnapshot
+from aethersearch.server.features.persona.models import MinimalPersonaSnapshot
+from aethersearch.server.features.persona.models import PersonaSharedNotificationData
+from aethersearch.server.features.persona.models import PersonaSnapshot
+from aethersearch.server.features.persona.models import PersonaUpsertRequest
+from aethersearch.server.features.tool.tool_visibility import should_expose_tool_to_fe
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.variable_functionality import fetch_versioned_implementation
 
 logger = setup_logger()
 
@@ -261,7 +261,7 @@ def update_persona_access(
         ).delete(synchronize_session="fetch")
 
         if group_ids:
-            raise NotImplementedError("Onyx MIT does not support group-based sharing")
+            raise NotImplementedError("AetherSearch MIT does not support group-based sharing")
 
     # When sharing changes, user file ACLs need to be updated in the vector DB
     if needs_sync:
@@ -327,7 +327,7 @@ def create_update_persona(
         )
 
         versioned_update_persona_access = fetch_versioned_implementation(
-            "onyx.db.persona", "update_persona_access"
+            "aethersearch.db.persona", "update_persona_access"
         )
 
         versioned_update_persona_access(
@@ -366,7 +366,7 @@ def update_persona_shared(
         raise PermissionError("You don't have permission to modify this persona")
 
     versioned_update_persona_access = fetch_versioned_implementation(
-        "onyx.db.persona", "update_persona_access"
+        "aethersearch.db.persona", "update_persona_access"
     )
     versioned_update_persona_access(
         persona_id=persona_id,
@@ -1205,7 +1205,7 @@ def update_persona_visibility(
 
 def validate_persona_tools(tools: list[Tool], db_session: Session) -> None:
     # local import to avoid circular import. DB layer should not depend on tools layer.
-    from onyx.tools.built_in_tools import get_built_in_tool_by_id
+    from aethersearch.tools.built_in_tools import get_built_in_tool_by_id
 
     for tool in tools:
         if tool.in_code_tool_id is not None:

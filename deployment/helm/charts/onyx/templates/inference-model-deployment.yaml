@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "onyx.fullname" . }}-inference-model
+  name: {{ include "aethersearch.fullname" . }}-inference-model
   labels:
     {{- range .Values.inferenceCapability.labels }}
     {{ .key }}: {{ .value }}
@@ -56,7 +56,7 @@ spec:
         - configMapRef:
             name: {{ .Values.config.envConfigMapName }}
         env:
-          {{- include "onyx.envSecrets" . | nindent 12}}
+          {{- include "aethersearch.envSecrets" . | nindent 12}}
           {{- with .Values.inferenceCapability.extraEnv }}
           {{- toYaml . | nindent 12 }}
           {{- end }}

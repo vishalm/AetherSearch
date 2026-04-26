@@ -3,7 +3,7 @@ import { SvgExa, SvgFirecrawl } from "@opal/logos";
 
 export type WebContentProviderType =
   | "firecrawl"
-  | "onyx_web_crawler"
+  | "aethersearch_web_crawler"
   | "exa"
   | (string & {});
 
@@ -16,12 +16,12 @@ export const CONTENT_PROVIDER_DETAILS: Record<
     logo?: IconFunctionComponent;
   }
 > = {
-  onyx_web_crawler: {
-    label: "Onyx Web Crawler",
+  aethersearch_web_crawler: {
+    label: "AetherSearch Web Crawler",
     subtitle:
       "Built-in web crawler. Works for most pages but less performant in edge cases.",
     description:
-      "Onyx's built-in crawler processes URLs returned by your search engine.",
+      "AetherSearch's built-in crawler processes URLs returned by your search engine.",
   },
   firecrawl: {
     label: "Firecrawl",
@@ -67,7 +67,7 @@ const CONTENT_PROVIDER_CAPABILITIES: Record<
   string,
   ContentProviderCapabilities
 > = {
-  onyx_web_crawler: {
+  aethersearch_web_crawler: {
     requiresApiKey: false,
     requiredConfigKeys: [],
   },
@@ -144,10 +144,10 @@ export function getCurrentContentProviderType(
   }>
 ): WebContentProviderType {
   return (
-    providers.find((p) => p.is_active && p.provider_type !== "onyx_web_crawler")
+    providers.find((p) => p.is_active && p.provider_type !== "aethersearch_web_crawler")
       ?.provider_type ??
     providers.find((p) => p.is_active)?.provider_type ??
-    "onyx_web_crawler"
+    "aethersearch_web_crawler"
   );
 }
 

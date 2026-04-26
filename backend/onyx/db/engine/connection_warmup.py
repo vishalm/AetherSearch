@@ -1,7 +1,7 @@
 from sqlalchemy import text
 
-from onyx.db.engine.async_sql_engine import get_sqlalchemy_async_engine
-from onyx.db.engine.sql_engine import get_sqlalchemy_engine
+from aethersearch.db.engine.async_sql_engine import get_sqlalchemy_async_engine
+from aethersearch.db.engine.sql_engine import get_sqlalchemy_engine
 
 
 async def warm_up_connections(

@@ -10,11 +10,11 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/onyx-dot-app/onyx/cli/internal/api"
-	"github.com/onyx-dot-app/onyx/cli/internal/config"
-	"github.com/onyx-dot-app/onyx/cli/internal/exitcodes"
-	"github.com/onyx-dot-app/onyx/cli/internal/models"
-	"github.com/onyx-dot-app/onyx/cli/internal/overflow"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/api"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/config"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/exitcodes"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/models"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/overflow"
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
 )

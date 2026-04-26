@@ -2,12 +2,12 @@
 
 import pytest
 
-from onyx.configs.constants import DocumentSource
-from onyx.tools.tool_implementations.open_url.open_url_tool import _url_lookup_variants
-from onyx.tools.tool_implementations.open_url.url_normalization import (
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.tools.tool_implementations.open_url.open_url_tool import _url_lookup_variants
+from aethersearch.tools.tool_implementations.open_url.url_normalization import (
     _detect_source_type,
 )
-from onyx.tools.tool_implementations.open_url.url_normalization import normalize_url
+from aethersearch.tools.tool_implementations.open_url.url_normalization import normalize_url
 
 
 @pytest.mark.parametrize(

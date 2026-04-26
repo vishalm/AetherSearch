@@ -1,7 +1,7 @@
 import {
-  OnyxDocument,
+  AetherSearchDocument,
   Filters,
-  SearchOnyxDocument,
+  SearchAetherSearchDocument,
   StreamStopReason,
 } from "@/lib/search/interfaces";
 import { Packet } from "./services/streamingModels";
@@ -137,7 +137,7 @@ export interface ChatSession {
 
 export interface SearchSession {
   search_session_id: string;
-  documents: SearchOnyxDocument[];
+  documents: SearchAetherSearchDocument[];
   messages: BackendMessage[];
   description: string;
 }
@@ -147,7 +147,7 @@ export interface Message {
   messageId?: number;
   nodeId: number; // Unique identifier for tree structure (can be negative for temp messages)
   message: string;
-  type: "user" | "assistant" | "system" | "error"; // TODO: rename "assistant" to "agent" — https://linear.app/onyx-app/issue/ENG-3766
+  type: "user" | "assistant" | "system" | "error"; // TODO: rename "assistant" to "agent" — https://linear.app/aethersearch-app/issue/ENG-3766
   retrievalType?: RetrievalType;
   researchType?: ResearchType;
   query?: string | null;
@@ -174,7 +174,7 @@ export interface Message {
   packetCount?: number; // Tracks packet count for React memo comparison (avoids reading from mutated array)
 
   // cached values for easy access
-  documents?: OnyxDocument[] | null;
+  documents?: AetherSearchDocument[] | null;
   citations?: CitationMap;
 
   // feedback state
@@ -223,10 +223,10 @@ export interface BackendMessage {
   message: string;
   rephrased_query: string | null;
   // Backend sends context_docs as a flat array of documents
-  context_docs: OnyxDocument[] | null;
+  context_docs: AetherSearchDocument[] | null;
   time_sent: string;
   overridden_model: string;
-  alternate_assistant_id: number | null; // TODO: rename to agent — https://linear.app/onyx-app/issue/ENG-3766
+  alternate_assistant_id: number | null; // TODO: rename to agent — https://linear.app/aethersearch-app/issue/ENG-3766
   chat_session_id: string;
   citations: CitationMap | null;
   files: FileDescriptor[];
@@ -251,7 +251,7 @@ export interface BackendMessage {
 export interface MessageResponseIDInfo {
   type: "message_id_info";
   user_message_id: number | null;
-  reserved_assistant_message_id: number; // TODO: rename to agent — https://linear.app/onyx-app/issue/ENG-3766
+  reserved_assistant_message_id: number; // TODO: rename to agent — https://linear.app/aethersearch-app/issue/ENG-3766
 }
 
 export interface ModelResponseSlot {
@@ -270,7 +270,7 @@ export interface UserKnowledgeFilePacket {
 }
 
 export interface DocumentsResponse {
-  top_documents: OnyxDocument[];
+  top_documents: AetherSearchDocument[];
   rephrased_query: string | null;
   level?: number | null;
   level_question_num?: number | null;
@@ -333,7 +333,7 @@ export interface SubQuestionDetail extends BaseQuestionIdentifier {
   question: string;
   answer: string;
   sub_queries?: SubQueryDetail[] | null;
-  context_docs?: { top_documents: OnyxDocument[] } | null;
+  context_docs?: { top_documents: AetherSearchDocument[] } | null;
   is_complete?: boolean;
   is_stopped?: boolean;
   answer_streaming?: boolean;

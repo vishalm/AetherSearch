@@ -7,16 +7,16 @@ from typing import IO
 from fastapi import HTTPException
 from fastapi import UploadFile
 
-from ee.onyx.server.enterprise_settings.models import AnalyticsScriptUpload
-from ee.onyx.server.enterprise_settings.models import EnterpriseSettings
-from onyx.configs.constants import FileOrigin
-from onyx.configs.constants import KV_CUSTOM_ANALYTICS_SCRIPT_KEY
-from onyx.configs.constants import KV_ENTERPRISE_SETTINGS_KEY
-from onyx.configs.constants import ONYX_DEFAULT_APPLICATION_NAME
-from onyx.file_store.file_store import get_default_file_store
-from onyx.key_value_store.factory import get_kv_store
-from onyx.key_value_store.interface import KvKeyNotFoundError
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.server.enterprise_settings.models import AnalyticsScriptUpload
+from ee.aethersearch.server.enterprise_settings.models import EnterpriseSettings
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.configs.constants import KV_CUSTOM_ANALYTICS_SCRIPT_KEY
+from aethersearch.configs.constants import KV_ENTERPRISE_SETTINGS_KEY
+from aethersearch.configs.constants import AETHERSEARCH_DEFAULT_APPLICATION_NAME
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.key_value_store.factory import get_kv_store
+from aethersearch.key_value_store.interface import KvKeyNotFoundError
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -58,7 +58,7 @@ def load_runtime_settings() -> EnterpriseSettings:
     """
     enterprise_settings = load_settings()
     if not enterprise_settings.application_name:
-        enterprise_settings.application_name = ONYX_DEFAULT_APPLICATION_NAME
+        enterprise_settings.application_name = AETHERSEARCH_DEFAULT_APPLICATION_NAME
 
     return enterprise_settings
 

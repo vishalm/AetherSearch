@@ -1,10 +1,10 @@
 import pytest
 from pydantic import ValidationError
 
-from onyx.db.enums import HookFailStrategy
-from onyx.db.enums import HookPoint
-from onyx.hooks.models import HookCreateRequest
-from onyx.hooks.models import HookUpdateRequest
+from aethersearch.db.enums import HookFailStrategy
+from aethersearch.db.enums import HookPoint
+from aethersearch.hooks.models import HookCreateRequest
+from aethersearch.hooks.models import HookUpdateRequest
 
 
 def test_hook_update_request_rejects_empty() -> None:

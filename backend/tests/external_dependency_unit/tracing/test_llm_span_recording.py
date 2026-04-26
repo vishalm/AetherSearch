@@ -5,17 +5,17 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from onyx.llm.model_response import ChatCompletionMessageToolCall
-from onyx.llm.model_response import Choice
-from onyx.llm.model_response import FunctionCall as ModelResponseFunctionCall
-from onyx.llm.model_response import Message
-from onyx.llm.model_response import ModelResponse
-from onyx.llm.model_response import Usage
-from onyx.llm.models import FunctionCall
-from onyx.llm.models import ToolCall
-from onyx.tracing.framework.span_data import GenerationSpanData
-from onyx.tracing.llm_utils import record_llm_response
-from onyx.tracing.llm_utils import record_llm_span_output
+from aethersearch.llm.model_response import ChatCompletionMessageToolCall
+from aethersearch.llm.model_response import Choice
+from aethersearch.llm.model_response import FunctionCall as ModelResponseFunctionCall
+from aethersearch.llm.model_response import Message
+from aethersearch.llm.model_response import ModelResponse
+from aethersearch.llm.model_response import Usage
+from aethersearch.llm.models import FunctionCall
+from aethersearch.llm.models import ToolCall
+from aethersearch.tracing.framework.span_data import GenerationSpanData
+from aethersearch.tracing.llm_utils import record_llm_response
+from aethersearch.tracing.llm_utils import record_llm_span_output
 
 
 @pytest.fixture

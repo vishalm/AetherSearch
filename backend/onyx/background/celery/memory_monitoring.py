@@ -1,12 +1,12 @@
-# backend/onyx/background/celery/memory_monitoring.py
+# backend/aethersearch/background/celery/memory_monitoring.py
 import logging
 import os
 from logging.handlers import RotatingFileHandler
 
 import psutil
 
-from onyx.utils.logger import setup_logger
-from onyx.utils.platform import is_running_in_container
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.platform import is_running_in_container
 
 # Regular application logger
 logger = setup_logger()
@@ -14,7 +14,7 @@ logger = setup_logger()
 # Only set up memory monitoring in container environment
 if is_running_in_container():
     # Set up a dedicated memory monitoring logger
-    MEMORY_LOG_DIR = "/var/log/onyx/memory"
+    MEMORY_LOG_DIR = "/var/log/aethersearch/memory"
     MEMORY_LOG_FILE = os.path.join(MEMORY_LOG_DIR, "memory_usage.log")
     MEMORY_LOG_MAX_BYTES = 10 * 1024 * 1024  # 10MB
     MEMORY_LOG_BACKUP_COUNT = 5  # Keep 5 backup files

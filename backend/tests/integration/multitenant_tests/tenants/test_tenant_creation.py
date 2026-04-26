@@ -3,9 +3,9 @@ from uuid import uuid4
 
 import requests
 
-from onyx.configs.constants import DocumentSource
-from onyx.db.enums import AccessType
-from onyx.db.models import UserRole
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.db.enums import AccessType
+from aethersearch.db.models import UserRole
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.managers.cc_pair import CCPairManager
 from tests.integration.common_utils.managers.connector import ConnectorManager

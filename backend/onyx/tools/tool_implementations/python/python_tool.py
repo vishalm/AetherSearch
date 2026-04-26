@@ -8,39 +8,39 @@ from pydantic import TypeAdapter
 from sqlalchemy.orm import Session
 from typing_extensions import override
 
-from onyx.chat.emitter import Emitter
-from onyx.configs.app_configs import CODE_INTERPRETER_BASE_URL
-from onyx.configs.app_configs import CODE_INTERPRETER_DEFAULT_TIMEOUT_MS
-from onyx.configs.app_configs import CODE_INTERPRETER_MAX_OUTPUT_LENGTH
-from onyx.configs.constants import FileOrigin
-from onyx.db.code_interpreter import fetch_code_interpreter_server
-from onyx.file_store.utils import build_full_frontend_file_url
-from onyx.file_store.utils import get_default_file_store
-from onyx.server.query_and_chat.placement import Placement
-from onyx.server.query_and_chat.streaming_models import Packet
-from onyx.server.query_and_chat.streaming_models import PythonToolDelta
-from onyx.server.query_and_chat.streaming_models import PythonToolStart
-from onyx.tools.interface import Tool
-from onyx.tools.models import LlmPythonExecutionResult
-from onyx.tools.models import PythonExecutionFile
-from onyx.tools.models import PythonToolOverrideKwargs
-from onyx.tools.models import PythonToolRichResponse
-from onyx.tools.models import ToolCallException
-from onyx.tools.models import ToolResponse
-from onyx.tools.tool_implementations.python.code_interpreter_client import (
+from aethersearch.chat.emitter import Emitter
+from aethersearch.configs.app_configs import CODE_INTERPRETER_BASE_URL
+from aethersearch.configs.app_configs import CODE_INTERPRETER_DEFAULT_TIMEOUT_MS
+from aethersearch.configs.app_configs import CODE_INTERPRETER_MAX_OUTPUT_LENGTH
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.db.code_interpreter import fetch_code_interpreter_server
+from aethersearch.file_store.utils import build_full_frontend_file_url
+from aethersearch.file_store.utils import get_default_file_store
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.server.query_and_chat.streaming_models import Packet
+from aethersearch.server.query_and_chat.streaming_models import PythonToolDelta
+from aethersearch.server.query_and_chat.streaming_models import PythonToolStart
+from aethersearch.tools.interface import Tool
+from aethersearch.tools.models import LlmPythonExecutionResult
+from aethersearch.tools.models import PythonExecutionFile
+from aethersearch.tools.models import PythonToolOverrideKwargs
+from aethersearch.tools.models import PythonToolRichResponse
+from aethersearch.tools.models import ToolCallException
+from aethersearch.tools.models import ToolResponse
+from aethersearch.tools.tool_implementations.python.code_interpreter_client import (
     CodeInterpreterClient,
 )
-from onyx.tools.tool_implementations.python.code_interpreter_client import FileInput
-from onyx.tools.tool_implementations.python.code_interpreter_client import (
+from aethersearch.tools.tool_implementations.python.code_interpreter_client import FileInput
+from aethersearch.tools.tool_implementations.python.code_interpreter_client import (
     StreamErrorEvent,
 )
-from onyx.tools.tool_implementations.python.code_interpreter_client import (
+from aethersearch.tools.tool_implementations.python.code_interpreter_client import (
     StreamOutputEvent,
 )
-from onyx.tools.tool_implementations.python.code_interpreter_client import (
+from aethersearch.tools.tool_implementations.python.code_interpreter_client import (
     StreamResultEvent,
 )
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -279,8 +279,8 @@ class PythonTool(Tool[PythonToolOverrideKwargs]):
                         # Default to binary if we can't determine the type
                         mime_type = mime_type or "application/octet-stream"
 
-                        # Save to Onyx file store
-                        onyx_file_id = file_store.save_file(
+                        # Save to AetherSearch file store
+                        aethersearch_file_id = file_store.save_file(
                             content=BytesIO(file_content),
                             display_name=filename,
                             file_origin=FileOrigin.CHAT_UPLOAD,
@@ -290,10 +290,10 @@ class PythonTool(Tool[PythonToolOverrideKwargs]):
                         generated_files.append(
                             PythonExecutionFile(
                                 filename=filename,
-                                file_link=build_full_frontend_file_url(onyx_file_id),
+                                file_link=build_full_frontend_file_url(aethersearch_file_id),
                             )
                         )
-                        generated_file_ids.append(onyx_file_id)
+                        generated_file_ids.append(aethersearch_file_id)
 
                         # Mark for cleanup
                         file_ids_to_cleanup.append(workspace_file.file_id)

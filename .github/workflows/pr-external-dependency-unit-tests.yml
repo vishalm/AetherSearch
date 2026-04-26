@@ -127,7 +127,7 @@ jobs:
           cat <<EOF > deployment/docker_compose/.env
           COMPOSE_PROFILES=s3-filestore,opensearch-enabled
           DISABLE_TELEMETRY=true
-          OPENSEARCH_FOR_ONYX_ENABLED=true
+          OPENSEARCH_FOR_AETHERSEARCH_ENABLED=true
           EOF
 
       - name: Set up Standard Dependencies

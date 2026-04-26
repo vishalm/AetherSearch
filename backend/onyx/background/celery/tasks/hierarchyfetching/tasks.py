@@ -21,35 +21,35 @@ from redis import Redis
 from redis.lock import Lock as RedisLock
 from sqlalchemy.orm import Session
 
-from onyx.background.celery.apps.app_base import task_logger
-from onyx.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
-from onyx.configs.constants import DANSWER_REDIS_FUNCTION_LOCK_PREFIX
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import OnyxRedisLocks
-from onyx.connectors.factory import ConnectorMissingException
-from onyx.connectors.factory import identify_connector_class
-from onyx.connectors.factory import instantiate_connector
-from onyx.connectors.interfaces import HierarchyConnector
-from onyx.connectors.models import HierarchyNode as PydanticHierarchyNode
-from onyx.db.connector import mark_cc_pair_as_hierarchy_fetched
-from onyx.db.connector_credential_pair import (
+from aethersearch.background.celery.apps.app_base import task_logger
+from aethersearch.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
+from aethersearch.configs.constants import DANSWER_REDIS_FUNCTION_LOCK_PREFIX
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import AetherSearchRedisLocks
+from aethersearch.connectors.factory import ConnectorMissingException
+from aethersearch.connectors.factory import identify_connector_class
+from aethersearch.connectors.factory import instantiate_connector
+from aethersearch.connectors.interfaces import HierarchyConnector
+from aethersearch.connectors.models import HierarchyNode as PydanticHierarchyNode
+from aethersearch.db.connector import mark_cc_pair_as_hierarchy_fetched
+from aethersearch.db.connector_credential_pair import (
     fetch_indexable_standard_connector_credential_pair_ids,
 )
-from onyx.db.connector_credential_pair import get_connector_credential_pair_from_id
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import AccessType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.hierarchy import upsert_hierarchy_node_cc_pair_entries
-from onyx.db.hierarchy import upsert_hierarchy_nodes_batch
-from onyx.db.models import ConnectorCredentialPair
-from onyx.redis.redis_hierarchy import cache_hierarchy_nodes_batch
-from onyx.redis.redis_hierarchy import ensure_source_node_exists
-from onyx.redis.redis_hierarchy import HierarchyNodeCacheEntry
-from onyx.redis.redis_pool import get_redis_client
-from onyx.utils.logger import setup_logger
+from aethersearch.db.connector_credential_pair import get_connector_credential_pair_from_id
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.hierarchy import upsert_hierarchy_node_cc_pair_entries
+from aethersearch.db.hierarchy import upsert_hierarchy_nodes_batch
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.redis.redis_hierarchy import cache_hierarchy_nodes_batch
+from aethersearch.redis.redis_hierarchy import ensure_source_node_exists
+from aethersearch.redis.redis_hierarchy import HierarchyNodeCacheEntry
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -135,14 +135,14 @@ def _try_creating_hierarchy_fetching_task(
 
         # Send the task
         result = celery_app.send_task(
-            OnyxCeleryTask.CONNECTOR_HIERARCHY_FETCHING_TASK,
+            AetherSearchCeleryTask.CONNECTOR_HIERARCHY_FETCHING_TASK,
             kwargs=dict(
                 cc_pair_id=cc_pair.id,
                 tenant_id=tenant_id,
             ),
-            queue=OnyxCeleryQueues.CONNECTOR_HIERARCHY_FETCHING,
+            queue=AetherSearchCeleryQueues.CONNECTOR_HIERARCHY_FETCHING,
             task_id=custom_task_id,
-            priority=OnyxCeleryPriority.LOW,
+            priority=AetherSearchCeleryPriority.LOW,
         )
 
         if not result:
@@ -165,7 +165,7 @@ def _try_creating_hierarchy_fetching_task(
 
 
 @shared_task(
-    name=OnyxCeleryTask.CHECK_FOR_HIERARCHY_FETCHING,
+    name=AetherSearchCeleryTask.CHECK_FOR_HIERARCHY_FETCHING,
     soft_time_limit=300,
     bind=True,
 )
@@ -183,7 +183,7 @@ def check_for_hierarchy_fetching(self: Task, *, tenant_id: str) -> int | None:
     redis_client = get_redis_client()
 
     lock_beat: RedisLock = redis_client.lock(
-        OnyxRedisLocks.CHECK_HIERARCHY_FETCHING_BEAT_LOCK,
+        AetherSearchRedisLocks.CHECK_HIERARCHY_FETCHING_BEAT_LOCK,
         timeout=CELERY_GENERIC_BEAT_LOCK_TIMEOUT,
     )
 
@@ -347,7 +347,7 @@ def _run_hierarchy_extraction(
 
 
 @shared_task(
-    name=OnyxCeleryTask.CONNECTOR_HIERARCHY_FETCHING_TASK,
+    name=AetherSearchCeleryTask.CONNECTOR_HIERARCHY_FETCHING_TASK,
     soft_time_limit=3600,  # 1 hour soft limit
     time_limit=3900,  # 1 hour 5 min hard limit
     bind=True,

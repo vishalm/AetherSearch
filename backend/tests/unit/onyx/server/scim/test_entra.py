@@ -16,41 +16,41 @@ from uuid import uuid4
 import pytest
 from fastapi import Response
 
-from ee.onyx.server.scim.api import create_user
-from ee.onyx.server.scim.api import delete_user
-from ee.onyx.server.scim.api import get_group
-from ee.onyx.server.scim.api import get_resource_types
-from ee.onyx.server.scim.api import get_schemas
-from ee.onyx.server.scim.api import get_service_provider_config
-from ee.onyx.server.scim.api import get_user
-from ee.onyx.server.scim.api import list_groups
-from ee.onyx.server.scim.api import list_users
-from ee.onyx.server.scim.api import patch_group
-from ee.onyx.server.scim.api import patch_user
-from ee.onyx.server.scim.api import replace_user
-from ee.onyx.server.scim.api import ScimJSONResponse
-from ee.onyx.server.scim.models import SCIM_ENTERPRISE_USER_SCHEMA
-from ee.onyx.server.scim.models import SCIM_USER_SCHEMA
-from ee.onyx.server.scim.models import ScimEnterpriseExtension
-from ee.onyx.server.scim.models import ScimGroupMember
-from ee.onyx.server.scim.models import ScimGroupResource
-from ee.onyx.server.scim.models import ScimManagerRef
-from ee.onyx.server.scim.models import ScimMappingFields
-from ee.onyx.server.scim.models import ScimName
-from ee.onyx.server.scim.models import ScimPatchOperation
-from ee.onyx.server.scim.models import ScimPatchOperationType
-from ee.onyx.server.scim.models import ScimPatchRequest
-from ee.onyx.server.scim.models import ScimPatchResourceValue
-from ee.onyx.server.scim.models import ScimUserResource
-from ee.onyx.server.scim.providers.base import ScimProvider
-from ee.onyx.server.scim.providers.entra import EntraProvider
-from tests.unit.onyx.server.scim.conftest import make_db_group
-from tests.unit.onyx.server.scim.conftest import make_db_user
-from tests.unit.onyx.server.scim.conftest import make_scim_user
-from tests.unit.onyx.server.scim.conftest import make_user_mapping
-from tests.unit.onyx.server.scim.conftest import parse_scim_group
-from tests.unit.onyx.server.scim.conftest import parse_scim_list
-from tests.unit.onyx.server.scim.conftest import parse_scim_user
+from ee.aethersearch.server.scim.api import create_user
+from ee.aethersearch.server.scim.api import delete_user
+from ee.aethersearch.server.scim.api import get_group
+from ee.aethersearch.server.scim.api import get_resource_types
+from ee.aethersearch.server.scim.api import get_schemas
+from ee.aethersearch.server.scim.api import get_service_provider_config
+from ee.aethersearch.server.scim.api import get_user
+from ee.aethersearch.server.scim.api import list_groups
+from ee.aethersearch.server.scim.api import list_users
+from ee.aethersearch.server.scim.api import patch_group
+from ee.aethersearch.server.scim.api import patch_user
+from ee.aethersearch.server.scim.api import replace_user
+from ee.aethersearch.server.scim.api import ScimJSONResponse
+from ee.aethersearch.server.scim.models import SCIM_ENTERPRISE_USER_SCHEMA
+from ee.aethersearch.server.scim.models import SCIM_USER_SCHEMA
+from ee.aethersearch.server.scim.models import ScimEnterpriseExtension
+from ee.aethersearch.server.scim.models import ScimGroupMember
+from ee.aethersearch.server.scim.models import ScimGroupResource
+from ee.aethersearch.server.scim.models import ScimManagerRef
+from ee.aethersearch.server.scim.models import ScimMappingFields
+from ee.aethersearch.server.scim.models import ScimName
+from ee.aethersearch.server.scim.models import ScimPatchOperation
+from ee.aethersearch.server.scim.models import ScimPatchOperationType
+from ee.aethersearch.server.scim.models import ScimPatchRequest
+from ee.aethersearch.server.scim.models import ScimPatchResourceValue
+from ee.aethersearch.server.scim.models import ScimUserResource
+from ee.aethersearch.server.scim.providers.base import ScimProvider
+from ee.aethersearch.server.scim.providers.entra import EntraProvider
+from tests.unit.aethersearch.server.scim.conftest import make_db_group
+from tests.unit.aethersearch.server.scim.conftest import make_db_user
+from tests.unit.aethersearch.server.scim.conftest import make_scim_user
+from tests.unit.aethersearch.server.scim.conftest import make_user_mapping
+from tests.unit.aethersearch.server.scim.conftest import parse_scim_group
+from tests.unit.aethersearch.server.scim.conftest import parse_scim_list
+from tests.unit.aethersearch.server.scim.conftest import parse_scim_user
 
 
 @pytest.fixture
@@ -113,7 +113,7 @@ class TestEntraServiceDiscovery:
 class TestEntraUserLifecycle:
     """Test user CRUD through Entra's lens: enterprise schemas, PascalCase ops."""
 
-    @patch("ee.onyx.server.scim.api._check_seat_availability", return_value=None)
+    @patch("ee.aethersearch.server.scim.api._check_seat_availability", return_value=None)
     def test_create_user_includes_enterprise_schema(
         self,
         mock_seats: MagicMock,  # noqa: ARG002
@@ -136,7 +136,7 @@ class TestEntraUserLifecycle:
         assert SCIM_ENTERPRISE_USER_SCHEMA in resource.schemas
         assert SCIM_USER_SCHEMA in resource.schemas
 
-    @patch("ee.onyx.server.scim.api._check_seat_availability", return_value=None)
+    @patch("ee.aethersearch.server.scim.api._check_seat_availability", return_value=None)
     def test_create_user_with_enterprise_extension(
         self,
         mock_seats: MagicMock,  # noqa: ARG002
@@ -604,7 +604,7 @@ class TestEntraUserLifecycle:
         )
 
         with patch(
-            "ee.onyx.server.scim.api._check_seat_availability", return_value=None
+            "ee.aethersearch.server.scim.api._check_seat_availability", return_value=None
         ):
             result = create_user(
                 user_resource=resource,
@@ -707,7 +707,7 @@ class TestEntraGroupLifecycle:
         assert "members" not in parsed
         assert parsed["displayName"] == "Engineering"
 
-    @patch("ee.onyx.server.scim.api.apply_group_patch")
+    @patch("ee.aethersearch.server.scim.api.apply_group_patch")
     def test_patch_group_add_members_with_pascal_case(
         self,
         mock_apply: MagicMock,
@@ -751,7 +751,7 @@ class TestEntraGroupLifecycle:
         parse_scim_group(result)
         mock_dal.upsert_group_members.assert_called_once()
 
-    @patch("ee.onyx.server.scim.api.apply_group_patch")
+    @patch("ee.aethersearch.server.scim.api.apply_group_patch")
     def test_patch_group_remove_member_with_pascal_case(
         self,
         mock_apply: MagicMock,

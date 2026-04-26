@@ -14,19 +14,19 @@ from typing import cast
 import bs4
 from pydantic import BaseModel
 
-from onyx.access.models import ExternalAccess
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.imap.models import EmailHeaders
-from onyx.connectors.interfaces import CheckpointedConnectorWithPermSync
-from onyx.connectors.interfaces import CheckpointOutput
-from onyx.connectors.interfaces import CredentialsConnector
-from onyx.connectors.interfaces import CredentialsProviderInterface
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.models import BasicExpertInfo
-from onyx.connectors.models import ConnectorCheckpoint
-from onyx.connectors.models import Document
-from onyx.connectors.models import TextSection
-from onyx.utils.logger import setup_logger
+from aethersearch.access.models import ExternalAccess
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.imap.models import EmailHeaders
+from aethersearch.connectors.interfaces import CheckpointedConnectorWithPermSync
+from aethersearch.connectors.interfaces import CheckpointOutput
+from aethersearch.connectors.interfaces import CredentialsConnector
+from aethersearch.connectors.interfaces import CredentialsProviderInterface
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.connectors.models import ConnectorCheckpoint
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import TextSection
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -444,7 +444,7 @@ def _parse_singular_addr(raw_header: str) -> tuple[str, str]:
 if __name__ == "__main__":
     import time
 
-    from onyx.connectors.credentials_provider import OnyxStaticCredentialsProvider
+    from aethersearch.connectors.credentials_provider import AetherSearchStaticCredentialsProvider
     from tests.daily.connectors.utils import load_all_from_connector
 
     host = os.environ.get("IMAP_HOST")
@@ -467,7 +467,7 @@ if __name__ == "__main__":
     )
 
     imap_connector.set_credentials_provider(
-        OnyxStaticCredentialsProvider(
+        AetherSearchStaticCredentialsProvider(
             tenant_id=None,
             connector_name=DocumentSource.IMAP,
             credential_json={

@@ -2,31 +2,31 @@ from collections.abc import Generator
 
 from sqlalchemy.orm import Session
 
-from ee.onyx.db.search import create_search_query
-from ee.onyx.secondary_llm_flows.query_expansion import expand_keywords
-from ee.onyx.server.query_and_chat.models import SearchDocWithContent
-from ee.onyx.server.query_and_chat.models import SearchFullResponse
-from ee.onyx.server.query_and_chat.models import SendSearchQueryRequest
-from ee.onyx.server.query_and_chat.streaming_models import LLMSelectedDocsPacket
-from ee.onyx.server.query_and_chat.streaming_models import SearchDocsPacket
-from ee.onyx.server.query_and_chat.streaming_models import SearchErrorPacket
-from ee.onyx.server.query_and_chat.streaming_models import SearchQueriesPacket
-from onyx.context.search.models import BaseFilters
-from onyx.context.search.models import ChunkSearchRequest
-from onyx.context.search.models import InferenceChunk
-from onyx.context.search.pipeline import merge_individual_chunks
-from onyx.context.search.pipeline import search_pipeline
-from onyx.db.models import User
-from onyx.db.search_settings import get_current_search_settings
-from onyx.document_index.factory import get_default_document_index
-from onyx.document_index.interfaces import DocumentIndex
-from onyx.llm.factory import get_default_llm
-from onyx.secondary_llm_flows.document_filter import select_sections_for_expansion
-from onyx.tools.tool_implementations.search.search_utils import (
+from ee.aethersearch.db.search import create_search_query
+from ee.aethersearch.secondary_llm_flows.query_expansion import expand_keywords
+from ee.aethersearch.server.query_and_chat.models import SearchDocWithContent
+from ee.aethersearch.server.query_and_chat.models import SearchFullResponse
+from ee.aethersearch.server.query_and_chat.models import SendSearchQueryRequest
+from ee.aethersearch.server.query_and_chat.streaming_models import LLMSelectedDocsPacket
+from ee.aethersearch.server.query_and_chat.streaming_models import SearchDocsPacket
+from ee.aethersearch.server.query_and_chat.streaming_models import SearchErrorPacket
+from ee.aethersearch.server.query_and_chat.streaming_models import SearchQueriesPacket
+from aethersearch.context.search.models import BaseFilters
+from aethersearch.context.search.models import ChunkSearchRequest
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.context.search.pipeline import merge_individual_chunks
+from aethersearch.context.search.pipeline import search_pipeline
+from aethersearch.db.models import User
+from aethersearch.db.search_settings import get_current_search_settings
+from aethersearch.document_index.factory import get_default_document_index
+from aethersearch.document_index.interfaces import DocumentIndex
+from aethersearch.llm.factory import get_default_llm
+from aethersearch.secondary_llm_flows.document_filter import select_sections_for_expansion
+from aethersearch.tools.tool_implementations.search.search_utils import (
     weighted_reciprocal_rank_fusion,
 )
-from onyx.utils.logger import setup_logger
-from onyx.utils.threadpool_concurrency import run_functions_tuples_in_parallel
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.threadpool_concurrency import run_functions_tuples_in_parallel
 
 logger = setup_logger()
 

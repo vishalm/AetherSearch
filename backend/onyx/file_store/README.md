@@ -1,6 +1,6 @@
-# Onyx File Store
+# AetherSearch File Store
 
-The Onyx file store provides a unified interface for storing files and large binary objects in S3-compatible storage systems. It supports AWS S3, MinIO, Azure Blob Storage, Digital Ocean Spaces, and other S3-compatible services.
+The AetherSearch file store provides a unified interface for storing files and large binary objects in S3-compatible storage systems. It supports AWS S3, MinIO, Azure Blob Storage, Digital Ocean Spaces, and other S3-compatible services.
 
 ## Architecture
 
@@ -45,8 +45,8 @@ All configuration is handled via environment variables. The system requires S3-c
 ### AWS S3
 
 ```bash
-S3_FILE_STORE_BUCKET_NAME=your-bucket-name  # Defaults to 'onyx-file-store-bucket'
-S3_FILE_STORE_PREFIX=onyx-files  # Optional, defaults to 'onyx-files'
+S3_FILE_STORE_BUCKET_NAME=your-bucket-name  # Defaults to 'aethersearch-file-store-bucket'
+S3_FILE_STORE_PREFIX=aethersearch-files  # Optional, defaults to 'aethersearch-files'
 
 # AWS credentials (use one of these methods):
 # 1. Environment variables
@@ -106,8 +106,8 @@ The `FileStore` abstract base class defines the following methods:
 ## Usage Example
 
 ```python
-from onyx.file_store.file_store import get_default_file_store
-from onyx.configs.constants import FileOrigin
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.configs.constants import FileOrigin
 
 # Get the configured file store
 file_store = get_default_file_store(db_session)

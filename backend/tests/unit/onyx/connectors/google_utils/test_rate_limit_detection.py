@@ -3,7 +3,7 @@ import json
 import httplib2
 from googleapiclient.errors import HttpError
 
-from onyx.connectors.google_utils.google_utils import _is_rate_limit_error
+from aethersearch.connectors.google_utils.google_utils import _is_rate_limit_error
 
 
 def _make_http_error(

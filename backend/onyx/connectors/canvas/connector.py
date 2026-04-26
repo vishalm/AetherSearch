@@ -9,37 +9,37 @@ from pydantic import BaseModel
 from retry import retry
 from typing_extensions import override
 
-from onyx.access.models import ExternalAccess
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.canvas.access import get_course_permissions
-from onyx.connectors.canvas.client import CanvasApiClient
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.connectors.exceptions import CredentialExpiredError
-from onyx.connectors.exceptions import InsufficientPermissionsError
-from onyx.connectors.exceptions import UnexpectedValidationError
-from onyx.connectors.interfaces import CheckpointedConnectorWithPermSync
-from onyx.connectors.interfaces import CheckpointOutput
-from onyx.connectors.interfaces import GenerateSlimDocumentOutput
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.interfaces import SlimConnectorWithPermSync
-from onyx.connectors.models import ConnectorCheckpoint
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import ConnectorMissingCredentialError
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentFailure
-from onyx.connectors.models import EntityFailure
-from onyx.connectors.models import ImageSection
-from onyx.connectors.models import TextSection
-from onyx.error_handling.exceptions import OnyxError
-from onyx.file_processing.html_utils import parse_html_page_basic
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.utils.logger import setup_logger
+from aethersearch.access.models import ExternalAccess
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.canvas.access import get_course_permissions
+from aethersearch.connectors.canvas.client import CanvasApiClient
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.connectors.exceptions import CredentialExpiredError
+from aethersearch.connectors.exceptions import InsufficientPermissionsError
+from aethersearch.connectors.exceptions import UnexpectedValidationError
+from aethersearch.connectors.interfaces import CheckpointedConnectorWithPermSync
+from aethersearch.connectors.interfaces import CheckpointOutput
+from aethersearch.connectors.interfaces import GenerateSlimDocumentOutput
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.interfaces import SlimConnectorWithPermSync
+from aethersearch.connectors.models import ConnectorCheckpoint
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import ConnectorMissingCredentialError
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentFailure
+from aethersearch.connectors.models import EntityFailure
+from aethersearch.connectors.models import ImageSection
+from aethersearch.connectors.models import TextSection
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.file_processing.html_utils import parse_html_page_basic
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
 
-def _handle_canvas_api_error(e: OnyxError) -> NoReturn:
+def _handle_canvas_api_error(e: AetherSearchError) -> NoReturn:
     """Map Canvas API errors to connector framework exceptions."""
     if e.status_code == 401:
         raise CredentialExpiredError(
@@ -442,7 +442,7 @@ class CanvasConnector(
             client.get("courses", params={"per_page": "1"})
         except ValueError as e:
             raise ConnectorValidationError(f"Invalid Canvas base URL: {e}")
-        except OnyxError as e:
+        except AetherSearchError as e:
             _handle_canvas_api_error(e)
 
         self._canvas_client = client
@@ -591,7 +591,7 @@ class CanvasConnector(
         if not new_checkpoint.course_ids:
             try:
                 courses = self._list_courses()
-            except OnyxError as e:
+            except AetherSearchError as e:
                 if e.status_code in (401, 403):
                     _handle_canvas_api_error(e)  # NoReturn — always raises
                 raise
@@ -633,7 +633,7 @@ class CanvasConnector(
                 endpoint=endpoint,
                 params=params,
             )
-        except OnyxError as oe:
+        except AetherSearchError as oe:
             # Security errors from _parse_next_link (host/scheme
             # mismatch on pagination URLs) have no status code override
             # and must not be silenced.
@@ -762,7 +762,7 @@ class CanvasConnector(
         try:
             self.canvas_client.get("courses", params={"per_page": "1"})
             logger.info("Canvas connector settings validated successfully")
-        except OnyxError as e:
+        except AetherSearchError as e:
             _handle_canvas_api_error(e)
         except ConnectorMissingCredentialError:
             raise

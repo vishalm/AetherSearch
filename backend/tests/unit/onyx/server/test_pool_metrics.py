@@ -8,13 +8,13 @@ from unittest.mock import patch
 from fastapi import FastAPI
 from sqlalchemy.pool import NullPool
 
-from onyx.server.metrics.postgres_connection_pool import _register_pool_events
-from onyx.server.metrics.postgres_connection_pool import PoolStateCollector
-from onyx.server.metrics.postgres_connection_pool import (
+from aethersearch.server.metrics.postgres_connection_pool import _register_pool_events
+from aethersearch.server.metrics.postgres_connection_pool import PoolStateCollector
+from aethersearch.server.metrics.postgres_connection_pool import (
     setup_postgres_connection_pool_metrics,
 )
-from onyx.utils.middleware import _build_route_map
-from onyx.utils.middleware import _match_route
+from aethersearch.utils.middleware import _build_route_map
+from aethersearch.utils.middleware import _match_route
 
 # --- PoolStateCollector tests ---
 
@@ -40,10 +40,10 @@ def test_pool_state_collector_reports_pool_stats() -> None:
         for sample in family.samples:
             metrics[f"{sample.name}:{sample.labels['engine']}"] = sample.value
 
-    assert metrics["onyx_db_pool_checked_out:sync"] == 5
-    assert metrics["onyx_db_pool_checked_in:sync"] == 35
-    assert metrics["onyx_db_pool_overflow:sync"] == 2
-    assert metrics["onyx_db_pool_size:sync"] == 40
+    assert metrics["aethersearch_db_pool_checked_out:sync"] == 5
+    assert metrics["aethersearch_db_pool_checked_in:sync"] == 35
+    assert metrics["aethersearch_db_pool_overflow:sync"] == 2
+    assert metrics["aethersearch_db_pool_size:sync"] == 40
 
 
 def test_pool_state_collector_handles_multiple_engines() -> None:
@@ -87,7 +87,7 @@ def test_checkout_event_stores_endpoint_and_increments_gauge() -> None:
     listeners: dict[str, Any] = {}
 
     # Capture event listeners
-    with patch("onyx.server.metrics.postgres_connection_pool.event") as mock_event:
+    with patch("aethersearch.server.metrics.postgres_connection_pool.event") as mock_event:
 
         def capture_listener(target: Any, event_name: str) -> Any:  # noqa: ARG001
             def decorator(fn: Any) -> Any:
@@ -103,15 +103,15 @@ def test_checkout_event_stores_endpoint_and_increments_gauge() -> None:
 
     with (
         patch(
-            "onyx.server.metrics.postgres_connection_pool.CURRENT_ENDPOINT_CONTEXTVAR"
+            "aethersearch.server.metrics.postgres_connection_pool.CURRENT_ENDPOINT_CONTEXTVAR"
         ) as mock_ctx,
         patch(
-            "onyx.server.metrics.postgres_connection_pool.CURRENT_TENANT_ID_CONTEXTVAR"
+            "aethersearch.server.metrics.postgres_connection_pool.CURRENT_TENANT_ID_CONTEXTVAR"
         ) as mock_tenant_ctx,
         patch(
-            "onyx.server.metrics.postgres_connection_pool._connections_held"
+            "aethersearch.server.metrics.postgres_connection_pool._connections_held"
         ) as mock_gauge,
-        patch("onyx.server.metrics.postgres_connection_pool._checkout_total"),
+        patch("aethersearch.server.metrics.postgres_connection_pool._checkout_total"),
     ):
         mock_labels = MagicMock()
         mock_gauge.labels.return_value = mock_labels
@@ -134,7 +134,7 @@ def test_checkin_event_observes_hold_duration() -> None:
     engine.pool = MagicMock()
     listeners: dict[str, Any] = {}
 
-    with patch("onyx.server.metrics.postgres_connection_pool.event") as mock_event:
+    with patch("aethersearch.server.metrics.postgres_connection_pool.event") as mock_event:
 
         def capture_listener(target: Any, event_name: str) -> Any:  # noqa: ARG001
             def decorator(fn: Any) -> Any:
@@ -153,12 +153,12 @@ def test_checkin_event_observes_hold_duration() -> None:
 
     with (
         patch(
-            "onyx.server.metrics.postgres_connection_pool._connections_held"
+            "aethersearch.server.metrics.postgres_connection_pool._connections_held"
         ) as mock_gauge,
         patch(
-            "onyx.server.metrics.postgres_connection_pool._hold_seconds"
+            "aethersearch.server.metrics.postgres_connection_pool._hold_seconds"
         ) as mock_hist,
-        patch("onyx.server.metrics.postgres_connection_pool._checkin_total"),
+        patch("aethersearch.server.metrics.postgres_connection_pool._checkin_total"),
     ):
         mock_labels = MagicMock()
         mock_gauge.labels.return_value = mock_labels
@@ -189,7 +189,7 @@ def test_checkin_with_missing_endpoint_uses_unknown() -> None:
     engine.pool = MagicMock()
     listeners: dict[str, Any] = {}
 
-    with patch("onyx.server.metrics.postgres_connection_pool.event") as mock_event:
+    with patch("aethersearch.server.metrics.postgres_connection_pool.event") as mock_event:
 
         def capture_listener(target: Any, event_name: str) -> Any:  # noqa: ARG001
             def decorator(fn: Any) -> Any:
@@ -205,10 +205,10 @@ def test_checkin_with_missing_endpoint_uses_unknown() -> None:
 
     with (
         patch(
-            "onyx.server.metrics.postgres_connection_pool._connections_held"
+            "aethersearch.server.metrics.postgres_connection_pool._connections_held"
         ) as mock_gauge,
-        patch("onyx.server.metrics.postgres_connection_pool._hold_seconds"),
-        patch("onyx.server.metrics.postgres_connection_pool._checkin_total"),
+        patch("aethersearch.server.metrics.postgres_connection_pool._hold_seconds"),
+        patch("aethersearch.server.metrics.postgres_connection_pool._checkin_total"),
     ):
         mock_labels = MagicMock()
         mock_gauge.labels.return_value = mock_labels
@@ -226,9 +226,9 @@ def test_checkin_with_missing_endpoint_uses_unknown() -> None:
 def test_setup_skips_null_pool_engines() -> None:
     """Verify setup_postgres_connection_pool_metrics skips engines with NullPool."""
     with (
-        patch("onyx.server.metrics.postgres_connection_pool.REGISTRY"),
+        patch("aethersearch.server.metrics.postgres_connection_pool.REGISTRY"),
         patch(
-            "onyx.server.metrics.postgres_connection_pool._register_pool_events"
+            "aethersearch.server.metrics.postgres_connection_pool._register_pool_events"
         ) as mock_register,
     ):
         null_engine = MagicMock()

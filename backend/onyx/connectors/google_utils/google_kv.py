@@ -9,39 +9,39 @@ from google.oauth2.credentials import Credentials as OAuthCredentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import WEB_DOMAIN
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import KV_CRED_KEY
-from onyx.configs.constants import KV_GMAIL_CRED_KEY
-from onyx.configs.constants import KV_GMAIL_SERVICE_ACCOUNT_KEY
-from onyx.configs.constants import KV_GOOGLE_DRIVE_CRED_KEY
-from onyx.configs.constants import KV_GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY
-from onyx.connectors.google_utils.resources import get_drive_service
-from onyx.connectors.google_utils.resources import get_gmail_service
-from onyx.connectors.google_utils.shared_constants import (
+from aethersearch.configs.app_configs import WEB_DOMAIN
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import KV_CRED_KEY
+from aethersearch.configs.constants import KV_GMAIL_CRED_KEY
+from aethersearch.configs.constants import KV_GMAIL_SERVICE_ACCOUNT_KEY
+from aethersearch.configs.constants import KV_GOOGLE_DRIVE_CRED_KEY
+from aethersearch.configs.constants import KV_GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY
+from aethersearch.connectors.google_utils.resources import get_drive_service
+from aethersearch.connectors.google_utils.resources import get_gmail_service
+from aethersearch.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_AUTHENTICATION_METHOD,
 )
-from onyx.connectors.google_utils.shared_constants import (
+from aethersearch.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_DICT_SERVICE_ACCOUNT_KEY,
 )
-from onyx.connectors.google_utils.shared_constants import DB_CREDENTIALS_DICT_TOKEN_KEY
-from onyx.connectors.google_utils.shared_constants import (
+from aethersearch.connectors.google_utils.shared_constants import DB_CREDENTIALS_DICT_TOKEN_KEY
+from aethersearch.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_PRIMARY_ADMIN_KEY,
 )
-from onyx.connectors.google_utils.shared_constants import GOOGLE_SCOPES
-from onyx.connectors.google_utils.shared_constants import (
+from aethersearch.connectors.google_utils.shared_constants import GOOGLE_SCOPES
+from aethersearch.connectors.google_utils.shared_constants import (
     GoogleOAuthAuthenticationMethod,
 )
-from onyx.connectors.google_utils.shared_constants import MISSING_SCOPES_ERROR_STR
-from onyx.connectors.google_utils.shared_constants import ONYX_SCOPE_INSTRUCTIONS
-from onyx.db.credentials import update_credential_json
-from onyx.db.models import User
-from onyx.key_value_store.factory import get_kv_store
-from onyx.key_value_store.interface import unwrap_str
-from onyx.server.documents.models import CredentialBase
-from onyx.server.documents.models import GoogleAppCredentials
-from onyx.server.documents.models import GoogleServiceAccountKey
-from onyx.utils.logger import setup_logger
+from aethersearch.connectors.google_utils.shared_constants import MISSING_SCOPES_ERROR_STR
+from aethersearch.connectors.google_utils.shared_constants import AETHERSEARCH_SCOPE_INSTRUCTIONS
+from aethersearch.db.credentials import update_credential_json
+from aethersearch.db.models import User
+from aethersearch.key_value_store.factory import get_kv_store
+from aethersearch.key_value_store.interface import unwrap_str
+from aethersearch.server.documents.models import CredentialBase
+from aethersearch.server.documents.models import GoogleAppCredentials
+from aethersearch.server.documents.models import GoogleServiceAccountKey
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -129,7 +129,7 @@ def update_credential_access_tokens(
         email = _get_current_oauth_user(creds, source)
     except Exception as e:
         if MISSING_SCOPES_ERROR_STR in str(e):
-            raise PermissionError(ONYX_SCOPE_INSTRUCTIONS) from e
+            raise PermissionError(AETHERSEARCH_SCOPE_INSTRUCTIONS) from e
         raise e
 
     new_creds_dict = {

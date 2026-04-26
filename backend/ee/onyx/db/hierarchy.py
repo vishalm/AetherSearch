@@ -13,8 +13,8 @@ from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.elements import ColumnElement
 
-from onyx.configs.constants import DocumentSource
-from onyx.db.models import HierarchyNode
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.db.models import HierarchyNode
 
 
 def _build_hierarchy_access_filter(

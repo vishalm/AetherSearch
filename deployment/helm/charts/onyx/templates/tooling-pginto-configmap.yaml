@@ -1,10 +1,10 @@
-{{- if (include "onyx.pgInto.enabled" .) }}
+{{- if (include "aethersearch.pgInto.enabled" .) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "onyx.pgInto.configMapName" . }}
+  name: {{ include "aethersearch.pgInto.configMapName" . }}
   labels:
-    {{- include "onyx.labels" . | nindent 4 }}
+    {{- include "aethersearch.labels" . | nindent 4 }}
 data:
   pginto: |
     #!/usr/bin/env sh

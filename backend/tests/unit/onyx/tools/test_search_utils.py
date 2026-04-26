@@ -4,8 +4,8 @@ from typing import NamedTuple
 
 import pytest
 
-from onyx.tools.tool_implementations.search.search_tool import deduplicate_queries
-from onyx.tools.tool_implementations.search.search_utils import (
+from aethersearch.tools.tool_implementations.search.search_tool import deduplicate_queries
+from aethersearch.tools.tool_implementations.search.search_utils import (
     weighted_reciprocal_rank_fusion,
 )
 

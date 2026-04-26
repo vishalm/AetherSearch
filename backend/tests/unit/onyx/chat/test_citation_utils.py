@@ -7,10 +7,10 @@ in text to use the smallest possible numbers while respecting existing mappings.
 
 from datetime import datetime
 
-from onyx.chat.citation_processor import CitationMapping
-from onyx.chat.citation_utils import collapse_citations
-from onyx.configs.constants import DocumentSource
-from onyx.context.search.models import SearchDoc
+from aethersearch.chat.citation_processor import CitationMapping
+from aethersearch.chat.citation_utils import collapse_citations
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.context.search.models import SearchDoc
 
 # ============================================================================
 # Helper Functions

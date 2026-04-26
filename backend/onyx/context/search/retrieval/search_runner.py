@@ -3,28 +3,28 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from onyx.configs.chat_configs import HYBRID_ALPHA
-from onyx.configs.chat_configs import NUM_RETURNED_HITS
-from onyx.context.search.models import ChunkIndexRequest
-from onyx.context.search.models import IndexFilters
-from onyx.context.search.models import InferenceChunk
-from onyx.context.search.models import InferenceSection
-from onyx.context.search.models import QueryExpansionType
-from onyx.context.search.utils import get_query_embedding
-from onyx.context.search.utils import inference_section_from_chunks
-from onyx.document_index.interfaces import DocumentIndex
-from onyx.document_index.interfaces import VespaChunkRequest
-from onyx.document_index.interfaces_new import DocumentIndex as NewDocumentIndex
-from onyx.document_index.opensearch.opensearch_document_index import (
+from aethersearch.configs.chat_configs import HYBRID_ALPHA
+from aethersearch.configs.chat_configs import NUM_RETURNED_HITS
+from aethersearch.context.search.models import ChunkIndexRequest
+from aethersearch.context.search.models import IndexFilters
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.context.search.models import InferenceSection
+from aethersearch.context.search.models import QueryExpansionType
+from aethersearch.context.search.utils import get_query_embedding
+from aethersearch.context.search.utils import inference_section_from_chunks
+from aethersearch.document_index.interfaces import DocumentIndex
+from aethersearch.document_index.interfaces import VespaChunkRequest
+from aethersearch.document_index.interfaces_new import DocumentIndex as NewDocumentIndex
+from aethersearch.document_index.opensearch.opensearch_document_index import (
     OpenSearchOldDocumentIndex,
 )
-from onyx.federated_connectors.federated_retrieval import FederatedRetrievalInfo
-from onyx.federated_connectors.federated_retrieval import (
+from aethersearch.federated_connectors.federated_retrieval import FederatedRetrievalInfo
+from aethersearch.federated_connectors.federated_retrieval import (
     get_federated_retrieval_functions,
 )
-from onyx.natural_language_processing.search_nlp_models import EmbeddingModel
-from onyx.utils.logger import setup_logger
-from onyx.utils.threadpool_concurrency import run_functions_tuples_in_parallel
+from aethersearch.natural_language_processing.search_nlp_models import EmbeddingModel
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.threadpool_concurrency import run_functions_tuples_in_parallel
 
 logger = setup_logger()
 

@@ -14,19 +14,19 @@ from uuid import uuid4
 
 import pytest
 
-from onyx.file_store.models import ChatFileType
-from onyx.file_store.models import InMemoryChatFile
-from onyx.server.query_and_chat.placement import Placement
-from onyx.tools.models import ToolCallException
-from onyx.tools.tool_implementations.file_reader.file_reader_tool import FILE_ID_FIELD
-from onyx.tools.tool_implementations.file_reader.file_reader_tool import FileReaderTool
-from onyx.tools.tool_implementations.file_reader.file_reader_tool import MAX_NUM_CHARS
-from onyx.tools.tool_implementations.file_reader.file_reader_tool import NUM_CHARS_FIELD
-from onyx.tools.tool_implementations.file_reader.file_reader_tool import (
+from aethersearch.file_store.models import ChatFileType
+from aethersearch.file_store.models import InMemoryChatFile
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.tools.models import ToolCallException
+from aethersearch.tools.tool_implementations.file_reader.file_reader_tool import FILE_ID_FIELD
+from aethersearch.tools.tool_implementations.file_reader.file_reader_tool import FileReaderTool
+from aethersearch.tools.tool_implementations.file_reader.file_reader_tool import MAX_NUM_CHARS
+from aethersearch.tools.tool_implementations.file_reader.file_reader_tool import NUM_CHARS_FIELD
+from aethersearch.tools.tool_implementations.file_reader.file_reader_tool import (
     START_CHAR_FIELD,
 )
 
-TOOL_MODULE = "onyx.tools.tool_implementations.file_reader.file_reader_tool"
+TOOL_MODULE = "aethersearch.tools.tool_implementations.file_reader.file_reader_tool"
 _PLACEMENT = Placement(turn_index=0)
 
 

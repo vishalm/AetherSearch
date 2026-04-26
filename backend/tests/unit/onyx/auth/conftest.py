@@ -3,8 +3,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from onyx.db.models import OAuthAccount
-from onyx.db.models import User
+from aethersearch.db.models import OAuthAccount
+from aethersearch.db.models import User
 
 
 @pytest.fixture

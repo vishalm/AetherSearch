@@ -9,8 +9,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
-	"github.com/onyx-dot-app/onyx/tools/ods/internal/git"
-	"github.com/onyx-dot-app/onyx/tools/ods/internal/prompt"
+	"github.com/aethersearch-dot-app/aethersearch/tools/ods/internal/git"
+	"github.com/aethersearch-dot-app/aethersearch/tools/ods/internal/prompt"
 )
 
 // RunCIOptions holds options for the run-ci command

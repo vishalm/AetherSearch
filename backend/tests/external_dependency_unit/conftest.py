@@ -5,12 +5,12 @@ import pytest
 from fastapi_users.password import PasswordHelper
 from sqlalchemy.orm import Session
 
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.engine.sql_engine import SqlEngine
-from onyx.db.enums import AccountType
-from onyx.db.models import User
-from onyx.db.models import UserRole
-from onyx.file_store.file_store import get_default_file_store
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.engine.sql_engine import SqlEngine
+from aethersearch.db.enums import AccountType
+from aethersearch.db.models import User
+from aethersearch.db.models import UserRole
+from aethersearch.file_store.file_store import get_default_file_store
 from shared_configs.contextvars import CURRENT_TENANT_ID_CONTEXTVAR
 from tests.external_dependency_unit.constants import TEST_TENANT_ID
 from tests.external_dependency_unit.full_setup import ensure_full_deployment_setup

@@ -5,8 +5,8 @@ from __future__ import annotations
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from onyx.connectors.sharepoint.connector import _REST_CTX_MAX_AGE_S
-from onyx.connectors.sharepoint.connector import SharepointConnector
+from aethersearch.connectors.sharepoint.connector import _REST_CTX_MAX_AGE_S
+from aethersearch.connectors.sharepoint.connector import SharepointConnector
 
 SITE_A = "https://tenant.sharepoint.com/sites/SiteA"
 SITE_B = "https://tenant.sharepoint.com/sites/SiteB"
@@ -42,8 +42,8 @@ def _fresh_client_context() -> MagicMock:
     return mock_cls
 
 
-@patch("onyx.connectors.sharepoint.connector.acquire_token_for_rest")
-@patch("onyx.connectors.sharepoint.connector.ClientContext")
+@patch("aethersearch.connectors.sharepoint.connector.acquire_token_for_rest")
+@patch("aethersearch.connectors.sharepoint.connector.ClientContext")
 def test_returns_cached_context_within_max_age(
     mock_client_ctx_cls: MagicMock,
     _mock_acquire: MagicMock,
@@ -60,9 +60,9 @@ def test_returns_cached_context_within_max_age(
     assert mock_client_ctx_cls.call_count == 1
 
 
-@patch("onyx.connectors.sharepoint.connector.time")
-@patch("onyx.connectors.sharepoint.connector.acquire_token_for_rest")
-@patch("onyx.connectors.sharepoint.connector.ClientContext")
+@patch("aethersearch.connectors.sharepoint.connector.time")
+@patch("aethersearch.connectors.sharepoint.connector.acquire_token_for_rest")
+@patch("aethersearch.connectors.sharepoint.connector.ClientContext")
 def test_rebuilds_context_after_max_age(
     mock_client_ctx_cls: MagicMock,
     _mock_acquire: MagicMock,
@@ -84,8 +84,8 @@ def test_rebuilds_context_after_max_age(
     assert mock_client_ctx_cls.call_count == 2
 
 
-@patch("onyx.connectors.sharepoint.connector.acquire_token_for_rest")
-@patch("onyx.connectors.sharepoint.connector.ClientContext")
+@patch("aethersearch.connectors.sharepoint.connector.acquire_token_for_rest")
+@patch("aethersearch.connectors.sharepoint.connector.ClientContext")
 def test_rebuilds_context_on_site_change(
     mock_client_ctx_cls: MagicMock,
     _mock_acquire: MagicMock,
@@ -102,9 +102,9 @@ def test_rebuilds_context_on_site_change(
     assert mock_client_ctx_cls.call_count == 2
 
 
-@patch("onyx.connectors.sharepoint.connector.time")
-@patch("onyx.connectors.sharepoint.connector.acquire_token_for_rest")
-@patch("onyx.connectors.sharepoint.connector.ClientContext")
+@patch("aethersearch.connectors.sharepoint.connector.time")
+@patch("aethersearch.connectors.sharepoint.connector.acquire_token_for_rest")
+@patch("aethersearch.connectors.sharepoint.connector.ClientContext")
 def test_load_credentials_called_on_rebuild(
     _mock_client_ctx_cls: MagicMock,
     _mock_acquire: MagicMock,

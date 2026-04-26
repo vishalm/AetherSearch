@@ -155,7 +155,7 @@ export const MacIcon = ({
     </svg>
   );
 };
-export const OnyxLogoTypeIcon = ({
+export const AetherSearchLogoTypeIcon = ({
   size = 16,
   className = defaultTailwindCSS,
 }: IconProps) => {

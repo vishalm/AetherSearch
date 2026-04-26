@@ -5,21 +5,21 @@ from collections import defaultdict
 
 import sentry_sdk
 
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import ConnectorStopSignal
-from onyx.connectors.models import DocumentFailure
-from onyx.db.models import SearchSettings
-from onyx.document_index.chunk_content_enrichment import (
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import ConnectorStopSignal
+from aethersearch.connectors.models import DocumentFailure
+from aethersearch.db.models import SearchSettings
+from aethersearch.document_index.chunk_content_enrichment import (
     generate_enriched_content_for_chunk_embedding,
 )
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.indexing.models import ChunkEmbedding
-from onyx.indexing.models import DocAwareChunk
-from onyx.indexing.models import IndexChunk
-from onyx.natural_language_processing.search_nlp_models import EmbeddingModel
-from onyx.utils.logger import setup_logger
-from onyx.utils.pydantic_util import shallow_model_dump
-from onyx.utils.timing import log_function_time
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.indexing.models import ChunkEmbedding
+from aethersearch.indexing.models import DocAwareChunk
+from aethersearch.indexing.models import IndexChunk
+from aethersearch.natural_language_processing.search_nlp_models import EmbeddingModel
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.pydantic_util import shallow_model_dump
+from aethersearch.utils.timing import log_function_time
 from shared_configs.configs import INDEXING_MODEL_SERVER_HOST
 from shared_configs.configs import INDEXING_MODEL_SERVER_PORT
 from shared_configs.enums import EmbeddingProvider

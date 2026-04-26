@@ -12,21 +12,21 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 from starlette.background import BackgroundTasks
 
-from onyx.configs.app_configs import DISABLE_VECTOR_DB
-from onyx.configs.constants import CELERY_USER_FILE_PROCESSING_TASK_EXPIRES
-from onyx.configs.constants import FileOrigin
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.db.enums import UserFileStatus
-from onyx.db.models import Project__UserFile
-from onyx.db.models import User
-from onyx.db.models import UserFile
-from onyx.db.models import UserProject
-from onyx.server.documents.connector import upload_files
-from onyx.server.features.projects.projects_file_utils import categorize_uploaded_files
-from onyx.server.features.projects.projects_file_utils import RejectedFile
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
+from aethersearch.configs.constants import CELERY_USER_FILE_PROCESSING_TASK_EXPIRES
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.db.enums import UserFileStatus
+from aethersearch.db.models import Project__UserFile
+from aethersearch.db.models import User
+from aethersearch.db.models import UserFile
+from aethersearch.db.models import UserProject
+from aethersearch.server.documents.connector import upload_files
+from aethersearch.server.features.projects.projects_file_utils import categorize_uploaded_files
+from aethersearch.server.features.projects.projects_file_utils import RejectedFile
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()
@@ -147,20 +147,20 @@ def upload_files_to_user_files_with_indexing(
         )
 
     if DISABLE_VECTOR_DB and background_tasks is not None:
-        from onyx.background.task_utils import drain_processing_loop
+        from aethersearch.background.task_utils import drain_processing_loop
 
         background_tasks.add_task(drain_processing_loop, tenant_id)
         for user_file in indexable_files:
             logger.info(f"Queued in-process processing for user_file_id={user_file.id}")
     else:
-        from onyx.background.celery.versioned_apps.client import app as client_app
+        from aethersearch.background.celery.versioned_apps.client import app as client_app
 
         for user_file in indexable_files:
             task = client_app.send_task(
-                OnyxCeleryTask.PROCESS_SINGLE_USER_FILE,
+                AetherSearchCeleryTask.PROCESS_SINGLE_USER_FILE,
                 kwargs={"user_file_id": user_file.id, "tenant_id": tenant_id},
-                queue=OnyxCeleryQueues.USER_FILE_PROCESSING,
-                priority=OnyxCeleryPriority.HIGH,
+                queue=AetherSearchCeleryQueues.USER_FILE_PROCESSING,
+                priority=AetherSearchCeleryPriority.HIGH,
                 expires=CELERY_USER_FILE_PROCESSING_TASK_EXPIRES,
             )
             logger.info(

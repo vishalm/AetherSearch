@@ -1,19 +1,19 @@
 from typing import Any
 
-from onyx.access.models import ExternalAccess
-from onyx.access.utils import build_ext_group_name_for_onyx
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.confluence.onyx_confluence import (
+from aethersearch.access.models import ExternalAccess
+from aethersearch.access.utils import build_ext_group_name_for_aethersearch
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.confluence.aethersearch_confluence import (
     get_user_email_from_username__server,
 )
-from onyx.connectors.confluence.onyx_confluence import OnyxConfluence
-from onyx.utils.logger import setup_logger
+from aethersearch.connectors.confluence.aethersearch_confluence import AetherSearchConfluence
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
 
 def _extract_read_access_restrictions(
-    confluence_client: OnyxConfluence, restrictions: dict[str, Any]
+    confluence_client: AetherSearchConfluence, restrictions: dict[str, Any]
 ) -> tuple[set[str], set[str], bool]:
     """
     Converts a page's restrictions dict into an ExternalAccess object.
@@ -70,7 +70,7 @@ def _extract_read_access_restrictions(
 
 
 def get_page_restrictions(
-    confluence_client: OnyxConfluence,
+    confluence_client: AetherSearchConfluence,
     page_id: str,
     page_restrictions: dict[str, Any],
     ancestors: list[dict[str, Any]],
@@ -102,7 +102,7 @@ def get_page_restrictions(
     def _maybe_prefix_groups(group_names: set[str]) -> set[str]:
         if add_prefix:
             return {
-                build_ext_group_name_for_onyx(g, DocumentSource.CONFLUENCE)
+                build_ext_group_name_for_aethersearch(g, DocumentSource.CONFLUENCE)
                 for g in group_names
             }
         return group_names

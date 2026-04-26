@@ -9,16 +9,16 @@ from celery.signals import worker_init
 from celery.signals import worker_ready
 from celery.signals import worker_shutdown
 
-import onyx.background.celery.apps.app_base as app_base
-from onyx.configs.constants import POSTGRES_CELERY_WORKER_MONITORING_APP_NAME
-from onyx.db.engine.sql_engine import SqlEngine
-from onyx.utils.logger import setup_logger
+import aethersearch.background.celery.apps.app_base as app_base
+from aethersearch.configs.constants import POSTGRES_CELERY_WORKER_MONITORING_APP_NAME
+from aethersearch.db.engine.sql_engine import SqlEngine
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()
 
 celery_app = Celery(__name__)
-celery_app.config_from_object("onyx.background.celery.configs.monitoring")
+celery_app.config_from_object("aethersearch.background.celery.configs.monitoring")
 celery_app.Task = app_base.TenantAwareTask  # ty: ignore[invalid-assignment]
 
 
@@ -88,7 +88,7 @@ def _setup_prometheus_collectors(sender: Any) -> bool:
     Returns True if registration succeeded, False otherwise.
     """
     try:
-        from onyx.server.metrics.indexing_pipeline_setup import (
+        from aethersearch.server.metrics.indexing_pipeline_setup import (
             setup_indexing_pipeline_metrics,
         )
 
@@ -103,7 +103,7 @@ def _setup_prometheus_collectors(sender: Any) -> bool:
 @worker_ready.connect
 def on_worker_ready(sender: Any, **kwargs: Any) -> None:
     if _prometheus_collectors_ok:
-        from onyx.server.metrics.metrics_server import start_metrics_server
+        from aethersearch.server.metrics.metrics_server import start_metrics_server
 
         start_metrics_server("monitoring")
     else:
@@ -132,7 +132,7 @@ for bootstep in base_bootsteps:
 celery_app.autodiscover_tasks(
     app_base.filter_task_modules(
         [
-            "onyx.background.celery.tasks.monitoring",
+            "aethersearch.background.celery.tasks.monitoring",
         ]
     )
 )

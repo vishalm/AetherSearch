@@ -6,16 +6,16 @@ from unittest.mock import patch
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from onyx.auth.captcha import CaptchaAction
-from onyx.auth.captcha import CaptchaVerificationError
-from onyx.error_handling.exceptions import register_onyx_exception_handlers
-from onyx.server.auth import captcha_api as captcha_api_module
-from onyx.server.auth.captcha_api import LoginCaptchaMiddleware
+from aethersearch.auth.captcha import CaptchaAction
+from aethersearch.auth.captcha import CaptchaVerificationError
+from aethersearch.error_handling.exceptions import register_aethersearch_exception_handlers
+from aethersearch.server.auth import captcha_api as captcha_api_module
+from aethersearch.server.auth.captcha_api import LoginCaptchaMiddleware
 
 
 def build_app() -> FastAPI:
     app = FastAPI()
-    register_onyx_exception_handlers(app)
+    register_aethersearch_exception_handlers(app)
     app.add_middleware(LoginCaptchaMiddleware)
 
     @app.post("/auth/login")

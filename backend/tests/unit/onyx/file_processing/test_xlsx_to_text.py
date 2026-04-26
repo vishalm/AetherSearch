@@ -5,9 +5,9 @@ from unittest.mock import patch
 import openpyxl
 from openpyxl.worksheet.worksheet import Worksheet
 
-from onyx.file_processing.extract_file_text import _sheet_to_csv
-from onyx.file_processing.extract_file_text import xlsx_sheet_extraction
-from onyx.file_processing.extract_file_text import xlsx_to_text
+from aethersearch.file_processing.extract_file_text import _sheet_to_csv
+from aethersearch.file_processing.extract_file_text import xlsx_sheet_extraction
+from aethersearch.file_processing.extract_file_text import xlsx_to_text
 
 
 def _make_xlsx(sheets: dict[str, list[list[str]]]) -> io.BytesIO:
@@ -344,7 +344,7 @@ class TestSheetToCsvStreaming:
         a truncation marker row is appended so downstream indexing sees
         the sheet was cut off."""
         with patch(
-            "onyx.file_processing.extract_file_text.MAX_XLSX_CELLS_PER_SHEET", 5
+            "aethersearch.file_processing.extract_file_text.MAX_XLSX_CELLS_PER_SHEET", 5
         ):
             csv_text = _sheet_to_csv(
                 iter(
@@ -456,7 +456,7 @@ class TestXlsxSheetExtraction:
         values >14 with 'Max value is 14'. Treat as a known openpyxl bug
         and skip the file rather than fail the whole connector batch."""
         with patch(
-            "onyx.file_processing.extract_file_text.openpyxl.load_workbook",
+            "aethersearch.file_processing.extract_file_text.openpyxl.load_workbook",
             side_effect=ValueError("Max value is 14"),
         ):
             sheets = xlsx_sheet_extraction(io.BytesIO(b""), file_name="bad_font.xlsx")

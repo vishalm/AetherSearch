@@ -1,13 +1,13 @@
 from io import BytesIO
 from unittest import mock
 
-from onyx.file_processing.extract_file_text import detect_encoding
+from aethersearch.file_processing.extract_file_text import detect_encoding
 
 
 def test_utf8_cyrillic_returns_utf8_without_chardet() -> None:
     """Valid UTF-8 Cyrillic text must be identified as utf-8 without calling chardet."""
     cyrillic = "Привет мир".encode("utf-8")
-    with mock.patch("onyx.file_processing.extract_file_text.chardet.detect") as m:
+    with mock.patch("aethersearch.file_processing.extract_file_text.chardet.detect") as m:
         result = detect_encoding(BytesIO(cyrillic))
     assert result == "utf-8"
     m.assert_not_called()

@@ -3,7 +3,7 @@
 import React, { RefObject, useState, useCallback, useMemo } from "react";
 import { Packet, StreamingCitation } from "@/app/app/services/streamingModels";
 import { FeedbackType } from "@/app/app/interfaces";
-import { OnyxDocument } from "@/lib/search/interfaces";
+import { AetherSearchDocument } from "@/lib/search/interfaces";
 import { TooltipGroup } from "@/components/tooltip/CustomTooltip";
 import {
   useChatSessionStore,
@@ -44,7 +44,7 @@ const SourcesTagWrapper = React.memo(function SourcesTagWrapper({
   updateCurrentSelectedNodeForDocDisplay,
 }: {
   citations: StreamingCitation[];
-  documentMap: Map<string, OnyxDocument>;
+  documentMap: Map<string, AetherSearchDocument>;
   nodeId: number;
   selectedMessageForDocDisplay: number | null;
   documentSidebarVisible: boolean;
@@ -115,7 +115,7 @@ export interface MessageToolbarProps {
 
   // Citations
   citations: StreamingCitation[];
-  documentMap: Map<string, OnyxDocument>;
+  documentMap: Map<string, AetherSearchDocument>;
 }
 
 export default function MessageToolbar({

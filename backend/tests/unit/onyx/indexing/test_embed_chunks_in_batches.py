@@ -14,16 +14,16 @@ from collections.abc import Callable
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import Document
-from onyx.connectors.models import DocumentFailure
-from onyx.connectors.models import DocumentSource
-from onyx.connectors.models import TextSection
-from onyx.indexing.chunk_batch_store import ChunkBatchStore
-from onyx.indexing.indexing_pipeline import _embed_chunks_to_store
-from onyx.indexing.models import ChunkEmbedding
-from onyx.indexing.models import DocAwareChunk
-from onyx.indexing.models import IndexChunk
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import DocumentFailure
+from aethersearch.connectors.models import DocumentSource
+from aethersearch.connectors.models import TextSection
+from aethersearch.indexing.chunk_batch_store import ChunkBatchStore
+from aethersearch.indexing.indexing_pipeline import _embed_chunks_to_store
+from aethersearch.indexing.models import ChunkEmbedding
+from aethersearch.indexing.models import DocAwareChunk
+from aethersearch.indexing.models import IndexChunk
 
 
 def _make_doc(doc_id: str) -> Document:
@@ -125,9 +125,9 @@ def _mock_embed_fail_doc(
 
 class TestEmbedChunksInBatches:
     @patch(
-        "onyx.indexing.indexing_pipeline.embed_chunks_with_failure_handling",
+        "aethersearch.indexing.indexing_pipeline.embed_chunks_with_failure_handling",
     )
-    @patch("onyx.indexing.indexing_pipeline.MAX_CHUNKS_PER_DOC_BATCH", 100)
+    @patch("aethersearch.indexing.indexing_pipeline.MAX_CHUNKS_PER_DOC_BATCH", 100)
     def test_single_batch_no_failures(self, mock_embed: MagicMock) -> None:
         """All chunks fit in one batch and embed successfully."""
         mock_embed.side_effect = _mock_embed_success
@@ -151,9 +151,9 @@ class TestEmbedChunksInBatches:
             assert len(stored) == 3
 
     @patch(
-        "onyx.indexing.indexing_pipeline.embed_chunks_with_failure_handling",
+        "aethersearch.indexing.indexing_pipeline.embed_chunks_with_failure_handling",
     )
-    @patch("onyx.indexing.indexing_pipeline.MAX_CHUNKS_PER_DOC_BATCH", 3)
+    @patch("aethersearch.indexing.indexing_pipeline.MAX_CHUNKS_PER_DOC_BATCH", 3)
     def test_multiple_batches_no_failures(self, mock_embed: MagicMock) -> None:
         """Chunks are split across multiple batches, all succeed."""
         mock_embed.side_effect = _mock_embed_success
@@ -173,9 +173,9 @@ class TestEmbedChunksInBatches:
             assert len(store._batch_files()) == 3  # 3 + 3 + 1
 
     @patch(
-        "onyx.indexing.indexing_pipeline.embed_chunks_with_failure_handling",
+        "aethersearch.indexing.indexing_pipeline.embed_chunks_with_failure_handling",
     )
-    @patch("onyx.indexing.indexing_pipeline.MAX_CHUNKS_PER_DOC_BATCH", 100)
+    @patch("aethersearch.indexing.indexing_pipeline.MAX_CHUNKS_PER_DOC_BATCH", 100)
     def test_single_batch_with_failure(self, mock_embed: MagicMock) -> None:
         """One doc fails embedding, its chunks are excluded from results."""
         mock_embed.side_effect = _mock_embed_fail_doc("doc2")
@@ -200,9 +200,9 @@ class TestEmbedChunksInBatches:
             assert "doc1" in successful_doc_ids
 
     @patch(
-        "onyx.indexing.indexing_pipeline.embed_chunks_with_failure_handling",
+        "aethersearch.indexing.indexing_pipeline.embed_chunks_with_failure_handling",
     )
-    @patch("onyx.indexing.indexing_pipeline.MAX_CHUNKS_PER_DOC_BATCH", 3)
+    @patch("aethersearch.indexing.indexing_pipeline.MAX_CHUNKS_PER_DOC_BATCH", 3)
     def test_cross_batch_failure_scrubs_earlier_batch(
         self, mock_embed: MagicMock
     ) -> None:
@@ -252,9 +252,9 @@ class TestEmbedChunksInBatches:
             assert "docB" in stored_doc_ids
 
     @patch(
-        "onyx.indexing.indexing_pipeline.embed_chunks_with_failure_handling",
+        "aethersearch.indexing.indexing_pipeline.embed_chunks_with_failure_handling",
     )
-    @patch("onyx.indexing.indexing_pipeline.MAX_CHUNKS_PER_DOC_BATCH", 3)
+    @patch("aethersearch.indexing.indexing_pipeline.MAX_CHUNKS_PER_DOC_BATCH", 3)
     def test_later_batch_skips_already_failed_doc(self, mock_embed: MagicMock) -> None:
         """If docA fails in batch 0, its chunks in batch 1 are skipped
         entirely (never sent to the embedder)."""
@@ -291,9 +291,9 @@ class TestEmbedChunksInBatches:
         assert "docA" not in batch_1_doc_ids
 
     @patch(
-        "onyx.indexing.indexing_pipeline.embed_chunks_with_failure_handling",
+        "aethersearch.indexing.indexing_pipeline.embed_chunks_with_failure_handling",
     )
-    @patch("onyx.indexing.indexing_pipeline.MAX_CHUNKS_PER_DOC_BATCH", 3)
+    @patch("aethersearch.indexing.indexing_pipeline.MAX_CHUNKS_PER_DOC_BATCH", 3)
     def test_failed_doc_skipped_in_later_batch_while_other_doc_succeeds(
         self, mock_embed: MagicMock
     ) -> None:
@@ -343,7 +343,7 @@ class TestEmbedChunksInBatches:
             assert all(c.source_document.id == "doc2" for c in all_stored)
 
     @patch(
-        "onyx.indexing.indexing_pipeline.embed_chunks_with_failure_handling",
+        "aethersearch.indexing.indexing_pipeline.embed_chunks_with_failure_handling",
     )
     def test_empty_input(self, mock_embed: MagicMock) -> None:
         """Empty chunk list produces empty results."""
@@ -363,9 +363,9 @@ class TestEmbedChunksInBatches:
             mock_embed.assert_not_called()
 
     @patch(
-        "onyx.indexing.indexing_pipeline.embed_chunks_with_failure_handling",
+        "aethersearch.indexing.indexing_pipeline.embed_chunks_with_failure_handling",
     )
-    @patch("onyx.indexing.indexing_pipeline.MAX_CHUNKS_PER_DOC_BATCH", 100)
+    @patch("aethersearch.indexing.indexing_pipeline.MAX_CHUNKS_PER_DOC_BATCH", 100)
     def test_all_chunks_fail(self, mock_embed: MagicMock) -> None:
         """When all documents fail, results have no successful chunks."""
 

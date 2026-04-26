@@ -7,12 +7,12 @@ from unittest.mock import patch
 import pytest
 from fastapi import Request
 
-from onyx.auth import signup_rate_limit as rl
-from onyx.auth.signup_rate_limit import _bucket_key
-from onyx.auth.signup_rate_limit import _client_ip
-from onyx.auth.signup_rate_limit import _PER_IP_PER_HOUR
-from onyx.auth.signup_rate_limit import enforce_signup_rate_limit
-from onyx.error_handling.exceptions import OnyxError
+from aethersearch.auth import signup_rate_limit as rl
+from aethersearch.auth.signup_rate_limit import _bucket_key
+from aethersearch.auth.signup_rate_limit import _client_ip
+from aethersearch.auth.signup_rate_limit import _PER_IP_PER_HOUR
+from aethersearch.auth.signup_rate_limit import enforce_signup_rate_limit
+from aethersearch.error_handling.exceptions import AetherSearchError
 
 
 def _make_request(
@@ -133,7 +133,7 @@ async def test_allows_when_under_limit() -> None:
 
 @pytest.mark.asyncio
 async def test_rejects_when_over_limit() -> None:
-    """Strictly above the cap → OnyxError.RATE_LIMITED (HTTP 429)."""
+    """Strictly above the cap → AetherSearchError.RATE_LIMITED (HTTP 429)."""
     req = _make_request(xff="1.2.3.4, 10.0.0.1")
     fake_redis = _fake_pipeline_redis(incr_return=_PER_IP_PER_HOUR + 1)
     with (
@@ -143,7 +143,7 @@ async def test_rejects_when_over_limit() -> None:
             rl, "get_async_redis_connection", AsyncMock(return_value=fake_redis)
         ),
     ):
-        with pytest.raises(OnyxError) as exc_info:
+        with pytest.raises(AetherSearchError) as exc_info:
             await enforce_signup_rate_limit(req)
     assert exc_info.value.error_code.status_code == 429
 

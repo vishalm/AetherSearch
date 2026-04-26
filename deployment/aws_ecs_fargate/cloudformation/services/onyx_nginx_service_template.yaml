@@ -39,11 +39,11 @@ Parameters:
     Default: 1
   GitHubConfigUrl:
     Type: String
-    Default: "https://raw.githubusercontent.com/onyx-dot-app/aethersearch/main/deployment/data/nginx/app.conf.template"
+    Default: "https://raw.githubusercontent.com/aethersearch-dot-app/aethersearch/main/deployment/data/nginx/app.conf.template"
     Description: "URL to the nginx configuration file on GitHub"
   GitHubRunScriptUrl:
     Type: String
-    Default: "https://raw.githubusercontent.com/onyx-dot-app/aethersearch/main/deployment/data/nginx/run-nginx.sh"
+    Default: "https://raw.githubusercontent.com/aethersearch-dot-app/aethersearch/main/deployment/data/nginx/run-nginx.sh"
     Description: "URL to the nginx run script on GitHub"
 
 Conditions:
@@ -126,10 +126,10 @@ Resources:
               Value: ""
             - Name: DOMAIN
               Value: !Ref DomainName
-            - Name: ONYX_BACKEND_API_HOST
-              Value: !Sub ${Environment}-${OnyxBackendApiServiceName}.${AetherSearchNamespace}
-            - Name: ONYX_WEB_SERVER_HOST
-              Value: !Sub ${Environment}-${OnyxWebServerServiceName}.${AetherSearchNamespace}
+            - Name: AETHERSEARCH_BACKEND_API_HOST
+              Value: !Sub ${Environment}-${AetherSearchBackendApiServiceName}.${AetherSearchNamespace}
+            - Name: AETHERSEARCH_WEB_SERVER_HOST
+              Value: !Sub ${Environment}-${AetherSearchWebServerServiceName}.${AetherSearchNamespace}
           MountPoints:
             - SourceVolume: efs-volume
               ContainerPath: /etc/nginx/conf.d
@@ -140,7 +140,7 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: !Sub /ecs/${Environment}-OnyxNginxTaskDefinition
+              awslogs-group: !Sub /ecs/${Environment}-AetherSearchNginxTaskDefinition
               mode: non-blocking
               awslogs-create-group: "true"
               max-buffer-size: 25m
@@ -285,4 +285,4 @@ Outputs:
     Description: LoadBalancer DNSName
     Value: !GetAtt LoadBalancer.DNSName
     Export:
-      Name: !Sub ${AWS::StackName}-OnyxLoadBalancerDNSName
+      Name: !Sub ${AWS::StackName}-AetherSearchLoadBalancerDNSName

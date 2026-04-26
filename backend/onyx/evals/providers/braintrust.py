@@ -7,14 +7,14 @@ from braintrust import EvalCase
 from braintrust import init_dataset
 from braintrust import Score
 
-from onyx.configs.app_configs import BRAINTRUST_MAX_CONCURRENCY
-from onyx.configs.app_configs import BRAINTRUST_PROJECT
-from onyx.evals.models import EvalationAck
-from onyx.evals.models import EvalConfigurationOptions
-from onyx.evals.models import EvalProvider
-from onyx.evals.models import EvalToolResult
-from onyx.evals.models import MultiTurnEvalResult
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import BRAINTRUST_MAX_CONCURRENCY
+from aethersearch.configs.app_configs import BRAINTRUST_PROJECT
+from aethersearch.evals.models import EvalationAck
+from aethersearch.evals.models import EvalConfigurationOptions
+from aethersearch.evals.models import EvalProvider
+from aethersearch.evals.models import EvalToolResult
+from aethersearch.evals.models import MultiTurnEvalResult
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

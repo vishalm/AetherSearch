@@ -71,84 +71,84 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
-from onyx.auth.api_key import get_hashed_api_key_from_request
-from onyx.auth.disposable_email_validator import is_disposable_email
-from onyx.auth.email_utils import send_forgot_password_email
-from onyx.auth.email_utils import send_user_verification_email
-from onyx.auth.invited_users import get_invited_users
-from onyx.auth.invited_users import remove_user_from_invited_users
-from onyx.auth.jwt import verify_jwt_token
-from onyx.auth.pat import get_hashed_pat_from_request
-from onyx.auth.schemas import AuthBackend
-from onyx.auth.schemas import UserCreate
-from onyx.auth.schemas import UserRole
-from onyx.auth.signup_rate_limit import enforce_signup_rate_limit
-from onyx.configs.app_configs import AUTH_BACKEND
-from onyx.configs.app_configs import AUTH_COOKIE_EXPIRE_TIME_SECONDS
-from onyx.configs.app_configs import AUTH_TYPE
-from onyx.configs.app_configs import EMAIL_CONFIGURED
-from onyx.configs.app_configs import JWT_PUBLIC_KEY_URL
-from onyx.configs.app_configs import PASSWORD_MAX_LENGTH
-from onyx.configs.app_configs import PASSWORD_MIN_LENGTH
-from onyx.configs.app_configs import PASSWORD_REQUIRE_DIGIT
-from onyx.configs.app_configs import PASSWORD_REQUIRE_LOWERCASE
-from onyx.configs.app_configs import PASSWORD_REQUIRE_SPECIAL_CHAR
-from onyx.configs.app_configs import PASSWORD_REQUIRE_UPPERCASE
-from onyx.configs.app_configs import REDIS_AUTH_KEY_PREFIX
-from onyx.configs.app_configs import REQUIRE_EMAIL_VERIFICATION
-from onyx.configs.app_configs import SESSION_EXPIRE_TIME_SECONDS
-from onyx.configs.app_configs import TRACK_EXTERNAL_IDP_EXPIRY
-from onyx.configs.app_configs import USER_AUTH_SECRET
-from onyx.configs.app_configs import VALID_EMAIL_DOMAINS
-from onyx.configs.app_configs import WEB_DOMAIN
-from onyx.configs.constants import ANONYMOUS_USER_COOKIE_NAME
-from onyx.configs.constants import ANONYMOUS_USER_EMAIL
-from onyx.configs.constants import ANONYMOUS_USER_UUID
-from onyx.configs.constants import AuthType
-from onyx.configs.constants import DANSWER_API_KEY_DUMMY_EMAIL_DOMAIN
-from onyx.configs.constants import DANSWER_API_KEY_PREFIX
-from onyx.configs.constants import FASTAPI_USERS_AUTH_COOKIE_NAME
-from onyx.configs.constants import MilestoneRecordType
-from onyx.configs.constants import OnyxRedisLocks
-from onyx.configs.constants import PASSWORD_SPECIAL_CHARS
-from onyx.configs.constants import UNNAMED_KEY_PLACEHOLDER
-from onyx.db.api_key import fetch_user_for_api_key
-from onyx.db.auth import get_access_token_db
-from onyx.db.auth import get_default_admin_user_emails
-from onyx.db.auth import get_user_count
-from onyx.db.auth import get_user_db
-from onyx.db.auth import SQLAlchemyUserAdminDB
-from onyx.db.engine.async_sql_engine import get_async_session
-from onyx.db.engine.async_sql_engine import get_async_session_context_manager
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.engine.sql_engine import get_session_with_tenant
-from onyx.db.enums import AccountType
-from onyx.db.models import AccessToken
-from onyx.db.models import OAuthAccount
-from onyx.db.models import Persona
-from onyx.db.models import User
-from onyx.db.pat import fetch_user_for_pat
-from onyx.db.users import assign_user_to_default_groups__no_commit
-from onyx.db.users import get_user_by_email
-from onyx.db.users import is_limited_user
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import log_onyx_error
-from onyx.error_handling.exceptions import onyx_error_to_json_response
-from onyx.error_handling.exceptions import OnyxError
-from onyx.redis.redis_pool import get_async_redis_connection
-from onyx.redis.redis_pool import retrieve_ws_token_data
-from onyx.server.settings.store import load_settings
-from onyx.server.utils import BasicAuthenticationError
-from onyx.utils.logger import setup_logger
-from onyx.utils.telemetry import mt_cloud_alias
-from onyx.utils.telemetry import mt_cloud_get_anon_id
-from onyx.utils.telemetry import mt_cloud_identify
-from onyx.utils.telemetry import mt_cloud_telemetry
-from onyx.utils.telemetry import optional_telemetry
-from onyx.utils.telemetry import RecordType
-from onyx.utils.timing import log_function_time
-from onyx.utils.url import add_url_params
-from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
+from aethersearch.auth.api_key import get_hashed_api_key_from_request
+from aethersearch.auth.disposable_email_validator import is_disposable_email
+from aethersearch.auth.email_utils import send_forgot_password_email
+from aethersearch.auth.email_utils import send_user_verification_email
+from aethersearch.auth.invited_users import get_invited_users
+from aethersearch.auth.invited_users import remove_user_from_invited_users
+from aethersearch.auth.jwt import verify_jwt_token
+from aethersearch.auth.pat import get_hashed_pat_from_request
+from aethersearch.auth.schemas import AuthBackend
+from aethersearch.auth.schemas import UserCreate
+from aethersearch.auth.schemas import UserRole
+from aethersearch.auth.signup_rate_limit import enforce_signup_rate_limit
+from aethersearch.configs.app_configs import AUTH_BACKEND
+from aethersearch.configs.app_configs import AUTH_COOKIE_EXPIRE_TIME_SECONDS
+from aethersearch.configs.app_configs import AUTH_TYPE
+from aethersearch.configs.app_configs import EMAIL_CONFIGURED
+from aethersearch.configs.app_configs import JWT_PUBLIC_KEY_URL
+from aethersearch.configs.app_configs import PASSWORD_MAX_LENGTH
+from aethersearch.configs.app_configs import PASSWORD_MIN_LENGTH
+from aethersearch.configs.app_configs import PASSWORD_REQUIRE_DIGIT
+from aethersearch.configs.app_configs import PASSWORD_REQUIRE_LOWERCASE
+from aethersearch.configs.app_configs import PASSWORD_REQUIRE_SPECIAL_CHAR
+from aethersearch.configs.app_configs import PASSWORD_REQUIRE_UPPERCASE
+from aethersearch.configs.app_configs import REDIS_AUTH_KEY_PREFIX
+from aethersearch.configs.app_configs import REQUIRE_EMAIL_VERIFICATION
+from aethersearch.configs.app_configs import SESSION_EXPIRE_TIME_SECONDS
+from aethersearch.configs.app_configs import TRACK_EXTERNAL_IDP_EXPIRY
+from aethersearch.configs.app_configs import USER_AUTH_SECRET
+from aethersearch.configs.app_configs import VALID_EMAIL_DOMAINS
+from aethersearch.configs.app_configs import WEB_DOMAIN
+from aethersearch.configs.constants import ANONYMOUS_USER_COOKIE_NAME
+from aethersearch.configs.constants import ANONYMOUS_USER_EMAIL
+from aethersearch.configs.constants import ANONYMOUS_USER_UUID
+from aethersearch.configs.constants import AuthType
+from aethersearch.configs.constants import DANSWER_API_KEY_DUMMY_EMAIL_DOMAIN
+from aethersearch.configs.constants import DANSWER_API_KEY_PREFIX
+from aethersearch.configs.constants import FASTAPI_USERS_AUTH_COOKIE_NAME
+from aethersearch.configs.constants import MilestoneRecordType
+from aethersearch.configs.constants import AetherSearchRedisLocks
+from aethersearch.configs.constants import PASSWORD_SPECIAL_CHARS
+from aethersearch.configs.constants import UNNAMED_KEY_PLACEHOLDER
+from aethersearch.db.api_key import fetch_user_for_api_key
+from aethersearch.db.auth import get_access_token_db
+from aethersearch.db.auth import get_default_admin_user_emails
+from aethersearch.db.auth import get_user_count
+from aethersearch.db.auth import get_user_db
+from aethersearch.db.auth import SQLAlchemyUserAdminDB
+from aethersearch.db.engine.async_sql_engine import get_async_session
+from aethersearch.db.engine.async_sql_engine import get_async_session_context_manager
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.engine.sql_engine import get_session_with_tenant
+from aethersearch.db.enums import AccountType
+from aethersearch.db.models import AccessToken
+from aethersearch.db.models import OAuthAccount
+from aethersearch.db.models import Persona
+from aethersearch.db.models import User
+from aethersearch.db.pat import fetch_user_for_pat
+from aethersearch.db.users import assign_user_to_default_groups__no_commit
+from aethersearch.db.users import get_user_by_email
+from aethersearch.db.users import is_limited_user
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import log_aethersearch_error
+from aethersearch.error_handling.exceptions import aethersearch_error_to_json_response
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.redis.redis_pool import get_async_redis_connection
+from aethersearch.redis.redis_pool import retrieve_ws_token_data
+from aethersearch.server.settings.store import load_settings
+from aethersearch.server.utils import BasicAuthenticationError
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.telemetry import mt_cloud_alias
+from aethersearch.utils.telemetry import mt_cloud_get_anon_id
+from aethersearch.utils.telemetry import mt_cloud_identify
+from aethersearch.utils.telemetry import mt_cloud_telemetry
+from aethersearch.utils.telemetry import optional_telemetry
+from aethersearch.utils.telemetry import RecordType
+from aethersearch.utils.timing import log_function_time
+from aethersearch.utils.url import add_url_params
+from aethersearch.utils.variable_functionality import fetch_ee_implementation_or_noop
 from shared_configs.configs import async_return_default_schema
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.configs import POSTGRES_DEFAULT_SCHEMA
@@ -231,10 +231,10 @@ def user_needs_to_be_verified() -> bool:
 
 
 def anonymous_user_enabled(*, tenant_id: str | None = None) -> bool:
-    from onyx.cache.factory import get_cache_backend
+    from aethersearch.cache.factory import get_cache_backend
 
     cache = get_cache_backend(tenant_id=tenant_id)
-    value = cache.get(OnyxRedisLocks.ANONYMOUS_USER_ENABLED)
+    value = cache.get(AetherSearchRedisLocks.ANONYMOUS_USER_ENABLED)
 
     if value is None:
         return False
@@ -258,12 +258,12 @@ def verify_email_is_invited(email: str) -> None:
     whitelist = get_invited_users()
 
     if not email:
-        raise OnyxError(OnyxErrorCode.INVALID_INPUT, "Email must be specified")
+        raise AetherSearchError(AetherSearchErrorCode.INVALID_INPUT, "Email must be specified")
 
     try:
         email_info = validate_email(email, check_deliverability=False)
     except EmailUndeliverableError:
-        raise OnyxError(OnyxErrorCode.INVALID_INPUT, "Email is not valid")
+        raise AetherSearchError(AetherSearchErrorCode.INVALID_INPUT, "Email is not valid")
 
     for email_whitelist in whitelist:
         try:
@@ -280,8 +280,8 @@ def verify_email_is_invited(email: str) -> None:
         if email_info.normalized.lower() == email_info_whitelist.normalized.lower():
             return
 
-    raise OnyxError(
-        OnyxErrorCode.UNAUTHORIZED,
+    raise AetherSearchError(
+        AetherSearchErrorCode.UNAUTHORIZED,
         "This workspace is invite-only. Please ask your admin to invite you.",
     )
 
@@ -294,7 +294,7 @@ def verify_email_in_whitelist(email: str, tenant_id: str) -> None:
 
 def verify_email_domain(email: str, *, is_registration: bool = False) -> None:
     if email.count("@") != 1:
-        raise OnyxError(OnyxErrorCode.INVALID_INPUT, "Email is not valid")
+        raise AetherSearchError(AetherSearchErrorCode.INVALID_INPUT, "Email is not valid")
 
     local_part, domain = email.split("@")
     domain = domain.lower()
@@ -303,36 +303,36 @@ def verify_email_domain(email: str, *, is_registration: bool = False) -> None:
     if AUTH_TYPE == AuthType.CLOUD:
         # Normalize googlemail.com to gmail.com (they deliver to the same inbox)
         if domain == "googlemail.com":
-            raise OnyxError(
-                OnyxErrorCode.INVALID_INPUT,
+            raise AetherSearchError(
+                AetherSearchErrorCode.INVALID_INPUT,
                 "Please use @gmail.com instead of @googlemail.com.",
             )
 
         # Only block dotted Gmail on new signups — existing users must still be
         # able to sign in with the address they originally registered with.
         if is_registration and domain == "gmail.com" and "." in local_part:
-            raise OnyxError(
-                OnyxErrorCode.INVALID_INPUT,
+            raise AetherSearchError(
+                AetherSearchErrorCode.INVALID_INPUT,
                 "Gmail addresses with '.' are not allowed. Please use your base email address.",
             )
 
-        if "+" in local_part and domain != "onyx.app":
-            raise OnyxError(
-                OnyxErrorCode.INVALID_INPUT,
+        if "+" in local_part and domain != "aethersearch.app":
+            raise AetherSearchError(
+                AetherSearchErrorCode.INVALID_INPUT,
                 "Email addresses with '+' are not allowed. Please use your base email address.",
             )
 
     # Check if email uses a disposable/temporary domain
     if is_disposable_email(email):
-        raise OnyxError(
-            OnyxErrorCode.INVALID_INPUT,
+        raise AetherSearchError(
+            AetherSearchErrorCode.INVALID_INPUT,
             "Disposable email addresses are not allowed. Please use a permanent email address.",
         )
 
     # Check domain whitelist if configured
     if VALID_EMAIL_DOMAINS:
         if domain not in VALID_EMAIL_DOMAINS:
-            raise OnyxError(OnyxErrorCode.INVALID_INPUT, "Email domain is not valid")
+            raise AetherSearchError(AetherSearchErrorCode.INVALID_INPUT, "Email domain is not valid")
 
 
 def enforce_seat_limit(db_session: Session, seats_needed: int = 1) -> None:
@@ -344,11 +344,11 @@ def enforce_seat_limit(db_session: Session, seats_needed: int = 1) -> None:
         return
 
     result = fetch_ee_implementation_or_noop(
-        "onyx.db.license", "check_seat_availability", None
+        "aethersearch.db.license", "check_seat_availability", None
     )(db_session, seats_needed=seats_needed)
 
     if result is not None and not result.available:
-        raise OnyxError(OnyxErrorCode.SEAT_LIMIT_EXCEEDED, result.error_message)
+        raise AetherSearchError(AetherSearchErrorCode.SEAT_LIMIT_EXCEEDED, result.error_message)
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
@@ -359,7 +359,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
 
     async def get_by_email(self, user_email: str) -> User:
         tenant_id = fetch_ee_implementation_or_noop(
-            "onyx.server.tenants.user_mapping", "get_tenant_id_for_email", None
+            "aethersearch.server.tenants.user_mapping", "get_tenant_id_for_email", None
         )(user_email)
         async with get_async_session_context_manager(tenant_id) as db_session:
             if MULTI_TENANT:
@@ -385,7 +385,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         # rejected before hitting Google's siteverify API. Cheap local check.
         try:
             verify_email_domain(user_create.email, is_registration=True)
-        except OnyxError as e:
+        except AetherSearchError as e:
             # Log blocked disposable email attempts
             if "Disposable email" in e.detail:
                 domain = (
@@ -403,10 +403,10 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
             await enforce_signup_rate_limit(request)
 
         # Verify captcha if enabled (for cloud signup protection)
-        from onyx.auth.captcha import CaptchaAction
-        from onyx.auth.captcha import CaptchaVerificationError
-        from onyx.auth.captcha import is_captcha_enabled
-        from onyx.auth.captcha import verify_captcha_token
+        from aethersearch.auth.captcha import CaptchaAction
+        from aethersearch.auth.captcha import CaptchaVerificationError
+        from aethersearch.auth.captcha import is_captcha_enabled
+        from aethersearch.auth.captcha import verify_captcha_token
 
         if is_captcha_enabled() and request is not None:
             # Get captcha token from request body or headers
@@ -421,7 +421,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
             try:
                 await verify_captcha_token(captcha_token or "", CaptchaAction.SIGNUP)
             except CaptchaVerificationError as e:
-                raise OnyxError(OnyxErrorCode.INVALID_INPUT, str(e))
+                raise AetherSearchError(AetherSearchErrorCode.INVALID_INPUT, str(e))
 
         # We verify the password here to make sure it's valid before we proceed
         await self.validate_password(
@@ -436,7 +436,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         )
 
         tenant_id = await fetch_ee_implementation_or_noop(
-            "onyx.server.tenants.provisioning",
+            "aethersearch.server.tenants.provisioning",
             "get_or_provision_tenant",
             async_return_default_schema,
         )(
@@ -678,7 +678,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         )
 
         tenant_id = await fetch_ee_implementation_or_noop(
-            "onyx.server.tenants.provisioning",
+            "aethersearch.server.tenants.provisioning",
             "get_or_provision_tenant",
             async_return_default_schema,
         )(
@@ -870,7 +870,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         self, user: User, request: Optional[Request] = None
     ) -> None:
         tenant_id = await fetch_ee_implementation_or_noop(
-            "onyx.server.tenants.provisioning",
+            "aethersearch.server.tenants.provisioning",
             "get_or_provision_tenant",
             async_return_default_schema,
         )(
@@ -923,17 +923,17 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
 
         # Fetch EE PostHog functions if available
         get_marketing_posthog_cookie_name = fetch_ee_implementation_or_noop(
-            module="onyx.utils.posthog_client",
+            module="aethersearch.utils.posthog_client",
             attribute="get_marketing_posthog_cookie_name",
             noop_return_value=None,
         )
         parse_posthog_cookie = fetch_ee_implementation_or_noop(
-            module="onyx.utils.posthog_client",
+            module="aethersearch.utils.posthog_client",
             attribute="parse_posthog_cookie",
             noop_return_value=None,
         )
         capture_and_sync_with_alternate_posthog = fetch_ee_implementation_or_noop(
-            module="onyx.utils.posthog_client",
+            module="aethersearch.utils.posthog_client",
             attribute="capture_and_sync_with_alternate_posthog",
             noop_return_value=None,
         )
@@ -957,7 +957,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
             # to also be semantically correct.
             properties = {
                 "email": user.email,
-                "onyx_cloud_user_id": str(user.id),
+                "aethersearch_cloud_user_id": str(user.id),
                 "tenant_id": str(tenant_id) if tenant_id else None,
                 "role": user.role.value,
                 "is_first_user": user_count == 1,
@@ -1001,7 +1001,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
                 "Your admin has not enabled this feature.",
             )
         tenant_id = await fetch_ee_implementation_or_noop(
-            "onyx.server.tenants.provisioning",
+            "aethersearch.server.tenants.provisioning",
             "get_or_provision_tenant",
             async_return_default_schema,
         )(email=user.email)
@@ -1033,7 +1033,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         tenant_id: str | None = None
         try:
             tenant_id = fetch_ee_implementation_or_noop(
-                "onyx.server.tenants.provisioning",
+                "aethersearch.server.tenants.provisioning",
                 "get_tenant_id_for_email",
                 POSTGRES_DEFAULT_SCHEMA,
             )(
@@ -1164,7 +1164,7 @@ class TenantAwareRedisStrategy(RedisStrategy[User, uuid.UUID]):
         redis = await get_async_redis_connection()
 
         tenant_id = await fetch_ee_implementation_or_noop(
-            "onyx.server.tenants.provisioning",
+            "aethersearch.server.tenants.provisioning",
             "get_or_provision_tenant",
             async_return_default_schema,
         )(email=user.email)
@@ -1406,7 +1406,7 @@ class FastAPIUserWithLogoutRouter(FastAPIUsers[models.UP, models.ID]):
         Provide a router for session token refreshing.
         """
         # Import the oauth_refresher here to avoid circular imports
-        from onyx.auth.oauth_refresher import check_and_refresh_oauth_tokens
+        from aethersearch.auth.oauth_refresher import check_and_refresh_oauth_tokens
 
         router = APIRouter()
 
@@ -1848,7 +1848,7 @@ async def current_user_from_websocket(
 
 
 def get_default_admin_user_emails_() -> list[str]:
-    # No default seeding available for Onyx MIT
+    # No default seeding available for AetherSearch MIT
     return []
 
 
@@ -1893,7 +1893,7 @@ def get_pkce_cookie_name(state: str) -> str:
 
 
 # refer to https://github.com/fastapi-users/fastapi-users/blob/42ddc241b965475390e2bce887b084152ae1a2cd/fastapi_users/fastapi_users.py#L91
-def create_onyx_oauth_router(
+def create_aethersearch_oauth_router(
     oauth_client: BaseOAuth2,
     backend: AuthenticationBackend,
     state_secret: SecretType,
@@ -2103,9 +2103,9 @@ def get_oauth_router(
                     samesite=csrf_token_cookie_samesite,
                 )
 
-        def build_error_response(exc: OnyxError) -> JSONResponse:
-            log_onyx_error(exc)
-            error_response = onyx_error_to_json_response(exc)
+        def build_error_response(exc: AetherSearchError) -> JSONResponse:
+            log_aethersearch_error(exc)
+            error_response = aethersearch_error_to_json_response(exc)
             delete_pkce_cookie(error_response)
             return error_response
 
@@ -2115,8 +2115,8 @@ def get_oauth_router(
                     state_value, state_secret, [STATE_TOKEN_AUDIENCE]
                 )
             except jwt.DecodeError:
-                raise OnyxError(
-                    OnyxErrorCode.VALIDATION_ERROR,
+                raise AetherSearchError(
+                    AetherSearchErrorCode.VALIDATION_ERROR,
                     getattr(
                         ErrorCode,
                         "ACCESS_TOKEN_DECODE_ERROR",
@@ -2124,8 +2124,8 @@ def get_oauth_router(
                     ),
                 )
             except jwt.ExpiredSignatureError:
-                raise OnyxError(
-                    OnyxErrorCode.VALIDATION_ERROR,
+                raise AetherSearchError(
+                    AetherSearchErrorCode.VALIDATION_ERROR,
                     getattr(
                         ErrorCode,
                         "ACCESS_TOKEN_ALREADY_EXPIRED",
@@ -2133,8 +2133,8 @@ def get_oauth_router(
                     ),
                 )
             except jwt.PyJWTError:
-                raise OnyxError(
-                    OnyxErrorCode.VALIDATION_ERROR,
+                raise AetherSearchError(
+                    AetherSearchErrorCode.VALIDATION_ERROR,
                     getattr(
                         ErrorCode,
                         "ACCESS_TOKEN_DECODE_ERROR",
@@ -2149,8 +2149,8 @@ def get_oauth_router(
                 or not state_csrf_token
                 or not secrets.compare_digest(cookie_csrf_token, state_csrf_token)
             ):
-                raise OnyxError(
-                    OnyxErrorCode.VALIDATION_ERROR,
+                raise AetherSearchError(
+                    AetherSearchErrorCode.VALIDATION_ERROR,
                     getattr(ErrorCode, "OAUTH_INVALID_STATE", "OAUTH_INVALID_STATE"),
                 )
 
@@ -2167,22 +2167,22 @@ def get_oauth_router(
 
             if error is not None:
                 return build_error_response(
-                    OnyxError(
-                        OnyxErrorCode.VALIDATION_ERROR,
+                    AetherSearchError(
+                        AetherSearchErrorCode.VALIDATION_ERROR,
                         "Authorization request failed or was denied",
                     )
                 )
             if code is None:
                 return build_error_response(
-                    OnyxError(
-                        OnyxErrorCode.VALIDATION_ERROR,
+                    AetherSearchError(
+                        AetherSearchErrorCode.VALIDATION_ERROR,
                         "Missing authorization code in OAuth callback",
                     )
                 )
             if state is None:
                 return build_error_response(
-                    OnyxError(
-                        OnyxErrorCode.VALIDATION_ERROR,
+                    AetherSearchError(
+                        AetherSearchErrorCode.VALIDATION_ERROR,
                         "Missing state parameter in OAuth callback",
                     )
                 )
@@ -2198,15 +2198,15 @@ def get_oauth_router(
             code_verifier = request.cookies.get(cast(str, pkce_cookie_name))
             if not code_verifier:
                 return build_error_response(
-                    OnyxError(
-                        OnyxErrorCode.VALIDATION_ERROR,
+                    AetherSearchError(
+                        AetherSearchErrorCode.VALIDATION_ERROR,
                         "Missing PKCE verifier cookie in OAuth callback",
                     )
                 )
 
             try:
                 state_data = decode_and_validate_state(state_value)
-            except OnyxError as e:
+            except AetherSearchError as e:
                 return build_error_response(e)
 
             try:
@@ -2215,20 +2215,20 @@ def get_oauth_router(
                 )
             except GetAccessTokenError:
                 return build_error_response(
-                    OnyxError(
-                        OnyxErrorCode.VALIDATION_ERROR,
+                    AetherSearchError(
+                        AetherSearchErrorCode.VALIDATION_ERROR,
                         "Authorization code exchange failed",
                     )
                 )
         else:
             if access_token_state is None:
-                raise OnyxError(
-                    OnyxErrorCode.INTERNAL_ERROR, "Missing OAuth callback state"
+                raise AetherSearchError(
+                    AetherSearchErrorCode.INTERNAL_ERROR, "Missing OAuth callback state"
                 )
             token, callback_state = access_token_state
             if callback_state is None:
-                raise OnyxError(
-                    OnyxErrorCode.VALIDATION_ERROR,
+                raise AetherSearchError(
+                    AetherSearchErrorCode.VALIDATION_ERROR,
                     "Missing state parameter in OAuth callback",
                 )
             state_data = decode_and_validate_state(callback_state)
@@ -2241,8 +2241,8 @@ def get_oauth_router(
             )
 
             if account_email is None:
-                raise OnyxError(
-                    OnyxErrorCode.VALIDATION_ERROR,
+                raise AetherSearchError(
+                    AetherSearchErrorCode.VALIDATION_ERROR,
                     ErrorCode.OAUTH_NOT_AVAILABLE_EMAIL,
                 )
 
@@ -2250,7 +2250,7 @@ def get_oauth_router(
             referral_source = state_data.get("referral_source", None)
             try:
                 tenant_id = fetch_ee_implementation_or_noop(
-                    "onyx.server.tenants.user_mapping", "get_tenant_id_for_email", None
+                    "aethersearch.server.tenants.user_mapping", "get_tenant_id_for_email", None
                 )(account_email)
             except exceptions.UserNotExists:
                 tenant_id = None
@@ -2271,14 +2271,14 @@ def get_oauth_router(
                     is_verified_by_default=is_verified_by_default,
                 )
             except UserAlreadyExists:
-                raise OnyxError(
-                    OnyxErrorCode.VALIDATION_ERROR,
+                raise AetherSearchError(
+                    AetherSearchErrorCode.VALIDATION_ERROR,
                     ErrorCode.OAUTH_USER_ALREADY_EXISTS,
                 )
 
             if not user.is_active:
-                raise OnyxError(
-                    OnyxErrorCode.VALIDATION_ERROR,
+                raise AetherSearchError(
+                    AetherSearchErrorCode.VALIDATION_ERROR,
                     ErrorCode.LOGIN_BAD_CREDENTIALS,
                 )
 
@@ -2312,7 +2312,7 @@ def get_oauth_router(
         if enable_pkce:
             try:
                 redirect_response = await complete_login_flow(token, state_data)
-            except OnyxError as e:
+            except AetherSearchError as e:
                 return build_error_response(e)
             delete_pkce_cookie(redirect_response)
             return redirect_response

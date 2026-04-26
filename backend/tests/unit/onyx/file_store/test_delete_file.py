@@ -5,8 +5,8 @@ from unittest.mock import patch
 
 import pytest
 
-_S3_MODULE = "onyx.file_store.file_store"
-_PG_MODULE = "onyx.file_store.postgres_file_store"
+_S3_MODULE = "aethersearch.file_store.file_store"
+_PG_MODULE = "aethersearch.file_store.postgres_file_store"
 
 
 def _mock_db_session() -> MagicMock:
@@ -25,7 +25,7 @@ def test_s3_delete_missing_file_raises_by_default(
     _mock_get_record: MagicMock,
     mock_ctx: MagicMock,
 ) -> None:
-    from onyx.file_store.file_store import S3BackedFileStore
+    from aethersearch.file_store.file_store import S3BackedFileStore
 
     mock_ctx.return_value = _mock_db_session()
     store = S3BackedFileStore(bucket_name="b")
@@ -42,7 +42,7 @@ def test_s3_delete_missing_file_silent_when_error_on_missing_false(
     _mock_get_record: MagicMock,
     mock_ctx: MagicMock,
 ) -> None:
-    from onyx.file_store.file_store import S3BackedFileStore
+    from aethersearch.file_store.file_store import S3BackedFileStore
 
     mock_ctx.return_value = _mock_db_session()
     store = S3BackedFileStore(bucket_name="b")
@@ -61,7 +61,7 @@ def test_pg_delete_missing_file_raises_by_default(
     _mock_get_content: MagicMock,
     mock_ctx: MagicMock,
 ) -> None:
-    from onyx.file_store.postgres_file_store import PostgresBackedFileStore
+    from aethersearch.file_store.postgres_file_store import PostgresBackedFileStore
 
     mock_ctx.return_value = _mock_db_session()
     store = PostgresBackedFileStore()
@@ -80,7 +80,7 @@ def test_pg_delete_missing_file_silent_when_error_on_missing_false(
     _mock_get_content: MagicMock,
     mock_ctx: MagicMock,
 ) -> None:
-    from onyx.file_store.postgres_file_store import PostgresBackedFileStore
+    from aethersearch.file_store.postgres_file_store import PostgresBackedFileStore
 
     mock_ctx.return_value = _mock_db_session()
     store = PostgresBackedFileStore()

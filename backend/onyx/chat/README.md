@@ -1,9 +1,9 @@
 # Overview of Context Management
 
-This document reviews some design decisions around the main agent-loop powering Onyx's chat flow.
+This document reviews some design decisions around the main agent-loop powering AetherSearch's chat flow.
 It is highly recommended for all engineers contributing to this flow to be familiar with the concepts here.
 
-> Note: it is assumed the reader is familiar with the Onyx product and features such as Projects, User files, Citations, etc. 
+> Note: it is assumed the reader is familiar with the AetherSearch product and features such as Projects, User files, Citations, etc. 
 
 ## System Prompt
 
@@ -163,7 +163,7 @@ rate by even just moving the same statement a few sentences.
 
 ## Other related pointers
 
-- How messages, files, images are stored can be found in backend/onyx/db/models.py, there is also a README.md under that directory that may be helpful.
+- How messages, files, images are stored can be found in backend/aethersearch/db/models.py, there is also a README.md under that directory that may be helpful.
 
 ---
 

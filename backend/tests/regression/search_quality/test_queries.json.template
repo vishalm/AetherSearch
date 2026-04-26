@@ -1,10 +1,10 @@
 [
     {
-        "question": "What is Onyx?",
+        "question": "What is AetherSearch?",
         "ground_truth": [
             {
                 "doc_source": "web",
-                "doc_link": "https://docs.onyx.app/welcome"
+                "doc_link": "https://docs.aethersearch.app/welcome"
             }
         ],
         "categories": [

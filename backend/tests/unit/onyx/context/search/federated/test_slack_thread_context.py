@@ -7,13 +7,13 @@ from unittest.mock import patch
 import pytest
 from slack_sdk.errors import SlackApiError
 
-from onyx.context.search.federated.models import SlackMessage
-from onyx.context.search.federated.slack_search import _fetch_thread_context
-from onyx.context.search.federated.slack_search import (
+from aethersearch.context.search.federated.models import SlackMessage
+from aethersearch.context.search.federated.slack_search import _fetch_thread_context
+from aethersearch.context.search.federated.slack_search import (
     fetch_thread_contexts_with_rate_limit_handling,
 )
-from onyx.context.search.federated.slack_search import SlackRateLimitError
-from onyx.context.search.federated.slack_search import ThreadContextResult
+from aethersearch.context.search.federated.slack_search import SlackRateLimitError
+from aethersearch.context.search.federated.slack_search import ThreadContextResult
 
 
 def _create_mock_message(
@@ -86,7 +86,7 @@ class TestFetchThreadContext:
         assert not result.is_rate_limited
         assert not result.is_error
 
-    @patch("onyx.context.search.federated.slack_search.WebClient")
+    @patch("aethersearch.context.search.federated.slack_search.WebClient")
     def test_rate_limit_returns_rate_limited_result(
         self, mock_webclient_class: MagicMock
     ) -> None:
@@ -110,7 +110,7 @@ class TestFetchThreadContext:
         assert result.is_rate_limited
         assert not result.is_error
 
-    @patch("onyx.context.search.federated.slack_search.WebClient")
+    @patch("aethersearch.context.search.federated.slack_search.WebClient")
     def test_other_api_error_returns_error_result(
         self, mock_webclient_class: MagicMock
     ) -> None:
@@ -133,7 +133,7 @@ class TestFetchThreadContext:
         assert not result.is_rate_limited
         assert result.is_error
 
-    @patch("onyx.context.search.federated.slack_search.WebClient")
+    @patch("aethersearch.context.search.federated.slack_search.WebClient")
     def test_unexpected_exception_returns_error_result(
         self, mock_webclient_class: MagicMock
     ) -> None:
@@ -150,8 +150,8 @@ class TestFetchThreadContext:
         assert not result.is_rate_limited
         assert result.is_error
 
-    @patch("onyx.context.search.federated.slack_search.batch_get_user_profiles")
-    @patch("onyx.context.search.federated.slack_search.WebClient")
+    @patch("aethersearch.context.search.federated.slack_search.batch_get_user_profiles")
+    @patch("aethersearch.context.search.federated.slack_search.WebClient")
     def test_successful_thread_fetch_returns_context(
         self, mock_webclient_class: MagicMock, mock_batch_profiles: MagicMock
     ) -> None:
@@ -209,9 +209,9 @@ class TestFetchThreadContextsWithRateLimitHandling:
 
         assert result == []
 
-    @patch("onyx.context.search.federated.slack_search._fetch_thread_context")
+    @patch("aethersearch.context.search.federated.slack_search._fetch_thread_context")
     @patch(
-        "onyx.context.search.federated.slack_search.run_functions_tuples_in_parallel"
+        "aethersearch.context.search.federated.slack_search.run_functions_tuples_in_parallel"
     )
     def test_batch_processing_respects_batch_size(
         self,
@@ -239,9 +239,9 @@ class TestFetchThreadContextsWithRateLimitHandling:
         # Should have called parallel execution 3 times (7 messages / 3 batch = 3 batches)
         assert mock_parallel.call_count == 3
 
-    @patch("onyx.context.search.federated.slack_search._fetch_thread_context")
+    @patch("aethersearch.context.search.federated.slack_search._fetch_thread_context")
     @patch(
-        "onyx.context.search.federated.slack_search.run_functions_tuples_in_parallel"
+        "aethersearch.context.search.federated.slack_search.run_functions_tuples_in_parallel"
     )
     def test_rate_limit_stops_further_batches(
         self,
@@ -289,9 +289,9 @@ class TestFetchThreadContextsWithRateLimitHandling:
         # Should only call parallel twice (stopped after rate limit detected)
         assert mock_parallel.call_count == 2
 
-    @patch("onyx.context.search.federated.slack_search._fetch_thread_context")
+    @patch("aethersearch.context.search.federated.slack_search._fetch_thread_context")
     @patch(
-        "onyx.context.search.federated.slack_search.run_functions_tuples_in_parallel"
+        "aethersearch.context.search.federated.slack_search.run_functions_tuples_in_parallel"
     )
     def test_other_errors_dont_stop_processing(
         self,
@@ -338,9 +338,9 @@ class TestFetchThreadContextsWithRateLimitHandling:
 class TestMaxMessagesLimit:
     """Test max_messages parameter limiting thread context fetches."""
 
-    @patch("onyx.context.search.federated.slack_search._fetch_thread_context")
+    @patch("aethersearch.context.search.federated.slack_search._fetch_thread_context")
     @patch(
-        "onyx.context.search.federated.slack_search.run_functions_tuples_in_parallel"
+        "aethersearch.context.search.federated.slack_search.run_functions_tuples_in_parallel"
     )
     def test_max_messages_limits_context_fetches(
         self,
@@ -381,9 +381,9 @@ class TestMaxMessagesLimit:
         # Should only call parallel once (3 messages with batch_size=5 = 1 batch)
         assert mock_parallel.call_count == 1
 
-    @patch("onyx.context.search.federated.slack_search._fetch_thread_context")
+    @patch("aethersearch.context.search.federated.slack_search._fetch_thread_context")
     @patch(
-        "onyx.context.search.federated.slack_search.run_functions_tuples_in_parallel"
+        "aethersearch.context.search.federated.slack_search.run_functions_tuples_in_parallel"
     )
     def test_max_messages_none_fetches_all(
         self,
@@ -413,9 +413,9 @@ class TestMaxMessagesLimit:
         for i in range(5):
             assert result[i] == f"enriched{i}"
 
-    @patch("onyx.context.search.federated.slack_search._fetch_thread_context")
+    @patch("aethersearch.context.search.federated.slack_search._fetch_thread_context")
     @patch(
-        "onyx.context.search.federated.slack_search.run_functions_tuples_in_parallel"
+        "aethersearch.context.search.federated.slack_search.run_functions_tuples_in_parallel"
     )
     def test_max_messages_greater_than_total_fetches_all(
         self,

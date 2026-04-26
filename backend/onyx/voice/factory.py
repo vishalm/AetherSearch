@@ -1,5 +1,5 @@
-from onyx.db.models import VoiceProvider
-from onyx.voice.interface import VoiceProviderInterface
+from aethersearch.db.models import VoiceProvider
+from aethersearch.voice.interface import VoiceProviderInterface
 
 
 def get_voice_provider(provider: VoiceProvider) -> VoiceProviderInterface:
@@ -33,7 +33,7 @@ def get_voice_provider(provider: VoiceProvider) -> VoiceProviderInterface:
     default_voice = provider.default_voice
 
     if provider_type == "openai":
-        from onyx.voice.providers.openai import OpenAIVoiceProvider
+        from aethersearch.voice.providers.openai import OpenAIVoiceProvider
 
         return OpenAIVoiceProvider(
             api_key=api_key,
@@ -44,7 +44,7 @@ def get_voice_provider(provider: VoiceProvider) -> VoiceProviderInterface:
         )
 
     elif provider_type == "azure":
-        from onyx.voice.providers.azure import AzureVoiceProvider
+        from aethersearch.voice.providers.azure import AzureVoiceProvider
 
         return AzureVoiceProvider(
             api_key=api_key,
@@ -56,7 +56,7 @@ def get_voice_provider(provider: VoiceProvider) -> VoiceProviderInterface:
         )
 
     elif provider_type == "elevenlabs":
-        from onyx.voice.providers.elevenlabs import ElevenLabsVoiceProvider
+        from aethersearch.voice.providers.elevenlabs import ElevenLabsVoiceProvider
 
         return ElevenLabsVoiceProvider(
             api_key=api_key,

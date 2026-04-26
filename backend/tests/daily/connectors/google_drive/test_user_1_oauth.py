@@ -2,8 +2,8 @@ from collections.abc import Callable
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from onyx.connectors.google_drive.connector import GoogleDriveConnector
-from onyx.connectors.models import Document
+from aethersearch.connectors.google_drive.connector import GoogleDriveConnector
+from aethersearch.connectors.models import Document
 from tests.daily.connectors.google_drive.consts_and_utils import _clear_parents
 from tests.daily.connectors.google_drive.consts_and_utils import _pick
 from tests.daily.connectors.google_drive.consts_and_utils import ADMIN_FOLDER_3_FILE_IDS
@@ -63,7 +63,7 @@ def _check_for_error(
 
 
 @patch(
-    "onyx.file_processing.extract_file_text.get_unstructured_api_key",
+    "aethersearch.file_processing.extract_file_text.get_unstructured_api_key",
     return_value=None,
 )
 def test_all(
@@ -106,7 +106,7 @@ def test_all(
 
 
 @patch(
-    "onyx.file_processing.extract_file_text.get_unstructured_api_key",
+    "aethersearch.file_processing.extract_file_text.get_unstructured_api_key",
     return_value=None,
 )
 def test_shared_drives_only(
@@ -145,7 +145,7 @@ def test_shared_drives_only(
 
 
 @patch(
-    "onyx.file_processing.extract_file_text.get_unstructured_api_key",
+    "aethersearch.file_processing.extract_file_text.get_unstructured_api_key",
     return_value=None,
 )
 def test_shared_with_me_only(
@@ -177,7 +177,7 @@ def test_shared_with_me_only(
 
 
 @patch(
-    "onyx.file_processing.extract_file_text.get_unstructured_api_key",
+    "aethersearch.file_processing.extract_file_text.get_unstructured_api_key",
     return_value=None,
 )
 def test_my_drive_only(
@@ -209,7 +209,7 @@ def test_my_drive_only(
 
 
 @patch(
-    "onyx.file_processing.extract_file_text.get_unstructured_api_key",
+    "aethersearch.file_processing.extract_file_text.get_unstructured_api_key",
     return_value=None,
 )
 def test_shared_my_drive_folder(
@@ -241,7 +241,7 @@ def test_shared_my_drive_folder(
 
 
 @patch(
-    "onyx.file_processing.extract_file_text.get_unstructured_api_key",
+    "aethersearch.file_processing.extract_file_text.get_unstructured_api_key",
     return_value=None,
 )
 def test_shared_drive_folder(

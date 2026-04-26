@@ -4,27 +4,27 @@ from collections.abc import Generator
 from github import Github
 from github.Repository import Repository
 
-from ee.onyx.external_permissions.github.utils import fetch_repository_team_slugs
-from ee.onyx.external_permissions.github.utils import form_collaborators_group_id
-from ee.onyx.external_permissions.github.utils import form_organization_group_id
-from ee.onyx.external_permissions.github.utils import (
+from ee.aethersearch.external_permissions.github.utils import fetch_repository_team_slugs
+from ee.aethersearch.external_permissions.github.utils import form_collaborators_group_id
+from ee.aethersearch.external_permissions.github.utils import form_organization_group_id
+from ee.aethersearch.external_permissions.github.utils import (
     form_outside_collaborators_group_id,
 )
-from ee.onyx.external_permissions.github.utils import get_external_access_permission
-from ee.onyx.external_permissions.github.utils import get_repository_visibility
-from ee.onyx.external_permissions.github.utils import GitHubVisibility
-from ee.onyx.external_permissions.perm_sync_types import FetchAllDocumentsFunction
-from ee.onyx.external_permissions.perm_sync_types import FetchAllDocumentsIdsFunction
-from onyx.access.models import DocExternalAccess
-from onyx.access.utils import build_ext_group_name_for_onyx
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.github.connector import DocMetadata
-from onyx.connectors.github.connector import GithubConnector
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.utils import DocumentRow
-from onyx.db.utils import SortOrder
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.external_permissions.github.utils import get_external_access_permission
+from ee.aethersearch.external_permissions.github.utils import get_repository_visibility
+from ee.aethersearch.external_permissions.github.utils import GitHubVisibility
+from ee.aethersearch.external_permissions.perm_sync_types import FetchAllDocumentsFunction
+from ee.aethersearch.external_permissions.perm_sync_types import FetchAllDocumentsIdsFunction
+from aethersearch.access.models import DocExternalAccess
+from aethersearch.access.utils import build_ext_group_name_for_aethersearch
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.github.connector import DocMetadata
+from aethersearch.connectors.github.connector import GithubConnector
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.utils import DocumentRow
+from aethersearch.db.utils import SortOrder
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -193,14 +193,14 @@ def _is_repo_visibility_changed_from_groups(
     logger.info(f"Current repository visibility: {current_repo_visibility.value}")
 
     # Build expected group IDs for current visibility
-    collaborators_group_id = build_ext_group_name_for_onyx(
+    collaborators_group_id = build_ext_group_name_for_aethersearch(
         source=DocumentSource.GITHUB,
         ext_group_name=form_collaborators_group_id(repo.id),
     )
 
     org_group_id = None
     if repo.organization:
-        org_group_id = build_ext_group_name_for_onyx(
+        org_group_id = build_ext_group_name_for_aethersearch(
             source=DocumentSource.GITHUB,
             ext_group_name=form_organization_group_id(repo.organization.id),
         )
@@ -243,11 +243,11 @@ def _teams_updated_from_groups(
     )
 
     # Build group IDs to exclude from team comparison (non-team groups)
-    collaborators_group_id = build_ext_group_name_for_onyx(
+    collaborators_group_id = build_ext_group_name_for_aethersearch(
         source=DocumentSource.GITHUB,
         ext_group_name=form_collaborators_group_id(repo.id),
     )
-    outside_collaborators_group_id = build_ext_group_name_for_onyx(
+    outside_collaborators_group_id = build_ext_group_name_for_aethersearch(
         source=DocumentSource.GITHUB,
         ext_group_name=form_outside_collaborators_group_id(repo.id),
     )
@@ -264,7 +264,7 @@ def _teams_updated_from_groups(
     # but current_teams from API are raw team slugs, so we need to add the prefix
     current_team_ids = set()
     for team_slug in current_teams:
-        team_group_id = build_ext_group_name_for_onyx(
+        team_group_id = build_ext_group_name_for_aethersearch(
             source=DocumentSource.GITHUB,
             ext_group_name=team_slug,
         )

@@ -16,7 +16,7 @@ import { useLLMProviders } from "@/hooks/useLLMProviders";
 import { useProviderStatus } from "@/components/chat/ProviderContext";
 
 function getOnboardingCompletedKey(userId: string): string {
-  return `onyx:onboardingCompleted:${userId}`;
+  return `aethersearch:onboardingCompleted:${userId}`;
 }
 
 function useOnboardingState(liveAgent?: MinimalPersonaSnapshot): {

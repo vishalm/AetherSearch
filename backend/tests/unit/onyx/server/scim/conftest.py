@@ -13,19 +13,19 @@ import pytest
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-from ee.onyx.server.scim.api import ScimJSONResponse
-from ee.onyx.server.scim.models import ScimGroupResource
-from ee.onyx.server.scim.models import ScimListResponse
-from ee.onyx.server.scim.models import ScimName
-from ee.onyx.server.scim.models import ScimUserResource
-from ee.onyx.server.scim.providers.base import ScimProvider
-from ee.onyx.server.scim.providers.entra import EntraProvider
-from ee.onyx.server.scim.providers.okta import OktaProvider
-from onyx.db.models import ScimToken
-from onyx.db.models import ScimUserMapping
-from onyx.db.models import User
-from onyx.db.models import UserGroup
-from onyx.db.models import UserRole
+from ee.aethersearch.server.scim.api import ScimJSONResponse
+from ee.aethersearch.server.scim.models import ScimGroupResource
+from ee.aethersearch.server.scim.models import ScimListResponse
+from ee.aethersearch.server.scim.models import ScimName
+from ee.aethersearch.server.scim.models import ScimUserResource
+from ee.aethersearch.server.scim.providers.base import ScimProvider
+from ee.aethersearch.server.scim.providers.entra import EntraProvider
+from ee.aethersearch.server.scim.providers.okta import OktaProvider
+from aethersearch.db.models import ScimToken
+from aethersearch.db.models import ScimUserMapping
+from aethersearch.db.models import User
+from aethersearch.db.models import UserGroup
+from aethersearch.db.models import UserRole
 
 # Every supported SCIM provider must appear here so that all endpoint tests
 # run against it.  When adding a new provider, add its class to this list.
@@ -55,7 +55,7 @@ def provider(request: pytest.FixtureRequest) -> ScimProvider:
 @pytest.fixture
 def mock_dal() -> Generator[MagicMock, None, None]:
     """Patch ScimDAL construction in api module and yield the mock instance."""
-    with patch("ee.onyx.server.scim.api.ScimDAL") as cls:
+    with patch("ee.aethersearch.server.scim.api.ScimDAL") as cls:
         dal = cls.return_value
         # User defaults
         dal.get_user.return_value = None

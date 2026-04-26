@@ -12,9 +12,9 @@ Usage:
 from urllib.parse import urlparse
 from urllib.parse import urlunparse
 
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.factory import identify_connector_class
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.factory import identify_connector_class
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

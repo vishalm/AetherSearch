@@ -1,7 +1,7 @@
 import requests
 from fastapi import HTTPException
 
-from onyx.configs.constants import SLACK_USER_TOKEN_PREFIX
+from aethersearch.configs.constants import SLACK_USER_TOKEN_PREFIX
 
 SLACK_API_URL = "https://slack.com/api/auth.test"
 SLACK_CONNECTIONS_OPEN_URL = "https://slack.com/api/apps.connections.open"

@@ -13,7 +13,7 @@ import time
 
 import requests
 
-from onyx.db.enums import UserFileStatus
+from aethersearch.db.enums import UserFileStatus
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.managers.chat import ChatSessionManager
 from tests.integration.common_utils.managers.file import FileManager

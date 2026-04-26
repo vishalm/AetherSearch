@@ -1,14 +1,14 @@
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import DocumentSource
-from onyx.db.connector_credential_pair import get_connector_credential_pair
-from onyx.db.enums import AccessType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.models import Connector
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import UserGroup__ConnectorCredentialPair
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.db.connector_credential_pair import get_connector_credential_pair
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.models import Connector
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import UserGroup__ConnectorCredentialPair
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

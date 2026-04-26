@@ -11,8 +11,8 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import ColumnClause
 
-from onyx.db.models import ChatMessage
-from onyx.db.models import ChatSession
+from aethersearch.db.models import ChatMessage
+from aethersearch.db.models import ChatSession
 
 
 def search_chat_sessions(
@@ -22,7 +22,7 @@ def search_chat_sessions(
     page: int = 1,
     page_size: int = 10,
     include_deleted: bool = False,
-    include_onyxbot_flows: bool = False,
+    include_aethersearchbot_flows: bool = False,
 ) -> Tuple[List[ChatSession], bool]:
     """
     Fast full-text search on ChatSession + ChatMessage using tsvectors.
@@ -45,8 +45,8 @@ def search_chat_sessions(
         )
         if user_id is not None:
             stmt = stmt.where(ChatSession.user_id == user_id)
-        if not include_onyxbot_flows:
-            stmt = stmt.where(ChatSession.onyxbot_flow.is_(False))
+        if not include_aethersearchbot_flows:
+            stmt = stmt.where(ChatSession.aethersearchbot_flow.is_(False))
         if not include_deleted:
             stmt = stmt.where(ChatSession.deleted.is_(False))
 
@@ -65,8 +65,8 @@ def search_chat_sessions(
     base_conditions = []
     if user_id is not None:
         base_conditions.append(ChatSession.user_id == user_id)
-    if not include_onyxbot_flows:
-        base_conditions.append(ChatSession.onyxbot_flow.is_(False))
+    if not include_aethersearchbot_flows:
+        base_conditions.append(ChatSession.aethersearchbot_flow.is_(False))
     if not include_deleted:
         base_conditions.append(ChatSession.deleted.is_(False))
 

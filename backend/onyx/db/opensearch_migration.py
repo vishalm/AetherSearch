@@ -13,22 +13,22 @@ from sqlalchemy import text
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
-from onyx.background.celery.tasks.opensearch_migration.constants import (
+from aethersearch.background.celery.tasks.opensearch_migration.constants import (
     GET_VESPA_CHUNKS_SLICE_COUNT,
 )
-from onyx.background.celery.tasks.opensearch_migration.constants import (
+from aethersearch.background.celery.tasks.opensearch_migration.constants import (
     TOTAL_ALLOWABLE_DOC_MIGRATION_ATTEMPTS_BEFORE_PERMANENT_FAILURE,
 )
-from onyx.configs.app_configs import ENABLE_OPENSEARCH_RETRIEVAL_FOR_ONYX
-from onyx.configs.app_configs import ONYX_DISABLE_VESPA
-from onyx.db.enums import OpenSearchDocumentMigrationStatus
-from onyx.db.models import Document
-from onyx.db.models import OpenSearchDocumentMigrationRecord
-from onyx.db.models import OpenSearchTenantMigrationRecord
-from onyx.document_index.vespa.shared_utils.utils import (
+from aethersearch.configs.app_configs import ENABLE_OPENSEARCH_RETRIEVAL_FOR_AETHERSEARCH
+from aethersearch.configs.app_configs import AETHERSEARCH_DISABLE_VESPA
+from aethersearch.db.enums import OpenSearchDocumentMigrationStatus
+from aethersearch.db.models import Document
+from aethersearch.db.models import OpenSearchDocumentMigrationRecord
+from aethersearch.db.models import OpenSearchTenantMigrationRecord
+from aethersearch.document_index.vespa.shared_utils.utils import (
     replace_invalid_doc_id_characters,
 )
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -412,15 +412,15 @@ def get_opensearch_retrieval_state(
     """Returns the state of the OpenSearch retrieval.
 
     If the tenant migration record is not found, defaults to
-    ENABLE_OPENSEARCH_RETRIEVAL_FOR_ONYX.
+    ENABLE_OPENSEARCH_RETRIEVAL_FOR_AETHERSEARCH.
 
-    If ONYX_DISABLE_VESPA is True, always returns True.
+    If AETHERSEARCH_DISABLE_VESPA is True, always returns True.
     """
-    if ONYX_DISABLE_VESPA:
+    if AETHERSEARCH_DISABLE_VESPA:
         return True
     record = db_session.query(OpenSearchTenantMigrationRecord).first()
     if record is None:
-        return ENABLE_OPENSEARCH_RETRIEVAL_FOR_ONYX
+        return ENABLE_OPENSEARCH_RETRIEVAL_FOR_AETHERSEARCH
     return record.enable_opensearch_retrieval
 
 

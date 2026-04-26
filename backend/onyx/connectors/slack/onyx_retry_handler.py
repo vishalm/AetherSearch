@@ -8,17 +8,17 @@ from slack_sdk.http_retry.request import HttpRequest
 from slack_sdk.http_retry.response import HttpResponse
 from slack_sdk.http_retry.state import RetryState
 
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
 
-class OnyxRedisSlackRetryHandler(RetryHandler):
+class AetherSearchRedisSlackRetryHandler(RetryHandler):
     """
     This class uses Redis to share a rate limit among multiple threads.
 
     As currently implemented, this code is already surrounded by a lock in Redis
-    via an override of _perform_urllib_http_request in OnyxSlackWebClient.
+    via an override of _perform_urllib_http_request in AetherSearchSlackWebClient.
 
     This just sets the desired retry delay with TTL in redis. In conjunction with
     a custom subclass of the client, the value is read and obeyed prior to an API call
@@ -100,13 +100,13 @@ class OnyxRedisSlackRetryHandler(RetryHandler):
             if retry_after_header_name is None:
                 # This situation usually does not arise. Just in case.
                 raise ValueError(
-                    "OnyxRedisSlackRetryHandler.prepare_for_next_attempt: retry-after header name is None"
+                    "AetherSearchRedisSlackRetryHandler.prepare_for_next_attempt: retry-after header name is None"
                 )
 
             retry_after_header_value = response.headers.get(retry_after_header_name)
             if not retry_after_header_value:
                 raise ValueError(
-                    "OnyxRedisSlackRetryHandler.prepare_for_next_attempt: retry-after header value is None"
+                    "AetherSearchRedisSlackRetryHandler.prepare_for_next_attempt: retry-after header value is None"
                 )
 
             # Handle case where header value might be a list
@@ -132,7 +132,7 @@ class OnyxRedisSlackRetryHandler(RetryHandler):
         self._redis.set(self._delay_key, "1", px=ttl_ms_new)
 
         logger.warning(
-            f"OnyxRedisSlackRetryHandler.prepare_for_next_attempt setting delay: "
+            f"AetherSearchRedisSlackRetryHandler.prepare_for_next_attempt setting delay: "
             f"current_attempt={state.current_attempt} "
             f"retry-after={retry_after_value} "
             f"{ttl_ms_new=}"

@@ -515,7 +515,7 @@ else
 fi
 
 # GitHub repo base URL - using main branch
-GITHUB_RAW_URL="https://raw.githubusercontent.com/vishalm/ai-enterprise-search-chat-onyx/main/deployment/docker_compose"
+GITHUB_RAW_URL="https://raw.githubusercontent.com/vishalm/ai-enterprise-search-chat-aethersearch/main/deployment/docker_compose"
 
 # Check system requirements
 print_step "Verifying Docker installation"
@@ -711,7 +711,7 @@ mkdir -p "${INSTALL_ROOT}/data/nginx/local"
 print_success "Directory structure created"
 
 # Ensure all required configuration files are present
-NGINX_BASE_URL="https://raw.githubusercontent.com/vishalm/ai-enterprise-search-chat-onyx/main/deployment/data/nginx"
+NGINX_BASE_URL="https://raw.githubusercontent.com/vishalm/ai-enterprise-search-chat-aethersearch/main/deployment/data/nginx"
 
 if [[ "$USE_LOCAL_FILES" = true ]]; then
     print_step "Verifying existing configuration files"
@@ -1119,7 +1119,7 @@ fi
 # For pinned version tags, re-download config files from that tag so the
 # compose file matches the images being pulled (the initial download used main).
 if [[ "$USE_LATEST" = false ]] && [[ "$USE_LOCAL_FILES" = false ]]; then
-    PINNED_BASE="https://raw.githubusercontent.com/vishalm/ai-enterprise-search-chat-onyx/${CURRENT_IMAGE_TAG}/deployment"
+    PINNED_BASE="https://raw.githubusercontent.com/vishalm/ai-enterprise-search-chat-aethersearch/${CURRENT_IMAGE_TAG}/deployment"
     print_info "Fetching config files matching tag ${CURRENT_IMAGE_TAG}..."
     if download_file "${PINNED_BASE}/docker_compose/docker-compose.yml" "${INSTALL_ROOT}/deployment/docker-compose.yml" 2>/dev/null; then
         download_file "${PINNED_BASE}/data/nginx/app.conf.template" "${INSTALL_ROOT}/data/nginx/app.conf.template" 2>/dev/null || true
@@ -1310,10 +1310,10 @@ echo ""
 if is_interactive && command -v gh &>/dev/null; then
     prompt_yn_or_default "Enjoying AetherSearch? Star the repo on GitHub? [Y/n] " "Y"
     if [[ ! "$REPLY" =~ ^[Nn] ]]; then
-        if GH_PAGER= gh api -X PUT /user/starred/vishalm/ai-enterprise-search-chat-onyx < /dev/null >/dev/null 2>&1; then
+        if GH_PAGER= gh api -X PUT /user/starred/vishalm/ai-enterprise-search-chat-aethersearch < /dev/null >/dev/null 2>&1; then
             print_success "Thanks for the star!"
         else
-            print_info "Star us at: https://github.com/vishalm/ai-enterprise-search-chat-onyx"
+            print_info "Star us at: https://github.com/vishalm/ai-enterprise-search-chat-aethersearch"
         fi
     fi
 fi

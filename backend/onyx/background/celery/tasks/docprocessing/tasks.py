@@ -20,106 +20,106 @@ from sqlalchemy import exists
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from onyx.background.celery.apps.app_base import task_logger
-from onyx.background.celery.celery_redis import celery_find_task
-from onyx.background.celery.celery_redis import celery_get_broker_client
-from onyx.background.celery.celery_redis import celery_get_unacked_task_ids
-from onyx.background.celery.celery_utils import httpx_init_vespa_pool
-from onyx.background.celery.memory_monitoring import emit_process_memory
-from onyx.background.celery.tasks.beat_schedule import CLOUD_BEAT_MULTIPLIER_DEFAULT
-from onyx.background.celery.tasks.docfetching.task_creation_utils import (
+from aethersearch.background.celery.apps.app_base import task_logger
+from aethersearch.background.celery.celery_redis import celery_find_task
+from aethersearch.background.celery.celery_redis import celery_get_broker_client
+from aethersearch.background.celery.celery_redis import celery_get_unacked_task_ids
+from aethersearch.background.celery.celery_utils import httpx_init_vespa_pool
+from aethersearch.background.celery.memory_monitoring import emit_process_memory
+from aethersearch.background.celery.tasks.beat_schedule import CLOUD_BEAT_MULTIPLIER_DEFAULT
+from aethersearch.background.celery.tasks.docfetching.task_creation_utils import (
     try_creating_docfetching_task,
 )
-from onyx.background.celery.tasks.docprocessing.heartbeat import start_heartbeat
-from onyx.background.celery.tasks.docprocessing.heartbeat import stop_heartbeat
-from onyx.background.celery.tasks.docprocessing.utils import IndexingCallback
-from onyx.background.celery.tasks.docprocessing.utils import is_in_repeated_error_state
-from onyx.background.celery.tasks.docprocessing.utils import should_index
-from onyx.background.celery.tasks.models import DocProcessingContext
-from onyx.background.indexing.checkpointing_utils import cleanup_checkpoint
-from onyx.background.indexing.checkpointing_utils import (
+from aethersearch.background.celery.tasks.docprocessing.heartbeat import start_heartbeat
+from aethersearch.background.celery.tasks.docprocessing.heartbeat import stop_heartbeat
+from aethersearch.background.celery.tasks.docprocessing.utils import IndexingCallback
+from aethersearch.background.celery.tasks.docprocessing.utils import is_in_repeated_error_state
+from aethersearch.background.celery.tasks.docprocessing.utils import should_index
+from aethersearch.background.celery.tasks.models import DocProcessingContext
+from aethersearch.background.indexing.checkpointing_utils import cleanup_checkpoint
+from aethersearch.background.indexing.checkpointing_utils import (
     get_index_attempts_with_old_checkpoints,
 )
-from onyx.background.indexing.index_attempt_utils import cleanup_index_attempts
-from onyx.background.indexing.index_attempt_utils import get_old_index_attempt_ids
-from onyx.configs.app_configs import AUTH_TYPE
-from onyx.configs.app_configs import MANAGED_VESPA
-from onyx.configs.app_configs import VESPA_CLOUD_CERT_PATH
-from onyx.configs.app_configs import VESPA_CLOUD_KEY_PATH
-from onyx.configs.constants import AuthType
-from onyx.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
-from onyx.configs.constants import CELERY_INDEXING_LOCK_TIMEOUT
-from onyx.configs.constants import MilestoneRecordType
-from onyx.configs.constants import NotificationType
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import OnyxRedisConstants
-from onyx.configs.constants import OnyxRedisLocks
-from onyx.configs.constants import OnyxRedisSignals
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import Document
-from onyx.connectors.models import IndexAttemptMetadata
-from onyx.db.connector import mark_ccpair_with_indexing_trigger
-from onyx.db.connector_credential_pair import (
+from aethersearch.background.indexing.index_attempt_utils import cleanup_index_attempts
+from aethersearch.background.indexing.index_attempt_utils import get_old_index_attempt_ids
+from aethersearch.configs.app_configs import AUTH_TYPE
+from aethersearch.configs.app_configs import MANAGED_VESPA
+from aethersearch.configs.app_configs import VESPA_CLOUD_CERT_PATH
+from aethersearch.configs.app_configs import VESPA_CLOUD_KEY_PATH
+from aethersearch.configs.constants import AuthType
+from aethersearch.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
+from aethersearch.configs.constants import CELERY_INDEXING_LOCK_TIMEOUT
+from aethersearch.configs.constants import MilestoneRecordType
+from aethersearch.configs.constants import NotificationType
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import AetherSearchRedisConstants
+from aethersearch.configs.constants import AetherSearchRedisLocks
+from aethersearch.configs.constants import AetherSearchRedisSignals
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import IndexAttemptMetadata
+from aethersearch.db.connector import mark_ccpair_with_indexing_trigger
+from aethersearch.db.connector_credential_pair import (
     fetch_indexable_standard_connector_credential_pair_ids,
 )
-from onyx.db.connector_credential_pair import get_connector_credential_pair_from_id
-from onyx.db.connector_credential_pair import set_cc_pair_repeated_error_state
-from onyx.db.connector_credential_pair import update_connector_credential_pair_from_id
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.engine.time_utils import get_db_current_time
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import IndexingMode
-from onyx.db.enums import IndexingStatus
-from onyx.db.enums import SwitchoverType
-from onyx.db.index_attempt import create_index_attempt_error
-from onyx.db.index_attempt import get_index_attempt
-from onyx.db.index_attempt import get_index_attempt_errors_for_cc_pair
-from onyx.db.index_attempt import IndexAttemptError
-from onyx.db.index_attempt import mark_attempt_canceled
-from onyx.db.index_attempt import mark_attempt_failed
-from onyx.db.index_attempt import mark_attempt_partially_succeeded
-from onyx.db.index_attempt import mark_attempt_succeeded
-from onyx.db.indexing_coordination import CoordinationStatus
-from onyx.db.indexing_coordination import INDEXING_PROGRESS_TIMEOUT_HOURS
-from onyx.db.indexing_coordination import IndexingCoordination
-from onyx.db.models import IndexAttempt
-from onyx.db.models import SearchSettings
-from onyx.db.notification import create_notification
-from onyx.db.notification import get_notifications
-from onyx.db.search_settings import get_current_search_settings
-from onyx.db.search_settings import get_secondary_search_settings
-from onyx.db.swap_index import check_and_perform_index_swap
-from onyx.document_index.factory import get_all_document_indices
-from onyx.error_handling.exceptions import OnyxError
-from onyx.file_store.document_batch_storage import DocumentBatchStorage
-from onyx.file_store.document_batch_storage import get_document_batch_storage
-from onyx.file_store.staging import cleanup_staged_files_for_attempt
-from onyx.httpx.httpx_pool import HttpxPool
-from onyx.indexing.adapters.document_indexing_adapter import (
+from aethersearch.db.connector_credential_pair import get_connector_credential_pair_from_id
+from aethersearch.db.connector_credential_pair import set_cc_pair_repeated_error_state
+from aethersearch.db.connector_credential_pair import update_connector_credential_pair_from_id
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.engine.time_utils import get_db_current_time
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import IndexingMode
+from aethersearch.db.enums import IndexingStatus
+from aethersearch.db.enums import SwitchoverType
+from aethersearch.db.index_attempt import create_index_attempt_error
+from aethersearch.db.index_attempt import get_index_attempt
+from aethersearch.db.index_attempt import get_index_attempt_errors_for_cc_pair
+from aethersearch.db.index_attempt import IndexAttemptError
+from aethersearch.db.index_attempt import mark_attempt_canceled
+from aethersearch.db.index_attempt import mark_attempt_failed
+from aethersearch.db.index_attempt import mark_attempt_partially_succeeded
+from aethersearch.db.index_attempt import mark_attempt_succeeded
+from aethersearch.db.indexing_coordination import CoordinationStatus
+from aethersearch.db.indexing_coordination import INDEXING_PROGRESS_TIMEOUT_HOURS
+from aethersearch.db.indexing_coordination import IndexingCoordination
+from aethersearch.db.models import IndexAttempt
+from aethersearch.db.models import SearchSettings
+from aethersearch.db.notification import create_notification
+from aethersearch.db.notification import get_notifications
+from aethersearch.db.search_settings import get_current_search_settings
+from aethersearch.db.search_settings import get_secondary_search_settings
+from aethersearch.db.swap_index import check_and_perform_index_swap
+from aethersearch.document_index.factory import get_all_document_indices
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.file_store.document_batch_storage import DocumentBatchStorage
+from aethersearch.file_store.document_batch_storage import get_document_batch_storage
+from aethersearch.file_store.staging import cleanup_staged_files_for_attempt
+from aethersearch.httpx.httpx_pool import HttpxPool
+from aethersearch.indexing.adapters.document_indexing_adapter import (
     DocumentIndexingBatchAdapter,
 )
-from onyx.indexing.embedder import DefaultIndexingEmbedder
-from onyx.indexing.indexing_pipeline import run_indexing_pipeline
-from onyx.natural_language_processing.search_nlp_models import EmbeddingModel
-from onyx.natural_language_processing.search_nlp_models import warm_up_bi_encoder
-from onyx.redis.redis_connector import RedisConnector
-from onyx.redis.redis_pool import get_redis_client
-from onyx.redis.redis_pool import get_redis_replica_client
-from onyx.redis.redis_pool import redis_lock_dump
-from onyx.redis.redis_pool import SCAN_ITER_COUNT_DEFAULT
-from onyx.redis.redis_tenant_work_gating import maybe_mark_tenant_active
-from onyx.redis.redis_utils import is_fence
-from onyx.server.metrics.connector_health_metrics import on_connector_error_state_change
-from onyx.server.metrics.connector_health_metrics import on_connector_indexing_success
-from onyx.server.metrics.connector_health_metrics import on_index_attempt_status_change
-from onyx.server.runtime.onyx_runtime import OnyxRuntime
-from onyx.utils.logger import setup_logger
-from onyx.utils.middleware import make_randomized_onyx_request_id
-from onyx.utils.telemetry import mt_cloud_telemetry
-from onyx.utils.telemetry import optional_telemetry
-from onyx.utils.telemetry import RecordType
+from aethersearch.indexing.embedder import DefaultIndexingEmbedder
+from aethersearch.indexing.indexing_pipeline import run_indexing_pipeline
+from aethersearch.natural_language_processing.search_nlp_models import EmbeddingModel
+from aethersearch.natural_language_processing.search_nlp_models import warm_up_bi_encoder
+from aethersearch.redis.redis_connector import RedisConnector
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.redis.redis_pool import get_redis_replica_client
+from aethersearch.redis.redis_pool import redis_lock_dump
+from aethersearch.redis.redis_pool import SCAN_ITER_COUNT_DEFAULT
+from aethersearch.redis.redis_tenant_work_gating import maybe_mark_tenant_active
+from aethersearch.redis.redis_utils import is_fence
+from aethersearch.server.metrics.connector_health_metrics import on_connector_error_state_change
+from aethersearch.server.metrics.connector_health_metrics import on_connector_indexing_success
+from aethersearch.server.metrics.connector_health_metrics import on_index_attempt_status_change
+from aethersearch.server.runtime.aethersearch_runtime import AetherSearchRuntime
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.middleware import make_randomized_aethersearch_request_id
+from aethersearch.utils.telemetry import mt_cloud_telemetry
+from aethersearch.utils.telemetry import optional_telemetry
+from aethersearch.utils.telemetry import RecordType
 from shared_configs.configs import INDEXING_MODEL_SERVER_HOST
 from shared_configs.configs import INDEXING_MODEL_SERVER_PORT
 from shared_configs.configs import MULTI_TENANT
@@ -148,7 +148,7 @@ def _get_fence_validation_block_expiration() -> int:
         return base_expiration
 
     try:
-        beat_multiplier = OnyxRuntime.get_beat_multiplier()
+        beat_multiplier = AetherSearchRuntime.get_beat_multiplier()
     except Exception:
         beat_multiplier = CLOUD_BEAT_MULTIPLIER_DEFAULT
 
@@ -466,11 +466,11 @@ def check_indexing_completion(
                 redis_celery = celery_get_broker_client(task.app)
                 task_exists = celery_find_task(
                     attempt.celery_task_id,
-                    OnyxCeleryQueues.CONNECTOR_DOC_FETCHING,
+                    AetherSearchCeleryQueues.CONNECTOR_DOC_FETCHING,
                     redis_celery,
                 )
                 unacked_task_ids = celery_get_unacked_task_ids(
-                    OnyxCeleryQueues.CONNECTOR_DOC_FETCHING, redis_celery
+                    AetherSearchCeleryQueues.CONNECTOR_DOC_FETCHING, redis_celery
                 )
 
                 if not task_exists and attempt.celery_task_id not in unacked_task_ids:
@@ -799,7 +799,7 @@ def _kickoff_indexing_tasks(
 
 
 @shared_task(
-    name=OnyxCeleryTask.CHECK_FOR_INDEXING,
+    name=AetherSearchCeleryTask.CHECK_FOR_INDEXING,
     soft_time_limit=300,
     bind=True,
 )
@@ -809,7 +809,7 @@ def check_for_indexing(self: Task, *, tenant_id: str) -> int | None:
 
     This task is the entrypoint for the full "indexing pipeline", which is composed
     of two tasks: "docfetching" and "docprocessing". More details in
-    the docfetching task (OnyxCeleryTask.CONNECTOR_DOC_FETCHING_TASK).
+    the docfetching task (AetherSearchCeleryTask.CONNECTOR_DOC_FETCHING_TASK).
 
     For cc pairs that should be indexed (see should_index()), this task
     calls try_creating_docfetching_task, which creates a docfetching task.
@@ -832,7 +832,7 @@ def check_for_indexing(self: Task, *, tenant_id: str) -> int | None:
     # redis_client_celery: Redis = self.app.broker_connection().channel().client
 
     lock_beat: RedisLock = redis_client.lock(
-        OnyxRedisLocks.CHECK_INDEXING_BEAT_LOCK,
+        AetherSearchRedisLocks.CHECK_INDEXING_BEAT_LOCK,
         timeout=CELERY_GENERIC_BEAT_LOCK_TIMEOUT,
     )
 
@@ -845,7 +845,7 @@ def check_for_indexing(self: Task, *, tenant_id: str) -> int | None:
 
         # SPECIAL 0/3: sync lookup table for active fences
         # we want to run this less frequently than the overall task
-        if not redis_client.exists(OnyxRedisSignals.BLOCK_BUILD_FENCE_LOOKUP_TABLE):
+        if not redis_client.exists(AetherSearchRedisSignals.BLOCK_BUILD_FENCE_LOOKUP_TABLE):
             # build a lookup table of existing fences
             # this is just a migration concern and should be unnecessary once
             # lookup tables are rolled out
@@ -853,15 +853,15 @@ def check_for_indexing(self: Task, *, tenant_id: str) -> int | None:
                 count=SCAN_ITER_COUNT_DEFAULT
             ):
                 if is_fence(key_bytes) and not redis_client.sismember(
-                    OnyxRedisConstants.ACTIVE_FENCES, key_bytes
+                    AetherSearchRedisConstants.ACTIVE_FENCES, key_bytes
                 ):
                     logger.warning(f"Adding {key_bytes} to the lookup table.")
-                    redis_client.sadd(OnyxRedisConstants.ACTIVE_FENCES, key_bytes)
+                    redis_client.sadd(AetherSearchRedisConstants.ACTIVE_FENCES, key_bytes)
 
             redis_client.set(
-                OnyxRedisSignals.BLOCK_BUILD_FENCE_LOOKUP_TABLE,
+                AetherSearchRedisSignals.BLOCK_BUILD_FENCE_LOOKUP_TABLE,
                 1,
-                ex=OnyxRuntime.get_build_fence_lookup_table_interval(),
+                ex=AetherSearchRuntime.get_build_fence_lookup_table_interval(),
             )
 
         # 1/3: KICKOFF
@@ -1083,7 +1083,7 @@ def check_for_indexing(self: Task, *, tenant_id: str) -> int | None:
 
         lock_beat.reacquire()
         # we want to run this less frequently than the overall task
-        if not redis_client.exists(OnyxRedisSignals.BLOCK_VALIDATE_INDEXING_FENCES):
+        if not redis_client.exists(AetherSearchRedisSignals.BLOCK_VALIDATE_INDEXING_FENCES):
             # Check for orphaned index attempts that have Celery task IDs but no actual running tasks
             # This can happen if workers crash or tasks are terminated unexpectedly
             # We reuse the same Redis signal name for backwards compatibility
@@ -1095,7 +1095,7 @@ def check_for_indexing(self: Task, *, tenant_id: str) -> int | None:
                 )
 
             redis_client.set(
-                OnyxRedisSignals.BLOCK_VALIDATE_INDEXING_FENCES,
+                AetherSearchRedisSignals.BLOCK_VALIDATE_INDEXING_FENCES,
                 1,
                 ex=_get_fence_validation_block_expiration(),
             )
@@ -1169,7 +1169,7 @@ def check_for_indexing(self: Task, *, tenant_id: str) -> int | None:
 
 # primary
 @shared_task(
-    name=OnyxCeleryTask.CHECK_FOR_CHECKPOINT_CLEANUP,
+    name=AetherSearchCeleryTask.CHECK_FOR_CHECKPOINT_CLEANUP,
     soft_time_limit=300,
     bind=True,
 )
@@ -1178,7 +1178,7 @@ def check_for_checkpoint_cleanup(self: Task, *, tenant_id: str) -> None:
     locked = False
     redis_client = get_redis_client(tenant_id=tenant_id)
     lock: RedisLock = redis_client.lock(
-        OnyxRedisLocks.CHECK_CHECKPOINT_CLEANUP_BEAT_LOCK,
+        AetherSearchRedisLocks.CHECK_CHECKPOINT_CLEANUP_BEAT_LOCK,
         timeout=CELERY_GENERIC_BEAT_LOCK_TIMEOUT,
     )
 
@@ -1195,13 +1195,13 @@ def check_for_checkpoint_cleanup(self: Task, *, tenant_id: str) -> None:
                     f"Cleaning up checkpoint for index attempt {attempt.id}"
                 )
                 self.app.send_task(
-                    OnyxCeleryTask.CLEANUP_CHECKPOINT,
+                    AetherSearchCeleryTask.CLEANUP_CHECKPOINT,
                     kwargs={
                         "index_attempt_id": attempt.id,
                         "tenant_id": tenant_id,
                     },
-                    queue=OnyxCeleryQueues.CHECKPOINT_CLEANUP,
-                    priority=OnyxCeleryPriority.MEDIUM,
+                    queue=AetherSearchCeleryQueues.CHECKPOINT_CLEANUP,
+                    priority=AetherSearchCeleryPriority.MEDIUM,
                 )
     except Exception:
         task_logger.exception("Unexpected exception during checkpoint cleanup")
@@ -1218,7 +1218,7 @@ def check_for_checkpoint_cleanup(self: Task, *, tenant_id: str) -> None:
 
 # light worker
 @shared_task(
-    name=OnyxCeleryTask.CLEANUP_CHECKPOINT,
+    name=AetherSearchCeleryTask.CLEANUP_CHECKPOINT,
     bind=True,
 )
 def cleanup_checkpoint_task(
@@ -1244,7 +1244,7 @@ def cleanup_checkpoint_task(
 
 # primary
 @shared_task(
-    name=OnyxCeleryTask.CHECK_FOR_INDEX_ATTEMPT_CLEANUP,
+    name=AetherSearchCeleryTask.CHECK_FOR_INDEX_ATTEMPT_CLEANUP,
     soft_time_limit=300,
     bind=True,
 )
@@ -1253,7 +1253,7 @@ def check_for_index_attempt_cleanup(self: Task, *, tenant_id: str) -> None:
     locked = False
     redis_client = get_redis_client(tenant_id=tenant_id)
     lock: RedisLock = redis_client.lock(
-        OnyxRedisLocks.CHECK_INDEX_ATTEMPT_CLEANUP_BEAT_LOCK,
+        AetherSearchRedisLocks.CHECK_INDEX_ATTEMPT_CLEANUP_BEAT_LOCK,
         timeout=CELERY_GENERIC_BEAT_LOCK_TIMEOUT,
     )
 
@@ -1284,13 +1284,13 @@ def check_for_index_attempt_cleanup(self: Task, *, tenant_id: str) -> None:
                     f"check_for_index_attempt_cleanup - Cleaning up index attempts {len(batch)}"
                 )
                 self.app.send_task(
-                    OnyxCeleryTask.CLEANUP_INDEX_ATTEMPT,
+                    AetherSearchCeleryTask.CLEANUP_INDEX_ATTEMPT,
                     kwargs={
                         "index_attempt_ids": batch,
                         "tenant_id": tenant_id,
                     },
-                    queue=OnyxCeleryQueues.INDEX_ATTEMPT_CLEANUP,
-                    priority=OnyxCeleryPriority.MEDIUM,
+                    queue=AetherSearchCeleryQueues.INDEX_ATTEMPT_CLEANUP,
+                    priority=AetherSearchCeleryPriority.MEDIUM,
                 )
     except Exception:
         task_logger.exception("Unexpected exception during index attempt cleanup check")
@@ -1307,7 +1307,7 @@ def check_for_index_attempt_cleanup(self: Task, *, tenant_id: str) -> None:
 
 # light worker
 @shared_task(
-    name=OnyxCeleryTask.CLEANUP_INDEX_ATTEMPT,
+    name=AetherSearchCeleryTask.CLEANUP_INDEX_ATTEMPT,
     bind=True,
 )
 def cleanup_index_attempt_task(
@@ -1414,7 +1414,7 @@ def _resolve_indexing_document_errors(
 
 
 @shared_task(
-    name=OnyxCeleryTask.DOCPROCESSING_TASK,
+    name=AetherSearchCeleryTask.DOCPROCESSING_TASK,
     bind=True,
 )
 def docprocessing_task(
@@ -1448,8 +1448,8 @@ def _check_chunk_usage_limit(tenant_id: str) -> None:
     if not USAGE_LIMITS_ENABLED:
         return
 
-    from onyx.db.usage import UsageType
-    from onyx.server.usage_limits import check_usage_and_raise
+    from aethersearch.db.usage import UsageType
+    from aethersearch.server.usage_limits import check_usage_and_raise
 
     with get_session_with_current_tenant() as db_session:
         check_usage_and_raise(
@@ -1472,20 +1472,20 @@ def _docprocessing_task(
         CURRENT_TENANT_ID_CONTEXTVAR.set(tenant_id)
 
     # Check if chunk indexing usage limit has been exceeded before processing.
-    # check_usage_and_raise raises OnyxError; hitting a trial/paid usage limit
+    # check_usage_and_raise raises AetherSearchError; hitting a trial/paid usage limit
     # is an expected user-facing condition (not an actionable error), so we
     # mark the attempt failed and return cleanly instead of raising (which
-    # would ship ONYX-BACKEND-H6ED to Sentry on every queued batch of an
+    # would ship AETHERSEARCH-BACKEND-H6ED to Sentry on every queued batch of an
     # over-limit tenant).
     if USAGE_LIMITS_ENABLED:
         try:
             _check_chunk_usage_limit(tenant_id)
-        except OnyxError as e:
+        except AetherSearchError as e:
             task_logger.warning(
                 f"Chunk indexing usage limit exceeded for tenant {tenant_id}: {e.detail}"
             )
             with get_session_with_current_tenant() as db_session:
-                from onyx.db.index_attempt import mark_attempt_failed
+                from aethersearch.db.index_attempt import mark_attempt_failed
 
                 mark_attempt_failed(
                     index_attempt_id=index_attempt_id,
@@ -1601,7 +1601,7 @@ def _docprocessing_task(
                 attempt_id=index_attempt_id,
                 connector_id=index_attempt.connector_credential_pair.connector.id,
                 credential_id=index_attempt.connector_credential_pair.credential.id,
-                request_id=make_randomized_onyx_request_id("DIP"),
+                request_id=make_randomized_aethersearch_request_id("DIP"),
                 structured_id=f"{tenant_id}:{cc_pair_id}:{index_attempt_id}:{batch_num}",
                 batch_num=batch_num,
             )
@@ -1639,8 +1639,8 @@ def _docprocessing_task(
         # Track chunk indexing usage for cloud usage limits
         if USAGE_LIMITS_ENABLED and index_pipeline_result.total_chunks > 0:
             try:
-                from onyx.db.usage import increment_usage
-                from onyx.db.usage import UsageType
+                from aethersearch.db.usage import increment_usage
+                from aethersearch.db.usage import UsageType
 
                 with get_session_with_current_tenant() as usage_db_session:
                     increment_usage(

@@ -18,17 +18,17 @@ from uuid import uuid4
 import pytest
 import requests
 
-from onyx.configs.constants import FileOrigin
-from onyx.connectors.models import InputType
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import AccessType
-from onyx.db.enums import ChatSessionSharedStatus
-from onyx.db.models import ChatSession
-from onyx.db.models import Document
-from onyx.db.models import ToolCall
-from onyx.file_store.file_store import get_default_file_store
-from onyx.file_store.models import FileDescriptor
-from onyx.server.documents.models import DocumentSource
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.connectors.models import InputType
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ChatSessionSharedStatus
+from aethersearch.db.models import ChatSession
+from aethersearch.db.models import Document
+from aethersearch.db.models import ToolCall
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.file_store.models import FileDescriptor
+from aethersearch.server.documents.models import DocumentSource
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.managers.api_key import APIKeyManager
 from tests.integration.common_utils.managers.cc_pair import CCPairManager

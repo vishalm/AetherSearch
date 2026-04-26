@@ -5,17 +5,17 @@ from fastapi import Depends
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 
-from ee.onyx.server.oauth.api_router import router
-from ee.onyx.server.oauth.confluence_cloud import ConfluenceCloudOAuth
-from ee.onyx.server.oauth.google_drive import GoogleDriveOAuth
-from ee.onyx.server.oauth.slack import SlackOAuth
-from onyx.auth.permissions import require_permission
-from onyx.configs.app_configs import DEV_MODE
-from onyx.configs.constants import DocumentSource
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.redis.redis_pool import get_redis_client
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.server.oauth.api_router import router
+from ee.aethersearch.server.oauth.confluence_cloud import ConfluenceCloudOAuth
+from ee.aethersearch.server.oauth.google_drive import GoogleDriveOAuth
+from ee.aethersearch.server.oauth.slack import SlackOAuth
+from aethersearch.auth.permissions import require_permission
+from aethersearch.configs.app_configs import DEV_MODE
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()

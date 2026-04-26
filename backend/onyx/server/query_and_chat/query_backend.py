@@ -2,27 +2,27 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import current_curator_or_admin_user
-from onyx.configs.constants import DocumentSource
-from onyx.context.search.models import IndexFilters
-from onyx.context.search.models import SearchDoc
-from onyx.context.search.preprocessing.access_filters import (
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import current_curator_or_admin_user
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.context.search.models import IndexFilters
+from aethersearch.context.search.models import SearchDoc
+from aethersearch.context.search.preprocessing.access_filters import (
     build_access_filters_for_user,
 )
-from onyx.context.search.utils import get_query_embedding
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.db.search_settings import get_current_search_settings
-from onyx.db.tag import find_tags
-from onyx.document_index.factory import get_default_document_index
-from onyx.server.query_and_chat.models import AdminSearchRequest
-from onyx.server.query_and_chat.models import AdminSearchResponse
-from onyx.server.query_and_chat.models import SourceTag
-from onyx.server.query_and_chat.models import TagResponse
-from onyx.server.utils_vector_db import require_vector_db
-from onyx.utils.logger import setup_logger
+from aethersearch.context.search.utils import get_query_embedding
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.db.search_settings import get_current_search_settings
+from aethersearch.db.tag import find_tags
+from aethersearch.document_index.factory import get_default_document_index
+from aethersearch.server.query_and_chat.models import AdminSearchRequest
+from aethersearch.server.query_and_chat.models import AdminSearchResponse
+from aethersearch.server.query_and_chat.models import SourceTag
+from aethersearch.server.query_and_chat.models import TagResponse
+from aethersearch.server.utils_vector_db import require_vector_db
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()

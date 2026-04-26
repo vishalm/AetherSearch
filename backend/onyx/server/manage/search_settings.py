@@ -4,38 +4,38 @@ from fastapi import HTTPException
 from fastapi import status
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.configs.app_configs import DISABLE_INDEX_UPDATE_ON_SWAP
-from onyx.context.search.models import SavedSearchSettings
-from onyx.context.search.models import SearchSettingsCreationRequest
-from onyx.db.connector_credential_pair import get_connector_credential_pairs
-from onyx.db.connector_credential_pair import resync_cc_pair
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.index_attempt import expire_index_attempts
-from onyx.db.llm import fetch_existing_llm_provider
-from onyx.db.llm import update_default_contextual_model
-from onyx.db.llm import update_no_default_contextual_rag_provider
-from onyx.db.models import IndexModelStatus
-from onyx.db.models import User
-from onyx.db.search_settings import create_search_settings
-from onyx.db.search_settings import delete_search_settings
-from onyx.db.search_settings import get_current_search_settings
-from onyx.db.search_settings import get_embedding_provider_from_provider_type
-from onyx.db.search_settings import get_secondary_search_settings
-from onyx.db.search_settings import update_current_search_settings
-from onyx.db.search_settings import update_search_settings_status
-from onyx.document_index.factory import get_all_document_indices
-from onyx.document_index.factory import get_default_document_index
-from onyx.file_processing.unstructured import delete_unstructured_api_key
-from onyx.file_processing.unstructured import get_unstructured_api_key
-from onyx.file_processing.unstructured import update_unstructured_api_key
-from onyx.natural_language_processing.search_nlp_models import clean_model_name
-from onyx.server.manage.embedding.models import SearchSettingsDeleteRequest
-from onyx.server.manage.models import FullModelVersionResponse
-from onyx.server.models import IdReturn
-from onyx.server.utils_vector_db import require_vector_db
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.permissions import require_permission
+from aethersearch.configs.app_configs import DISABLE_INDEX_UPDATE_ON_SWAP
+from aethersearch.context.search.models import SavedSearchSettings
+from aethersearch.context.search.models import SearchSettingsCreationRequest
+from aethersearch.db.connector_credential_pair import get_connector_credential_pairs
+from aethersearch.db.connector_credential_pair import resync_cc_pair
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.index_attempt import expire_index_attempts
+from aethersearch.db.llm import fetch_existing_llm_provider
+from aethersearch.db.llm import update_default_contextual_model
+from aethersearch.db.llm import update_no_default_contextual_rag_provider
+from aethersearch.db.models import IndexModelStatus
+from aethersearch.db.models import User
+from aethersearch.db.search_settings import create_search_settings
+from aethersearch.db.search_settings import delete_search_settings
+from aethersearch.db.search_settings import get_current_search_settings
+from aethersearch.db.search_settings import get_embedding_provider_from_provider_type
+from aethersearch.db.search_settings import get_secondary_search_settings
+from aethersearch.db.search_settings import update_current_search_settings
+from aethersearch.db.search_settings import update_search_settings_status
+from aethersearch.document_index.factory import get_all_document_indices
+from aethersearch.document_index.factory import get_default_document_index
+from aethersearch.file_processing.unstructured import delete_unstructured_api_key
+from aethersearch.file_processing.unstructured import get_unstructured_api_key
+from aethersearch.file_processing.unstructured import update_unstructured_api_key
+from aethersearch.natural_language_processing.search_nlp_models import clean_model_name
+from aethersearch.server.manage.embedding.models import SearchSettingsDeleteRequest
+from aethersearch.server.manage.models import FullModelVersionResponse
+from aethersearch.server.models import IdReturn
+from aethersearch.server.utils_vector_db import require_vector_db
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import ALT_INDEX_SUFFIX
 from shared_configs.configs import MULTI_TENANT
 
@@ -60,7 +60,7 @@ def set_new_search_settings(
     if MULTI_TENANT and search_settings_new.enable_contextual_rag:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Contextual RAG disabled in Onyx Cloud",
+            detail="Contextual RAG disabled in AetherSearch Cloud",
         )
 
     # Validate cloud provider exists or create new LiteLLM provider.
@@ -240,7 +240,7 @@ def update_saved_search_settings(
     if MULTI_TENANT and search_settings.enable_contextual_rag:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Contextual RAG disabled in Onyx Cloud",
+            detail="Contextual RAG disabled in AetherSearch Cloud",
         )
 
     validate_contextual_rag_model(

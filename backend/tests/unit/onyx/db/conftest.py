@@ -6,7 +6,7 @@ from unittest.mock import MagicMock
 import pytest
 from sqlalchemy.orm import Session
 
-from ee.onyx.db.scim import ScimDAL
+from ee.aethersearch.db.scim import ScimDAL
 
 
 def model_attrs(obj: object) -> dict[str, Any]:

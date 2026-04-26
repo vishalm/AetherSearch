@@ -92,7 +92,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum(increase(onyx_celery_task_queue_wait_seconds_bucket{queue=\"connector_pruning\"}[30m])) by (le)",
+          "expr": "sum(increase(aethersearch_celery_task_queue_wait_seconds_bucket{queue=\"connector_pruning\"}[30m])) by (le)",
           "format": "heatmap",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
@@ -192,7 +192,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.95, sum(rate(onyx_celery_task_duration_seconds_bucket{task_name=~\"connector_pruning.*\"}[1h])) by (le, task_name))",
+          "expr": "histogram_quantile(0.95, sum(rate(aethersearch_celery_task_duration_seconds_bucket{task_name=~\"connector_pruning.*\"}[1h])) by (le, task_name))",
           "instant": false,
           "legendFormat": "{{task_name}}",
           "range": true,
@@ -288,7 +288,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(onyx_celery_task_revoked_total{task_name=~\"connector_pruning.*\"}[1h])) by (task_name)",
+          "expr": "sum(increase(aethersearch_celery_task_revoked_total{task_name=~\"connector_pruning.*\"}[1h])) by (task_name)",
           "hide": false,
           "instant": false,
           "legendFormat": "revoked",
@@ -301,7 +301,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(onyx_celery_task_completed_total{task_name=~\"connector_pruning.*\", outcome=\"failure\"}[1h])) by (task_name)",
+          "expr": "sum(increase(aethersearch_celery_task_completed_total{task_name=~\"connector_pruning.*\", outcome=\"failure\"}[1h])) by (task_name)",
           "hide": false,
           "instant": false,
           "legendFormat": "failure",
@@ -314,7 +314,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(onyx_celery_task_completed_total{task_name=~\"connector_pruning.*\", outcome=\"success\"}[1h])) by (task_name)",
+          "expr": "sum(increase(aethersearch_celery_task_completed_total{task_name=~\"connector_pruning.*\", outcome=\"success\"}[1h])) by (task_name)",
           "hide": false,
           "instant": false,
           "legendFormat": "success",
@@ -411,7 +411,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "  sum(rate(onyx_celery_task_completed_total{task_name=~\"connector_pruning.*\", outcome=\"success\"}[1h]))\n  /\n  sum(rate(onyx_celery_task_completed_total{task_name=~\"connector_pruning.*\"}[1h]))",
+          "expr": "  sum(rate(aethersearch_celery_task_completed_total{task_name=~\"connector_pruning.*\", outcome=\"success\"}[1h]))\n  /\n  sum(rate(aethersearch_celery_task_completed_total{task_name=~\"connector_pruning.*\"}[1h]))",
           "instant": false,
           "legendFormat": "Success Rate",
           "range": true,
@@ -426,7 +426,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "  This chart shows how long it takes for Onyx to crawl each source connector and collect the current list of documents. The Y axis represents duration  in seconds (bucketed), and each band shows how many enumerations completed within that time range.",
+      "description": "  This chart shows how long it takes for AetherSearch to crawl each source connector and collect the current list of documents. The Y axis represents duration  in seconds (bucketed), and each band shows how many enumerations completed within that time range.",
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -492,7 +492,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(onyx_pruning_enumeration_duration_seconds_bucket[30m])) by (le)",
+          "expr": "sum(increase(aethersearch_pruning_enumeration_duration_seconds_bucket[30m])) by (le)",
           "format": "heatmap",
           "instant": false,
           "legendFormat": "__auto",
@@ -588,7 +588,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.95, sum(rate(onyx_pruning_enumeration_duration_seconds_bucket[1h])) by (le, connector_type))",
+          "expr": "histogram_quantile(0.95, sum(rate(aethersearch_pruning_enumeration_duration_seconds_bucket[1h])) by (le, connector_type))",
           "instant": false,
           "legendFormat": "{{connector_type}}",
           "range": true,
@@ -684,7 +684,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(onyx_pruning_enumeration_duration_seconds_count[1h])) by (connector_type)",
+          "expr": "sum(increase(aethersearch_pruning_enumeration_duration_seconds_count[1h])) by (connector_type)",
           "instant": false,
           "legendFormat": "{{connector_type}}",
           "range": true,
@@ -699,7 +699,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "This chart shows how frequently Onyx hits rate limits from source connectors during the enumeration phase. Rate limit errors slow down or stall the document crawl, directly increasing enumeration duration. A spike here for a specific connector type indicates the source API is throttling Onyx's requests, which may explain long enumeration times for that connector.",
+      "description": "This chart shows how frequently AetherSearch hits rate limits from source connectors during the enumeration phase. Rate limit errors slow down or stall the document crawl, directly increasing enumeration duration. A spike here for a specific connector type indicates the source API is throttling AetherSearch's requests, which may explain long enumeration times for that connector.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -780,7 +780,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(onyx_pruning_rate_limit_errors_total[5m])) by (connector_type)",
+          "expr": "sum(rate(aethersearch_pruning_rate_limit_errors_total[5m])) by (connector_type)",
           "instant": false,
           "legendFormat": "{{connector_type}}",
           "range": true,
@@ -876,7 +876,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum by (queue) (onyx_queue_depth{queue=~\"connector_pruning|external_group_sync|permissions_sync\"})",
+          "expr": "sum by (queue) (aethersearch_queue_depth{queue=~\"connector_pruning|external_group_sync|permissions_sync\"})",
           "instant": false,
           "legendFormat": "{{queue}}",
           "range": true,
@@ -972,7 +972,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(onyx_celery_tasks_active{queue=~\"connector_pruning.*|connector_doc_permissions.*|connector_external_group.*|csv_generation|sandbox\"}) by (task_name)",
+          "expr": "sum(aethersearch_celery_tasks_active{queue=~\"connector_pruning.*|connector_doc_permissions.*|connector_external_group.*|csv_generation|sandbox\"}) by (task_name)",
           "instant": false,
           "legendFormat": "{{task_name}}",
           "range": true,
@@ -987,7 +987,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "This chart shows how long it takes Onyx to compare the list of documents fetched from the source connector against what is currently indexed. The diff computes the set difference \u2014 documents that exist in the index but no longer exist in the source are flagged for removal.",
+      "description": "This chart shows how long it takes AetherSearch to compare the list of documents fetched from the source connector against what is currently indexed. The diff computes the set difference \u2014 documents that exist in the index but no longer exist in the source are flagged for removal.",
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -1053,7 +1053,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(onyx_pruning_diff_duration_seconds_bucket[30m])) by (le)",
+          "expr": "sum(increase(aethersearch_pruning_diff_duration_seconds_bucket[30m])) by (le)",
           "format": "heatmap",
           "instant": false,
           "legendFormat": "__auto",
@@ -1077,7 +1077,7 @@
   "timepicker": {},
   "timezone": "browser",
   "title": "Indexing - Pruning",
-  "uid": "onyx-indexing-pruning",
+  "uid": "aethersearch-indexing-pruning",
   "version": 14,
   "weekStart": ""
 }

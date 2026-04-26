@@ -1,4 +1,4 @@
-<!-- ONYX_METADATA={"link": "https://github.com/vishalm/ai-enterprise-search-chat-onyx/blob/main/web/README.md"} -->
+<!-- AETHERSEARCH_METADATA={"link": "https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/blob/main/web/README.md"} -->
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
@@ -19,7 +19,7 @@ _Note:_ if you are having problems accessing the ^, try setting the `WEB_DOMAIN`
 `http://127.0.0.1:3000` and accessing it there.
 
 > [!TIP]
-> Packages are installed automatically when switching branches after `package.json` changes with [pre-commit](https://github.com/vishalm/ai-enterprise-search-chat-onyx/blob/main/CONTRIBUTING.md#formatting-and-linting) configured.
+> Packages are installed automatically when switching branches after `package.json` changes with [pre-commit](https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/blob/main/CONTRIBUTING.md#formatting-and-linting) configured.
 
 ### Connecting to a Cloud Backend
 
@@ -102,4 +102,4 @@ To compare screenshots across CI runs, use:
 ods screenshot-diff compare --project admin
 ```
 
-For more information, see [tools/ods/README.md](https://github.com/vishalm/ai-enterprise-search-chat-onyx/blob/main/tools/ods/README.md#screenshot-diff---visual-regression-testing).
+For more information, see [tools/ods/README.md](https://github.com/vishalm/ai-enterprise-search-chat-aethersearch/blob/main/tools/ods/README.md#screenshot-diff---visual-regression-testing).

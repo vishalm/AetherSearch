@@ -3,7 +3,7 @@ from enum import Enum
 
 from pydantic import BaseModel
 
-from onyx.server.settings.models import ApplicationStatus
+from aethersearch.server.settings.models import ApplicationStatus
 
 
 class PlanType(str, Enum):

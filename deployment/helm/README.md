@@ -1,6 +1,6 @@
 # Dependency updates (when subchart versions are bumped)
 * If updating subcharts, you need to run this before committing!
-* cd charts/onyx
+* cd charts/aethersearch
 * helm dependency update .
 
 # Local testing
@@ -18,26 +18,26 @@
   * ct install --all --helm-extra-set-args="--set=nginx.enabled=false" --debug --config ct.yaml
 
 ## Output template to file and inspect
-* cd charts/onyx
+* cd charts/aethersearch
 * helm template test-output . --set auth.opensearch.values.opensearch_admin_password='StrongPassword123!' > test-output.yaml
 
 ## Test the entire cluster manually
-* cd charts/onyx
-* helm install onyx . -n onyx --set postgresql.primary.persistence.enabled=false --set auth.opensearch.values.opensearch_admin_password='StrongPassword123!'
+* cd charts/aethersearch
+* helm install aethersearch . -n aethersearch --set postgresql.primary.persistence.enabled=false --set auth.opensearch.values.opensearch_admin_password='StrongPassword123!'
   * the postgres flag is to keep the storage ephemeral for testing. You probably don't want to set that in prod.
   * the OpenSearch admin password must be set on first install unless you are supplying `auth.opensearch.existingSecret`.
   * no flag for ephemeral vespa storage yet, might be good for testing
-* kubectl -n onyx port-forward service/onyx-nginx 8080:80
+* kubectl -n aethersearch port-forward service/aethersearch-nginx 8080:80
   * this will forward the local port 8080 to the installed chart for you to run tests, etc.
 * When you are finished
-  * helm uninstall onyx -n onyx
+  * helm uninstall aethersearch -n aethersearch
   * Vespa leaves behind a PVC. Delete it if you are completely done.
-    * k -n onyx get pvc
-    * k -n onyx delete pvc vespa-storage-da-vespa-0
+    * k -n aethersearch get pvc
+    * k -n aethersearch delete pvc vespa-storage-da-vespa-0
   * If you didn't disable Postgres persistence earlier, you may want to delete that PVC too.
 
 ## Run as non-root user
-By default, some onyx containers run as root. If you'd like to explicitly run the onyx containers as a non-root user, update the values.yaml file for the following components:
+By default, some aethersearch containers run as root. If you'd like to explicitly run the aethersearch containers as a non-root user, update the values.yaml file for the following components:
   * `celery_shared`, `api`, `webserver`, `indexCapability`, `inferenceCapability`
     ```yaml
     securityContext:
@@ -54,7 +54,7 @@ By default, some onyx containers run as root. If you'd like to explicitly run th
     ```
 
 ## Resourcing
-In the helm charts, we have resource suggestions for all Onyx-owned components. 
+In the helm charts, we have resource suggestions for all AetherSearch-owned components. 
 These are simply initial suggestions, and may need to be tuned for your specific use case.
 
 Please talk to us in Slack if you have any questions!
@@ -65,7 +65,7 @@ The chart renders Kubernetes HorizontalPodAutoscalers by default. To keep this b
 
 If you would like to use KEDA ScaledObjects instead:
 
-1. Install and manage the KEDA operator in your cluster yourself (for example via the official KEDA Helm chart). KEDA is no longer packaged as a dependency of the Onyx chart.
+1. Install and manage the KEDA operator in your cluster yourself (for example via the official KEDA Helm chart). KEDA is no longer packaged as a dependency of the AetherSearch chart.
 2. Set `autoscaling.engine: keda` in your `values.yaml` and enable autoscaling for the components you want to scale.
 
 When `autoscaling.engine` is set to `keda`, the chart will render the existing ScaledObject templates; otherwise HPAs will be rendered.

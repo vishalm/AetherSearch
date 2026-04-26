@@ -10,8 +10,8 @@ import (
 	"net/http"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/onyx-dot-app/onyx/cli/internal/models"
-	"github.com/onyx-dot-app/onyx/cli/internal/parser"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/models"
+	"github.com/aethersearch-dot-app/aethersearch/cli/internal/parser"
 )
 
 // StreamEventMsg wraps a StreamEvent for Bubble Tea.
@@ -76,7 +76,7 @@ func (c *Client) SendMessageStream(
 		if c.apiKey != "" {
 			bearer := "Bearer " + c.apiKey
 			req.Header.Set("Authorization", bearer)
-			req.Header.Set("X-Onyx-Authorization", bearer)
+			req.Header.Set("X-AetherSearch-Authorization", bearer)
 		}
 
 		resp, err := c.longHTTPClient.Do(req)

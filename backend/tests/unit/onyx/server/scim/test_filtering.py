@@ -1,8 +1,8 @@
 import pytest
 
-from ee.onyx.server.scim.filtering import parse_scim_filter
-from ee.onyx.server.scim.filtering import ScimFilter
-from ee.onyx.server.scim.filtering import ScimFilterOperator
+from ee.aethersearch.server.scim.filtering import parse_scim_filter
+from ee.aethersearch.server.scim.filtering import ScimFilter
+from ee.aethersearch.server.scim.filtering import ScimFilterOperator
 
 
 class TestParseScimFilter:

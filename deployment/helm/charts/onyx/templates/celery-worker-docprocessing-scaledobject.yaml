@@ -1,15 +1,15 @@
-{{- if and .Values.vectorDB.enabled (.Values.celery_worker_docprocessing.autoscaling.enabled) (eq (include "onyx.autoscaling.engine" .) "keda") }}
+{{- if and .Values.vectorDB.enabled (.Values.celery_worker_docprocessing.autoscaling.enabled) (eq (include "aethersearch.autoscaling.engine" .) "keda") }}
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
-  name: {{ include "onyx.fullname" . }}-celery-worker-docprocessing
+  name: {{ include "aethersearch.fullname" . }}-celery-worker-docprocessing
   labels:
-    {{- include "onyx.labels" . | nindent 4 }}
+    {{- include "aethersearch.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "onyx.fullname" . }}-celery-worker-docprocessing
+    name: {{ include "aethersearch.fullname" . }}-celery-worker-docprocessing
   minReplicaCount: {{ .Values.celery_worker_docprocessing.autoscaling.minReplicas | default 1 }}
   maxReplicaCount: {{ .Values.celery_worker_docprocessing.autoscaling.maxReplicas | default 10 }}
   pollingInterval: {{ .Values.celery_worker_docprocessing.autoscaling.pollingInterval | default 30 }}

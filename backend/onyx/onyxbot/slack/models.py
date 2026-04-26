@@ -3,7 +3,7 @@ from typing import Literal
 
 from pydantic import BaseModel
 
-from onyx.configs.constants import MessageType
+from aethersearch.configs.constants import MessageType
 
 
 class ChannelType(str, Enum):
@@ -38,9 +38,9 @@ class SlackMessageInfo(BaseModel):
     thread_to_respond: str | None
     sender_id: str | None
     email: str | None
-    bypass_filters: bool  # User has tagged @OnyxBot
-    is_slash_command: bool  # User is using /OnyxBot
-    is_bot_dm: bool  # User is direct messaging to OnyxBot
+    bypass_filters: bool  # User has tagged @AetherSearchBot
+    is_slash_command: bool  # User is using /AetherSearchBot
+    is_bot_dm: bool  # User is direct messaging to AetherSearchBot
     slack_context: SlackContext | None = None
 
 

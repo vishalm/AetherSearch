@@ -18,25 +18,25 @@ from slack_sdk.models.blocks import SectionBlock
 from slack_sdk.models.metadata import Metadata
 from slack_sdk.socket_mode import SocketModeClient
 
-from onyx.configs.app_configs import DISABLE_TELEMETRY
-from onyx.configs.constants import ID_SEPARATOR
-from onyx.configs.constants import MessageType
-from onyx.configs.onyxbot_configs import ONYX_BOT_FEEDBACK_VISIBILITY
-from onyx.configs.onyxbot_configs import ONYX_BOT_MAX_QPM
-from onyx.configs.onyxbot_configs import ONYX_BOT_MAX_WAIT_TIME
-from onyx.configs.onyxbot_configs import ONYX_BOT_NUM_RETRIES
-from onyx.configs.onyxbot_configs import ONYX_BOT_RESPONSE_LIMIT_PER_TIME_PERIOD
-from onyx.configs.onyxbot_configs import ONYX_BOT_RESPONSE_LIMIT_TIME_PERIOD_SECONDS
-from onyx.connectors.slack.utils import SlackTextCleaner
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.users import get_user_by_email
-from onyx.onyxbot.slack.constants import FeedbackVisibility
-from onyx.onyxbot.slack.models import ChannelType
-from onyx.onyxbot.slack.models import ThreadMessage
-from onyx.utils.logger import setup_logger
-from onyx.utils.telemetry import optional_telemetry
-from onyx.utils.telemetry import RecordType
-from onyx.utils.text_processing import replace_whitespaces_w_space
+from aethersearch.configs.app_configs import DISABLE_TELEMETRY
+from aethersearch.configs.constants import ID_SEPARATOR
+from aethersearch.configs.constants import MessageType
+from aethersearch.configs.aethersearchbot_configs import AETHERSEARCH_BOT_FEEDBACK_VISIBILITY
+from aethersearch.configs.aethersearchbot_configs import AETHERSEARCH_BOT_MAX_QPM
+from aethersearch.configs.aethersearchbot_configs import AETHERSEARCH_BOT_MAX_WAIT_TIME
+from aethersearch.configs.aethersearchbot_configs import AETHERSEARCH_BOT_NUM_RETRIES
+from aethersearch.configs.aethersearchbot_configs import AETHERSEARCH_BOT_RESPONSE_LIMIT_PER_TIME_PERIOD
+from aethersearch.configs.aethersearchbot_configs import AETHERSEARCH_BOT_RESPONSE_LIMIT_TIME_PERIOD_SECONDS
+from aethersearch.connectors.slack.utils import SlackTextCleaner
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.users import get_user_by_email
+from aethersearch.aethersearchbot.slack.constants import FeedbackVisibility
+from aethersearch.aethersearchbot.slack.models import ChannelType
+from aethersearch.aethersearchbot.slack.models import ThreadMessage
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.telemetry import optional_telemetry
+from aethersearch.utils.telemetry import RecordType
+from aethersearch.utils.text_processing import replace_whitespaces_w_space
 from shared_configs.contextvars import CURRENT_TENANT_ID_CONTEXTVAR
 
 logger = setup_logger()
@@ -45,11 +45,11 @@ slack_token_user_ids: dict[str, str | None] = {}
 slack_token_bot_ids: dict[str, str | None] = {}
 slack_token_lock = threading.Lock()
 
-_ONYX_BOT_MESSAGE_COUNT: int = 0
-_ONYX_BOT_COUNT_START_TIME: float = time.time()
+_AETHERSEARCH_BOT_MESSAGE_COUNT: int = 0
+_AETHERSEARCH_BOT_COUNT_START_TIME: float = time.time()
 
 
-def get_onyx_bot_auth_ids(
+def get_aethersearch_bot_auth_ids(
     tenant_id: str, web_client: WebClient
 ) -> tuple[str | None, str | None]:
     """Returns a tuple of user_id and bot_id."""
@@ -114,22 +114,22 @@ def check_message_limit() -> bool:
     High traffic at the end of one period and start of another could cause
     the limit to be exceeded.
     """
-    if ONYX_BOT_RESPONSE_LIMIT_PER_TIME_PERIOD <= 0:
+    if AETHERSEARCH_BOT_RESPONSE_LIMIT_PER_TIME_PERIOD <= 0:
         return True
-    global _ONYX_BOT_MESSAGE_COUNT
-    global _ONYX_BOT_COUNT_START_TIME
-    time_since_start = time.time() - _ONYX_BOT_COUNT_START_TIME
-    if time_since_start > ONYX_BOT_RESPONSE_LIMIT_TIME_PERIOD_SECONDS:
-        _ONYX_BOT_MESSAGE_COUNT = 0
-        _ONYX_BOT_COUNT_START_TIME = time.time()
-    if (_ONYX_BOT_MESSAGE_COUNT + 1) > ONYX_BOT_RESPONSE_LIMIT_PER_TIME_PERIOD:
+    global _AETHERSEARCH_BOT_MESSAGE_COUNT
+    global _AETHERSEARCH_BOT_COUNT_START_TIME
+    time_since_start = time.time() - _AETHERSEARCH_BOT_COUNT_START_TIME
+    if time_since_start > AETHERSEARCH_BOT_RESPONSE_LIMIT_TIME_PERIOD_SECONDS:
+        _AETHERSEARCH_BOT_MESSAGE_COUNT = 0
+        _AETHERSEARCH_BOT_COUNT_START_TIME = time.time()
+    if (_AETHERSEARCH_BOT_MESSAGE_COUNT + 1) > AETHERSEARCH_BOT_RESPONSE_LIMIT_PER_TIME_PERIOD:
         logger.error(
-            f"OnyxBot has reached the message limit {ONYX_BOT_RESPONSE_LIMIT_PER_TIME_PERIOD}"
-            f" for the time period {ONYX_BOT_RESPONSE_LIMIT_TIME_PERIOD_SECONDS} seconds."
-            " These limits are configurable in backend/onyx/configs/onyxbot_configs.py"
+            f"AetherSearchBot has reached the message limit {AETHERSEARCH_BOT_RESPONSE_LIMIT_PER_TIME_PERIOD}"
+            f" for the time period {AETHERSEARCH_BOT_RESPONSE_LIMIT_TIME_PERIOD_SECONDS} seconds."
+            " These limits are configurable in backend/aethersearch/configs/aethersearchbot_configs.py"
         )
         return False
-    _ONYX_BOT_MESSAGE_COUNT += 1
+    _AETHERSEARCH_BOT_MESSAGE_COUNT += 1
     return True
 
 
@@ -169,8 +169,8 @@ def update_emote_react(
     return
 
 
-def remove_onyx_bot_tag(tenant_id: str, message_str: str, client: WebClient) -> str:
-    bot_token_user_id, _ = get_onyx_bot_auth_ids(tenant_id, web_client=client)
+def remove_aethersearch_bot_tag(tenant_id: str, message_str: str, client: WebClient) -> str:
+    bot_token_user_id, _ = get_aethersearch_bot_auth_ids(tenant_id, web_client=client)
     return re.sub(rf"<@{bot_token_user_id}>\s*", "", message_str)
 
 
@@ -202,14 +202,14 @@ def _build_error_block(error_message: str) -> Block:
     the error without completely breaking
     """
     display_text = (
-        "There was an error displaying all of the Onyx answers."
-        f" Please let an admin or an onyx developer know. Error: {error_message}"
+        "There was an error displaying all of the AetherSearch answers."
+        f" Please let an admin or an aethersearch developer know. Error: {error_message}"
     )
     return SectionBlock(text=display_text)
 
 
 @retry(
-    tries=ONYX_BOT_NUM_RETRIES,
+    tries=AETHERSEARCH_BOT_NUM_RETRIES,
     delay=0.25,
     backoff=2,
     logger=cast(logging.Logger, logger),
@@ -560,31 +560,31 @@ def read_slack_thread(
             message_type = MessageType.USER
         else:
             blocks: Any
-            is_onyx_bot_response = False
+            is_aethersearch_bot_response = False
 
             reply_user = reply.get("user")
             reply_bot_id = reply.get("bot_id")
 
-            self_slack_bot_user_id, self_slack_bot_bot_id = get_onyx_bot_auth_ids(
+            self_slack_bot_user_id, self_slack_bot_bot_id = get_aethersearch_bot_auth_ids(
                 tenant_id, client
             )
             if reply_user is not None and reply_user == self_slack_bot_user_id:
-                is_onyx_bot_response = True
+                is_aethersearch_bot_response = True
 
             if reply_bot_id is not None and reply_bot_id == self_slack_bot_bot_id:
-                is_onyx_bot_response = True
+                is_aethersearch_bot_response = True
 
-            if is_onyx_bot_response:
-                # OnyxBot response
+            if is_aethersearch_bot_response:
+                # AetherSearchBot response
                 message_type = MessageType.ASSISTANT
                 user_sem_id = "Assistant"
 
-                # OnyxBot responses have both text and blocks
+                # AetherSearchBot responses have both text and blocks
                 # The useful content is in the blocks, specifically the first block unless there are
                 # auto-detected filters
                 blocks = reply.get("blocks")
                 if not blocks:
-                    logger.warning(f"OnyxBot response has no blocks: {reply}")
+                    logger.warning(f"AetherSearchBot response has no blocks: {reply}")
                     continue
 
                 message = blocks[0].get("text", {}).get("text")
@@ -595,11 +595,11 @@ def read_slack_thread(
                     if len(blocks) < 2:
                         logger.warning(f"Only filter blocks found: {reply}")
                         continue
-                    # This is the OnyxBot answer format, if there is a change to how we respond,
+                    # This is the AetherSearchBot answer format, if there is a change to how we respond,
                     # this will need to be updated to get the correct "answer" portion
                     message = reply["blocks"][1].get("text", {}).get("text")
             else:
-                # Other bots are not counted as the LLM response which only comes from Onyx
+                # Other bots are not counted as the LLM response which only comes from AetherSearch
                 message_type = MessageType.USER
                 bot_user_name = fetch_user_semantic_id_from_id(
                     reply.get("user"), client
@@ -620,7 +620,7 @@ def read_slack_thread(
                 logger.warning("Skipping Slack thread message, no text found")
                 continue
 
-        message = remove_onyx_bot_tag(tenant_id, message, client=client)
+        message = remove_aethersearch_bot_tag(tenant_id, message, client=client)
         thread_messages.append(
             ThreadMessage(message=message, sender=user_sem_id, role=message_type)
         )
@@ -632,7 +632,7 @@ def slack_usage_report(action: str, sender_id: str | None, client: WebClient) ->
     if DISABLE_TELEMETRY:
         return
 
-    onyx_user = None
+    aethersearch_user = None
     sender_email = None
     try:
         resp = client.users_info(user=sender_id)  # ty: ignore[invalid-argument-type]
@@ -642,19 +642,19 @@ def slack_usage_report(action: str, sender_id: str | None, client: WebClient) ->
 
     if sender_email is not None:
         with get_session_with_current_tenant() as db_session:
-            onyx_user = get_user_by_email(email=sender_email, db_session=db_session)
+            aethersearch_user = get_user_by_email(email=sender_email, db_session=db_session)
 
     optional_telemetry(
         record_type=RecordType.USAGE,
         data={"action": action},
-        user_id=str(onyx_user.id) if onyx_user else "Non-Onyx-Or-No-Auth-User",
+        user_id=str(aethersearch_user.id) if aethersearch_user else "Non-AetherSearch-Or-No-Auth-User",
     )
 
 
 class SlackRateLimiter:
     def __init__(self) -> None:
-        self.max_qpm: int | None = ONYX_BOT_MAX_QPM
-        self.max_wait_time = ONYX_BOT_MAX_WAIT_TIME
+        self.max_qpm: int | None = AETHERSEARCH_BOT_MAX_QPM
+        self.max_wait_time = AETHERSEARCH_BOT_MAX_WAIT_TIME
         self.active_question = 0
         self.last_reset_time = time.time()
         self.waiting_questions: list[int] = []
@@ -713,7 +713,7 @@ class SlackRateLimiter:
 
 def get_feedback_visibility() -> FeedbackVisibility:
     try:
-        return FeedbackVisibility(ONYX_BOT_FEEDBACK_VISIBILITY.lower())
+        return FeedbackVisibility(AETHERSEARCH_BOT_FEEDBACK_VISIBILITY.lower())
     except ValueError:
         return FeedbackVisibility.PRIVATE
 
@@ -723,7 +723,7 @@ class TenantSocketModeClient(SocketModeClient):
         # Set these BEFORE calling super().__init__ — the base class starts
         # the message_processor IntervalRunner thread during init, which can
         # race into our overridden process_message/enqueue_message methods
-        # before these attributes exist (ONYX-BACKEND-1: AttributeError on
+        # before these attributes exist (AETHERSEARCH-BACKEND-1: AttributeError on
         # _tenant_id).
         self._tenant_id = tenant_id
         self.slack_bot_id = slack_bot_id

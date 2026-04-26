@@ -1,17 +1,17 @@
 from celery import shared_task
 from celery import Task
 
-from onyx.background.celery.apps.app_base import task_logger
-from onyx.configs.app_configs import AUTO_LLM_CONFIG_URL
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.llm.well_known_providers.auto_update_service import (
+from aethersearch.background.celery.apps.app_base import task_logger
+from aethersearch.configs.app_configs import AUTO_LLM_CONFIG_URL
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.llm.well_known_providers.auto_update_service import (
     sync_llm_models_from_github,
 )
 
 
 @shared_task(
-    name=OnyxCeleryTask.CHECK_FOR_AUTO_LLM_UPDATE,
+    name=AetherSearchCeleryTask.CHECK_FOR_AUTO_LLM_UPDATE,
     ignore_result=True,
     soft_time_limit=300,  # 5 minute timeout
     trail=False,

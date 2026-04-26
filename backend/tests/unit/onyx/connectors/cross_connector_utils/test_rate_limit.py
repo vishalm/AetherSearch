@@ -1,6 +1,6 @@
 import time
 
-from onyx.connectors.cross_connector_utils.rate_limit_wrapper import rate_limit_builder
+from aethersearch.connectors.cross_connector_utils.rate_limit_wrapper import rate_limit_builder
 
 
 def test_rate_limit_basic() -> None:

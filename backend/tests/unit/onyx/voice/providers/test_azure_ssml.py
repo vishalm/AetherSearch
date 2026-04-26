@@ -4,7 +4,7 @@ import wave
 
 import pytest
 
-from onyx.voice.providers.azure import AzureVoiceProvider
+from aethersearch.voice.providers.azure import AzureVoiceProvider
 
 # --- _is_azure_cloud_url ---
 
@@ -159,7 +159,7 @@ def test_is_self_hosted_false_for_azure_cloud() -> None:
 
 
 def test_resample_pcm16_passthrough() -> None:
-    from onyx.voice.providers.azure import AzureStreamingTranscriber
+    from aethersearch.voice.providers.azure import AzureStreamingTranscriber
 
     t = AzureStreamingTranscriber.__new__(AzureStreamingTranscriber)
     t.input_sample_rate = 16000
@@ -170,7 +170,7 @@ def test_resample_pcm16_passthrough() -> None:
 
 
 def test_resample_pcm16_downsamples() -> None:
-    from onyx.voice.providers.azure import AzureStreamingTranscriber
+    from aethersearch.voice.providers.azure import AzureStreamingTranscriber
 
     t = AzureStreamingTranscriber.__new__(AzureStreamingTranscriber)
     t.input_sample_rate = 24000
@@ -184,7 +184,7 @@ def test_resample_pcm16_downsamples() -> None:
 
 
 def test_resample_pcm16_empty_data() -> None:
-    from onyx.voice.providers.azure import AzureStreamingTranscriber
+    from aethersearch.voice.providers.azure import AzureStreamingTranscriber
 
     t = AzureStreamingTranscriber.__new__(AzureStreamingTranscriber)
     t.input_sample_rate = 24000

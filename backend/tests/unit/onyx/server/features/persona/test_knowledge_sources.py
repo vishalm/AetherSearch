@@ -3,10 +3,10 @@
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import FederatedConnectorSource
-from onyx.server.features.document_set.models import DocumentSetSummary
-from onyx.server.features.persona.models import MinimalPersonaSnapshot
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import FederatedConnectorSource
+from aethersearch.server.features.document_set.models import DocumentSetSummary
+from aethersearch.server.features.persona.models import MinimalPersonaSnapshot
 
 _STUB_DS_SUMMARY = DocumentSetSummary(
     id=1,
@@ -103,7 +103,7 @@ def _make_attached_document(source: DocumentSource) -> MagicMock:
 
 
 @patch(
-    "onyx.server.features.persona.models.DocumentSetSummary.from_model",
+    "aethersearch.server.features.persona.models.DocumentSetSummary.from_model",
     return_value=_STUB_DS_SUMMARY,
 )
 def test_empty_persona_has_no_knowledge_sources(_mock_ds: MagicMock) -> None:
@@ -113,7 +113,7 @@ def test_empty_persona_has_no_knowledge_sources(_mock_ds: MagicMock) -> None:
 
 
 @patch(
-    "onyx.server.features.persona.models.DocumentSetSummary.from_model",
+    "aethersearch.server.features.persona.models.DocumentSetSummary.from_model",
     return_value=_STUB_DS_SUMMARY,
 )
 def test_user_files_adds_user_file_source(_mock_ds: MagicMock) -> None:
@@ -123,7 +123,7 @@ def test_user_files_adds_user_file_source(_mock_ds: MagicMock) -> None:
 
 
 @patch(
-    "onyx.server.features.persona.models.DocumentSetSummary.from_model",
+    "aethersearch.server.features.persona.models.DocumentSetSummary.from_model",
     return_value=_STUB_DS_SUMMARY,
 )
 def test_no_user_files_excludes_user_file_source(_mock_ds: MagicMock) -> None:
@@ -136,7 +136,7 @@ def test_no_user_files_excludes_user_file_source(_mock_ds: MagicMock) -> None:
 
 
 @patch(
-    "onyx.server.features.persona.models.DocumentSetSummary.from_model",
+    "aethersearch.server.features.persona.models.DocumentSetSummary.from_model",
     return_value=_STUB_DS_SUMMARY,
 )
 def test_federated_connector_in_doc_set(_mock_ds: MagicMock) -> None:
@@ -148,7 +148,7 @@ def test_federated_connector_in_doc_set(_mock_ds: MagicMock) -> None:
 
 
 @patch(
-    "onyx.server.features.persona.models.DocumentSetSummary.from_model",
+    "aethersearch.server.features.persona.models.DocumentSetSummary.from_model",
     return_value=_STUB_DS_SUMMARY,
 )
 def test_hierarchy_nodes_and_attached_documents(_mock_ds: MagicMock) -> None:
@@ -161,7 +161,7 @@ def test_hierarchy_nodes_and_attached_documents(_mock_ds: MagicMock) -> None:
 
 
 @patch(
-    "onyx.server.features.persona.models.DocumentSetSummary.from_model",
+    "aethersearch.server.features.persona.models.DocumentSetSummary.from_model",
     return_value=_STUB_DS_SUMMARY,
 )
 def test_all_source_types_combined(_mock_ds: MagicMock) -> None:

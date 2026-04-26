@@ -34,7 +34,7 @@ Exactly one of `href` / `onClick` is expected. Passing both is allowed but only 
 import { LinkButton } from "@opal/components";
 
 // External link — automatic rel="noopener noreferrer"
-<LinkButton href="https://docs.onyx.app" target="_blank">
+<LinkButton href="https://docs.aethersearch.app" target="_blank">
   Read the docs
 </LinkButton>
 

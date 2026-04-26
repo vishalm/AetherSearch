@@ -3,7 +3,7 @@ from pathlib import Path
 
 import litellm
 
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -145,7 +145,7 @@ def load_model_metadata_enrichments() -> None:
         # Clear the model name parser cache since enrichments are now loaded
         # This ensures any parsing done before enrichments were loaded gets refreshed
         try:
-            from onyx.llm.model_name_parser import parse_litellm_model_name
+            from aethersearch.llm.model_name_parser import parse_litellm_model_name
 
             parse_litellm_model_name.cache_clear()
         except ImportError:

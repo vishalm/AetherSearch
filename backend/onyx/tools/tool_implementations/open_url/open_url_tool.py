@@ -6,48 +6,48 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from typing_extensions import override
 
-from onyx.chat.emitter import Emitter
-from onyx.context.search.models import IndexFilters
-from onyx.context.search.models import InferenceSection
-from onyx.context.search.models import SearchDocsResponse
-from onyx.context.search.preprocessing.access_filters import (
+from aethersearch.chat.emitter import Emitter
+from aethersearch.context.search.models import IndexFilters
+from aethersearch.context.search.models import InferenceSection
+from aethersearch.context.search.models import SearchDocsResponse
+from aethersearch.context.search.preprocessing.access_filters import (
     build_access_filters_for_user,
 )
-from onyx.context.search.utils import convert_inference_sections_to_search_docs
-from onyx.context.search.utils import inference_section_from_chunks
-from onyx.db.document import fetch_document_ids_by_links
-from onyx.db.document import filter_existing_document_ids
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.models import User
-from onyx.document_index.interfaces import DocumentIndex
-from onyx.document_index.interfaces import VespaChunkRequest
-from onyx.server.query_and_chat.placement import Placement
-from onyx.server.query_and_chat.streaming_models import OpenUrlDocuments
-from onyx.server.query_and_chat.streaming_models import OpenUrlStart
-from onyx.server.query_and_chat.streaming_models import OpenUrlUrls
-from onyx.server.query_and_chat.streaming_models import Packet
-from onyx.tools.interface import Tool
-from onyx.tools.models import OpenURLToolOverrideKwargs
-from onyx.tools.models import ToolCallException
-from onyx.tools.models import ToolResponse
-from onyx.tools.tool_implementations.open_url.models import WebContentProvider
-from onyx.tools.tool_implementations.open_url.url_normalization import (
+from aethersearch.context.search.utils import convert_inference_sections_to_search_docs
+from aethersearch.context.search.utils import inference_section_from_chunks
+from aethersearch.db.document import fetch_document_ids_by_links
+from aethersearch.db.document import filter_existing_document_ids
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.models import User
+from aethersearch.document_index.interfaces import DocumentIndex
+from aethersearch.document_index.interfaces import VespaChunkRequest
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.server.query_and_chat.streaming_models import OpenUrlDocuments
+from aethersearch.server.query_and_chat.streaming_models import OpenUrlStart
+from aethersearch.server.query_and_chat.streaming_models import OpenUrlUrls
+from aethersearch.server.query_and_chat.streaming_models import Packet
+from aethersearch.tools.interface import Tool
+from aethersearch.tools.models import OpenURLToolOverrideKwargs
+from aethersearch.tools.models import ToolCallException
+from aethersearch.tools.models import ToolResponse
+from aethersearch.tools.tool_implementations.open_url.models import WebContentProvider
+from aethersearch.tools.tool_implementations.open_url.url_normalization import (
     _default_url_normalizer,
 )
-from onyx.tools.tool_implementations.open_url.url_normalization import normalize_url
-from onyx.tools.tool_implementations.open_url.utils import (
+from aethersearch.tools.tool_implementations.open_url.url_normalization import normalize_url
+from aethersearch.tools.tool_implementations.open_url.utils import (
     filter_web_contents_with_no_title_or_content,
 )
-from onyx.tools.tool_implementations.web_search.providers import (
+from aethersearch.tools.tool_implementations.web_search.providers import (
     get_default_content_provider,
 )
-from onyx.tools.tool_implementations.web_search.utils import (
+from aethersearch.tools.tool_implementations.web_search.utils import (
     inference_section_from_internet_page_scrape,
 )
-from onyx.tools.tool_implementations.web_search.utils import MAX_CHARS_PER_URL
-from onyx.utils.logger import setup_logger
-from onyx.utils.threadpool_concurrency import run_functions_tuples_in_parallel
-from onyx.utils.url import normalize_url as normalize_web_content_url
+from aethersearch.tools.tool_implementations.web_search.utils import MAX_CHARS_PER_URL
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.threadpool_concurrency import run_functions_tuples_in_parallel
+from aethersearch.utils.url import normalize_url as normalize_web_content_url
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.contextvars import get_current_tenant_id
 
@@ -377,7 +377,7 @@ class OpenURLTool(Tool[OpenURLToolOverrideKwargs]):
             user: User context for ACL filtering, anonymous users only see public docs.
             content_provider: Optional content provider. If not provided,
                 will use the default provider from the database or fall back
-                to the built-in Onyx web crawler.
+                to the built-in AetherSearch web crawler.
         """
         super().__init__(emitter=emitter)
         self._id = tool_id
@@ -392,7 +392,7 @@ class OpenURLTool(Tool[OpenURLToolOverrideKwargs]):
                 raise RuntimeError(
                     "No web content provider available. "
                     "Please configure a content provider or ensure the "
-                    "built-in Onyx web crawler can be initialized."
+                    "built-in AetherSearch web crawler can be initialized."
                 )
             self._provider = provider
 
@@ -421,7 +421,7 @@ class OpenURLTool(Tool[OpenURLToolOverrideKwargs]):
         which requires a vector database. When DISABLE_VECTOR_DB is set, the
         tool is disabled entirely.
         """
-        from onyx.configs.app_configs import DISABLE_VECTOR_DB
+        from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
 
         if DISABLE_VECTOR_DB:
             return False

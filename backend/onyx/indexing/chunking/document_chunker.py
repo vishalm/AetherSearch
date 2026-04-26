@@ -1,18 +1,18 @@
 from chonkie import SentenceChunker
 
-from onyx.connectors.models import IndexingDocument
-from onyx.connectors.models import Section
-from onyx.connectors.models import SectionType
-from onyx.indexing.chunking.image_section_chunker import ImageChunker
-from onyx.indexing.chunking.section_chunker import AccumulatorState
-from onyx.indexing.chunking.section_chunker import ChunkPayload
-from onyx.indexing.chunking.section_chunker import SectionChunker
-from onyx.indexing.chunking.tabular_section_chunker import TabularChunker
-from onyx.indexing.chunking.text_section_chunker import TextChunker
-from onyx.indexing.models import DocAwareChunk
-from onyx.natural_language_processing.utils import BaseTokenizer
-from onyx.utils.logger import setup_logger
-from onyx.utils.text_processing import clean_text
+from aethersearch.connectors.models import IndexingDocument
+from aethersearch.connectors.models import Section
+from aethersearch.connectors.models import SectionType
+from aethersearch.indexing.chunking.image_section_chunker import ImageChunker
+from aethersearch.indexing.chunking.section_chunker import AccumulatorState
+from aethersearch.indexing.chunking.section_chunker import ChunkPayload
+from aethersearch.indexing.chunking.section_chunker import SectionChunker
+from aethersearch.indexing.chunking.tabular_section_chunker import TabularChunker
+from aethersearch.indexing.chunking.text_section_chunker import TextChunker
+from aethersearch.indexing.models import DocAwareChunk
+from aethersearch.natural_language_processing.utils import BaseTokenizer
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.text_processing import clean_text
 
 logger = setup_logger()
 

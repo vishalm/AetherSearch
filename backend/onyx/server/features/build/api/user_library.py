@@ -38,41 +38,41 @@ from fastapi import UploadFile
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.background.celery.versioned_apps.client import app as celery_app
-from onyx.configs.app_configs import MAX_EMBEDDED_IMAGES_PER_FILE
-from onyx.configs.app_configs import MAX_EMBEDDED_IMAGES_PER_UPLOAD
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.db.connector_credential_pair import update_connector_credential_pair
-from onyx.db.document import upsert_document_by_connector_credential_pair
-from onyx.db.document import upsert_documents
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.document_index.interfaces import DocumentMetadata
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.file_processing.extract_file_text import count_pdf_embedded_images
-from onyx.server.features.build.configs import USER_LIBRARY_MAX_FILE_SIZE_BYTES
-from onyx.server.features.build.configs import USER_LIBRARY_MAX_FILES_PER_UPLOAD
-from onyx.server.features.build.configs import USER_LIBRARY_MAX_TOTAL_SIZE_BYTES
-from onyx.server.features.build.configs import USER_LIBRARY_SOURCE_DIR
-from onyx.server.features.build.db.user_library import get_or_create_craft_connector
-from onyx.server.features.build.db.user_library import get_user_storage_bytes
-from onyx.server.features.build.indexing.persistent_document_writer import (
+from aethersearch.auth.permissions import require_permission
+from aethersearch.background.celery.versioned_apps.client import app as celery_app
+from aethersearch.configs.app_configs import MAX_EMBEDDED_IMAGES_PER_FILE
+from aethersearch.configs.app_configs import MAX_EMBEDDED_IMAGES_PER_UPLOAD
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.db.connector_credential_pair import update_connector_credential_pair
+from aethersearch.db.document import upsert_document_by_connector_credential_pair
+from aethersearch.db.document import upsert_documents
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.document_index.interfaces import DocumentMetadata
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.file_processing.extract_file_text import count_pdf_embedded_images
+from aethersearch.server.features.build.configs import USER_LIBRARY_MAX_FILE_SIZE_BYTES
+from aethersearch.server.features.build.configs import USER_LIBRARY_MAX_FILES_PER_UPLOAD
+from aethersearch.server.features.build.configs import USER_LIBRARY_MAX_TOTAL_SIZE_BYTES
+from aethersearch.server.features.build.configs import USER_LIBRARY_SOURCE_DIR
+from aethersearch.server.features.build.db.user_library import get_or_create_craft_connector
+from aethersearch.server.features.build.db.user_library import get_user_storage_bytes
+from aethersearch.server.features.build.indexing.persistent_document_writer import (
     get_persistent_document_writer,
 )
-from onyx.server.features.build.indexing.persistent_document_writer import (
+from aethersearch.server.features.build.indexing.persistent_document_writer import (
     PersistentDocumentWriter,
 )
-from onyx.server.features.build.indexing.persistent_document_writer import (
+from aethersearch.server.features.build.indexing.persistent_document_writer import (
     S3PersistentDocumentWriter,
 )
-from onyx.server.features.build.utils import sanitize_filename as api_sanitize_filename
-from onyx.utils.logger import setup_logger
+from aethersearch.server.features.build.utils import sanitize_filename as api_sanitize_filename
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()
@@ -152,7 +152,7 @@ def _check_pdf_image_caps(
     """Enforce per-file and per-batch embedded-image caps for PDFs.
 
     Returns the number of embedded images in this file (0 for non-PDFs) so
-    callers can update their running batch total. Raises OnyxError(INVALID_INPUT)
+    callers can update their running batch total. Raises AetherSearchError(INVALID_INPUT)
     if either cap is exceeded.
     """
     if not _looks_like_pdf(filename, content_type):
@@ -162,14 +162,14 @@ def _check_pdf_image_caps(
     # Short-circuit at the larger cap so we get a useful count for both checks.
     count = count_pdf_embedded_images(BytesIO(content), max(file_cap, batch_cap))
     if count > file_cap:
-        raise OnyxError(
-            OnyxErrorCode.INVALID_INPUT,
+        raise AetherSearchError(
+            AetherSearchErrorCode.INVALID_INPUT,
             f"PDF '{filename}' contains too many embedded images "
             f"(more than {file_cap}). Try splitting the document into smaller files.",
         )
     if batch_total + count > batch_cap:
-        raise OnyxError(
-            OnyxErrorCode.INVALID_INPUT,
+        raise AetherSearchError(
+            AetherSearchErrorCode.INVALID_INPUT,
             f"Upload would exceed the {batch_cap}-image limit across all "
             f"files in this batch. Try uploading fewer image-heavy files at once.",
         )
@@ -220,9 +220,9 @@ def _trigger_sandbox_sync(
                 only syncs that source's directory with --delete flag.
     """
     celery_app.send_task(
-        OnyxCeleryTask.SANDBOX_FILE_SYNC,
+        AetherSearchCeleryTask.SANDBOX_FILE_SYNC,
         kwargs={"user_id": user_id, "tenant_id": tenant_id, "source": source},
-        queue=OnyxCeleryQueues.SANDBOX,
+        queue=AetherSearchCeleryQueues.SANDBOX,
     )
 
 
@@ -263,7 +263,7 @@ def _verify_ownership_and_get_document(
 
     Raises HTTPException on authorization failure or if document not found.
     """
-    from onyx.db.document import get_document
+    from aethersearch.db.document import get_document
 
     user_prefix = f"CRAFT_FILE__{user.id}__"
     if not document_id.startswith(user_prefix):
@@ -337,7 +337,7 @@ def get_library_tree(
 
     Returns all CRAFT_FILE documents for the user, organized hierarchically.
     """
-    from onyx.db.document import get_documents_by_source
+    from aethersearch.db.document import get_documents_by_source
 
     # Get CRAFT_FILE documents for this user (filtered at SQL level)
     user_docs = get_documents_by_source(
@@ -757,8 +757,8 @@ def toggle_file_sync(
 
     If the item is a directory, all children are also toggled.
     """
-    from onyx.db.document import get_documents_by_source
-    from onyx.db.document import update_document_metadata__no_commit
+    from aethersearch.db.document import get_documents_by_source
+    from aethersearch.db.document import update_document_metadata__no_commit
 
     tenant_id = get_current_tenant_id()
     if tenant_id is None:
@@ -803,7 +803,7 @@ def delete_file(
     db_session: Session = Depends(get_session),
 ) -> DeleteFileResponse:
     """Delete a file from both S3 and the document table."""
-    from onyx.db.document import delete_document_by_id__no_commit
+    from aethersearch.db.document import delete_document_by_id__no_commit
 
     tenant_id = get_current_tenant_id()
     if tenant_id is None:

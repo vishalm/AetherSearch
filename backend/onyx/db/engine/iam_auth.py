@@ -5,11 +5,11 @@ from typing import Any
 
 import boto3
 
-from onyx.configs.app_configs import POSTGRES_HOST
-from onyx.configs.app_configs import POSTGRES_PORT
-from onyx.configs.app_configs import POSTGRES_USER
-from onyx.configs.app_configs import USE_IAM_AUTH
-from onyx.configs.constants import SSL_CERT_FILE
+from aethersearch.configs.app_configs import POSTGRES_HOST
+from aethersearch.configs.app_configs import POSTGRES_PORT
+from aethersearch.configs.app_configs import POSTGRES_USER
+from aethersearch.configs.app_configs import USE_IAM_AUTH
+from aethersearch.configs.constants import SSL_CERT_FILE
 
 
 def get_iam_auth_token(

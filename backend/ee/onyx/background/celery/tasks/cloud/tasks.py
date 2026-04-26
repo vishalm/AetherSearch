@@ -7,23 +7,23 @@ from celery.exceptions import SoftTimeLimitExceeded
 from redis.client import Redis
 from redis.lock import Lock as RedisLock
 
-from ee.onyx.server.tenants.product_gating import get_gated_tenants
-from onyx.background.celery.apps.app_base import task_logger
-from onyx.background.celery.tasks.beat_schedule import BEAT_EXPIRES_DEFAULT
-from onyx.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
-from onyx.configs.constants import ONYX_CLOUD_TENANT_ID
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import OnyxRedisLocks
-from onyx.db.engine.tenant_utils import get_all_tenant_ids
-from onyx.redis.redis_pool import get_redis_client
-from onyx.redis.redis_pool import redis_lock_dump
-from onyx.redis.redis_tenant_work_gating import cleanup_expired
-from onyx.redis.redis_tenant_work_gating import get_active_tenants
-from onyx.redis.redis_tenant_work_gating import observe_active_set_size
-from onyx.redis.redis_tenant_work_gating import record_full_fanout_cycle
-from onyx.redis.redis_tenant_work_gating import record_gate_decision
-from onyx.server.runtime.onyx_runtime import OnyxRuntime
+from ee.aethersearch.server.tenants.product_gating import get_gated_tenants
+from aethersearch.background.celery.apps.app_base import task_logger
+from aethersearch.background.celery.tasks.beat_schedule import BEAT_EXPIRES_DEFAULT
+from aethersearch.configs.constants import CELERY_GENERIC_BEAT_LOCK_TIMEOUT
+from aethersearch.configs.constants import AETHERSEARCH_CLOUD_TENANT_ID
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import AetherSearchRedisLocks
+from aethersearch.db.engine.tenant_utils import get_all_tenant_ids
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.redis.redis_pool import redis_lock_dump
+from aethersearch.redis.redis_tenant_work_gating import cleanup_expired
+from aethersearch.redis.redis_tenant_work_gating import get_active_tenants
+from aethersearch.redis.redis_tenant_work_gating import observe_active_set_size
+from aethersearch.redis.redis_tenant_work_gating import record_full_fanout_cycle
+from aethersearch.redis.redis_tenant_work_gating import record_gate_decision
+from aethersearch.server.runtime.aethersearch_runtime import AetherSearchRuntime
 from shared_configs.configs import IGNORED_SYNCING_TENANT_LIST
 
 _FULL_FANOUT_TIMESTAMP_KEY_PREFIX = "tenant_work_gating_last_full_fanout_ms"
@@ -68,7 +68,7 @@ def _should_bypass_gate_for_full_fanout(
 
 
 @shared_task(
-    name=OnyxCeleryTask.CLOUD_BEAT_TASK_GENERATOR,
+    name=AetherSearchCeleryTask.CLOUD_BEAT_TASK_GENERATOR,
     ignore_result=True,
     trail=False,
     bind=True,
@@ -76,8 +76,8 @@ def _should_bypass_gate_for_full_fanout(
 def cloud_beat_task_generator(
     self: Task,
     task_name: str,
-    queue: str = OnyxCeleryTask.DEFAULT,
-    priority: int = OnyxCeleryPriority.MEDIUM,
+    queue: str = AetherSearchCeleryTask.DEFAULT,
+    priority: int = AetherSearchCeleryPriority.MEDIUM,
     expires: int = BEAT_EXPIRES_DEFAULT,
     skip_gated: bool = True,
     work_gated: bool = False,
@@ -85,10 +85,10 @@ def cloud_beat_task_generator(
     """a lightweight task used to kick off individual beat tasks per tenant."""
     time_start = time.monotonic()
 
-    redis_client = get_redis_client(tenant_id=ONYX_CLOUD_TENANT_ID)
+    redis_client = get_redis_client(tenant_id=AETHERSEARCH_CLOUD_TENANT_ID)
 
     lock_beat: RedisLock = redis_client.lock(
-        f"{OnyxRedisLocks.CLOUD_BEAT_TASK_GENERATOR_LOCK}:{task_name}",
+        f"{AetherSearchRedisLocks.CLOUD_BEAT_TASK_GENERATOR_LOCK}:{task_name}",
         timeout=CELERY_GENERIC_BEAT_LOCK_TIMEOUT,
     )
 
@@ -114,8 +114,8 @@ def cloud_beat_task_generator(
         # reaches the finally that releases the beat lock.
         if work_gated:
             try:
-                gate_enabled = OnyxRuntime.get_tenant_work_gating_enabled()
-                gate_enforce = OnyxRuntime.get_tenant_work_gating_enforce()
+                gate_enabled = AetherSearchRuntime.get_tenant_work_gating_enabled()
+                gate_enforce = AetherSearchRuntime.get_tenant_work_gating_enforce()
             except Exception:
                 task_logger.exception("tenant work gating: runtime flag read failed")
                 gate_enabled = False
@@ -123,7 +123,7 @@ def cloud_beat_task_generator(
             if gate_enabled:
                 redis_failed = False
                 interval_s = (
-                    OnyxRuntime.get_tenant_work_gating_full_fanout_interval_seconds()
+                    AetherSearchRuntime.get_tenant_work_gating_full_fanout_interval_seconds()
                 )
                 full_fanout_cycle = _should_bypass_gate_for_full_fanout(
                     redis_client, task_name, interval_s
@@ -131,14 +131,14 @@ def cloud_beat_task_generator(
                 if full_fanout_cycle:
                     record_full_fanout_cycle(task_name)
                     try:
-                        ttl_s = OnyxRuntime.get_tenant_work_gating_ttl_seconds()
+                        ttl_s = AetherSearchRuntime.get_tenant_work_gating_ttl_seconds()
                         cleanup_expired(ttl_s)
                     except Exception:
                         task_logger.exception(
                             "tenant work gating: cleanup_expired failed"
                         )
                 else:
-                    ttl_s = OnyxRuntime.get_tenant_work_gating_ttl_seconds()
+                    ttl_s = AetherSearchRuntime.get_tenant_work_gating_ttl_seconds()
                     active_tenants = get_active_tenants(ttl_s)
                     if active_tenants is None:
                         full_fanout_cycle = True

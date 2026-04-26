@@ -8,26 +8,26 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.highspot.client import HighspotClient
-from onyx.connectors.highspot.client import HighspotClientError
-from onyx.connectors.highspot.utils import scrape_url_content
-from onyx.connectors.interfaces import GenerateDocumentsOutput
-from onyx.connectors.interfaces import GenerateSlimDocumentOutput
-from onyx.connectors.interfaces import LoadConnector
-from onyx.connectors.interfaces import PollConnector
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.interfaces import SlimConnectorWithPermSync
-from onyx.connectors.models import ConnectorMissingCredentialError
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import SlimDocument
-from onyx.connectors.models import TextSection
-from onyx.file_processing.extract_file_text import extract_file_text
-from onyx.file_processing.file_types import OnyxFileExtensions
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.highspot.client import HighspotClient
+from aethersearch.connectors.highspot.client import HighspotClientError
+from aethersearch.connectors.highspot.utils import scrape_url_content
+from aethersearch.connectors.interfaces import GenerateDocumentsOutput
+from aethersearch.connectors.interfaces import GenerateSlimDocumentOutput
+from aethersearch.connectors.interfaces import LoadConnector
+from aethersearch.connectors.interfaces import PollConnector
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.interfaces import SlimConnectorWithPermSync
+from aethersearch.connectors.models import ConnectorMissingCredentialError
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import SlimDocument
+from aethersearch.connectors.models import TextSection
+from aethersearch.file_processing.extract_file_text import extract_file_text
+from aethersearch.file_processing.file_types import AetherSearchFileExtensions
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 _SLIM_BATCH_SIZE = 1000
@@ -316,7 +316,7 @@ class HighspotConnector(LoadConnector, PollConnector, SlimConnectorWithPermSync)
 
             elif (
                 is_valid_format
-                and file_extension in OnyxFileExtensions.TEXT_AND_DOCUMENT_EXTENSIONS
+                and file_extension in AetherSearchFileExtensions.TEXT_AND_DOCUMENT_EXTENSIONS
                 and can_download
             ):
                 content_response = self.client.get_item_content(item_id)

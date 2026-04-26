@@ -2,9 +2,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "onyx.fullname" . }}-mcp-server
+  name: {{ include "aethersearch.fullname" . }}-mcp-server
   labels:
-    {{- include "onyx.labels" . | nindent 4 }}
+    {{- include "aethersearch.labels" . | nindent 4 }}
     {{- with .Values.mcpServer.deploymentLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -12,7 +12,7 @@ spec:
   replicas: {{ .Values.mcpServer.replicaCount }}
   selector:
     matchLabels:
-      {{- include "onyx.selectorLabels" . | nindent 6 }}
+      {{- include "aethersearch.selectorLabels" . | nindent 6 }}
       {{- if .Values.mcpServer.deploymentLabels }}
       {{- toYaml .Values.mcpServer.deploymentLabels | nindent 6 }}
       {{- end }}
@@ -24,7 +24,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "onyx.labels" . | nindent 8 }}
+        {{- include "aethersearch.labels" . | nindent 8 }}
         {{- with .Values.mcpServer.deploymentLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -36,7 +36,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "onyx.serviceAccountName" . }}
+      serviceAccountName: {{ include "aethersearch.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.mcpServer.podSecurityContext | nindent 8 }}
       {{- with .Values.mcpServer.nodeSelector }}
@@ -57,7 +57,7 @@ spec:
             {{- toYaml .Values.mcpServer.securityContext | nindent 12 }}
           image: "{{ .Values.mcpServer.image.repository }}:{{ .Values.mcpServer.image.tag | default .Values.global.version }}"
           imagePullPolicy: {{ .Values.global.pullPolicy }}
-          command: ["python", "onyx/mcp_server_main.py"]
+          command: ["python", "aethersearch/mcp_server_main.py"]
           ports:
             - name: mcp-server-port
               containerPort: {{ .Values.mcpServer.containerPorts.server }}
@@ -97,8 +97,8 @@ spec:
             # API server connection for authentication and proxying
             # Uses full override variable to set the port instead of using default 8080
             - name: API_SERVER_URL_OVERRIDE_FOR_HTTP_REQUESTS
-              value: "http://{{ include "onyx.fullname" . }}-api-service:{{ .Values.api.service.servicePort }}"
-            {{- include "onyx.envSecrets" . | nindent 12 }}
+              value: "http://{{ include "aethersearch.fullname" . }}-api-service:{{ .Values.api.service.servicePort }}"
+            {{- include "aethersearch.envSecrets" . | nindent 12 }}
             {{- with .Values.mcpServer.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}

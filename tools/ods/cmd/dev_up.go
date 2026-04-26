@@ -12,7 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
-	"github.com/onyx-dot-app/onyx/tools/ods/internal/paths"
+	"github.com/aethersearch-dot-app/aethersearch/tools/ods/internal/paths"
 )
 
 func newDevUpCommand() *cobra.Command {

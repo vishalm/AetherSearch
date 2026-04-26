@@ -81,19 +81,19 @@ jobs:
         with:
           filters: |
             hubspot:
-              - 'backend/onyx/connectors/hubspot/**'
+              - 'backend/aethersearch/connectors/hubspot/**'
               - 'backend/tests/daily/connectors/hubspot/**'
               - 'uv.lock'
             salesforce:
-              - 'backend/onyx/connectors/salesforce/**'
+              - 'backend/aethersearch/connectors/salesforce/**'
               - 'backend/tests/daily/connectors/salesforce/**'
               - 'uv.lock'
             github:
-              - 'backend/onyx/connectors/github/**'
+              - 'backend/aethersearch/connectors/github/**'
               - 'backend/tests/daily/connectors/github/**'
               - 'uv.lock'
             file_processing:
-              - 'backend/onyx/file_processing/**'
+              - 'backend/aethersearch/file_processing/**'
               - 'uv.lock'
 
       - name: Configure AWS credentials

@@ -10,7 +10,7 @@ with explicit session management. It supports two usage modes:
      own session via the tenant-aware session factory.
 
 Subclasses add domain-specific query methods while inheriting session
-management. See ``ee.onyx.db.scim.ScimDAL`` for a concrete example.
+management. See ``ee.aethersearch.db.scim.ScimDAL`` for a concrete example.
 
 Example (FastAPI)::
 
@@ -35,7 +35,7 @@ from contextlib import contextmanager
 
 from sqlalchemy.orm import Session
 
-from onyx.db.engine.sql_engine import get_session_with_tenant
+from aethersearch.db.engine.sql_engine import get_session_with_tenant
 
 
 class DAL:

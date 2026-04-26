@@ -10,12 +10,12 @@ Utilities for dynamic LLM providers (Bedrock, Ollama, OpenRouter):
 import re
 from typing import TypedDict
 
-from onyx.llm.constants import BEDROCK_MODEL_NAME_MAPPINGS
-from onyx.llm.constants import LlmProviderNames
-from onyx.llm.constants import MODEL_PREFIX_TO_VENDOR
-from onyx.llm.constants import OLLAMA_MODEL_NAME_MAPPINGS
-from onyx.llm.constants import OLLAMA_MODEL_TO_VENDOR
-from onyx.llm.constants import PROVIDER_DISPLAY_NAMES
+from aethersearch.llm.constants import BEDROCK_MODEL_NAME_MAPPINGS
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.llm.constants import MODEL_PREFIX_TO_VENDOR
+from aethersearch.llm.constants import OLLAMA_MODEL_NAME_MAPPINGS
+from aethersearch.llm.constants import OLLAMA_MODEL_TO_VENDOR
+from aethersearch.llm.constants import PROVIDER_DISPLAY_NAMES
 
 # Dynamic providers fetch models directly from source APIs (not LiteLLM)
 DYNAMIC_LLM_PROVIDERS = frozenset(
@@ -336,8 +336,8 @@ def filter_model_configurations(
         List of ModelConfigurationView objects with obsolete/duplicate models removed
     """
     # Import here to avoid circular imports
-    from onyx.llm.well_known_providers.llm_provider_options import is_obsolete_model
-    from onyx.server.manage.llm.models import ModelConfigurationView
+    from aethersearch.llm.well_known_providers.llm_provider_options import is_obsolete_model
+    from aethersearch.server.manage.llm.models import ModelConfigurationView
 
     all_model_names = {mc.name for mc in model_configurations}
 

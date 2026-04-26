@@ -1,6 +1,6 @@
 # Opal
 
-A Typescript component library for Onyx.
+A Typescript component library for AetherSearch.
 
 ## Usage
 

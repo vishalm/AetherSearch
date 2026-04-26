@@ -2,16 +2,16 @@ from collections.abc import Mapping
 from typing import Any
 from typing import cast
 
-from onyx.auth.schemas import UserRole
-from onyx.configs.constants import ANONYMOUS_USER_EMAIL
-from onyx.configs.constants import ANONYMOUS_USER_INFO_ID
-from onyx.configs.constants import KV_ANONYMOUS_USER_PERSONALIZATION_KEY
-from onyx.configs.constants import KV_ANONYMOUS_USER_PREFERENCES_KEY
-from onyx.key_value_store.store import KeyValueStore
-from onyx.key_value_store.store import KvKeyNotFoundError
-from onyx.server.manage.models import UserInfo
-from onyx.server.manage.models import UserPersonalization
-from onyx.server.manage.models import UserPreferences
+from aethersearch.auth.schemas import UserRole
+from aethersearch.configs.constants import ANONYMOUS_USER_EMAIL
+from aethersearch.configs.constants import ANONYMOUS_USER_INFO_ID
+from aethersearch.configs.constants import KV_ANONYMOUS_USER_PERSONALIZATION_KEY
+from aethersearch.configs.constants import KV_ANONYMOUS_USER_PREFERENCES_KEY
+from aethersearch.key_value_store.store import KeyValueStore
+from aethersearch.key_value_store.store import KvKeyNotFoundError
+from aethersearch.server.manage.models import UserInfo
+from aethersearch.server.manage.models import UserPersonalization
+from aethersearch.server.manage.models import UserPreferences
 
 
 def set_anonymous_user_preferences(

@@ -5,8 +5,8 @@ from typing import Any
 
 import pytest
 
-from onyx.utils.sensitive import SensitiveAccessError
-from onyx.utils.sensitive import SensitiveValue
+from aethersearch.utils.sensitive import SensitiveAccessError
+from aethersearch.utils.sensitive import SensitiveValue
 
 
 def _encrypt_string(value: str) -> bytes:

@@ -1,8 +1,8 @@
 import pytest
 from office365.graph_client import AzureEnvironment
 
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.connectors.microsoft_graph_env import resolve_microsoft_environment
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.connectors.microsoft_graph_env import resolve_microsoft_environment
 
 
 def test_resolve_global_defaults() -> None:

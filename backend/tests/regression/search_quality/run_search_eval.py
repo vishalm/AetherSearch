@@ -21,13 +21,13 @@ from pydantic import ValidationError
 from requests.exceptions import RequestException
 from retry import retry
 
-# add onyx/backend to path (since this isn't done automatically when running as a script)
+# add aethersearch/backend to path (since this isn't done automatically when running as a script)
 current_dir = Path(__file__).parent
-onyx_dir = current_dir.parent.parent.parent.parent
-sys.path.append(str(onyx_dir / "backend"))
+aethersearch_dir = current_dir.parent.parent.parent.parent
+sys.path.append(str(aethersearch_dir / "backend"))
 
 # load env before app_config loads (since env doesn't get loaded when running as a script)
-env_path = onyx_dir / ".vscode" / ".env"
+env_path = aethersearch_dir / ".vscode" / ".env"
 if not env_path.exists():
     raise RuntimeError(
         "Could not find .env file. Please create one in the root .vscode directory."
@@ -37,15 +37,15 @@ load_dotenv(env_path)
 # pylint: disable=E402
 # flake8: noqa: E402
 
-from ee.onyx.server.query_and_chat.models import SearchFullResponse
-from ee.onyx.server.query_and_chat.models import SendSearchQueryRequest
-from onyx.configs.app_configs import POSTGRES_API_SERVER_POOL_OVERFLOW
-from onyx.configs.app_configs import POSTGRES_API_SERVER_POOL_SIZE
-from onyx.context.search.models import BaseFilters
-from onyx.context.search.models import SavedSearchDoc
-from onyx.db.engine.sql_engine import get_session_with_tenant
-from onyx.db.engine.sql_engine import SqlEngine
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.server.query_and_chat.models import SearchFullResponse
+from ee.aethersearch.server.query_and_chat.models import SendSearchQueryRequest
+from aethersearch.configs.app_configs import POSTGRES_API_SERVER_POOL_OVERFLOW
+from aethersearch.configs.app_configs import POSTGRES_API_SERVER_POOL_SIZE
+from aethersearch.context.search.models import BaseFilters
+from aethersearch.context.search.models import SavedSearchDoc
+from aethersearch.db.engine.sql_engine import get_session_with_tenant
+from aethersearch.db.engine.sql_engine import SqlEngine
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.configs import POSTGRES_DEFAULT_SCHEMA_STANDARD_VALUE
 from tests.regression.search_quality.models import AnalysisSummary
@@ -417,7 +417,7 @@ class SearchAnswerAnalyzer:
 
     @retry(tries=3, delay=1, backoff=2)
     def _perform_search(self, query: str) -> OneshotQAResult:
-        """Perform a document search query against the Onyx API and time it."""
+        """Perform a document search query against the AetherSearch API and time it."""
         # create the search request
         filters = BaseFilters()
         search_request = SendSearchQueryRequest(
@@ -434,8 +434,8 @@ class SearchAnswerAnalyzer:
             request_data = search_request.model_dump()
             headers = GENERAL_HEADERS.copy()
             # Add API key if present
-            if os.environ.get("ONYX_API_KEY"):
-                headers["Authorization"] = f"Bearer {os.environ.get('ONYX_API_KEY')}"
+            if os.environ.get("AETHERSEARCH_API_KEY"):
+                headers["Authorization"] = f"Bearer {os.environ.get('AETHERSEARCH_API_KEY')}"
 
             start_time = time.monotonic()
             response = requests.post(
@@ -609,20 +609,20 @@ def run_search_eval(
             "OPENAI_API_KEY is required for answer evaluation. Please add it to the root .vscode/.env file."
         )
 
-    # check onyx api key is set (auth is always required)
-    if not os.environ.get("ONYX_API_KEY"):
+    # check aethersearch api key is set (auth is always required)
+    if not os.environ.get("AETHERSEARCH_API_KEY"):
         raise RuntimeError(
-            "ONYX_API_KEY is required. Please create one in the admin panel and add it to the root .vscode/.env file."
+            "AETHERSEARCH_API_KEY is required. Please create one in the admin panel and add it to the root .vscode/.env file."
         )
 
-    # check onyx is running
+    # check aethersearch is running
     try:
         response = requests.get(
             f"{config.api_url}/health", timeout=config.request_timeout
         )
         response.raise_for_status()
     except RequestException as e:
-        raise RuntimeError(f"Could not connect to Onyx API: {e}")
+        raise RuntimeError(f"Could not connect to AetherSearch API: {e}")
 
     # create the export folder
     export_folder = current_dir / datetime.now().strftime("eval-%Y-%m-%d-%H-%M-%S")
@@ -689,7 +689,7 @@ if __name__ == "__main__":
         "--api_endpoint",
         type=str,
         default="http://127.0.0.1:8080",
-        help="Base URL of the Onyx API server (default: %(default)s).",
+        help="Base URL of the AetherSearch API server (default: %(default)s).",
     )
     parser.add_argument(
         "-s",

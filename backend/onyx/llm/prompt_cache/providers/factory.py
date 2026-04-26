@@ -1,12 +1,12 @@
 """Factory for creating provider-specific prompt cache adapters."""
 
-from onyx.llm.constants import LlmProviderNames
-from onyx.llm.interfaces import LLMConfig
-from onyx.llm.prompt_cache.providers.anthropic import AnthropicPromptCacheProvider
-from onyx.llm.prompt_cache.providers.base import PromptCacheProvider
-from onyx.llm.prompt_cache.providers.noop import NoOpPromptCacheProvider
-from onyx.llm.prompt_cache.providers.openai import OpenAIPromptCacheProvider
-from onyx.llm.prompt_cache.providers.vertex import VertexAIPromptCacheProvider
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.llm.interfaces import LLMConfig
+from aethersearch.llm.prompt_cache.providers.anthropic import AnthropicPromptCacheProvider
+from aethersearch.llm.prompt_cache.providers.base import PromptCacheProvider
+from aethersearch.llm.prompt_cache.providers.noop import NoOpPromptCacheProvider
+from aethersearch.llm.prompt_cache.providers.openai import OpenAIPromptCacheProvider
+from aethersearch.llm.prompt_cache.providers.vertex import VertexAIPromptCacheProvider
 
 ANTHROPIC_BEDROCK_TAG = "anthropic."
 

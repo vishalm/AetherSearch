@@ -21,124 +21,124 @@ from google.oauth2.credentials import Credentials
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from onyx.auth.email_utils import send_email
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import current_chat_accessible_user
-from onyx.auth.users import current_curator_or_admin_user
-from onyx.background.celery.tasks.pruning.tasks import try_creating_prune_generator_task
-from onyx.background.celery.versioned_apps.client import app as client_app
-from onyx.configs.app_configs import EMAIL_CONFIGURED
-from onyx.configs.app_configs import ENABLED_CONNECTOR_TYPES
-from onyx.configs.app_configs import MOCK_CONNECTOR_FILE_PATH
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import FileOrigin
-from onyx.configs.constants import MilestoneRecordType
-from onyx.configs.constants import ONYX_METADATA_FILENAME
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import PUBLIC_API_TAGS
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.connectors.factory import validate_ccpair_for_user
-from onyx.connectors.google_utils.google_auth import get_google_oauth_creds
-from onyx.connectors.google_utils.google_kv import build_service_account_creds
-from onyx.connectors.google_utils.google_kv import delete_google_app_cred
-from onyx.connectors.google_utils.google_kv import delete_service_account_key
-from onyx.connectors.google_utils.google_kv import get_auth_url
-from onyx.connectors.google_utils.google_kv import get_google_app_cred
-from onyx.connectors.google_utils.google_kv import get_service_account_key
-from onyx.connectors.google_utils.google_kv import update_credential_access_tokens
-from onyx.connectors.google_utils.google_kv import upsert_google_app_cred
-from onyx.connectors.google_utils.google_kv import upsert_service_account_key
-from onyx.connectors.google_utils.google_kv import verify_csrf
-from onyx.connectors.google_utils.shared_constants import DB_CREDENTIALS_DICT_TOKEN_KEY
-from onyx.connectors.google_utils.shared_constants import (
+from aethersearch.auth.email_utils import send_email
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import current_chat_accessible_user
+from aethersearch.auth.users import current_curator_or_admin_user
+from aethersearch.background.celery.tasks.pruning.tasks import try_creating_prune_generator_task
+from aethersearch.background.celery.versioned_apps.client import app as client_app
+from aethersearch.configs.app_configs import EMAIL_CONFIGURED
+from aethersearch.configs.app_configs import ENABLED_CONNECTOR_TYPES
+from aethersearch.configs.app_configs import MOCK_CONNECTOR_FILE_PATH
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import FileOrigin
+from aethersearch.configs.constants import MilestoneRecordType
+from aethersearch.configs.constants import AETHERSEARCH_METADATA_FILENAME
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import PUBLIC_API_TAGS
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.connectors.factory import validate_ccpair_for_user
+from aethersearch.connectors.google_utils.google_auth import get_google_oauth_creds
+from aethersearch.connectors.google_utils.google_kv import build_service_account_creds
+from aethersearch.connectors.google_utils.google_kv import delete_google_app_cred
+from aethersearch.connectors.google_utils.google_kv import delete_service_account_key
+from aethersearch.connectors.google_utils.google_kv import get_auth_url
+from aethersearch.connectors.google_utils.google_kv import get_google_app_cred
+from aethersearch.connectors.google_utils.google_kv import get_service_account_key
+from aethersearch.connectors.google_utils.google_kv import update_credential_access_tokens
+from aethersearch.connectors.google_utils.google_kv import upsert_google_app_cred
+from aethersearch.connectors.google_utils.google_kv import upsert_service_account_key
+from aethersearch.connectors.google_utils.google_kv import verify_csrf
+from aethersearch.connectors.google_utils.shared_constants import DB_CREDENTIALS_DICT_TOKEN_KEY
+from aethersearch.connectors.google_utils.shared_constants import (
     GoogleOAuthAuthenticationMethod,
 )
-from onyx.db.connector import create_connector
-from onyx.db.connector import delete_connector
-from onyx.db.connector import fetch_connector_by_id
-from onyx.db.connector import fetch_connectors
-from onyx.db.connector import fetch_unique_document_sources
-from onyx.db.connector import get_connector_credential_ids
-from onyx.db.connector import mark_ccpair_with_indexing_trigger
-from onyx.db.connector import update_connector
-from onyx.db.connector_credential_pair import add_credential_to_connector
-from onyx.db.connector_credential_pair import (
+from aethersearch.db.connector import create_connector
+from aethersearch.db.connector import delete_connector
+from aethersearch.db.connector import fetch_connector_by_id
+from aethersearch.db.connector import fetch_connectors
+from aethersearch.db.connector import fetch_unique_document_sources
+from aethersearch.db.connector import get_connector_credential_ids
+from aethersearch.db.connector import mark_ccpair_with_indexing_trigger
+from aethersearch.db.connector import update_connector
+from aethersearch.db.connector_credential_pair import add_credential_to_connector
+from aethersearch.db.connector_credential_pair import (
     fetch_connector_credential_pair_for_connector,
 )
-from onyx.db.connector_credential_pair import get_cc_pair_groups_for_ids
-from onyx.db.connector_credential_pair import get_connector_credential_pair
-from onyx.db.connector_credential_pair import get_connector_credential_pairs_for_user
-from onyx.db.connector_credential_pair import (
+from aethersearch.db.connector_credential_pair import get_cc_pair_groups_for_ids
+from aethersearch.db.connector_credential_pair import get_connector_credential_pair
+from aethersearch.db.connector_credential_pair import get_connector_credential_pairs_for_user
+from aethersearch.db.connector_credential_pair import (
     get_connector_credential_pairs_for_user_parallel,
 )
-from onyx.db.connector_credential_pair import verify_user_has_access_to_cc_pair
-from onyx.db.credentials import cleanup_gmail_credentials
-from onyx.db.credentials import cleanup_google_drive_credentials
-from onyx.db.credentials import create_credential
-from onyx.db.credentials import delete_service_account_credentials
-from onyx.db.credentials import fetch_credential_by_id_for_user
-from onyx.db.deletion_attempt import check_deletion_attempt_is_allowed
-from onyx.db.document import get_document_counts_for_all_cc_pairs
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import AccessType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import IndexingMode
-from onyx.db.enums import Permission
-from onyx.db.enums import ProcessingMode
-from onyx.db.federated import fetch_all_federated_connectors_parallel
-from onyx.db.index_attempt import get_index_attempts_for_cc_pair
-from onyx.db.index_attempt import get_latest_index_attempts_by_status
-from onyx.db.index_attempt import get_latest_index_attempts_parallel
-from onyx.db.index_attempt import get_latest_successful_index_attempts_parallel
-from onyx.db.models import ConnectorCredentialPair
-from onyx.db.models import FederatedConnector
-from onyx.db.models import IndexAttempt
-from onyx.db.models import IndexingStatus
-from onyx.db.models import User
-from onyx.db.models import UserRole
-from onyx.file_processing.file_types import PLAIN_TEXT_MIME_TYPE
-from onyx.file_processing.file_types import WORD_PROCESSING_MIME_TYPE
-from onyx.file_store.file_store import FileStore
-from onyx.file_store.file_store import get_default_file_store
-from onyx.key_value_store.interface import KvKeyNotFoundError
-from onyx.redis.redis_pool import get_redis_client
-from onyx.redis.redis_tenant_work_gating import maybe_mark_tenant_active
-from onyx.server.documents.models import AuthStatus
-from onyx.server.documents.models import AuthUrl
-from onyx.server.documents.models import ConnectorBase
-from onyx.server.documents.models import ConnectorCredentialPairIdentifier
-from onyx.server.documents.models import ConnectorFileInfo
-from onyx.server.documents.models import ConnectorFilesResponse
-from onyx.server.documents.models import ConnectorIndexingStatusLite
-from onyx.server.documents.models import ConnectorIndexingStatusLiteResponse
-from onyx.server.documents.models import ConnectorRequestSubmission
-from onyx.server.documents.models import ConnectorSnapshot
-from onyx.server.documents.models import ConnectorStatus
-from onyx.server.documents.models import ConnectorUpdateRequest
-from onyx.server.documents.models import CredentialBase
-from onyx.server.documents.models import CredentialSnapshot
-from onyx.server.documents.models import DocsCountOperator
-from onyx.server.documents.models import FailedConnectorIndexingStatus
-from onyx.server.documents.models import FileUploadResponse
-from onyx.server.documents.models import GDriveCallback
-from onyx.server.documents.models import GmailCallback
-from onyx.server.documents.models import GoogleAppCredentials
-from onyx.server.documents.models import GoogleServiceAccountCredentialRequest
-from onyx.server.documents.models import GoogleServiceAccountKey
-from onyx.server.documents.models import IndexedSourcesResponse
-from onyx.server.documents.models import IndexingStatusRequest
-from onyx.server.documents.models import ObjectCreationIdResponse
-from onyx.server.documents.models import RunConnectorRequest
-from onyx.server.documents.models import SourceSummary
-from onyx.server.federated.models import FederatedConnectorStatus
-from onyx.server.models import StatusResponse
-from onyx.server.utils_vector_db import require_vector_db
-from onyx.utils.logger import setup_logger
-from onyx.utils.telemetry import mt_cloud_telemetry
-from onyx.utils.threadpool_concurrency import CallableProtocol
-from onyx.utils.threadpool_concurrency import run_functions_tuples_in_parallel
-from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
+from aethersearch.db.connector_credential_pair import verify_user_has_access_to_cc_pair
+from aethersearch.db.credentials import cleanup_gmail_credentials
+from aethersearch.db.credentials import cleanup_google_drive_credentials
+from aethersearch.db.credentials import create_credential
+from aethersearch.db.credentials import delete_service_account_credentials
+from aethersearch.db.credentials import fetch_credential_by_id_for_user
+from aethersearch.db.deletion_attempt import check_deletion_attempt_is_allowed
+from aethersearch.db.document import get_document_counts_for_all_cc_pairs
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import IndexingMode
+from aethersearch.db.enums import Permission
+from aethersearch.db.enums import ProcessingMode
+from aethersearch.db.federated import fetch_all_federated_connectors_parallel
+from aethersearch.db.index_attempt import get_index_attempts_for_cc_pair
+from aethersearch.db.index_attempt import get_latest_index_attempts_by_status
+from aethersearch.db.index_attempt import get_latest_index_attempts_parallel
+from aethersearch.db.index_attempt import get_latest_successful_index_attempts_parallel
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.db.models import FederatedConnector
+from aethersearch.db.models import IndexAttempt
+from aethersearch.db.models import IndexingStatus
+from aethersearch.db.models import User
+from aethersearch.db.models import UserRole
+from aethersearch.file_processing.file_types import PLAIN_TEXT_MIME_TYPE
+from aethersearch.file_processing.file_types import WORD_PROCESSING_MIME_TYPE
+from aethersearch.file_store.file_store import FileStore
+from aethersearch.file_store.file_store import get_default_file_store
+from aethersearch.key_value_store.interface import KvKeyNotFoundError
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.redis.redis_tenant_work_gating import maybe_mark_tenant_active
+from aethersearch.server.documents.models import AuthStatus
+from aethersearch.server.documents.models import AuthUrl
+from aethersearch.server.documents.models import ConnectorBase
+from aethersearch.server.documents.models import ConnectorCredentialPairIdentifier
+from aethersearch.server.documents.models import ConnectorFileInfo
+from aethersearch.server.documents.models import ConnectorFilesResponse
+from aethersearch.server.documents.models import ConnectorIndexingStatusLite
+from aethersearch.server.documents.models import ConnectorIndexingStatusLiteResponse
+from aethersearch.server.documents.models import ConnectorRequestSubmission
+from aethersearch.server.documents.models import ConnectorSnapshot
+from aethersearch.server.documents.models import ConnectorStatus
+from aethersearch.server.documents.models import ConnectorUpdateRequest
+from aethersearch.server.documents.models import CredentialBase
+from aethersearch.server.documents.models import CredentialSnapshot
+from aethersearch.server.documents.models import DocsCountOperator
+from aethersearch.server.documents.models import FailedConnectorIndexingStatus
+from aethersearch.server.documents.models import FileUploadResponse
+from aethersearch.server.documents.models import GDriveCallback
+from aethersearch.server.documents.models import GmailCallback
+from aethersearch.server.documents.models import GoogleAppCredentials
+from aethersearch.server.documents.models import GoogleServiceAccountCredentialRequest
+from aethersearch.server.documents.models import GoogleServiceAccountKey
+from aethersearch.server.documents.models import IndexedSourcesResponse
+from aethersearch.server.documents.models import IndexingStatusRequest
+from aethersearch.server.documents.models import ObjectCreationIdResponse
+from aethersearch.server.documents.models import RunConnectorRequest
+from aethersearch.server.documents.models import SourceSummary
+from aethersearch.server.federated.models import FederatedConnectorStatus
+from aethersearch.server.models import StatusResponse
+from aethersearch.server.utils_vector_db import require_vector_db
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.telemetry import mt_cloud_telemetry
+from aethersearch.utils.threadpool_concurrency import CallableProtocol
+from aethersearch.utils.threadpool_concurrency import run_functions_tuples_in_parallel
+from aethersearch.utils.variable_functionality import fetch_ee_implementation_or_noop
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()
@@ -414,11 +414,11 @@ def save_zip_metadata_to_file_store(
     zf: zipfile.ZipFile, file_store: FileStore
 ) -> str | None:
     """
-    Extract .onyx_metadata.json from zip and save to file store.
+    Extract .aethersearch_metadata.json from zip and save to file store.
     Returns the file_id or None if no metadata file exists.
     """
     try:
-        metadata_file_info = zf.getinfo(ONYX_METADATA_FILENAME)
+        metadata_file_info = zf.getinfo(AETHERSEARCH_METADATA_FILENAME)
         with zf.open(metadata_file_info, "r") as metadata_file:
             metadata_bytes = metadata_file.read()
 
@@ -426,22 +426,22 @@ def save_zip_metadata_to_file_store(
             try:
                 json.loads(metadata_bytes)
             except json.JSONDecodeError as e:
-                logger.warning(f"Unable to load {ONYX_METADATA_FILENAME}: {e}")
+                logger.warning(f"Unable to load {AETHERSEARCH_METADATA_FILENAME}: {e}")
                 raise HTTPException(
                     status_code=400,
-                    detail=f"Unable to load {ONYX_METADATA_FILENAME}: {e}",
+                    detail=f"Unable to load {AETHERSEARCH_METADATA_FILENAME}: {e}",
                 )
 
             # Save to file store
             file_id = file_store.save_file(
                 content=BytesIO(metadata_bytes),
-                display_name=ONYX_METADATA_FILENAME,
+                display_name=AETHERSEARCH_METADATA_FILENAME,
                 file_origin=FileOrigin.CONNECTOR_METADATA,
                 file_type="application/json",
             )
             return file_id
     except KeyError:
-        logger.info(f"No {ONYX_METADATA_FILENAME} file")
+        logger.info(f"No {AETHERSEARCH_METADATA_FILENAME} file")
         return None
 
 
@@ -537,7 +537,7 @@ def upload_files(
             # we store them in the file store as plain text
             if file.content_type == WORD_PROCESSING_MIME_TYPE:
                 # Lazy load to avoid importing markitdown when not needed
-                from onyx.file_processing.extract_file_text import read_docx_file
+                from aethersearch.file_processing.extract_file_text import read_docx_file
 
                 text, _ = read_docx_file(file.file, file.filename)
                 file_id = file_store.save_file(
@@ -830,7 +830,7 @@ def update_connector_files(
     if final_zip_metadata:
         final_zip_metadata_file_id = file_store.save_file(
             content=BytesIO(json.dumps(final_zip_metadata).encode("utf-8")),
-            display_name=ONYX_METADATA_FILENAME,
+            display_name=AETHERSEARCH_METADATA_FILENAME,
             file_origin=FileOrigin.CONNECTOR_METADATA,
             file_type="application/json",
         )
@@ -873,9 +873,9 @@ def update_connector_files(
 
             # Send task to check for indexing immediately
             client_app.send_task(
-                OnyxCeleryTask.CHECK_FOR_INDEXING,
+                AetherSearchCeleryTask.CHECK_FOR_INDEXING,
                 kwargs={"tenant_id": tenant_id},
-                priority=OnyxCeleryPriority.HIGH,
+                priority=AetherSearchCeleryPriority.HIGH,
             )
             logger.info(
                 f"Marked cc_pair {cc_pair.id} for UPDATE indexing (new files) for connector {connector_id}"
@@ -1537,7 +1537,7 @@ def create_connector_from_model(
         _validate_connector_allowed(connector_data.source)
 
         fetch_ee_implementation_or_noop(
-            "onyx.db.user_group", "validate_object_creation_for_user", None
+            "aethersearch.db.user_group", "validate_object_creation_for_user", None
         )(
             db_session=db_session,
             user=user,
@@ -1573,7 +1573,7 @@ def create_connector_with_mock_credential(
     tenant_id = get_current_tenant_id()
 
     fetch_ee_implementation_or_noop(
-        "onyx.db.user_group", "validate_object_creation_for_user", None
+        "aethersearch.db.user_group", "validate_object_creation_for_user", None
     )(
         db_session=db_session,
         user=user,
@@ -1625,8 +1625,8 @@ def create_connector_with_mock_credential(
 
         # trigger indexing immediately
         client_app.send_task(
-            OnyxCeleryTask.CHECK_FOR_INDEXING,
-            priority=OnyxCeleryPriority.HIGH,
+            AetherSearchCeleryTask.CHECK_FOR_INDEXING,
+            priority=AetherSearchCeleryPriority.HIGH,
             kwargs={"tenant_id": tenant_id},
         )
 
@@ -1660,7 +1660,7 @@ def update_connector_from_model(
     try:
         _validate_connector_allowed(connector_data.source)
         fetch_ee_implementation_or_noop(
-            "onyx.db.user_group", "validate_object_creation_for_user", None
+            "aethersearch.db.user_group", "validate_object_creation_for_user", None
         )(
             db_session=db_session,
             user=user,
@@ -1936,7 +1936,7 @@ def submit_connector_request(
 ) -> StatusResponse:
     """
     Submit a connector request for Cloud deployments.
-    Tracks via PostHog telemetry and sends email to hello@onyx.app.
+    Tracks via PostHog telemetry and sends email to hello@aethersearch.app.
     """
     tenant_id = get_current_tenant_id()
     connector_name = request_data.connector_name.strip()
@@ -1963,7 +1963,7 @@ def submit_connector_request(
     # Send email notification (if email is configured)
     if EMAIL_CONFIGURED:
         try:
-            subject = "Onyx Craft Connector Request"
+            subject = "AetherSearch Craft Connector Request"
             email_body_text = f"""A new connector request has been submitted:
 
 Connector Name: {connector_name}
@@ -1982,13 +1982,13 @@ Tenant ID: {tenant_id}
 </html>"""
 
             send_email(
-                user_email="hello@onyx.app",
+                user_email="hello@aethersearch.app",
                 subject=subject,
                 html_body=email_body_html,
                 text_body=email_body_text,
             )
             logger.info(
-                f"Connector request email sent to hello@onyx.app for connector: {connector_name}"
+                f"Connector request email sent to hello@aethersearch.app for connector: {connector_name}"
             )
         except Exception as e:
             # Log error but don't fail the request if email fails
@@ -2106,12 +2106,12 @@ def trigger_indexing_for_cc_pair(
                 f"indexing_trigger={indexing_mode}"
             )
 
-    priority = OnyxCeleryPriority.HIGH
+    priority = AetherSearchCeleryPriority.HIGH
 
     # run the beat task to pick up the triggers immediately
     logger.info(f"Sending indexing check task with priority {priority}")
     client_app.send_task(
-        OnyxCeleryTask.CHECK_FOR_INDEXING,
+        AetherSearchCeleryTask.CHECK_FOR_INDEXING,
         priority=priority,
         kwargs={"tenant_id": tenant_id},
     )

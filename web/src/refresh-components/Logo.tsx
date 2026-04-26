@@ -9,7 +9,7 @@ import { cn } from "@opal/utils";
 import Text from "@/refresh-components/texts/Text";
 import Truncated from "@/refresh-components/texts/Truncated";
 import { useMemo } from "react";
-import { SvgOnyxLogo, SvgOnyxLogoTyped } from "@opal/logos";
+import { SvgAetherSearchLogo, SvgAetherSearchLogoTyped } from "@opal/logos";
 
 export interface LogoProps {
   folded?: boolean;
@@ -50,7 +50,7 @@ export default function Logo({ folded, size, className }: LogoProps) {
       />
     </div>
   ) : (
-    <SvgOnyxLogo
+    <SvgAetherSearchLogo
       size={resolvedSize}
       className={cn("flex-shrink-0", className)}
     />
@@ -76,7 +76,7 @@ export default function Logo({ folded, size, className }: LogoProps) {
                 className={"line-clamp-1 truncate"}
                 nowrap
               >
-                Powered by Onyx
+                Powered by AetherSearch
               </Text>
             )}
           </div>
@@ -99,11 +99,11 @@ export default function Logo({ folded, size, className }: LogoProps) {
   return applicationName ? (
     renderNameAndPoweredBy({ includeLogo: true, includeName: true })
   ) : folded ? (
-    <SvgOnyxLogo
+    <SvgAetherSearchLogo
       size={resolvedSize}
       className={cn("flex-shrink-0", className)}
     />
   ) : (
-    <SvgOnyxLogoTyped size={resolvedSize} className={className} />
+    <SvgAetherSearchLogoTyped size={resolvedSize} className={className} />
   );
 }

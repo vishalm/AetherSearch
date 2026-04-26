@@ -124,7 +124,7 @@ Resources:
             - "/bin/sh"
             - "-c"
             - |
-              alembic upgrade head && echo "Starting AetherSearch Api Server" && uvicorn onyx.main:app --host 0.0.0.0 --port 8080
+              alembic upgrade head && echo "Starting AetherSearch Api Server" && uvicorn aethersearch.main:app --host 0.0.0.0 --port 8080
           PortMappings:
             - Name: backend
               ContainerPort: 8080

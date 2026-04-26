@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 
-from onyx.access.access import get_acl_for_user
-from onyx.context.search.models import IndexFilters
-from onyx.db.models import User
+from aethersearch.access.access import get_acl_for_user
+from aethersearch.context.search.models import IndexFilters
+from aethersearch.db.models import User
 
 
 def build_access_filters_for_user(user: User, session: Session) -> list[str]:

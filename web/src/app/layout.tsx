@@ -50,7 +50,7 @@ const dmMono = DM_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Onyx",
+  title: "AetherSearch",
   description: "Question answering for your documents",
 };
 

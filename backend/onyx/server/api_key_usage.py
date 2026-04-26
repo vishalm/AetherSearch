@@ -4,14 +4,14 @@ from fastapi import Depends
 from fastapi import Request
 from sqlalchemy.orm import Session
 
-from onyx.auth.api_key import get_hashed_api_key_from_request
-from onyx.auth.pat import get_hashed_pat_from_request
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.usage import increment_usage
-from onyx.db.usage import UsageType
-from onyx.server.usage_limits import check_usage_and_raise
-from onyx.server.usage_limits import is_usage_limits_enabled
-from onyx.utils.logger import setup_logger
+from aethersearch.auth.api_key import get_hashed_api_key_from_request
+from aethersearch.auth.pat import get_hashed_pat_from_request
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.usage import increment_usage
+from aethersearch.db.usage import UsageType
+from aethersearch.server.usage_limits import check_usage_and_raise
+from aethersearch.server.usage_limits import is_usage_limits_enabled
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()

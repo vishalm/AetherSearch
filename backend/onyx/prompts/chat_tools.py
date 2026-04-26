@@ -1,6 +1,6 @@
 # These prompts are to support tool calling. Currently not used in the main flow or via any configs
 # The current generation of LLM is too unreliable for this task.
-# Onyx retrieval call as a tool option
+# AetherSearch retrieval call as a tool option
 DANSWER_TOOL_NAME = "Current Search"
 DANSWER_TOOL_DESCRIPTION = "A search tool that can find information on any topic including up to date and proprietary knowledge."
 

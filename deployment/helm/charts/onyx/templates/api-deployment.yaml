@@ -2,9 +2,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "onyx.fullname" . }}-api-server
+  name: {{ include "aethersearch.fullname" . }}-api-server
   labels:
-    {{- include "onyx.labels" . | nindent 4 }}
+    {{- include "aethersearch.labels" . | nindent 4 }}
     {{- with .Values.api.deploymentLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -14,7 +14,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "onyx.selectorLabels" . | nindent 6 }}
+      {{- include "aethersearch.selectorLabels" . | nindent 6 }}
       {{- if .Values.api.deploymentLabels }}
       {{- toYaml .Values.api.deploymentLabels | nindent 6 }}
       {{- end }}
@@ -22,7 +22,7 @@ spec:
     metadata:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        {{- $pgIntoChecksum := include "onyx.pgInto.checksumAnnotation" . }}
+        {{- $pgIntoChecksum := include "aethersearch.pgInto.checksumAnnotation" . }}
         {{- if $pgIntoChecksum }}
         {{- $pgIntoChecksum | nindent 8 }}
         {{- end }}
@@ -30,7 +30,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "onyx.labels" . | nindent 8 }}
+        {{- include "aethersearch.labels" . | nindent 8 }}
         {{- with .Values.api.deploymentLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -42,7 +42,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "onyx.serviceAccountName" . }}
+      serviceAccountName: {{ include "aethersearch.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.api.podSecurityContext | nindent 8 }}
       {{- with .Values.api.nodeSelector }}
@@ -71,8 +71,8 @@ spec:
               update-ca-certificates &&
               {{- end }}
               alembic upgrade head &&
-              echo "Starting Onyx Api Server" &&
-              uvicorn onyx.main:app --host {{ .Values.global.host }} --port {{ .Values.api.containerPorts.server }}
+              echo "Starting AetherSearch Api Server" &&
+              uvicorn aethersearch.main:app --host {{ .Values.global.host }} --port {{ .Values.api.containerPorts.server }}
           ports:
             - name: api-server-port
               containerPort: {{ .Values.api.containerPorts.server }}
@@ -95,15 +95,15 @@ spec:
             - configMapRef:
                 name: {{ .Values.config.envConfigMapName }}
           env:
-            {{- include "onyx.envSecrets" . | nindent 12}}
+            {{- include "aethersearch.envSecrets" . | nindent 12}}
             {{- with .Values.api.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-          {{- $apiVolumeMounts := include "onyx.renderVolumeMounts" (dict "ctx" . "volumeMounts" .Values.api.volumeMounts) }}
+          {{- $apiVolumeMounts := include "aethersearch.renderVolumeMounts" (dict "ctx" . "volumeMounts" .Values.api.volumeMounts) }}
           {{- if $apiVolumeMounts }}
           {{- $apiVolumeMounts | nindent 10 }}
           {{- end }}
-      {{- $apiVolumes := include "onyx.renderVolumes" (dict "ctx" . "volumes" .Values.api.volumes) }}
+      {{- $apiVolumes := include "aethersearch.renderVolumes" (dict "ctx" . "volumes" .Values.api.volumes) }}
       {{- if $apiVolumes }}
       {{- $apiVolumes | nindent 6 }}
       {{- end }}

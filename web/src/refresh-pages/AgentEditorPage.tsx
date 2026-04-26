@@ -57,7 +57,7 @@ import {
   SvgFold,
   SvgImage,
   SvgLock,
-  SvgOnyxOctagon,
+  SvgAetherSearchOctagon,
   SvgSliders,
   SvgUsers,
   SvgTrash,
@@ -1242,7 +1242,7 @@ export default function AgentEditorPage({
                 <Form className="h-full w-full">
                   <SettingsLayouts.Root>
                     <SettingsLayouts.Header
-                      icon={SvgOnyxOctagon}
+                      icon={SvgAetherSearchOctagon}
                       title={existingAgent ? "Edit Agent" : "Create Agent"}
                       rightChildren={
                         <div className="flex gap-2">
@@ -1569,7 +1569,7 @@ export default function AgentEditorPage({
                                 <InputHorizontal
                                   withLabel="llm_model"
                                   title="Default Model"
-                                  description="This model will be used by Onyx by default in your chats."
+                                  description="This model will be used by AetherSearch by default in your chats."
                                 >
                                   <LLMSelector
                                     name="llm_model"

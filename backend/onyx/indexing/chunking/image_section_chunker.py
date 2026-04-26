@@ -1,9 +1,9 @@
-from onyx.connectors.models import Section
-from onyx.indexing.chunking.section_chunker import AccumulatorState
-from onyx.indexing.chunking.section_chunker import ChunkPayload
-from onyx.indexing.chunking.section_chunker import SectionChunker
-from onyx.indexing.chunking.section_chunker import SectionChunkerOutput
-from onyx.utils.text_processing import clean_text
+from aethersearch.connectors.models import Section
+from aethersearch.indexing.chunking.section_chunker import AccumulatorState
+from aethersearch.indexing.chunking.section_chunker import ChunkPayload
+from aethersearch.indexing.chunking.section_chunker import SectionChunker
+from aethersearch.indexing.chunking.section_chunker import SectionChunkerOutput
+from aethersearch.utils.text_processing import clean_text
 
 
 class ImageChunker(SectionChunker):

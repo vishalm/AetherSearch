@@ -9,9 +9,9 @@ from urllib.parse import quote
 
 from fastapi import Request
 
-from onyx.auth.constants import PAT_LENGTH
-from onyx.auth.constants import PAT_PREFIX
-from onyx.auth.utils import get_hashed_bearer_token_from_request
+from aethersearch.auth.constants import PAT_LENGTH
+from aethersearch.auth.constants import PAT_PREFIX
+from aethersearch.auth.utils import get_hashed_bearer_token_from_request
 from shared_configs.configs import MULTI_TENANT
 
 
@@ -31,9 +31,9 @@ def hash_pat(token: str) -> str:
 def build_displayable_pat(token: str) -> str:
     """Create masked display version: show prefix + first 4 random chars, mask middle, show last 4.
 
-    Example: onyx_pat_abc1****xyz9
+    Example: aethersearch_pat_abc1****xyz9
     """
-    # Show first 12 chars (onyx_pat_ + 4 random chars) and last 4 chars
+    # Show first 12 chars (aethersearch_pat_ + 4 random chars) and last 4 chars
     return f"{token[:12]}****{token[-4:]}"
 
 

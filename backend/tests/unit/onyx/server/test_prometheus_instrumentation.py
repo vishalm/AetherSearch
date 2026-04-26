@@ -10,9 +10,9 @@ from fastapi.testclient import TestClient
 from prometheus_client import CollectorRegistry
 from prometheus_client import Gauge
 
-from onyx.server.metrics.per_tenant import per_tenant_request_callback
-from onyx.server.metrics.prometheus_setup import setup_prometheus_metrics
-from onyx.server.metrics.slow_requests import slow_request_callback
+from aethersearch.server.metrics.per_tenant import per_tenant_request_callback
+from aethersearch.server.metrics.prometheus_setup import setup_prometheus_metrics
+from aethersearch.server.metrics.slow_requests import slow_request_callback
 
 
 def _make_info(
@@ -31,7 +31,7 @@ def _make_info(
 
 
 def test_slow_request_callback_increments_above_threshold() -> None:
-    with patch("onyx.server.metrics.slow_requests._slow_requests") as mock_counter:
+    with patch("aethersearch.server.metrics.slow_requests._slow_requests") as mock_counter:
         mock_labels = MagicMock()
         mock_counter.labels.return_value = mock_labels
 
@@ -47,7 +47,7 @@ def test_slow_request_callback_increments_above_threshold() -> None:
 
 
 def test_slow_request_callback_skips_below_threshold() -> None:
-    with patch("onyx.server.metrics.slow_requests._slow_requests") as mock_counter:
+    with patch("aethersearch.server.metrics.slow_requests._slow_requests") as mock_counter:
         info = _make_info(duration=0.5)
         slow_request_callback(info)
 
@@ -56,8 +56,8 @@ def test_slow_request_callback_skips_below_threshold() -> None:
 
 def test_slow_request_callback_skips_at_exact_threshold() -> None:
     with (
-        patch("onyx.server.metrics.slow_requests.SLOW_REQUEST_THRESHOLD_SECONDS", 1.0),
-        patch("onyx.server.metrics.slow_requests._slow_requests") as mock_counter,
+        patch("aethersearch.server.metrics.slow_requests.SLOW_REQUEST_THRESHOLD_SECONDS", 1.0),
+        patch("aethersearch.server.metrics.slow_requests._slow_requests") as mock_counter,
     ):
         info = _make_info(duration=1.0)
         slow_request_callback(info)
@@ -66,7 +66,7 @@ def test_slow_request_callback_skips_at_exact_threshold() -> None:
 
 
 def test_setup_attaches_instrumentator_to_app() -> None:
-    with patch("onyx.server.metrics.prometheus_setup.Instrumentator") as mock_cls:
+    with patch("aethersearch.server.metrics.prometheus_setup.Instrumentator") as mock_cls:
         mock_instance = MagicMock()
         mock_instance.instrument.return_value = mock_instance
         mock_cls.return_value = mock_instance
@@ -105,9 +105,9 @@ def test_per_tenant_callback_increments_with_tenant_id() -> None:
     """Verify per-tenant callback reads tenant from contextvar and increments."""
     with (
         patch(
-            "onyx.server.metrics.per_tenant.CURRENT_TENANT_ID_CONTEXTVAR"
+            "aethersearch.server.metrics.per_tenant.CURRENT_TENANT_ID_CONTEXTVAR"
         ) as mock_ctx,
-        patch("onyx.server.metrics.per_tenant._requests_by_tenant") as mock_counter,
+        patch("aethersearch.server.metrics.per_tenant._requests_by_tenant") as mock_counter,
     ):
         mock_labels = MagicMock()
         mock_counter.labels.return_value = mock_labels
@@ -131,9 +131,9 @@ def test_per_tenant_callback_falls_back_to_unknown() -> None:
     """Verify per-tenant callback uses 'unknown' when contextvar is None."""
     with (
         patch(
-            "onyx.server.metrics.per_tenant.CURRENT_TENANT_ID_CONTEXTVAR"
+            "aethersearch.server.metrics.per_tenant.CURRENT_TENANT_ID_CONTEXTVAR"
         ) as mock_ctx,
-        patch("onyx.server.metrics.per_tenant._requests_by_tenant") as mock_counter,
+        patch("aethersearch.server.metrics.per_tenant._requests_by_tenant") as mock_counter,
     ):
         mock_labels = MagicMock()
         mock_counter.labels.return_value = mock_labels

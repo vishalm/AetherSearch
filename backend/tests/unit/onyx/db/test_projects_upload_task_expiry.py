@@ -10,11 +10,11 @@ from unittest.mock import MagicMock
 from unittest.mock import patch
 from uuid import uuid4
 
-from onyx.configs.constants import CELERY_USER_FILE_PROCESSING_TASK_EXPIRES
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.db.models import UserFile
-from onyx.db.projects import upload_files_to_user_files_with_indexing
+from aethersearch.configs.constants import CELERY_USER_FILE_PROCESSING_TASK_EXPIRES
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.db.models import UserFile
+from aethersearch.db.projects import upload_files_to_user_files_with_indexing
 
 
 def _make_mock_user_file() -> MagicMock:
@@ -23,10 +23,10 @@ def _make_mock_user_file() -> MagicMock:
     return uf
 
 
-@patch("onyx.db.projects.get_current_tenant_id", return_value="test_tenant")
-@patch("onyx.db.projects.create_user_files")
+@patch("aethersearch.db.projects.get_current_tenant_id", return_value="test_tenant")
+@patch("aethersearch.db.projects.create_user_files")
 @patch(
-    "onyx.background.celery.versioned_apps.client.app",
+    "aethersearch.background.celery.versioned_apps.client.app",
     new_callable=MagicMock,
 )
 def test_send_task_includes_expires(
@@ -58,8 +58,8 @@ def test_send_task_includes_expires(
     assert mock_client_app.send_task.call_count == len(user_files)
 
     for call in mock_client_app.send_task.call_args_list:
-        assert call.args[0] == OnyxCeleryTask.PROCESS_SINGLE_USER_FILE
-        assert call.kwargs.get("queue") == OnyxCeleryQueues.USER_FILE_PROCESSING
+        assert call.args[0] == AetherSearchCeleryTask.PROCESS_SINGLE_USER_FILE
+        assert call.kwargs.get("queue") == AetherSearchCeleryQueues.USER_FILE_PROCESSING
         assert (
             call.kwargs.get("expires") == CELERY_USER_FILE_PROCESSING_TASK_EXPIRES
         ), "send_task must include expires= to prevent phantom task accumulation"

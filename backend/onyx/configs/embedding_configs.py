@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from onyx.db.enums import EmbeddingPrecision
+from aethersearch.db.enums import EmbeddingPrecision
 
 
 class _BaseEmbeddingModel(BaseModel):

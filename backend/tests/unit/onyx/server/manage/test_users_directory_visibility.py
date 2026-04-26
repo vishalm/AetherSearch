@@ -4,11 +4,11 @@ from uuid import uuid4
 
 import pytest
 
-from onyx.db.enums import AccountType
-from onyx.db.enums import Permission
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.server.manage.users import list_all_users_basic_info
+from aethersearch.db.enums import AccountType
+from aethersearch.db.enums import Permission
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.server.manage.users import list_all_users_basic_info
 
 
 def _fake_user(
@@ -21,24 +21,24 @@ def _fake_user(
     return user
 
 
-@patch("onyx.server.manage.users.USER_DIRECTORY_ADMIN_ONLY", True)
+@patch("aethersearch.server.manage.users.USER_DIRECTORY_ADMIN_ONLY", True)
 def test_list_all_users_basic_info_blocks_non_admin_when_directory_restricted() -> None:
     """With the flag on, a caller lacking READ_USERS cannot enumerate the directory."""
     user = MagicMock()
     user.effective_permissions = [Permission.BASIC_ACCESS.value]
 
-    with pytest.raises(OnyxError) as exc_info:
+    with pytest.raises(AetherSearchError) as exc_info:
         list_all_users_basic_info(
             include_api_keys=False,
             user=user,
             db_session=MagicMock(),
         )
 
-    assert exc_info.value.error_code is OnyxErrorCode.INSUFFICIENT_PERMISSIONS
+    assert exc_info.value.error_code is AetherSearchErrorCode.INSUFFICIENT_PERMISSIONS
 
 
-@patch("onyx.server.manage.users.USER_DIRECTORY_ADMIN_ONLY", True)
-@patch("onyx.server.manage.users.get_all_users")
+@patch("aethersearch.server.manage.users.USER_DIRECTORY_ADMIN_ONLY", True)
+@patch("aethersearch.server.manage.users.get_all_users")
 def test_list_all_users_basic_info_allows_admin_when_directory_restricted(
     mock_get_all_users: MagicMock,
 ) -> None:
@@ -56,8 +56,8 @@ def test_list_all_users_basic_info_allows_admin_when_directory_restricted(
     assert [u.email for u in result] == ["a@example.com"]
 
 
-@patch("onyx.server.manage.users.USER_DIRECTORY_ADMIN_ONLY", False)
-@patch("onyx.server.manage.users.get_all_users")
+@patch("aethersearch.server.manage.users.USER_DIRECTORY_ADMIN_ONLY", False)
+@patch("aethersearch.server.manage.users.get_all_users")
 def test_list_all_users_basic_info_allows_non_admin_when_flag_off(
     mock_get_all_users: MagicMock,
 ) -> None:

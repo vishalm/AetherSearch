@@ -5,10 +5,10 @@ from sqlalchemy import select
 from sqlalchemy import update
 from sqlalchemy.orm import Session
 
-from onyx.db.models import User
-from onyx.db.models import VoiceProvider
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
+from aethersearch.db.models import User
+from aethersearch.db.models import VoiceProvider
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
 
 MIN_VOICE_PLAYBACK_SPEED = 0.5
 MAX_VOICE_PLAYBACK_SPEED = 2.0
@@ -75,8 +75,8 @@ def upsert_voice_provider(
     if provider_id is not None:
         provider = fetch_voice_provider_by_id(db_session, provider_id)
         if provider is None:
-            raise OnyxError(
-                OnyxErrorCode.NOT_FOUND,
+            raise AetherSearchError(
+                AetherSearchErrorCode.NOT_FOUND,
                 f"No voice provider with id {provider_id} exists.",
             )
     else:
@@ -119,8 +119,8 @@ def set_default_stt_provider(*, db_session: Session, provider_id: int) -> VoiceP
     """Set a voice provider as the default STT provider."""
     provider = fetch_voice_provider_by_id(db_session, provider_id)
     if provider is None:
-        raise OnyxError(
-            OnyxErrorCode.NOT_FOUND,
+        raise AetherSearchError(
+            AetherSearchErrorCode.NOT_FOUND,
             f"No voice provider with id {provider_id} exists.",
         )
 
@@ -148,8 +148,8 @@ def set_default_tts_provider(
     """Set a voice provider as the default TTS provider."""
     provider = fetch_voice_provider_by_id(db_session, provider_id)
     if provider is None:
-        raise OnyxError(
-            OnyxErrorCode.NOT_FOUND,
+        raise AetherSearchError(
+            AetherSearchErrorCode.NOT_FOUND,
             f"No voice provider with id {provider_id} exists.",
         )
 
@@ -179,8 +179,8 @@ def deactivate_stt_provider(*, db_session: Session, provider_id: int) -> VoicePr
     """Remove the default STT status from a voice provider."""
     provider = fetch_voice_provider_by_id(db_session, provider_id)
     if provider is None:
-        raise OnyxError(
-            OnyxErrorCode.NOT_FOUND,
+        raise AetherSearchError(
+            AetherSearchErrorCode.NOT_FOUND,
             f"No voice provider with id {provider_id} exists.",
         )
 
@@ -195,8 +195,8 @@ def deactivate_tts_provider(*, db_session: Session, provider_id: int) -> VoicePr
     """Remove the default TTS status from a voice provider."""
     provider = fetch_voice_provider_by_id(db_session, provider_id)
     if provider is None:
-        raise OnyxError(
-            OnyxErrorCode.NOT_FOUND,
+        raise AetherSearchError(
+            AetherSearchErrorCode.NOT_FOUND,
             f"No voice provider with id {provider_id} exists.",
         )
 

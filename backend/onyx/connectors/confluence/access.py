@@ -2,14 +2,14 @@ from collections.abc import Callable
 from typing import Any
 from typing import cast
 
-from onyx.access.models import ExternalAccess
-from onyx.connectors.confluence.onyx_confluence import OnyxConfluence
-from onyx.utils.variable_functionality import fetch_versioned_implementation
-from onyx.utils.variable_functionality import global_version
+from aethersearch.access.models import ExternalAccess
+from aethersearch.connectors.confluence.aethersearch_confluence import AetherSearchConfluence
+from aethersearch.utils.variable_functionality import fetch_versioned_implementation
+from aethersearch.utils.variable_functionality import global_version
 
 
 def get_page_restrictions(
-    confluence_client: OnyxConfluence,
+    confluence_client: AetherSearchConfluence,
     page_id: str,
     page_restrictions: dict[str, Any],
     ancestors: list[dict[str, Any]],
@@ -22,7 +22,7 @@ def get_page_restrictions(
     left unprefixed here because upsert_document_external_perms handles prefixing.
 
     Args:
-        confluence_client: OnyxConfluence client instance
+        confluence_client: AetherSearchConfluence client instance
         page_id: The ID of the page
         page_restrictions: Dictionary containing page restriction data
         ancestors: List of ancestor pages with their restriction data
@@ -37,11 +37,11 @@ def get_page_restrictions(
     # Fetch the EE implementation
     ee_get_all_page_restrictions = cast(
         Callable[
-            [OnyxConfluence, str, dict[str, Any], list[dict[str, Any]], bool],
+            [AetherSearchConfluence, str, dict[str, Any], list[dict[str, Any]], bool],
             ExternalAccess | None,
         ],
         fetch_versioned_implementation(
-            "onyx.external_permissions.confluence.page_access", "get_page_restrictions"
+            "aethersearch.external_permissions.confluence.page_access", "get_page_restrictions"
         ),
     )
 
@@ -52,7 +52,7 @@ def get_page_restrictions(
 
 
 def get_all_space_permissions(
-    confluence_client: OnyxConfluence,
+    confluence_client: AetherSearchConfluence,
     is_cloud: bool,
 ) -> dict[str, ExternalAccess]:
     """
@@ -63,7 +63,7 @@ def get_all_space_permissions(
     left unprefixed here because upsert_document_external_perms handles prefixing.
 
     Args:
-        confluence_client: OnyxConfluence client instance
+        confluence_client: AetherSearchConfluence client instance
         is_cloud: Whether this is a Confluence Cloud instance
 
     Returns:
@@ -76,11 +76,11 @@ def get_all_space_permissions(
     # Fetch the EE implementation
     ee_get_all_space_permissions = cast(
         Callable[
-            [OnyxConfluence, bool, bool],
+            [AetherSearchConfluence, bool, bool],
             dict[str, ExternalAccess],
         ],
         fetch_versioned_implementation(
-            "onyx.external_permissions.confluence.space_access",
+            "aethersearch.external_permissions.confluence.space_access",
             "get_all_space_permissions",
         ),
     )

@@ -3,7 +3,7 @@ from enum import Enum
 from pydantic import BaseModel
 from pydantic import Field
 
-from onyx.server.manage.llm.models import ModelConfigurationView
+from aethersearch.server.manage.llm.models import ModelConfigurationView
 
 
 class CustomConfigKeyType(str, Enum):

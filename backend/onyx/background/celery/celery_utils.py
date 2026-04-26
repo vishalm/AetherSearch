@@ -12,26 +12,26 @@ from typing import TypeVar
 import httpx
 from pydantic import BaseModel
 
-from onyx.configs.app_configs import MAX_PRUNING_DOCUMENT_RETRIEVAL_PER_MINUTE
-from onyx.configs.app_configs import VESPA_REQUEST_TIMEOUT
-from onyx.connectors.connector_runner import CheckpointOutputWrapper
-from onyx.connectors.cross_connector_utils.rate_limit_wrapper import rate_limit_builder
-from onyx.connectors.interfaces import BaseConnector
-from onyx.connectors.interfaces import CheckpointedConnector
-from onyx.connectors.interfaces import ConnectorCheckpoint
-from onyx.connectors.interfaces import LoadConnector
-from onyx.connectors.interfaces import PollConnector
-from onyx.connectors.interfaces import SlimConnector
-from onyx.connectors.interfaces import SlimConnectorWithPermSync
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import Document
-from onyx.connectors.models import HierarchyNode
-from onyx.connectors.models import SlimDocument
-from onyx.httpx.httpx_pool import HttpxPool
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.server.metrics.pruning_metrics import inc_pruning_rate_limit_error
-from onyx.server.metrics.pruning_metrics import observe_pruning_enumeration_duration
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import MAX_PRUNING_DOCUMENT_RETRIEVAL_PER_MINUTE
+from aethersearch.configs.app_configs import VESPA_REQUEST_TIMEOUT
+from aethersearch.connectors.connector_runner import CheckpointOutputWrapper
+from aethersearch.connectors.cross_connector_utils.rate_limit_wrapper import rate_limit_builder
+from aethersearch.connectors.interfaces import BaseConnector
+from aethersearch.connectors.interfaces import CheckpointedConnector
+from aethersearch.connectors.interfaces import ConnectorCheckpoint
+from aethersearch.connectors.interfaces import LoadConnector
+from aethersearch.connectors.interfaces import PollConnector
+from aethersearch.connectors.interfaces import SlimConnector
+from aethersearch.connectors.interfaces import SlimConnectorWithPermSync
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import HierarchyNode
+from aethersearch.connectors.models import SlimDocument
+from aethersearch.httpx.httpx_pool import HttpxPool
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.server.metrics.pruning_metrics import inc_pruning_rate_limit_error
+from aethersearch.server.metrics.pruning_metrics import observe_pruning_enumeration_duration
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -269,7 +269,7 @@ def httpx_init_vespa_pool(
 def make_probe_path(probe: str, hostname: str) -> Path:
     """templates the path for a k8s probe file.
 
-    e.g. /tmp/onyx_k8s_indexing_readiness.txt
+    e.g. /tmp/aethersearch_k8s_indexing_readiness.txt
     """
     hostname_parts = hostname.split("@")
     if len(hostname_parts) != 2:
@@ -280,4 +280,4 @@ def make_probe_path(probe: str, hostname: str) -> Path:
         raise ValueError(f"name cannot be empty! {name=}")
 
     safe_name = "".join(c for c in name if c.isalnum()).rstrip()
-    return Path(f"/tmp/onyx_k8s_{safe_name}_{probe}.txt")
+    return Path(f"/tmp/aethersearch_k8s_{safe_name}_{probe}.txt")

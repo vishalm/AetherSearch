@@ -9,18 +9,18 @@ from pydantic import ValidationError
 from slack_sdk import WebClient
 from typing_extensions import override
 
-from onyx.context.search.federated.slack_search import slack_retrieval
-from onyx.context.search.models import ChunkIndexRequest
-from onyx.context.search.models import InferenceChunk
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.federated_connectors.interfaces import FederatedConnector
-from onyx.federated_connectors.models import CredentialField
-from onyx.federated_connectors.models import EntityField
-from onyx.federated_connectors.models import OAuthResult
-from onyx.federated_connectors.slack.models import SlackCredentials
-from onyx.federated_connectors.slack.models import SlackEntities
-from onyx.onyxbot.slack.models import SlackContext
-from onyx.utils.logger import setup_logger
+from aethersearch.context.search.federated.slack_search import slack_retrieval
+from aethersearch.context.search.models import ChunkIndexRequest
+from aethersearch.context.search.models import InferenceChunk
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.federated_connectors.interfaces import FederatedConnector
+from aethersearch.federated_connectors.models import CredentialField
+from aethersearch.federated_connectors.models import EntityField
+from aethersearch.federated_connectors.models import OAuthResult
+from aethersearch.federated_connectors.slack.models import SlackCredentials
+from aethersearch.federated_connectors.slack.models import SlackEntities
+from aethersearch.aethersearchbot.slack.models import SlackContext
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

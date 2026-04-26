@@ -9,10 +9,10 @@ from uuid import uuid4
 
 from sqlalchemy.orm import Session
 
-from onyx.db.slack_bot import insert_slack_bot
-from onyx.db.slack_bot import update_slack_bot
-from onyx.server.manage.models import SlackBot
-from onyx.utils.sensitive import SensitiveValue
+from aethersearch.db.slack_bot import insert_slack_bot
+from aethersearch.db.slack_bot import update_slack_bot
+from aethersearch.server.manage.models import SlackBot
+from aethersearch.utils.sensitive import SensitiveValue
 
 
 def _unique(prefix: str) -> str:

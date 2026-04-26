@@ -1,7 +1,7 @@
 """
 Tests demonstrating static type checking for SensitiveValue.
 
-Run with: mypy tests/unit/onyx/utils/test_sensitive_typing.py --ignore-missing-imports
+Run with: mypy tests/unit/aethersearch/utils/test_sensitive_typing.py --ignore-missing-imports
 
 These tests show what mypy will catch when SensitiveValue is misused.
 """
@@ -14,9 +14,9 @@ from typing import Any
 
 def demonstrate_correct_usage() -> None:
     """Shows correct patterns that pass type checking."""
-    from onyx.utils.encryption import decrypt_bytes_to_string
-    from onyx.utils.encryption import encrypt_string_to_bytes
-    from onyx.utils.sensitive import SensitiveValue
+    from aethersearch.utils.encryption import decrypt_bytes_to_string
+    from aethersearch.utils.encryption import encrypt_string_to_bytes
+    from aethersearch.utils.sensitive import SensitiveValue
 
     # Create a SensitiveValue
     encrypted = encrypt_string_to_bytes('{"api_key": "secret"}')
@@ -43,8 +43,8 @@ def demonstrate_correct_usage() -> None:
 """
 def demonstrate_incorrect_usage() -> None:
     '''Shows patterns that mypy will flag as errors.'''
-    from onyx.utils.sensitive import SensitiveValue
-    from onyx.utils.encryption import encrypt_string_to_bytes, decrypt_bytes_to_string
+    from aethersearch.utils.sensitive import SensitiveValue
+    from aethersearch.utils.encryption import encrypt_string_to_bytes, decrypt_bytes_to_string
 
     encrypted = encrypt_string_to_bytes('{"api_key": "secret"}')
     sensitive: SensitiveValue[dict[str, Any]] = SensitiveValue(

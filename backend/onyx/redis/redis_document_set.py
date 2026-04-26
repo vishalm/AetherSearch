@@ -8,14 +8,14 @@ from redis import Redis
 from redis.lock import Lock as RedisLock
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import DB_YIELD_PER_DEFAULT
-from onyx.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.configs.constants import OnyxRedisConstants
-from onyx.db.document_set import construct_document_id_select_by_docset
-from onyx.redis.redis_object_helper import RedisObjectHelper
+from aethersearch.configs.app_configs import DB_YIELD_PER_DEFAULT
+from aethersearch.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.configs.constants import AetherSearchRedisConstants
+from aethersearch.db.document_set import construct_document_id_select_by_docset
+from aethersearch.redis.redis_object_helper import RedisObjectHelper
 
 
 class RedisDocumentSet(RedisObjectHelper):
@@ -34,12 +34,12 @@ class RedisDocumentSet(RedisObjectHelper):
 
     def set_fence(self, payload: int | None) -> None:
         if payload is None:
-            self.redis.srem(OnyxRedisConstants.ACTIVE_FENCES, self.fence_key)
+            self.redis.srem(AetherSearchRedisConstants.ACTIVE_FENCES, self.fence_key)
             self.redis.delete(self.fence_key)
             return
 
         self.redis.set(self.fence_key, payload, ex=self.FENCE_TTL)
-        self.redis.sadd(OnyxRedisConstants.ACTIVE_FENCES, self.fence_key)
+        self.redis.sadd(AetherSearchRedisConstants.ACTIVE_FENCES, self.fence_key)
 
     @property
     def payload(self) -> int | None:
@@ -87,11 +87,11 @@ class RedisDocumentSet(RedisObjectHelper):
             redis_client.expire(self.taskset_key, self.TASKSET_TTL)
 
             celery_app.send_task(
-                OnyxCeleryTask.VESPA_METADATA_SYNC_TASK,
+                AetherSearchCeleryTask.VESPA_METADATA_SYNC_TASK,
                 kwargs=dict(document_id=doc_id, tenant_id=tenant_id),
-                queue=OnyxCeleryQueues.VESPA_METADATA_SYNC,
+                queue=AetherSearchCeleryQueues.VESPA_METADATA_SYNC,
                 task_id=custom_task_id,
-                priority=OnyxCeleryPriority.MEDIUM,
+                priority=AetherSearchCeleryPriority.MEDIUM,
             )
 
             num_tasks_sent += 1
@@ -99,7 +99,7 @@ class RedisDocumentSet(RedisObjectHelper):
         return num_tasks_sent, num_tasks_sent
 
     def reset(self) -> None:
-        self.redis.srem(OnyxRedisConstants.ACTIVE_FENCES, self.fence_key)
+        self.redis.srem(AetherSearchRedisConstants.ACTIVE_FENCES, self.fence_key)
         self.redis.delete(self.taskset_key)
         self.redis.delete(self.fence_key)
 

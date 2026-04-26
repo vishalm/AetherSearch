@@ -2,8 +2,8 @@
 Standardized error handling utilities.
 """
 
-from onyx.configs.app_configs import CONTINUE_ON_CONNECTOR_FAILURE
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import CONTINUE_ON_CONNECTOR_FAILURE
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

@@ -21,11 +21,11 @@ from sqlalchemy import update
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm import Session
 
-from onyx.cache.interface import CacheBackend
-from onyx.cache.interface import CacheLock
-from onyx.cache.interface import TTL_KEY_NOT_FOUND
-from onyx.cache.interface import TTL_NO_EXPIRY
-from onyx.db.models import CacheStore
+from aethersearch.cache.interface import CacheBackend
+from aethersearch.cache.interface import CacheLock
+from aethersearch.cache.interface import TTL_KEY_NOT_FOUND
+from aethersearch.cache.interface import TTL_NO_EXPIRY
+from aethersearch.db.models import CacheStore
 
 _LIST_KEY_PREFIX = "_q:"
 # ASCII: ':' (0x3A) < ';' (0x3B). Upper bound for range queries so [prefix+, prefix;)
@@ -79,7 +79,7 @@ class PostgresCacheLock(CacheLock):
         blocking: bool = True,
         blocking_timeout: float | None = None,
     ) -> bool:
-        from onyx.db.engine.sql_engine import get_session_with_tenant
+        from aethersearch.db.engine.sql_engine import get_session_with_tenant
 
         self._session_cm = get_session_with_tenant(tenant_id=self._tenant_id)
         self._session = self._session_cm.__enter__()
@@ -151,7 +151,7 @@ class PostgresCacheBackend(CacheBackend):
     # -- basic key/value ---------------------------------------------------
 
     def get(self, key: str) -> bytes | None:
-        from onyx.db.engine.sql_engine import get_session_with_tenant
+        from aethersearch.db.engine.sql_engine import get_session_with_tenant
 
         stmt = select(CacheStore.value).where(
             CacheStore.key == key,
@@ -169,7 +169,7 @@ class PostgresCacheBackend(CacheBackend):
         value: str | bytes | int | float,
         ex: int | None = None,
     ) -> None:
-        from onyx.db.engine.sql_engine import get_session_with_tenant
+        from aethersearch.db.engine.sql_engine import get_session_with_tenant
 
         value_bytes = _to_bytes(value)
         expires_at = (
@@ -190,14 +190,14 @@ class PostgresCacheBackend(CacheBackend):
             session.commit()
 
     def delete(self, key: str) -> None:
-        from onyx.db.engine.sql_engine import get_session_with_tenant
+        from aethersearch.db.engine.sql_engine import get_session_with_tenant
 
         with get_session_with_tenant(tenant_id=self._tenant_id) as session:
             session.execute(delete(CacheStore).where(CacheStore.key == key))
             session.commit()
 
     def exists(self, key: str) -> bool:
-        from onyx.db.engine.sql_engine import get_session_with_tenant
+        from aethersearch.db.engine.sql_engine import get_session_with_tenant
 
         stmt = (
             select(CacheStore.key)
@@ -216,7 +216,7 @@ class PostgresCacheBackend(CacheBackend):
     # -- TTL ---------------------------------------------------------------
 
     def expire(self, key: str, seconds: int) -> None:
-        from onyx.db.engine.sql_engine import get_session_with_tenant
+        from aethersearch.db.engine.sql_engine import get_session_with_tenant
 
         new_exp = datetime.now(timezone.utc) + timedelta(seconds=seconds)
         stmt = (
@@ -227,7 +227,7 @@ class PostgresCacheBackend(CacheBackend):
             session.commit()
 
     def ttl(self, key: str) -> int:
-        from onyx.db.engine.sql_engine import get_session_with_tenant
+        from aethersearch.db.engine.sql_engine import get_session_with_tenant
 
         stmt = select(CacheStore.expires_at).where(CacheStore.key == key)
         with get_session_with_tenant(tenant_id=self._tenant_id) as session:
@@ -261,7 +261,7 @@ class PostgresCacheBackend(CacheBackend):
                 "timeout=0 would block the calling thread indefinitely "
                 "with no way to interrupt short of process termination."
             )
-        from onyx.db.engine.sql_engine import get_session_with_tenant
+        from aethersearch.db.engine.sql_engine import get_session_with_tenant
 
         deadline = time.monotonic() + timeout
         while True:
@@ -313,7 +313,7 @@ def cleanup_expired_cache_entries() -> None:
 
     Called by the periodic poller every 5 minutes.
     """
-    from onyx.db.engine.sql_engine import get_session_with_current_tenant
+    from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
 
     with get_session_with_current_tenant() as session:
         session.execute(

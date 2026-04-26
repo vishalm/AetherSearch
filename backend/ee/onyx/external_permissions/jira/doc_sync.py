@@ -1,14 +1,14 @@
 from collections.abc import Generator
 
-from ee.onyx.external_permissions.perm_sync_types import FetchAllDocumentsFunction
-from ee.onyx.external_permissions.perm_sync_types import FetchAllDocumentsIdsFunction
-from ee.onyx.external_permissions.utils import generic_doc_sync
-from onyx.access.models import ElementExternalAccess
-from onyx.configs.constants import DocumentSource
-from onyx.connectors.jira.connector import JiraConnector
-from onyx.db.models import ConnectorCredentialPair
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.external_permissions.perm_sync_types import FetchAllDocumentsFunction
+from ee.aethersearch.external_permissions.perm_sync_types import FetchAllDocumentsIdsFunction
+from ee.aethersearch.external_permissions.utils import generic_doc_sync
+from aethersearch.access.models import ElementExternalAccess
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.connectors.jira.connector import JiraConnector
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

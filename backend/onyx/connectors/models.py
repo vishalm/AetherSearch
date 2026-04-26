@@ -11,13 +11,13 @@ from pydantic import Field
 from pydantic import field_validator
 from pydantic import model_validator
 
-from onyx.access.models import ExternalAccess
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import INDEX_SEPARATOR
-from onyx.configs.constants import RETURN_SEPARATOR
-from onyx.db.enums import HierarchyNodeType
-from onyx.db.enums import IndexModelStatus
-from onyx.utils.text_processing import make_url_compatible
+from aethersearch.access.models import ExternalAccess
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import INDEX_SEPARATOR
+from aethersearch.configs.constants import RETURN_SEPARATOR
+from aethersearch.db.enums import HierarchyNodeType
+from aethersearch.db.enums import IndexModelStatus
+from aethersearch.utils.text_processing import make_url_compatible
 
 
 class InputType(str, Enum):
@@ -183,7 +183,7 @@ class BasicExpertInfo(BaseModel):
 
 
 class DocumentBase(BaseModel):
-    """Used for Onyx ingestion api, the ID is inferred before use if not provided"""
+    """Used for AetherSearch ingestion api, the ID is inferred before use if not provided"""
 
     id: str | None = None
     sections: Sequence[TextSection | ImageSection | TabularSection]
@@ -346,7 +346,7 @@ def convert_metadata_list_of_strings_to_dict(
 
 
 class Document(DocumentBase):
-    """Used for Onyx ingestion api, the ID is required"""
+    """Used for AetherSearch ingestion api, the ID is required"""
 
     id: str
     source: DocumentSource
@@ -508,7 +508,7 @@ class ConnectorStopSignal(Exception):
     """A custom exception used to signal a stop in processing."""
 
 
-class OnyxMetadata(BaseModel):
+class AetherSearchMetadata(BaseModel):
     # Careful overriding the document_id, may cause visual issues in the UI.
     # Kept here for API based use cases mostly
     document_id: str | None = None

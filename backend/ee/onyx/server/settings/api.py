@@ -3,15 +3,15 @@
 from redis.exceptions import RedisError
 from sqlalchemy.exc import SQLAlchemyError
 
-from ee.onyx.configs.app_configs import LICENSE_ENFORCEMENT_ENABLED
-from ee.onyx.db.license import get_cached_license_metadata
-from ee.onyx.db.license import refresh_license_cache
-from onyx.cache.interface import CACHE_TRANSIENT_ERRORS
-from onyx.configs.app_configs import ENTERPRISE_EDITION_ENABLED
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.server.settings.models import ApplicationStatus
-from onyx.server.settings.models import Settings
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.configs.app_configs import LICENSE_ENFORCEMENT_ENABLED
+from ee.aethersearch.db.license import get_cached_license_metadata
+from ee.aethersearch.db.license import refresh_license_cache
+from aethersearch.cache.interface import CACHE_TRANSIENT_ERRORS
+from aethersearch.configs.app_configs import ENTERPRISE_EDITION_ENABLED
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.server.settings.models import ApplicationStatus
+from aethersearch.server.settings.models import Settings
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.contextvars import get_current_tenant_id
 

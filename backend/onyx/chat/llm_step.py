@@ -10,55 +10,55 @@ from html import unescape
 from typing import Any
 from typing import cast
 
-from onyx.chat.chat_state import ChatStateContainer
-from onyx.chat.citation_processor import DynamicCitationProcessor
-from onyx.chat.emitter import Emitter
-from onyx.chat.models import ChatMessageSimple
-from onyx.chat.models import LlmStepResult
-from onyx.chat.tool_call_args_streaming import maybe_emit_argument_delta
-from onyx.configs.app_configs import LOG_ONYX_MODEL_INTERACTIONS
-from onyx.configs.app_configs import PROMPT_CACHE_CHAT_HISTORY
-from onyx.configs.constants import MessageType
-from onyx.context.search.models import SearchDoc
-from onyx.file_store.models import ChatFileType
-from onyx.llm.constants import LlmProviderNames
-from onyx.llm.interfaces import LanguageModelInput
-from onyx.llm.interfaces import LLM
-from onyx.llm.interfaces import LLMConfig
-from onyx.llm.interfaces import LLMUserIdentity
-from onyx.llm.interfaces import ToolChoiceOptions
-from onyx.llm.model_response import Delta
-from onyx.llm.models import AssistantMessage
-from onyx.llm.models import ChatCompletionMessage
-from onyx.llm.models import FunctionCall
-from onyx.llm.models import ImageContentPart
-from onyx.llm.models import ImageUrlDetail
-from onyx.llm.models import ReasoningEffort
-from onyx.llm.models import SystemMessage
-from onyx.llm.models import TextContentPart
-from onyx.llm.models import ToolCall
-from onyx.llm.models import ToolMessage
-from onyx.llm.models import UserMessage
-from onyx.llm.prompt_cache.processor import process_with_prompt_cache
-from onyx.llm.utils import model_needs_formatting_reenabled
-from onyx.prompts.chat_prompts import CODE_BLOCK_MARKDOWN
-from onyx.prompts.constants import SYSTEM_REMINDER_TAG_CLOSE
-from onyx.prompts.constants import SYSTEM_REMINDER_TAG_OPEN
-from onyx.server.query_and_chat.placement import Placement
-from onyx.server.query_and_chat.streaming_models import AgentResponseDelta
-from onyx.server.query_and_chat.streaming_models import AgentResponseStart
-from onyx.server.query_and_chat.streaming_models import CitationInfo
-from onyx.server.query_and_chat.streaming_models import Packet
-from onyx.server.query_and_chat.streaming_models import ReasoningDelta
-from onyx.server.query_and_chat.streaming_models import ReasoningDone
-from onyx.server.query_and_chat.streaming_models import ReasoningStart
-from onyx.tools.models import ToolCallKickoff
-from onyx.tracing.framework.create import generation_span
-from onyx.utils.b64 import get_image_type_from_bytes
-from onyx.utils.jsonriver import Parser
-from onyx.utils.logger import setup_logger
-from onyx.utils.postgres_sanitization import sanitize_string
-from onyx.utils.text_processing import find_all_json_objects
+from aethersearch.chat.chat_state import ChatStateContainer
+from aethersearch.chat.citation_processor import DynamicCitationProcessor
+from aethersearch.chat.emitter import Emitter
+from aethersearch.chat.models import ChatMessageSimple
+from aethersearch.chat.models import LlmStepResult
+from aethersearch.chat.tool_call_args_streaming import maybe_emit_argument_delta
+from aethersearch.configs.app_configs import LOG_AETHERSEARCH_MODEL_INTERACTIONS
+from aethersearch.configs.app_configs import PROMPT_CACHE_CHAT_HISTORY
+from aethersearch.configs.constants import MessageType
+from aethersearch.context.search.models import SearchDoc
+from aethersearch.file_store.models import ChatFileType
+from aethersearch.llm.constants import LlmProviderNames
+from aethersearch.llm.interfaces import LanguageModelInput
+from aethersearch.llm.interfaces import LLM
+from aethersearch.llm.interfaces import LLMConfig
+from aethersearch.llm.interfaces import LLMUserIdentity
+from aethersearch.llm.interfaces import ToolChoiceOptions
+from aethersearch.llm.model_response import Delta
+from aethersearch.llm.models import AssistantMessage
+from aethersearch.llm.models import ChatCompletionMessage
+from aethersearch.llm.models import FunctionCall
+from aethersearch.llm.models import ImageContentPart
+from aethersearch.llm.models import ImageUrlDetail
+from aethersearch.llm.models import ReasoningEffort
+from aethersearch.llm.models import SystemMessage
+from aethersearch.llm.models import TextContentPart
+from aethersearch.llm.models import ToolCall
+from aethersearch.llm.models import ToolMessage
+from aethersearch.llm.models import UserMessage
+from aethersearch.llm.prompt_cache.processor import process_with_prompt_cache
+from aethersearch.llm.utils import model_needs_formatting_reenabled
+from aethersearch.prompts.chat_prompts import CODE_BLOCK_MARKDOWN
+from aethersearch.prompts.constants import SYSTEM_REMINDER_TAG_CLOSE
+from aethersearch.prompts.constants import SYSTEM_REMINDER_TAG_OPEN
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.server.query_and_chat.streaming_models import AgentResponseDelta
+from aethersearch.server.query_and_chat.streaming_models import AgentResponseStart
+from aethersearch.server.query_and_chat.streaming_models import CitationInfo
+from aethersearch.server.query_and_chat.streaming_models import Packet
+from aethersearch.server.query_and_chat.streaming_models import ReasoningDelta
+from aethersearch.server.query_and_chat.streaming_models import ReasoningDone
+from aethersearch.server.query_and_chat.streaming_models import ReasoningStart
+from aethersearch.tools.models import ToolCallKickoff
+from aethersearch.tracing.framework.create import generation_span
+from aethersearch.utils.b64 import get_image_type_from_bytes
+from aethersearch.utils.jsonriver import Parser
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.postgres_sanitization import sanitize_string
+from aethersearch.utils.text_processing import find_all_json_objects
 
 logger = setup_logger()
 
@@ -1007,7 +1007,7 @@ def run_llm_step_pkt_generator(
     llm_msg_history = translate_history_to_llm_format(history, llm.config)
     has_reasoned = False
 
-    if LOG_ONYX_MODEL_INTERACTIONS:
+    if LOG_AETHERSEARCH_MODEL_INTERACTIONS:
         logger.debug(
             f"Message history:\n{_format_message_history_for_logging(llm_msg_history)}"
         )
@@ -1312,7 +1312,7 @@ def run_llm_step_pkt_generator(
 
     # Note: Content (AgentResponseDelta) doesn't need an explicit end packet - OverallStop handles it
     # Tool calls are handled by tool execution code and emit their own packets (e.g., SectionEnd)
-    if LOG_ONYX_MODEL_INTERACTIONS:
+    if LOG_AETHERSEARCH_MODEL_INTERACTIONS:
         logger.debug(f"Accumulated reasoning: {accumulated_reasoning}")
         logger.debug(f"Accumulated answer: {accumulated_answer}")
 

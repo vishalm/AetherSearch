@@ -169,7 +169,7 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: /ecs/OnyxPostgresTaskDefinition
+              awslogs-group: /ecs/AetherSearchPostgresTaskDefinition
               mode: non-blocking
               awslogs-create-group: "true"
               max-buffer-size: "25m"

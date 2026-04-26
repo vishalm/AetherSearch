@@ -9,8 +9,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from sqlalchemy.orm import Session
 
-from onyx.configs.app_configs import SESSION_EXPIRE_TIME_SECONDS
-from onyx.db.models import SamlAccount
+from aethersearch.configs.app_configs import SESSION_EXPIRE_TIME_SECONDS
+from aethersearch.db.models import SamlAccount
 
 
 def upsert_saml_account(

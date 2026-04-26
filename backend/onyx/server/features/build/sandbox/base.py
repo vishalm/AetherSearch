@@ -21,13 +21,13 @@ from collections.abc import Generator
 from typing import Any
 from uuid import UUID
 
-from onyx.server.features.build.configs import SANDBOX_BACKEND
-from onyx.server.features.build.configs import SandboxBackend
-from onyx.server.features.build.sandbox.models import FilesystemEntry
-from onyx.server.features.build.sandbox.models import LLMProviderConfig
-from onyx.server.features.build.sandbox.models import SandboxInfo
-from onyx.server.features.build.sandbox.models import SnapshotResult
-from onyx.utils.logger import setup_logger
+from aethersearch.server.features.build.configs import SANDBOX_BACKEND
+from aethersearch.server.features.build.configs import SandboxBackend
+from aethersearch.server.features.build.sandbox.models import FilesystemEntry
+from aethersearch.server.features.build.sandbox.models import LLMProviderConfig
+from aethersearch.server.features.build.sandbox.models import SandboxInfo
+from aethersearch.server.features.build.sandbox.models import SnapshotResult
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -511,13 +511,13 @@ def get_sandbox_manager() -> SandboxManager:
         with _sandbox_manager_lock:
             if _sandbox_manager_instance is None:
                 if SANDBOX_BACKEND == SandboxBackend.LOCAL:
-                    from onyx.server.features.build.sandbox.local.local_sandbox_manager import (
+                    from aethersearch.server.features.build.sandbox.local.local_sandbox_manager import (
                         LocalSandboxManager,
                     )
 
                     _sandbox_manager_instance = LocalSandboxManager()
                 elif SANDBOX_BACKEND == SandboxBackend.KUBERNETES:
-                    from onyx.server.features.build.sandbox.kubernetes.kubernetes_sandbox_manager import (
+                    from aethersearch.server.features.build.sandbox.kubernetes.kubernetes_sandbox_manager import (
                         KubernetesSandboxManager,
                     )
 

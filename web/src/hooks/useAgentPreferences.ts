@@ -9,9 +9,9 @@ import {
 import { errorHandlingFetcher } from "@/lib/fetcher";
 import { useCallback } from "react";
 
-// TODO: rename to agent — https://linear.app/onyx-app/issue/ENG-3766
+// TODO: rename to agent — https://linear.app/aethersearch-app/issue/ENG-3766
 
-// TODO: rename to agent — https://linear.app/onyx-app/issue/ENG-3766
+// TODO: rename to agent — https://linear.app/aethersearch-app/issue/ENG-3766
 const buildUpdateAgentPreferenceUrl = (agentId: number) =>
   `/api/user/assistant/${agentId}/preferences`;
 

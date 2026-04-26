@@ -6,33 +6,33 @@ from fastapi import HTTPException
 from fastapi import status
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.configs.app_configs import AUTH_TYPE
-from onyx.configs.app_configs import DISCORD_BOT_TOKEN
-from onyx.configs.constants import AuthType
-from onyx.db.discord_bot import create_discord_bot_config
-from onyx.db.discord_bot import create_guild_config
-from onyx.db.discord_bot import delete_discord_bot_config
-from onyx.db.discord_bot import delete_discord_service_api_key
-from onyx.db.discord_bot import delete_guild_config
-from onyx.db.discord_bot import get_channel_config_by_internal_ids
-from onyx.db.discord_bot import get_channel_configs
-from onyx.db.discord_bot import get_discord_bot_config
-from onyx.db.discord_bot import get_guild_config_by_internal_id
-from onyx.db.discord_bot import get_guild_configs
-from onyx.db.discord_bot import update_discord_channel_config
-from onyx.db.discord_bot import update_guild_config
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import Permission
-from onyx.db.models import User
-from onyx.server.manage.discord_bot.models import DiscordBotConfigCreateRequest
-from onyx.server.manage.discord_bot.models import DiscordBotConfigResponse
-from onyx.server.manage.discord_bot.models import DiscordChannelConfigResponse
-from onyx.server.manage.discord_bot.models import DiscordChannelConfigUpdateRequest
-from onyx.server.manage.discord_bot.models import DiscordGuildConfigCreateResponse
-from onyx.server.manage.discord_bot.models import DiscordGuildConfigResponse
-from onyx.server.manage.discord_bot.models import DiscordGuildConfigUpdateRequest
-from onyx.server.manage.discord_bot.utils import generate_discord_registration_key
+from aethersearch.auth.permissions import require_permission
+from aethersearch.configs.app_configs import AUTH_TYPE
+from aethersearch.configs.app_configs import DISCORD_BOT_TOKEN
+from aethersearch.configs.constants import AuthType
+from aethersearch.db.discord_bot import create_discord_bot_config
+from aethersearch.db.discord_bot import create_guild_config
+from aethersearch.db.discord_bot import delete_discord_bot_config
+from aethersearch.db.discord_bot import delete_discord_service_api_key
+from aethersearch.db.discord_bot import delete_guild_config
+from aethersearch.db.discord_bot import get_channel_config_by_internal_ids
+from aethersearch.db.discord_bot import get_channel_configs
+from aethersearch.db.discord_bot import get_discord_bot_config
+from aethersearch.db.discord_bot import get_guild_config_by_internal_id
+from aethersearch.db.discord_bot import get_guild_configs
+from aethersearch.db.discord_bot import update_discord_channel_config
+from aethersearch.db.discord_bot import update_guild_config
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import Permission
+from aethersearch.db.models import User
+from aethersearch.server.manage.discord_bot.models import DiscordBotConfigCreateRequest
+from aethersearch.server.manage.discord_bot.models import DiscordBotConfigResponse
+from aethersearch.server.manage.discord_bot.models import DiscordChannelConfigResponse
+from aethersearch.server.manage.discord_bot.models import DiscordChannelConfigUpdateRequest
+from aethersearch.server.manage.discord_bot.models import DiscordGuildConfigCreateResponse
+from aethersearch.server.manage.discord_bot.models import DiscordGuildConfigResponse
+from aethersearch.server.manage.discord_bot.models import DiscordGuildConfigUpdateRequest
+from aethersearch.server.manage.discord_bot.utils import generate_discord_registration_key
 from shared_configs.contextvars import get_current_tenant_id
 
 router = APIRouter(prefix="/manage/admin/discord-bot")
@@ -42,13 +42,13 @@ def _check_bot_config_api_access() -> None:
     """Raise 403 if bot config cannot be managed via API.
 
     Bot config endpoints are disabled:
-    - On Cloud (managed by Onyx)
+    - On Cloud (managed by AetherSearch)
     - When DISCORD_BOT_TOKEN env var is set (managed via env)
     """
     if AUTH_TYPE == AuthType.CLOUD:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Discord bot configuration is managed by Onyx on Cloud.",
+            detail="Discord bot configuration is managed by AetherSearch on Cloud.",
         )
     if DISCORD_BOT_TOKEN:
         raise HTTPException(
@@ -136,7 +136,7 @@ def delete_service_api_key_endpoint(
     """Delete the Discord service API key.
 
     This endpoint allows manual deletion of the service API key used by the
-    Discord bot to authenticate with the Onyx API. The key is also automatically
+    Discord bot to authenticate with the AetherSearch API. The key is also automatically
     deleted when:
     - Bot config is deleted (self-hosted)
     - All guild configs are deleted (Cloud)

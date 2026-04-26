@@ -18,118 +18,118 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from onyx.cache.factory import get_cache_backend
-from onyx.chat.chat_processing_checker import set_processing_status
-from onyx.chat.chat_state import AvailableFiles
-from onyx.chat.chat_state import ChatStateContainer
-from onyx.chat.chat_state import ChatTurnSetup
-from onyx.chat.chat_utils import build_file_context
-from onyx.chat.chat_utils import convert_chat_history
-from onyx.chat.chat_utils import create_chat_history_chain
-from onyx.chat.chat_utils import create_chat_session_from_request
-from onyx.chat.chat_utils import get_custom_agent_prompt
-from onyx.chat.chat_utils import is_last_assistant_message_clarification
-from onyx.chat.chat_utils import load_all_chat_files
-from onyx.chat.compression import calculate_total_history_tokens
-from onyx.chat.compression import compress_chat_history
-from onyx.chat.compression import find_summary_for_branch
-from onyx.chat.compression import get_compression_params
-from onyx.chat.emitter import Emitter
-from onyx.chat.llm_loop import EmptyLLMResponseError
-from onyx.chat.llm_loop import run_llm_loop
-from onyx.chat.models import AnswerStream
-from onyx.chat.models import AnswerStreamPart
-from onyx.chat.models import ChatBasicResponse
-from onyx.chat.models import ChatFullResponse
-from onyx.chat.models import ChatLoadedFile
-from onyx.chat.models import ChatMessageSimple
-from onyx.chat.models import ContextFileMetadata
-from onyx.chat.models import CreateChatSessionID
-from onyx.chat.models import ExtractedContextFiles
-from onyx.chat.models import FileToolMetadata
-from onyx.chat.models import SearchParams
-from onyx.chat.models import StreamingError
-from onyx.chat.models import ToolCallResponse
-from onyx.chat.prompt_utils import calculate_reserved_tokens
-from onyx.chat.save_chat import save_chat_turn
-from onyx.chat.stop_signal_checker import is_connected as check_stop_signal
-from onyx.chat.stop_signal_checker import reset_cancel_status
-from onyx.configs.app_configs import DISABLE_VECTOR_DB
-from onyx.configs.app_configs import INTEGRATION_TESTS_MODE
-from onyx.configs.constants import DEFAULT_PERSONA_ID
-from onyx.configs.constants import DocumentSource
-from onyx.configs.constants import MessageType
-from onyx.configs.constants import MilestoneRecordType
-from onyx.configs.llm_configs import get_image_extraction_and_analysis_enabled
-from onyx.context.search.models import BaseFilters
-from onyx.context.search.models import IndexFilters
-from onyx.context.search.models import SearchDoc
-from onyx.db.chat import create_new_chat_message
-from onyx.db.chat import get_chat_session_by_id
-from onyx.db.chat import get_or_create_root_message
-from onyx.db.chat import reserve_message_id
-from onyx.db.chat import reserve_multi_model_message_ids
-from onyx.db.document_set import filter_document_set_names_by_user_access
-from onyx.db.enums import HookPoint
-from onyx.db.memory import get_memories
-from onyx.db.models import ChatMessage
-from onyx.db.models import Persona
-from onyx.db.models import User
-from onyx.db.models import UserFile
-from onyx.db.projects import get_user_files_from_project
-from onyx.db.search_settings import get_active_search_settings
-from onyx.db.tools import get_tools
-from onyx.deep_research.dr_loop import run_deep_research_llm_loop
-from onyx.document_index.factory import get_default_document_index
-from onyx.document_index.interfaces import DocumentIndex
-from onyx.document_index.interfaces import VespaChunkRequest
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import log_onyx_error
-from onyx.error_handling.exceptions import OnyxError
-from onyx.file_processing.extract_file_text import extract_file_text
-from onyx.file_processing.extract_file_text import extract_text_and_images
-from onyx.file_store.models import ChatFileType
-from onyx.file_store.models import InMemoryChatFile
-from onyx.file_store.utils import load_in_memory_chat_files
-from onyx.file_store.utils import verify_user_files
-from onyx.hooks.executor import execute_hook
-from onyx.hooks.executor import HookSkipped
-from onyx.hooks.executor import HookSoftFailed
-from onyx.hooks.points.query_processing import QueryProcessingPayload
-from onyx.hooks.points.query_processing import QueryProcessingResponse
-from onyx.llm.factory import get_llm_for_persona
-from onyx.llm.factory import get_llm_token_counter
-from onyx.llm.interfaces import LLM
-from onyx.llm.interfaces import LLMUserIdentity
-from onyx.llm.override_models import LLMOverride
-from onyx.llm.request_context import reset_llm_mock_response
-from onyx.llm.request_context import set_llm_mock_response
-from onyx.llm.utils import litellm_exception_to_error_msg
-from onyx.onyxbot.slack.models import SlackContext
-from onyx.server.query_and_chat.chat_utils import mime_type_to_chat_file_type
-from onyx.server.query_and_chat.models import AUTO_PLACE_AFTER_LATEST_MESSAGE
-from onyx.server.query_and_chat.models import MessageResponseIDInfo
-from onyx.server.query_and_chat.models import ModelResponseSlot
-from onyx.server.query_and_chat.models import MultiModelMessageResponseIDInfo
-from onyx.server.query_and_chat.models import SendMessageRequest
-from onyx.server.query_and_chat.placement import Placement
-from onyx.server.query_and_chat.streaming_models import AgentResponseDelta
-from onyx.server.query_and_chat.streaming_models import AgentResponseStart
-from onyx.server.query_and_chat.streaming_models import CitationInfo
-from onyx.server.query_and_chat.streaming_models import OverallStop
-from onyx.server.query_and_chat.streaming_models import Packet
-from onyx.server.usage_limits import check_llm_cost_limit_for_provider
-from onyx.tools.constants import FILE_READER_TOOL_ID
-from onyx.tools.constants import SEARCH_TOOL_ID
-from onyx.tools.models import ChatFile
-from onyx.tools.models import SearchToolUsage
-from onyx.tools.tool_constructor import construct_tools
-from onyx.tools.tool_constructor import CustomToolConfig
-from onyx.tools.tool_constructor import FileReaderToolConfig
-from onyx.tools.tool_constructor import SearchToolConfig
-from onyx.utils.logger import setup_logger
-from onyx.utils.telemetry import mt_cloud_telemetry
-from onyx.utils.timing import log_function_time
+from aethersearch.cache.factory import get_cache_backend
+from aethersearch.chat.chat_processing_checker import set_processing_status
+from aethersearch.chat.chat_state import AvailableFiles
+from aethersearch.chat.chat_state import ChatStateContainer
+from aethersearch.chat.chat_state import ChatTurnSetup
+from aethersearch.chat.chat_utils import build_file_context
+from aethersearch.chat.chat_utils import convert_chat_history
+from aethersearch.chat.chat_utils import create_chat_history_chain
+from aethersearch.chat.chat_utils import create_chat_session_from_request
+from aethersearch.chat.chat_utils import get_custom_agent_prompt
+from aethersearch.chat.chat_utils import is_last_assistant_message_clarification
+from aethersearch.chat.chat_utils import load_all_chat_files
+from aethersearch.chat.compression import calculate_total_history_tokens
+from aethersearch.chat.compression import compress_chat_history
+from aethersearch.chat.compression import find_summary_for_branch
+from aethersearch.chat.compression import get_compression_params
+from aethersearch.chat.emitter import Emitter
+from aethersearch.chat.llm_loop import EmptyLLMResponseError
+from aethersearch.chat.llm_loop import run_llm_loop
+from aethersearch.chat.models import AnswerStream
+from aethersearch.chat.models import AnswerStreamPart
+from aethersearch.chat.models import ChatBasicResponse
+from aethersearch.chat.models import ChatFullResponse
+from aethersearch.chat.models import ChatLoadedFile
+from aethersearch.chat.models import ChatMessageSimple
+from aethersearch.chat.models import ContextFileMetadata
+from aethersearch.chat.models import CreateChatSessionID
+from aethersearch.chat.models import ExtractedContextFiles
+from aethersearch.chat.models import FileToolMetadata
+from aethersearch.chat.models import SearchParams
+from aethersearch.chat.models import StreamingError
+from aethersearch.chat.models import ToolCallResponse
+from aethersearch.chat.prompt_utils import calculate_reserved_tokens
+from aethersearch.chat.save_chat import save_chat_turn
+from aethersearch.chat.stop_signal_checker import is_connected as check_stop_signal
+from aethersearch.chat.stop_signal_checker import reset_cancel_status
+from aethersearch.configs.app_configs import DISABLE_VECTOR_DB
+from aethersearch.configs.app_configs import INTEGRATION_TESTS_MODE
+from aethersearch.configs.constants import DEFAULT_PERSONA_ID
+from aethersearch.configs.constants import DocumentSource
+from aethersearch.configs.constants import MessageType
+from aethersearch.configs.constants import MilestoneRecordType
+from aethersearch.configs.llm_configs import get_image_extraction_and_analysis_enabled
+from aethersearch.context.search.models import BaseFilters
+from aethersearch.context.search.models import IndexFilters
+from aethersearch.context.search.models import SearchDoc
+from aethersearch.db.chat import create_new_chat_message
+from aethersearch.db.chat import get_chat_session_by_id
+from aethersearch.db.chat import get_or_create_root_message
+from aethersearch.db.chat import reserve_message_id
+from aethersearch.db.chat import reserve_multi_model_message_ids
+from aethersearch.db.document_set import filter_document_set_names_by_user_access
+from aethersearch.db.enums import HookPoint
+from aethersearch.db.memory import get_memories
+from aethersearch.db.models import ChatMessage
+from aethersearch.db.models import Persona
+from aethersearch.db.models import User
+from aethersearch.db.models import UserFile
+from aethersearch.db.projects import get_user_files_from_project
+from aethersearch.db.search_settings import get_active_search_settings
+from aethersearch.db.tools import get_tools
+from aethersearch.deep_research.dr_loop import run_deep_research_llm_loop
+from aethersearch.document_index.factory import get_default_document_index
+from aethersearch.document_index.interfaces import DocumentIndex
+from aethersearch.document_index.interfaces import VespaChunkRequest
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import log_aethersearch_error
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.file_processing.extract_file_text import extract_file_text
+from aethersearch.file_processing.extract_file_text import extract_text_and_images
+from aethersearch.file_store.models import ChatFileType
+from aethersearch.file_store.models import InMemoryChatFile
+from aethersearch.file_store.utils import load_in_memory_chat_files
+from aethersearch.file_store.utils import verify_user_files
+from aethersearch.hooks.executor import execute_hook
+from aethersearch.hooks.executor import HookSkipped
+from aethersearch.hooks.executor import HookSoftFailed
+from aethersearch.hooks.points.query_processing import QueryProcessingPayload
+from aethersearch.hooks.points.query_processing import QueryProcessingResponse
+from aethersearch.llm.factory import get_llm_for_persona
+from aethersearch.llm.factory import get_llm_token_counter
+from aethersearch.llm.interfaces import LLM
+from aethersearch.llm.interfaces import LLMUserIdentity
+from aethersearch.llm.override_models import LLMOverride
+from aethersearch.llm.request_context import reset_llm_mock_response
+from aethersearch.llm.request_context import set_llm_mock_response
+from aethersearch.llm.utils import litellm_exception_to_error_msg
+from aethersearch.aethersearchbot.slack.models import SlackContext
+from aethersearch.server.query_and_chat.chat_utils import mime_type_to_chat_file_type
+from aethersearch.server.query_and_chat.models import AUTO_PLACE_AFTER_LATEST_MESSAGE
+from aethersearch.server.query_and_chat.models import MessageResponseIDInfo
+from aethersearch.server.query_and_chat.models import ModelResponseSlot
+from aethersearch.server.query_and_chat.models import MultiModelMessageResponseIDInfo
+from aethersearch.server.query_and_chat.models import SendMessageRequest
+from aethersearch.server.query_and_chat.placement import Placement
+from aethersearch.server.query_and_chat.streaming_models import AgentResponseDelta
+from aethersearch.server.query_and_chat.streaming_models import AgentResponseStart
+from aethersearch.server.query_and_chat.streaming_models import CitationInfo
+from aethersearch.server.query_and_chat.streaming_models import OverallStop
+from aethersearch.server.query_and_chat.streaming_models import Packet
+from aethersearch.server.usage_limits import check_llm_cost_limit_for_provider
+from aethersearch.tools.constants import FILE_READER_TOOL_ID
+from aethersearch.tools.constants import SEARCH_TOOL_ID
+from aethersearch.tools.models import ChatFile
+from aethersearch.tools.models import SearchToolUsage
+from aethersearch.tools.tool_constructor import construct_tools
+from aethersearch.tools.tool_constructor import CustomToolConfig
+from aethersearch.tools.tool_constructor import FileReaderToolConfig
+from aethersearch.tools.tool_constructor import SearchToolConfig
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.telemetry import mt_cloud_telemetry
+from aethersearch.utils.timing import log_function_time
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.contextvars import get_current_tenant_id
 
@@ -577,7 +577,7 @@ def _resolve_query_processing_hook_result(
 ) -> str:
     """Apply the Query Processing hook result to the message text.
 
-    Returns the (possibly rewritten) message text, or raises OnyxError with
+    Returns the (possibly rewritten) message text, or raises AetherSearchError with
     QUERY_REJECTED if the hook signals rejection (query is null or empty).
     HookSkipped and HookSoftFailed are pass-throughs — the original text is
     returned unchanged.
@@ -585,8 +585,8 @@ def _resolve_query_processing_hook_result(
     if isinstance(hook_result, (HookSkipped, HookSoftFailed)):
         return message_text
     if not (hook_result.query and hook_result.query.strip()):
-        raise OnyxError(
-            OnyxErrorCode.QUERY_REJECTED,
+        raise AetherSearchError(
+            AetherSearchErrorCode.QUERY_REJECTED,
             hook_result.rejection_message
             or "The hook extension for query processing did not return a valid query. No rejection reason was provided.",
         )
@@ -684,7 +684,7 @@ def build_chat_turn(
         },
     )
 
-    # Check LLM cost limits before using the LLM (only for Onyx-managed keys),
+    # Check LLM cost limits before using the LLM (only for AetherSearch-managed keys),
     # then build the LLM instance(s).
     llms: list[LLM] = []
     model_display_names: list[str] = []
@@ -1434,7 +1434,7 @@ def _stream_chat_turn(
     try:
         # Enforce document-set access on any user-supplied filters before setup
         # or any tool invocation. Running here (rather than inside SearchTool.run())
-        # means the OnyxError propagates to the StreamingError handler below
+        # means the AetherSearchError propagates to the StreamingError handler below
         # instead of being swallowed by the tool runner's catch-all.
         if (
             not bypass_acl
@@ -1452,8 +1452,8 @@ def _stream_chat_turn(
                 if name not in accessible_names
             )
             if unauthorized:
-                raise OnyxError(
-                    OnyxErrorCode.INSUFFICIENT_PERMISSIONS,
+                raise AetherSearchError(
+                    AetherSearchErrorCode.INSUFFICIENT_PERMISSIONS,
                     f"User does not have access to document sets: {unauthorized}",
                 )
 
@@ -1482,9 +1482,9 @@ def _stream_chat_turn(
             external_state_container=external_state_container,
         )
 
-    except OnyxError as e:
-        if e.error_code is not OnyxErrorCode.QUERY_REJECTED:
-            log_onyx_error(e)
+    except AetherSearchError as e:
+        if e.error_code is not AetherSearchErrorCode.QUERY_REJECTED:
+            log_aethersearch_error(e)
         yield StreamingError(
             error=e.detail,
             error_code=e.error_code.code,

@@ -2,7 +2,7 @@
 
 import pytest
 
-from onyx.tools.tool_implementations.images.image_generation_tool import (
+from aethersearch.tools.tool_implementations.images.image_generation_tool import (
     ImageGenerationTool,
 )
 from tests.integration.common_utils.managers.image_generation import (

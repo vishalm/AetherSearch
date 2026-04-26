@@ -1,11 +1,11 @@
 import redis
 
-from onyx.redis.redis_connector_delete import RedisConnectorDelete
-from onyx.redis.redis_connector_doc_perm_sync import RedisConnectorPermissionSync
-from onyx.redis.redis_connector_ext_group_sync import RedisConnectorExternalGroupSync
-from onyx.redis.redis_connector_prune import RedisConnectorPrune
-from onyx.redis.redis_connector_stop import RedisConnectorStop
-from onyx.redis.redis_pool import get_redis_client
+from aethersearch.redis.redis_connector_delete import RedisConnectorDelete
+from aethersearch.redis.redis_connector_doc_perm_sync import RedisConnectorPermissionSync
+from aethersearch.redis.redis_connector_ext_group_sync import RedisConnectorExternalGroupSync
+from aethersearch.redis.redis_connector_prune import RedisConnectorPrune
+from aethersearch.redis.redis_connector_stop import RedisConnectorStop
+from aethersearch.redis.redis_pool import get_redis_client
 
 
 # TODO: reduce dependence on redis

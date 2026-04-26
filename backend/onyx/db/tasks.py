@@ -6,10 +6,10 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import delete
 
-from onyx.configs.app_configs import JOB_TIMEOUT
-from onyx.db.engine.time_utils import get_db_current_time
-from onyx.db.models import TaskQueueState
-from onyx.db.models import TaskStatus
+from aethersearch.configs.app_configs import JOB_TIMEOUT
+from aethersearch.db.engine.time_utils import get_db_current_time
+from aethersearch.db.models import TaskQueueState
+from aethersearch.db.models import TaskStatus
 
 
 def get_latest_task(

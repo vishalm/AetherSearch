@@ -47,7 +47,7 @@ test.describe("SCIM Token Management", () => {
     const downloadPromise = adminPage.waitForEvent("download");
     await adminPage.getByRole("button", { name: "Download" }).click();
     const download = await downloadPromise;
-    expect(download.suggestedFilename()).toMatch(/^onyx-scim-token-\d+\.txt$/);
+    expect(download.suggestedFilename()).toMatch(/^aethersearch-scim-token-\d+\.txt$/);
   });
 
   test("regenerate token", async ({ adminPage, mockTokenEndpoint }) => {

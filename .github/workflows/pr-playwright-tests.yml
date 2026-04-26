@@ -305,7 +305,7 @@ jobs:
           cat <<EOF > deployment/docker_compose/.env
           COMPOSE_PROFILES=s3-filestore
           ENABLE_PAID_ENTERPRISE_EDITION_FEATURES=true
-          # TODO(Nik): https://linear.app/onyx-app/issue/ENG-1/update-test-infra-to-use-test-license
+          # TODO(Nik): https://linear.app/aethersearch-app/issue/ENG-1/update-test-infra-to-use-test-license
           LICENSE_ENFORCEMENT_ENABLED=false
           AUTH_TYPE=basic
           INTEGRATION_TESTS_MODE=true
@@ -313,9 +313,9 @@ jobs:
           EXA_API_KEY=${EXA_API_KEY_VALUE}
           REQUIRE_EMAIL_VERIFICATION=false
           DISABLE_TELEMETRY=true
-          ONYX_BACKEND_IMAGE=${ECR_CACHE}:playwright-test-backend-${RUN_ID}
-          ONYX_MODEL_SERVER_IMAGE=${ECR_CACHE}:playwright-test-model-server-${RUN_ID}
-          ONYX_WEB_SERVER_IMAGE=${ECR_CACHE}:playwright-test-web-${RUN_ID}
+          AETHERSEARCH_BACKEND_IMAGE=${ECR_CACHE}:playwright-test-backend-${RUN_ID}
+          AETHERSEARCH_MODEL_SERVER_IMAGE=${ECR_CACHE}:playwright-test-model-server-${RUN_ID}
+          AETHERSEARCH_WEB_SERVER_IMAGE=${ECR_CACHE}:playwright-test-web-${RUN_ID}
           EOF
 
       # needed for pulling Vespa, Redis, Postgres, and Minio images
@@ -337,7 +337,7 @@ jobs:
         run: |
           echo "Starting wait-for-service script..."
 
-          docker logs -f onyx-api_server-1 &
+          docker logs -f aethersearch-api_server-1 &
 
           start_time=$(date +%s)
           timeout=300  # 5 minutes in seconds
@@ -507,7 +507,7 @@ jobs:
           PLAYWRIGHT_S3_BUCKET: ${{ env.PLAYWRIGHT_S3_BUCKET }}
           BASELINE_REV: ${{ steps.baseline-rev.outputs.rev }}
         run: |
-          uv run --no-sync --with onyx-devtools ods screenshot-diff compare \
+          uv run --no-sync --with aethersearch-devtools ods screenshot-diff compare \
             --project "${PROJECT}" \
             --rev "${BASELINE_REV}"
 
@@ -570,7 +570,7 @@ jobs:
           BASELINE_REV: ${{ steps.baseline-rev.outputs.rev }}
         run: |
           if [ -d "web/output/screenshots/" ] && [ "$(ls -A web/output/screenshots/)" ]; then
-            uv run --no-sync --with onyx-devtools ods screenshot-diff upload-baselines \
+            uv run --no-sync --with aethersearch-devtools ods screenshot-diff upload-baselines \
               --project "${PROJECT}" \
               --rev "${BASELINE_REV}" \
               --delete
@@ -652,8 +652,8 @@ jobs:
           MOCK_LLM_RESPONSE=true
           REQUIRE_EMAIL_VERIFICATION=false
           DISABLE_TELEMETRY=true
-          ONYX_BACKEND_IMAGE=${ECR_CACHE}:playwright-test-backend-${RUN_ID}
-          ONYX_WEB_SERVER_IMAGE=${ECR_CACHE}:playwright-test-web-${RUN_ID}
+          AETHERSEARCH_BACKEND_IMAGE=${ECR_CACHE}:playwright-test-backend-${RUN_ID}
+          AETHERSEARCH_WEB_SERVER_IMAGE=${ECR_CACHE}:playwright-test-web-${RUN_ID}
           EOF
 
       # needed for pulling external images otherwise, we hit the "Unauthenticated users" limit
@@ -667,7 +667,7 @@ jobs:
       - name: Start Docker containers (lite)
         run: |
           cd deployment/docker_compose
-          docker compose -f docker-compose.yml -f docker-compose.onyx-lite.yml -f docker-compose.dev.yml up -d
+          docker compose -f docker-compose.yml -f docker-compose.aethersearch-lite.yml -f docker-compose.dev.yml up -d
         id: start_docker
 
       - name: Run Playwright tests (lite)

@@ -1,6 +1,6 @@
 # ruff: noqa: E501, W605 start
 
-from onyx.prompts.constants import REMINDER_TAG_NO_HEADER
+from aethersearch.prompts.constants import REMINDER_TAG_NO_HEADER
 
 DATETIME_REPLACEMENT_PAT = "{{CURRENT_DATETIME}}"
 CITATION_GUIDANCE_REPLACEMENT_PAT = "{{CITATION_GUIDANCE}}"

@@ -113,7 +113,7 @@ jobs:
           # Determine if this tag should get the "latest" Docker tag.
           # Only the highest semver stable tag (vX.Y.Z exactly) gets "latest".
           if [[ "$IS_STABLE" == "true" ]]; then
-            HIGHEST_STABLE=$(uv run --no-sync --with onyx-devtools ods latest-stable-tag) || {
+            HIGHEST_STABLE=$(uv run --no-sync --with aethersearch-devtools ods latest-stable-tag) || {
               echo "::error::Failed to determine highest stable tag via 'ods latest-stable-tag'"
               exit 1
             }
@@ -479,7 +479,7 @@ jobs:
           platforms: linux/amd64
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            ONYX_VERSION=${{ github.ref_name }}
+            AETHERSEARCH_VERSION=${{ github.ref_name }}
             NODE_OPTIONS=--max-old-space-size=8192
           cache-from: |
             type=registry,ref=${{ env.RUNS_ON_ECR_CACHE }}:web-cache-amd64
@@ -553,7 +553,7 @@ jobs:
           platforms: linux/arm64
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            ONYX_VERSION=${{ github.ref_name }}
+            AETHERSEARCH_VERSION=${{ github.ref_name }}
             NODE_OPTIONS=--max-old-space-size=8192
           cache-from: |
             type=registry,ref=${{ env.RUNS_ON_ECR_CACHE }}:web-cache-arm64
@@ -693,7 +693,7 @@ jobs:
           platforms: linux/amd64
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            ONYX_VERSION=${{ github.ref_name }}
+            AETHERSEARCH_VERSION=${{ github.ref_name }}
             NEXT_PUBLIC_CLOUD_ENABLED=true
             NEXT_PUBLIC_POSTHOG_KEY=${{ secrets.POSTHOG_KEY }}
             NEXT_PUBLIC_POSTHOG_HOST=${{ secrets.POSTHOG_HOST }}
@@ -778,7 +778,7 @@ jobs:
           platforms: linux/arm64
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            ONYX_VERSION=${{ github.ref_name }}
+            AETHERSEARCH_VERSION=${{ github.ref_name }}
             NEXT_PUBLIC_CLOUD_ENABLED=true
             NEXT_PUBLIC_POSTHOG_KEY=${{ secrets.POSTHOG_KEY }}
             NEXT_PUBLIC_POSTHOG_HOST=${{ secrets.POSTHOG_HOST }}
@@ -925,7 +925,7 @@ jobs:
           platforms: linux/amd64
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            ONYX_VERSION=${{ github.ref_name }}
+            AETHERSEARCH_VERSION=${{ github.ref_name }}
           cache-from: |
             type=registry,ref=${{ env.RUNS_ON_ECR_CACHE }}:backend-cache-amd64
             type=registry,ref=${{ env.REGISTRY_IMAGE }}:edge
@@ -998,7 +998,7 @@ jobs:
           platforms: linux/arm64
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            ONYX_VERSION=${{ github.ref_name }}
+            AETHERSEARCH_VERSION=${{ github.ref_name }}
           cache-from: |
             type=registry,ref=${{ env.RUNS_ON_ECR_CACHE }}:backend-cache-arm64
             type=registry,ref=${{ env.REGISTRY_IMAGE }}:edge
@@ -1136,7 +1136,7 @@ jobs:
           platforms: linux/amd64
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            ONYX_VERSION=${{ github.ref_name }}
+            AETHERSEARCH_VERSION=${{ github.ref_name }}
             ENABLE_CRAFT=true
           cache-from: |
             type=registry,ref=${{ env.RUNS_ON_ECR_CACHE }}:backend-craft-cache-amd64
@@ -1209,7 +1209,7 @@ jobs:
           platforms: linux/arm64
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            ONYX_VERSION=${{ github.ref_name }}
+            AETHERSEARCH_VERSION=${{ github.ref_name }}
             ENABLE_CRAFT=true
           cache-from: |
             type=registry,ref=${{ env.RUNS_ON_ECR_CACHE }}:backend-craft-cache-arm64
@@ -1350,7 +1350,7 @@ jobs:
           platforms: linux/amd64
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            ONYX_VERSION=${{ github.ref_name }}
+            AETHERSEARCH_VERSION=${{ github.ref_name }}
           cache-from: |
             type=registry,ref=${{ env.RUNS_ON_ECR_CACHE }}:model-server-cache-amd64
             type=registry,ref=${{ env.REGISTRY_IMAGE }}:edge
@@ -1430,7 +1430,7 @@ jobs:
           platforms: linux/arm64
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            ONYX_VERSION=${{ github.ref_name }}
+            AETHERSEARCH_VERSION=${{ github.ref_name }}
           cache-from: |
             type=registry,ref=${{ env.RUNS_ON_ECR_CACHE }}:model-server-cache-arm64
             type=registry,ref=${{ env.REGISTRY_IMAGE }}:edge

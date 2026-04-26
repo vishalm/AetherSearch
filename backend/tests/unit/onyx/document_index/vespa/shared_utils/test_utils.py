@@ -1,4 +1,4 @@
-from onyx.utils.text_processing import remove_invalid_unicode_chars
+from aethersearch.utils.text_processing import remove_invalid_unicode_chars
 
 
 def test_remove_invalid_unicode_chars() -> None:

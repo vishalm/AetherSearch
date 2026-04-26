@@ -4,9 +4,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "onyx.fullname" . }}-discordbot
+  name: {{ include "aethersearch.fullname" . }}-discordbot
   labels:
-    {{- include "onyx.labels" . | nindent 4 }}
+    {{- include "aethersearch.labels" . | nindent 4 }}
     {{- with .Values.discordbot.deploymentLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -17,7 +17,7 @@ spec:
     type: Recreate  # Ensure old pod is terminated before new one starts to avoid duplicate connections
   selector:
     matchLabels:
-      {{- include "onyx.selectorLabels" . | nindent 6 }}
+      {{- include "aethersearch.selectorLabels" . | nindent 6 }}
       {{- if .Values.discordbot.deploymentLabels }}
       {{- toYaml .Values.discordbot.deploymentLabels | nindent 6 }}
       {{- end }}
@@ -29,7 +29,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "onyx.labels" . | nindent 8 }}
+        {{- include "aethersearch.labels" . | nindent 8 }}
         {{- with .Values.discordbot.deploymentLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -41,7 +41,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "onyx.serviceAccountName" . }}
+      serviceAccountName: {{ include "aethersearch.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.discordbot.podSecurityContext | nindent 8 }}
       {{- with .Values.discordbot.nodeSelector }}
@@ -62,14 +62,14 @@ spec:
             {{- toYaml .Values.discordbot.securityContext | nindent 12 }}
           image: "{{ .Values.discordbot.image.repository }}:{{ .Values.discordbot.image.tag | default .Values.global.version }}"
           imagePullPolicy: {{ .Values.global.pullPolicy }}
-          command: ["python", "onyx/onyxbot/discord/client.py"]
+          command: ["python", "aethersearch/aethersearchbot/discord/client.py"]
           resources:
             {{- toYaml .Values.discordbot.resources | nindent 12 }}
           envFrom:
             - configMapRef:
                 name: {{ .Values.config.envConfigMapName }}
           env:
-            {{- include "onyx.envSecrets" . | nindent 12}}
+            {{- include "aethersearch.envSecrets" . | nindent 12}}
             {{- with .Values.discordbot.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}

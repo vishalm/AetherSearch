@@ -15,88 +15,88 @@ from fastapi import Query
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
-from onyx.auth.permissions import require_permission
-from onyx.auth.schemas import UserRole
-from onyx.auth.users import current_chat_accessible_user
-from onyx.db.engine.sql_engine import get_session
-from onyx.db.enums import LLMModelFlowType
-from onyx.db.enums import Permission
-from onyx.db.llm import can_user_access_llm_provider
-from onyx.db.llm import fetch_default_llm_model
-from onyx.db.llm import fetch_default_vision_model
-from onyx.db.llm import fetch_existing_llm_provider
-from onyx.db.llm import fetch_existing_llm_provider_by_id
-from onyx.db.llm import fetch_existing_llm_providers
-from onyx.db.llm import fetch_existing_models
-from onyx.db.llm import fetch_persona_with_groups
-from onyx.db.llm import fetch_user_group_ids
-from onyx.db.llm import remove_llm_provider
-from onyx.db.llm import sync_model_configurations
-from onyx.db.llm import update_default_provider
-from onyx.db.llm import update_default_vision_provider
-from onyx.db.llm import upsert_llm_provider
-from onyx.db.llm import validate_persona_ids_exist
-from onyx.db.models import User
-from onyx.db.persona import user_can_access_persona
-from onyx.error_handling.error_codes import OnyxErrorCode
-from onyx.error_handling.exceptions import OnyxError
-from onyx.llm.constants import PROVIDER_DISPLAY_NAMES
-from onyx.llm.constants import WELL_KNOWN_PROVIDER_NAMES
-from onyx.llm.factory import get_default_llm
-from onyx.llm.factory import get_llm
-from onyx.llm.factory import get_max_input_tokens_from_llm_provider
-from onyx.llm.utils import get_bedrock_token_limit
-from onyx.llm.utils import get_llm_contextual_cost
-from onyx.llm.utils import is_sensitive_custom_config_key
-from onyx.llm.utils import test_llm
-from onyx.llm.well_known_providers.auto_update_service import (
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.schemas import UserRole
+from aethersearch.auth.users import current_chat_accessible_user
+from aethersearch.db.engine.sql_engine import get_session
+from aethersearch.db.enums import LLMModelFlowType
+from aethersearch.db.enums import Permission
+from aethersearch.db.llm import can_user_access_llm_provider
+from aethersearch.db.llm import fetch_default_llm_model
+from aethersearch.db.llm import fetch_default_vision_model
+from aethersearch.db.llm import fetch_existing_llm_provider
+from aethersearch.db.llm import fetch_existing_llm_provider_by_id
+from aethersearch.db.llm import fetch_existing_llm_providers
+from aethersearch.db.llm import fetch_existing_models
+from aethersearch.db.llm import fetch_persona_with_groups
+from aethersearch.db.llm import fetch_user_group_ids
+from aethersearch.db.llm import remove_llm_provider
+from aethersearch.db.llm import sync_model_configurations
+from aethersearch.db.llm import update_default_provider
+from aethersearch.db.llm import update_default_vision_provider
+from aethersearch.db.llm import upsert_llm_provider
+from aethersearch.db.llm import validate_persona_ids_exist
+from aethersearch.db.models import User
+from aethersearch.db.persona import user_can_access_persona
+from aethersearch.error_handling.error_codes import AetherSearchErrorCode
+from aethersearch.error_handling.exceptions import AetherSearchError
+from aethersearch.llm.constants import PROVIDER_DISPLAY_NAMES
+from aethersearch.llm.constants import WELL_KNOWN_PROVIDER_NAMES
+from aethersearch.llm.factory import get_default_llm
+from aethersearch.llm.factory import get_llm
+from aethersearch.llm.factory import get_max_input_tokens_from_llm_provider
+from aethersearch.llm.utils import get_bedrock_token_limit
+from aethersearch.llm.utils import get_llm_contextual_cost
+from aethersearch.llm.utils import is_sensitive_custom_config_key
+from aethersearch.llm.utils import test_llm
+from aethersearch.llm.well_known_providers.auto_update_service import (
     fetch_llm_recommendations_from_github,
 )
-from onyx.llm.well_known_providers.constants import LM_STUDIO_API_KEY_CONFIG_KEY
-from onyx.llm.well_known_providers.llm_provider_options import (
+from aethersearch.llm.well_known_providers.constants import LM_STUDIO_API_KEY_CONFIG_KEY
+from aethersearch.llm.well_known_providers.llm_provider_options import (
     fetch_available_well_known_llms,
 )
-from onyx.llm.well_known_providers.llm_provider_options import (
+from aethersearch.llm.well_known_providers.llm_provider_options import (
     WellKnownLLMProviderDescriptor,
 )
-from onyx.server.manage.llm.models import BedrockFinalModelResponse
-from onyx.server.manage.llm.models import BedrockModelsRequest
-from onyx.server.manage.llm.models import BifrostFinalModelResponse
-from onyx.server.manage.llm.models import BifrostModelsRequest
-from onyx.server.manage.llm.models import CustomProviderOption
-from onyx.server.manage.llm.models import DefaultModel
-from onyx.server.manage.llm.models import LitellmFinalModelResponse
-from onyx.server.manage.llm.models import LitellmModelDetails
-from onyx.server.manage.llm.models import LitellmModelsRequest
-from onyx.server.manage.llm.models import LLMCost
-from onyx.server.manage.llm.models import LLMProviderDescriptor
-from onyx.server.manage.llm.models import LLMProviderResponse
-from onyx.server.manage.llm.models import LLMProviderUpsertRequest
-from onyx.server.manage.llm.models import LLMProviderView
-from onyx.server.manage.llm.models import LMStudioFinalModelResponse
-from onyx.server.manage.llm.models import LMStudioModelsRequest
-from onyx.server.manage.llm.models import ModelConfigurationUpsertRequest
-from onyx.server.manage.llm.models import OllamaFinalModelResponse
-from onyx.server.manage.llm.models import OllamaModelDetails
-from onyx.server.manage.llm.models import OllamaModelsRequest
-from onyx.server.manage.llm.models import OpenAICompatibleFinalModelResponse
-from onyx.server.manage.llm.models import OpenAICompatibleModelsRequest
-from onyx.server.manage.llm.models import OpenRouterFinalModelResponse
-from onyx.server.manage.llm.models import OpenRouterModelDetails
-from onyx.server.manage.llm.models import OpenRouterModelsRequest
-from onyx.server.manage.llm.models import SyncModelEntry
-from onyx.server.manage.llm.models import TestLLMRequest
-from onyx.server.manage.llm.models import VisionProviderResponse
-from onyx.server.manage.llm.utils import generate_bedrock_display_name
-from onyx.server.manage.llm.utils import generate_ollama_display_name
-from onyx.server.manage.llm.utils import infer_vision_support
-from onyx.server.manage.llm.utils import is_embedding_model
-from onyx.server.manage.llm.utils import is_reasoning_model
-from onyx.server.manage.llm.utils import is_valid_bedrock_model
-from onyx.server.manage.llm.utils import ModelMetadata
-from onyx.server.manage.llm.utils import strip_openrouter_vendor_prefix
-from onyx.utils.encryption import mask_string as mask_with_ellipsis
-from onyx.utils.logger import setup_logger
+from aethersearch.server.manage.llm.models import BedrockFinalModelResponse
+from aethersearch.server.manage.llm.models import BedrockModelsRequest
+from aethersearch.server.manage.llm.models import BifrostFinalModelResponse
+from aethersearch.server.manage.llm.models import BifrostModelsRequest
+from aethersearch.server.manage.llm.models import CustomProviderOption
+from aethersearch.server.manage.llm.models import DefaultModel
+from aethersearch.server.manage.llm.models import LitellmFinalModelResponse
+from aethersearch.server.manage.llm.models import LitellmModelDetails
+from aethersearch.server.manage.llm.models import LitellmModelsRequest
+from aethersearch.server.manage.llm.models import LLMCost
+from aethersearch.server.manage.llm.models import LLMProviderDescriptor
+from aethersearch.server.manage.llm.models import LLMProviderResponse
+from aethersearch.server.manage.llm.models import LLMProviderUpsertRequest
+from aethersearch.server.manage.llm.models import LLMProviderView
+from aethersearch.server.manage.llm.models import LMStudioFinalModelResponse
+from aethersearch.server.manage.llm.models import LMStudioModelsRequest
+from aethersearch.server.manage.llm.models import ModelConfigurationUpsertRequest
+from aethersearch.server.manage.llm.models import OllamaFinalModelResponse
+from aethersearch.server.manage.llm.models import OllamaModelDetails
+from aethersearch.server.manage.llm.models import OllamaModelsRequest
+from aethersearch.server.manage.llm.models import OpenAICompatibleFinalModelResponse
+from aethersearch.server.manage.llm.models import OpenAICompatibleModelsRequest
+from aethersearch.server.manage.llm.models import OpenRouterFinalModelResponse
+from aethersearch.server.manage.llm.models import OpenRouterModelDetails
+from aethersearch.server.manage.llm.models import OpenRouterModelsRequest
+from aethersearch.server.manage.llm.models import SyncModelEntry
+from aethersearch.server.manage.llm.models import TestLLMRequest
+from aethersearch.server.manage.llm.models import VisionProviderResponse
+from aethersearch.server.manage.llm.utils import generate_bedrock_display_name
+from aethersearch.server.manage.llm.utils import generate_ollama_display_name
+from aethersearch.server.manage.llm.utils import infer_vision_support
+from aethersearch.server.manage.llm.utils import is_embedding_model
+from aethersearch.server.manage.llm.utils import is_reasoning_model
+from aethersearch.server.manage.llm.utils import is_valid_bedrock_model
+from aethersearch.server.manage.llm.utils import ModelMetadata
+from aethersearch.server.manage.llm.utils import strip_openrouter_vendor_prefix
+from aethersearch.utils.encryption import mask_string as mask_with_ellipsis
+from aethersearch.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()
@@ -246,7 +246,7 @@ def _validate_llm_provider_change(
     Only enforced in MULTI_TENANT mode.
 
     Raises:
-        OnyxError: If api_base or custom_config changed without changing API key
+        AetherSearchError: If api_base or custom_config changed without changing API key
     """
     if not MULTI_TENANT or api_key_changed:
         return
@@ -260,8 +260,8 @@ def _validate_llm_provider_change(
     )
 
     if api_base_changed or custom_config_changed:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "API base and/or custom config cannot be changed without changing the API key",
         )
 
@@ -305,7 +305,7 @@ def fetch_llm_provider_options(
     for well_known_llm in well_known_llms:
         if well_known_llm.name == provider_name:
             return well_known_llm
-    raise OnyxError(OnyxErrorCode.NOT_FOUND, f"Provider {provider_name} not found")
+    raise AetherSearchError(AetherSearchErrorCode.NOT_FOUND, f"Provider {provider_name} not found")
 
 
 @admin_router.post("/test")
@@ -364,7 +364,7 @@ def test_llm_configuration(
     error_msg = test_llm(llm)
 
     if error_msg:
-        raise OnyxError(OnyxErrorCode.VALIDATION_ERROR, error_msg)
+        raise AetherSearchError(AetherSearchErrorCode.VALIDATION_ERROR, error_msg)
 
 
 @admin_router.post("/test/default")
@@ -375,11 +375,11 @@ def test_default_provider(
         llm = get_default_llm()
     except ValueError:
         logger.exception("Failed to fetch default LLM Provider")
-        raise OnyxError(OnyxErrorCode.VALIDATION_ERROR, "No LLM Provider setup")
+        raise AetherSearchError(AetherSearchErrorCode.VALIDATION_ERROR, "No LLM Provider setup")
 
     error = test_llm(llm)
     if error:
-        raise OnyxError(OnyxErrorCode.VALIDATION_ERROR, str(error))
+        raise AetherSearchError(AetherSearchErrorCode.VALIDATION_ERROR, str(error))
 
 
 @admin_router.get("/provider")
@@ -445,8 +445,8 @@ def put_llm_provider(
     # Check name constraints
     # TODO: Once port from name to id is complete, unique name will no longer be required
     if existing_provider and llm_provider_upsert_request.name != existing_provider.name:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "Renaming providers is not currently supported",
         )
 
@@ -454,19 +454,19 @@ def put_llm_provider(
         name=llm_provider_upsert_request.name, db_session=db_session
     )
     if found_provider is not None and found_provider is not existing_provider:
-        raise OnyxError(
-            OnyxErrorCode.DUPLICATE_RESOURCE,
+        raise AetherSearchError(
+            AetherSearchErrorCode.DUPLICATE_RESOURCE,
             f"Provider with name={llm_provider_upsert_request.name} already exists",
         )
 
     if existing_provider and is_creation:
-        raise OnyxError(
-            OnyxErrorCode.DUPLICATE_RESOURCE,
+        raise AetherSearchError(
+            AetherSearchErrorCode.DUPLICATE_RESOURCE,
             f"LLM Provider with name {llm_provider_upsert_request.name} and id={llm_provider_upsert_request.id} already exists",
         )
     elif not existing_provider and not is_creation:
-        raise OnyxError(
-            OnyxErrorCode.NOT_FOUND,
+        raise AetherSearchError(
+            AetherSearchErrorCode.NOT_FOUND,
             f"LLM Provider with name {llm_provider_upsert_request.name} and id={llm_provider_upsert_request.id} does not exist",
         )
 
@@ -492,8 +492,8 @@ def put_llm_provider(
             db_session, persona_ids
         )
         if missing_personas:
-            raise OnyxError(
-                OnyxErrorCode.VALIDATION_ERROR,
+            raise AetherSearchError(
+                AetherSearchErrorCode.VALIDATION_ERROR,
                 f"Invalid persona IDs: {', '.join(map(str, missing_personas))}",
             )
         # Remove duplicates while preserving order
@@ -541,7 +541,7 @@ def put_llm_provider(
 
         # If newly enabling Auto mode, sync models immediately from GitHub config
         if transitioning_to_auto_mode:
-            from onyx.db.llm import sync_auto_mode_models
+            from aethersearch.db.llm import sync_auto_mode_models
 
             config = fetch_llm_recommendations_from_github()
             if config and llm_provider_upsert_request.provider in config.providers:
@@ -561,7 +561,7 @@ def put_llm_provider(
         return result
     except ValueError as e:
         logger.exception("Failed to upsert LLM Provider")
-        raise OnyxError(OnyxErrorCode.VALIDATION_ERROR, str(e))
+        raise AetherSearchError(AetherSearchErrorCode.VALIDATION_ERROR, str(e))
 
 
 @admin_router.delete("/provider/{provider_id}")
@@ -575,15 +575,15 @@ def delete_llm_provider(
         model = fetch_default_llm_model(db_session)
 
         if model and model.llm_provider_id == provider_id:
-            raise OnyxError(
-                OnyxErrorCode.VALIDATION_ERROR,
+            raise AetherSearchError(
+                AetherSearchErrorCode.VALIDATION_ERROR,
                 "Cannot delete the default LLM provider",
             )
 
     try:
         remove_llm_provider(db_session, provider_id)
     except ValueError as e:
-        raise OnyxError(OnyxErrorCode.NOT_FOUND, str(e))
+        raise AetherSearchError(AetherSearchErrorCode.NOT_FOUND, str(e))
 
 
 @admin_router.post("/default")
@@ -623,8 +623,8 @@ def get_auto_config(
     """
     config = fetch_llm_recommendations_from_github()
     if not config:
-        raise OnyxError(
-            OnyxErrorCode.BAD_GATEWAY,
+        raise AetherSearchError(
+            AetherSearchErrorCode.BAD_GATEWAY,
             "Failed to fetch configuration from GitHub",
         )
     return config.model_dump()
@@ -782,12 +782,12 @@ def list_llm_providers_for_persona(
 
     persona = fetch_persona_with_groups(db_session, persona_id)
     if not persona:
-        raise OnyxError(OnyxErrorCode.PERSONA_NOT_FOUND, "Persona not found")
+        raise AetherSearchError(AetherSearchErrorCode.PERSONA_NOT_FOUND, "Persona not found")
 
     # Verify user has access to this persona
     if not user_can_access_persona(db_session, persona_id, user, get_editable=False):
-        raise OnyxError(
-            OnyxErrorCode.INSUFFICIENT_PERMISSIONS,
+        raise AetherSearchError(
+            AetherSearchErrorCode.INSUFFICIENT_PERMISSIONS,
             "You don't have access to this assistant",
         )
 
@@ -942,8 +942,8 @@ def get_bedrock_available_models(
         try:
             bedrock = session.client("bedrock")
         except Exception as e:
-            raise OnyxError(
-                OnyxErrorCode.CREDENTIAL_INVALID,
+            raise AetherSearchError(
+                AetherSearchErrorCode.CREDENTIAL_INVALID,
                 f"Failed to create Bedrock client: {e}. Check AWS credentials and region.",
             )
 
@@ -1056,13 +1056,13 @@ def get_bedrock_available_models(
         return results
 
     except (ClientError, NoCredentialsError, BotoCoreError) as e:
-        raise OnyxError(
-            OnyxErrorCode.CREDENTIAL_INVALID,
+        raise AetherSearchError(
+            AetherSearchErrorCode.CREDENTIAL_INVALID,
             f"Failed to connect to AWS Bedrock: {e}",
         )
     except Exception as e:
-        raise OnyxError(
-            OnyxErrorCode.INTERNAL_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.INTERNAL_ERROR,
             f"Unexpected error fetching Bedrock models: {e}",
         )
 
@@ -1075,8 +1075,8 @@ def _get_ollama_available_model_names(api_base: str) -> set[str]:
         response.raise_for_status()
         response_json = response.json()
     except Exception as e:
-        raise OnyxError(
-            OnyxErrorCode.BAD_GATEWAY,
+        raise AetherSearchError(
+            AetherSearchErrorCode.BAD_GATEWAY,
             f"Failed to fetch Ollama models: {e}",
         )
 
@@ -1094,8 +1094,8 @@ def get_ollama_available_models(
 
     cleaned_api_base = request.api_base.strip().rstrip("/")
     if not cleaned_api_base:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "API base URL is required to fetch Ollama models.",
         )
 
@@ -1105,8 +1105,8 @@ def get_ollama_available_models(
     # with the same response format
     model_names = _get_ollama_available_model_names(cleaned_api_base)
     if not model_names:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "No models found from your Ollama server",
         )
 
@@ -1193,8 +1193,8 @@ def _get_openrouter_models_response(api_base: str, api_key: str | None) -> dict:
     url = f"{cleaned_api_base}/models"
     headers: dict[str, str] = {
         # Optional headers recommended by OpenRouter for attribution
-        "HTTP-Referer": "https://onyx.app",
-        "X-Title": "Onyx",
+        "HTTP-Referer": "https://aethersearch.app",
+        "X-Title": "AetherSearch",
     }
     if api_key:
         headers["Authorization"] = f"Bearer {api_key}"
@@ -1203,8 +1203,8 @@ def _get_openrouter_models_response(api_base: str, api_key: str | None) -> dict:
         response.raise_for_status()
         return response.json()
     except Exception as e:
-        raise OnyxError(
-            OnyxErrorCode.BAD_GATEWAY,
+        raise AetherSearchError(
+            AetherSearchErrorCode.BAD_GATEWAY,
             f"Failed to fetch OpenRouter models: {e}",
         )
 
@@ -1230,8 +1230,8 @@ def get_openrouter_available_models(
 
     data = response_json.get("data", [])
     if not isinstance(data, list) or len(data) == 0:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "No models found from your OpenRouter endpoint",
         )
 
@@ -1267,8 +1267,8 @@ def get_openrouter_available_models(
             )
 
     if not results:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "No compatible models found from OpenRouter",
         )
 
@@ -1311,8 +1311,8 @@ def get_lm_studio_available_models(
     # the native metadata endpoint lives at /api/v1/models, not /v1/api/v1/models.
     cleaned_api_base = cleaned_api_base.removesuffix("/v1")
     if not cleaned_api_base:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "API base URL is required to fetch LM Studio models.",
         )
 
@@ -1341,15 +1341,15 @@ def get_lm_studio_available_models(
         response.raise_for_status()
         response_json = response.json()
     except Exception as e:
-        raise OnyxError(
-            OnyxErrorCode.BAD_GATEWAY,
+        raise AetherSearchError(
+            AetherSearchErrorCode.BAD_GATEWAY,
             f"Failed to fetch LM Studio models: {e}",
         )
 
     models = response_json.get("models", [])
     if not isinstance(models, list) or len(models) == 0:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "No models found from your LM Studio server.",
         )
 
@@ -1379,8 +1379,8 @@ def get_lm_studio_available_models(
         )
 
     if not results:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "No compatible models found from LM Studio server.",
         )
 
@@ -1423,8 +1423,8 @@ def get_litellm_available_models(
 
     models = response_json.get("data", [])
     if not isinstance(models, list) or len(models) == 0:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "No models found from your Litellm endpoint",
         )
 
@@ -1450,8 +1450,8 @@ def get_litellm_available_models(
             )
 
     if not results:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "No compatible models found from Litellm",
         )
 
@@ -1495,8 +1495,8 @@ def _get_openai_compatible_models_response(
     """Fetch model metadata from an OpenAI-compatible `/models` endpoint."""
     headers = {
         "Authorization": f"Bearer {api_key}",
-        "HTTP-Referer": "https://onyx.app",
-        "X-Title": "Onyx",
+        "HTTP-Referer": "https://aethersearch.app",
+        "X-Title": "AetherSearch",
     }
     if not api_key:
         headers.pop("Authorization")
@@ -1507,18 +1507,18 @@ def _get_openai_compatible_models_response(
         return response.json()
     except httpx.HTTPStatusError as e:
         if e.response.status_code == 401:
-            raise OnyxError(
-                OnyxErrorCode.VALIDATION_ERROR,
+            raise AetherSearchError(
+                AetherSearchErrorCode.VALIDATION_ERROR,
                 f"Authentication failed: invalid or missing API key for {source_name}.",
             )
         elif e.response.status_code == 404:
-            raise OnyxError(
-                OnyxErrorCode.VALIDATION_ERROR,
+            raise AetherSearchError(
+                AetherSearchErrorCode.VALIDATION_ERROR,
                 f"{source_name} models endpoint not found at {url}. Please verify the API base URL.",
             )
         else:
-            raise OnyxError(
-                OnyxErrorCode.BAD_GATEWAY,
+            raise AetherSearchError(
+                AetherSearchErrorCode.BAD_GATEWAY,
                 f"Failed to fetch {source_name} models: {e}",
             )
     except httpx.RequestError as e:
@@ -1527,8 +1527,8 @@ def _get_openai_compatible_models_response(
             extra={"source": source_name, "url": url, "error": str(e)},
             exc_info=True,
         )
-        raise OnyxError(
-            OnyxErrorCode.BAD_GATEWAY,
+        raise AetherSearchError(
+            AetherSearchErrorCode.BAD_GATEWAY,
             f"Failed to fetch {source_name} models: {e}",
         )
     except ValueError as e:
@@ -1537,8 +1537,8 @@ def _get_openai_compatible_models_response(
             extra={"source": source_name, "url": url, "error": str(e)},
             exc_info=True,
         )
-        raise OnyxError(
-            OnyxErrorCode.BAD_GATEWAY,
+        raise AetherSearchError(
+            AetherSearchErrorCode.BAD_GATEWAY,
             f"Failed to fetch {source_name} models: {e}",
         )
 
@@ -1560,8 +1560,8 @@ def get_bifrost_available_models(
 
     models = response_json.get("data", [])
     if not isinstance(models, list) or len(models) == 0:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "No models found from your Bifrost endpoint",
         )
 
@@ -1594,8 +1594,8 @@ def get_bifrost_available_models(
             )
 
     if not results:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "No compatible models found from Bifrost",
         )
 
@@ -1654,8 +1654,8 @@ def get_openai_compatible_server_available_models(
 
     models = response_json.get("data", [])
     if not isinstance(models, list) or len(models) == 0:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "No models found from your OpenAI-compatible endpoint",
         )
 
@@ -1688,8 +1688,8 @@ def get_openai_compatible_server_available_models(
             )
 
     if not results:
-        raise OnyxError(
-            OnyxErrorCode.VALIDATION_ERROR,
+        raise AetherSearchError(
+            AetherSearchErrorCode.VALIDATION_ERROR,
             "No compatible models found from OpenAI-compatible endpoint",
         )
 

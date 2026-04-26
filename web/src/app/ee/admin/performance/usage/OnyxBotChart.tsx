@@ -1,33 +1,33 @@
 import { ThreeDotsLoader } from "@/components/Loading";
-import { getDatesList, useOnyxBotAnalytics } from "../lib";
+import { getDatesList, useAetherSearchBotAnalytics } from "../lib";
 import { DateRangePickerValue } from "@/components/dateRangeSelectors/AdminDateRangeSelector";
 import { Text } from "@opal/components";
 import Title from "@/components/ui/title";
 import CardSection from "@/components/admin/CardSection";
 import { AreaChartDisplay } from "@/components/ui/areaChart";
 
-export function OnyxBotChart({
+export function AetherSearchBotChart({
   timeRange,
 }: {
   timeRange: DateRangePickerValue;
 }) {
   const {
-    data: onyxBotAnalyticsData,
-    isLoading: isOnyxBotAnalyticsLoading,
-    error: onyxBotAnalyticsError,
-  } = useOnyxBotAnalytics(timeRange);
+    data: aethersearchBotAnalyticsData,
+    isLoading: isAetherSearchBotAnalyticsLoading,
+    error: aethersearchBotAnalyticsError,
+  } = useAetherSearchBotAnalytics(timeRange);
 
   let chart;
-  if (isOnyxBotAnalyticsLoading) {
+  if (isAetherSearchBotAnalyticsLoading) {
     chart = (
       <div className="h-80 flex flex-col">
         <ThreeDotsLoader />
       </div>
     );
   } else if (
-    !onyxBotAnalyticsData ||
-    onyxBotAnalyticsData[0] == undefined ||
-    onyxBotAnalyticsError
+    !aethersearchBotAnalyticsData ||
+    aethersearchBotAnalyticsData[0] == undefined ||
+    aethersearchBotAnalyticsError
   ) {
     chart = (
       <div className="h-80 text-red-600 text-bold flex flex-col">
@@ -36,13 +36,13 @@ export function OnyxBotChart({
     );
   } else {
     const initialDate =
-      timeRange.from || new Date(onyxBotAnalyticsData[0].date);
+      timeRange.from || new Date(aethersearchBotAnalyticsData[0].date);
     const dateRange = getDatesList(initialDate);
 
-    const dateToOnyxBotAnalytics = new Map(
-      onyxBotAnalyticsData.map((onyxBotAnalyticsEntry) => [
-        onyxBotAnalyticsEntry.date,
-        onyxBotAnalyticsEntry,
+    const dateToAetherSearchBotAnalytics = new Map(
+      aethersearchBotAnalyticsData.map((aethersearchBotAnalyticsEntry) => [
+        aethersearchBotAnalyticsEntry.date,
+        aethersearchBotAnalyticsEntry,
       ])
     );
 
@@ -50,12 +50,12 @@ export function OnyxBotChart({
       <AreaChartDisplay
         className="mt-4"
         data={dateRange.map((dateStr) => {
-          const onyxBotAnalyticsForDate = dateToOnyxBotAnalytics.get(dateStr);
+          const aethersearchBotAnalyticsForDate = dateToAetherSearchBotAnalytics.get(dateStr);
           return {
             Day: dateStr,
-            "Total Queries": onyxBotAnalyticsForDate?.total_queries || 0,
+            "Total Queries": aethersearchBotAnalyticsForDate?.total_queries || 0,
             "Automatically Resolved":
-              onyxBotAnalyticsForDate?.auto_resolved || 0,
+              aethersearchBotAnalyticsForDate?.auto_resolved || 0,
           };
         })}
         categories={["Total Queries", "Automatically Resolved"]}

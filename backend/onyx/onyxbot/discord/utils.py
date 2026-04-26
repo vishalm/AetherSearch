@@ -1,10 +1,10 @@
-from onyx.configs.app_configs import AUTH_TYPE
-from onyx.configs.app_configs import DISCORD_BOT_TOKEN
-from onyx.configs.constants import AuthType
-from onyx.db.discord_bot import get_discord_bot_config
-from onyx.db.engine.sql_engine import get_session_with_tenant
-from onyx.utils.logger import setup_logger
-from onyx.utils.sensitive import SensitiveValue
+from aethersearch.configs.app_configs import AUTH_TYPE
+from aethersearch.configs.app_configs import DISCORD_BOT_TOKEN
+from aethersearch.configs.constants import AuthType
+from aethersearch.db.discord_bot import get_discord_bot_config
+from aethersearch.db.engine.sql_engine import get_session_with_tenant
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.sensitive import SensitiveValue
 from shared_configs.configs import POSTGRES_DEFAULT_SCHEMA
 
 logger = setup_logger()

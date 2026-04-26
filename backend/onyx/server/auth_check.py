@@ -4,14 +4,14 @@ from fastapi import FastAPI
 from fastapi.dependencies.models import Dependant
 from starlette.routing import BaseRoute
 
-from onyx.auth.users import current_chat_accessible_user
-from onyx.auth.users import current_curator_or_admin_user
-from onyx.auth.users import current_limited_user
-from onyx.auth.users import current_user
-from onyx.auth.users import current_user_from_websocket
-from onyx.auth.users import current_user_with_expired_token
-from onyx.configs.app_configs import APP_API_PREFIX
-from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
+from aethersearch.auth.users import current_chat_accessible_user
+from aethersearch.auth.users import current_curator_or_admin_user
+from aethersearch.auth.users import current_limited_user
+from aethersearch.auth.users import current_user
+from aethersearch.auth.users import current_user_from_websocket
+from aethersearch.auth.users import current_user_with_expired_token
+from aethersearch.configs.app_configs import APP_API_PREFIX
+from aethersearch.utils.variable_functionality import fetch_ee_implementation_or_noop
 
 PUBLIC_ENDPOINT_SPECS = [
     # built-in documentation functions
@@ -26,9 +26,9 @@ PUBLIC_ENDPOINT_SPECS = [
     # just returns auth type, needs to be accessible before the user is logged
     # in to determine what flow to give the user
     ("/auth/type", {"GET"}),
-    # just gets the version of Onyx (e.g. 0.3.11)
+    # just gets the version of AetherSearch (e.g. 0.3.11)
     ("/version", {"GET"}),
-    # Gets stable and beta versions for Onyx docker images
+    # Gets stable and beta versions for AetherSearch docker images
     ("/versions", {"GET"}),
     # stuff related to basic auth
     ("/auth/refresh", {"POST"}),
@@ -108,13 +108,13 @@ def check_router_auth(
     """
 
     control_plane_dep = fetch_ee_implementation_or_noop(
-        "onyx.server.tenants.access", "control_plane_dep"
+        "aethersearch.server.tenants.access", "control_plane_dep"
     )
     current_cloud_superuser = fetch_ee_implementation_or_noop(
-        "onyx.auth.users", "current_cloud_superuser"
+        "aethersearch.auth.users", "current_cloud_superuser"
     )
     verify_scim_token = fetch_ee_implementation_or_noop(
-        "onyx.server.scim.auth", "verify_scim_token"
+        "aethersearch.server.scim.auth", "verify_scim_token"
     )
 
     for route in application.routes:

@@ -20,7 +20,7 @@ from typing import Any
 from typing import Dict
 from typing import List
 
-from onyx.configs.app_configs import BRAINTRUST_API_KEY
+from aethersearch.configs.app_configs import BRAINTRUST_API_KEY
 
 try:
     from braintrust import init_dataset
@@ -163,7 +163,7 @@ def create_braintrust_dataset(records: List[Dict[str, Any]], dataset_name: str) 
         return
 
     # Initialize the dataset
-    dataset = init_dataset("Onyx", dataset_name, api_key=BRAINTRUST_API_KEY)
+    dataset = init_dataset("AetherSearch", dataset_name, api_key=BRAINTRUST_API_KEY)
 
     print(f"Creating Braintrust dataset with {len(records)} records...")
 
@@ -194,7 +194,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--csv-path",
-        default="/Users/richardguan/onyx/backend/onyx/evals/data/DR Master Question & Metric Sheet - Sheet1.csv",
+        default="/Users/richardguan/aethersearch/backend/aethersearch/evals/data/DR Master Question & Metric Sheet - Sheet1.csv",
         help="Path to the CSV file (default: %(default)s)",
     )
 

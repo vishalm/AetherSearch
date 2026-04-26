@@ -9,7 +9,7 @@ services:
     command: >
       /bin/sh -c "alembic upgrade head &&
       echo \"Starting AetherSearch Api Server\" &&
-      uvicorn onyx.main:app --host 0.0.0.0 --port 8080"
+      uvicorn aethersearch.main:app --host 0.0.0.0 --port 8080"
     depends_on:
       - relational_db
       - index
@@ -29,7 +29,7 @@ services:
       - MODEL_SERVER_PORT=${MODEL_SERVER_PORT:-}
       - ENV_SEED_CONFIGURATION=${ENV_SEED_CONFIGURATION:-}
       - ENABLE_PAID_ENTERPRISE_EDITION_FEATURES=True
-      # TODO(Nik): https://linear.app/onyx-app/issue/ENG-1/update-test-infra-to-use-test-license
+      # TODO(Nik): https://linear.app/aethersearch-app/issue/ENG-1/update-test-infra-to-use-test-license
       - LICENSE_ENFORCEMENT_ENABLED=false
       # MinIO configuration
       - S3_ENDPOINT_URL=${S3_ENDPOINT_URL:-http://minio:9000}
@@ -67,7 +67,7 @@ services:
       - INDEXING_MODEL_SERVER_HOST=${INDEXING_MODEL_SERVER_HOST:-indexing_model_server}
       - ENV_SEED_CONFIGURATION=${ENV_SEED_CONFIGURATION:-}
       - ENABLE_PAID_ENTERPRISE_EDITION_FEATURES=True
-      # TODO(Nik): https://linear.app/onyx-app/issue/ENG-1/update-test-infra-to-use-test-license
+      # TODO(Nik): https://linear.app/aethersearch-app/issue/ENG-1/update-test-infra-to-use-test-license
       - LICENSE_ENFORCEMENT_ENABLED=false
       # MinIO configuration
       - S3_ENDPOINT_URL=${S3_ENDPOINT_URL:-http://minio:9000}

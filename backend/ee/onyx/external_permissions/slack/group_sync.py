@@ -7,14 +7,14 @@ THERE IS NO USERGROUP <-> DOCUMENT PERMISSION MAPPING
 
 from slack_sdk import WebClient
 
-from ee.onyx.db.external_perm import ExternalUserGroup
-from ee.onyx.external_permissions.slack.utils import fetch_user_id_to_email_map
-from onyx.connectors.credentials_provider import OnyxDBCredentialsProvider
-from onyx.connectors.slack.connector import SlackConnector
-from onyx.connectors.slack.utils import make_paginated_slack_api_call
-from onyx.db.models import ConnectorCredentialPair
-from onyx.redis.redis_pool import get_redis_client
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.db.external_perm import ExternalUserGroup
+from ee.aethersearch.external_permissions.slack.utils import fetch_user_id_to_email_map
+from aethersearch.connectors.credentials_provider import AetherSearchDBCredentialsProvider
+from aethersearch.connectors.slack.connector import SlackConnector
+from aethersearch.connectors.slack.utils import make_paginated_slack_api_call
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -61,7 +61,7 @@ def slack_group_sync(
     """NOTE: not used atm. All channel access is done at the
     individual user level. Leaving in for now in case we need it later."""
 
-    provider = OnyxDBCredentialsProvider(tenant_id, "slack", cc_pair.credential.id)
+    provider = AetherSearchDBCredentialsProvider(tenant_id, "slack", cc_pair.credential.id)
     r = get_redis_client(tenant_id=tenant_id)
     credential_json = (
         cc_pair.credential.credential_json.get_value(apply_mask=False)
@@ -77,7 +77,7 @@ def slack_group_sync(
 
     user_id_to_email_map = fetch_user_id_to_email_map(slack_client)
 
-    onyx_groups: list[ExternalUserGroup] = []
+    aethersearch_groups: list[ExternalUserGroup] = []
     for group_name in _get_slack_group_ids(slack_client):
         group_member_emails = _get_slack_group_members_email(
             slack_client=slack_client,
@@ -86,7 +86,7 @@ def slack_group_sync(
         )
         if not group_member_emails:
             continue
-        onyx_groups.append(
+        aethersearch_groups.append(
             ExternalUserGroup(id=group_name, user_emails=group_member_emails)
         )
-    return onyx_groups
+    return aethersearch_groups

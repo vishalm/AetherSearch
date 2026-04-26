@@ -11,13 +11,13 @@ from sqlalchemy import or_
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from onyx.configs.constants import MessageType
-from onyx.db.models import ChatMessage
-from onyx.db.models import ChatMessageFeedback
-from onyx.db.models import ChatSession
-from onyx.db.models import Persona
-from onyx.db.models import User
-from onyx.db.models import UserRole
+from aethersearch.configs.constants import MessageType
+from aethersearch.db.models import ChatMessage
+from aethersearch.db.models import ChatMessageFeedback
+from aethersearch.db.models import ChatSession
+from aethersearch.db.models import Persona
+from aethersearch.db.models import User
+from aethersearch.db.models import UserRole
 
 
 def fetch_query_analytics(
@@ -95,18 +95,18 @@ def fetch_per_user_query_analytics(
     return db_session.execute(stmt).all()  # ty: ignore[invalid-return-type]
 
 
-def fetch_onyxbot_analytics(
+def fetch_aethersearchbot_analytics(
     start: datetime.datetime,
     end: datetime.datetime,
     db_session: Session,
 ) -> Sequence[tuple[int, int, datetime.date]]:
     """Gets the:
     Date of each set of aggregated statistics
-    Number of OnyxBot Queries (Chat Sessions)
+    Number of AetherSearchBot Queries (Chat Sessions)
     Number of instances of Negative feedback OR Needing additional help
         (only counting the last feedback)
     """
-    # Get every chat session in the time range which is a Onyxbot flow
+    # Get every chat session in the time range which is a AetherSearchbot flow
     # along with the first Assistant message which is the response to the user question.
     # Generally there should not be more than one AI message per chat session of this type
     subquery_first_ai_response = (
@@ -118,7 +118,7 @@ def fetch_onyxbot_analytics(
         .where(
             ChatSession.time_created >= start,
             ChatSession.time_created <= end,
-            ChatSession.onyxbot_flow.is_(True),
+            ChatSession.aethersearchbot_flow.is_(True),
         )
         .where(
             ChatMessage.message_type == MessageType.ASSISTANT,
@@ -142,7 +142,7 @@ def fetch_onyxbot_analytics(
         db_session.query(
             func.count(ChatSession.id).label("total_sessions"),
             # Need to explicitly specify this as False to handle the NULL case so the cases without
-            # feedback aren't counted against Onyxbot
+            # feedback aren't counted against AetherSearchbot
             func.sum(
                 case(
                     (
@@ -162,7 +162,7 @@ def fetch_onyxbot_analytics(
             ChatSession.id == subquery_first_ai_response.c.chat_session_id,
         )
         # Combine the chat sessions with latest feedback to get the latest feedback for the first AI
-        # message of the chat session where the chat session is Onyxbot type and within the time
+        # message of the chat session where the chat session is AetherSearchbot type and within the time
         # range specified. Left/outer join used here to ensure that if no feedback, a null is used
         # for the feedback id
         .outerjoin(

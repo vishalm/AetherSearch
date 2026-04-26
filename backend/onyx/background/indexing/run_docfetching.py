@@ -9,74 +9,74 @@ import sentry_sdk
 from celery import Celery
 from sqlalchemy.orm import Session
 
-from onyx.access.access import source_should_fetch_permissions_during_indexing
-from onyx.background.indexing.checkpointing_utils import check_checkpoint_size
-from onyx.background.indexing.checkpointing_utils import get_latest_valid_checkpoint
-from onyx.background.indexing.checkpointing_utils import save_checkpoint
-from onyx.background.indexing.memory_tracer import MemoryTracer
-from onyx.configs.app_configs import INDEX_BATCH_SIZE
-from onyx.configs.app_configs import INDEXING_SIZE_WARNING_THRESHOLD
-from onyx.configs.app_configs import INDEXING_TRACER_INTERVAL
-from onyx.configs.app_configs import INTEGRATION_TESTS_MODE
-from onyx.configs.app_configs import LEAVE_CONNECTOR_ACTIVE_ON_INITIALIZATION_FAILURE
-from onyx.configs.app_configs import MAX_FILE_SIZE_BYTES
-from onyx.configs.app_configs import POLL_CONNECTOR_OFFSET
-from onyx.configs.constants import OnyxCeleryPriority
-from onyx.configs.constants import OnyxCeleryQueues
-from onyx.configs.constants import OnyxCeleryTask
-from onyx.connectors.connector_runner import ConnectorRunner
-from onyx.connectors.exceptions import ConnectorValidationError
-from onyx.connectors.exceptions import UnexpectedValidationError
-from onyx.connectors.factory import instantiate_connector
-from onyx.connectors.interfaces import CheckpointedConnector
-from onyx.connectors.models import ConnectorFailure
-from onyx.connectors.models import ConnectorStopSignal
-from onyx.connectors.models import Document
-from onyx.connectors.models import IndexAttemptMetadata
-from onyx.connectors.models import TextSection
-from onyx.db.connector import mark_ccpair_with_indexing_trigger
-from onyx.db.connector_credential_pair import get_connector_credential_pair_from_id
-from onyx.db.connector_credential_pair import get_last_successful_attempt_poll_range_end
-from onyx.db.connector_credential_pair import update_connector_credential_pair
-from onyx.db.constants import CONNECTOR_VALIDATION_ERROR_MESSAGE_PREFIX
-from onyx.db.document import mark_document_as_indexed_for_cc_pair__no_commit
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.enums import AccessType
-from onyx.db.enums import ConnectorCredentialPairStatus
-from onyx.db.enums import IndexingStatus
-from onyx.db.enums import IndexModelStatus
-from onyx.db.enums import ProcessingMode
-from onyx.db.hierarchy import upsert_hierarchy_node_cc_pair_entries
-from onyx.db.hierarchy import upsert_hierarchy_nodes_batch
-from onyx.db.index_attempt import create_index_attempt_error
-from onyx.db.index_attempt import get_index_attempt
-from onyx.db.index_attempt import get_recent_completed_attempts_for_cc_pair
-from onyx.db.index_attempt import mark_attempt_canceled
-from onyx.db.index_attempt import mark_attempt_failed
-from onyx.db.index_attempt import transition_attempt_to_in_progress
-from onyx.db.indexing_coordination import IndexingCoordination
-from onyx.db.models import IndexAttempt
-from onyx.file_store.document_batch_storage import DocumentBatchStorage
-from onyx.file_store.document_batch_storage import get_document_batch_storage
-from onyx.file_store.staging import build_raw_file_callback
-from onyx.file_store.staging import RawFileCallback
-from onyx.file_store.staging import reap_prior_attempt_staged_files
-from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from onyx.indexing.indexing_pipeline import index_doc_batch_prepare
-from onyx.redis.redis_hierarchy import cache_hierarchy_nodes_batch
-from onyx.redis.redis_hierarchy import ensure_source_node_exists
-from onyx.redis.redis_hierarchy import get_node_id_from_raw_id
-from onyx.redis.redis_hierarchy import get_source_node_id_from_cache
-from onyx.redis.redis_hierarchy import HierarchyNodeCacheEntry
-from onyx.redis.redis_pool import get_redis_client
-from onyx.server.features.build.indexing.persistent_document_writer import (
+from aethersearch.access.access import source_should_fetch_permissions_during_indexing
+from aethersearch.background.indexing.checkpointing_utils import check_checkpoint_size
+from aethersearch.background.indexing.checkpointing_utils import get_latest_valid_checkpoint
+from aethersearch.background.indexing.checkpointing_utils import save_checkpoint
+from aethersearch.background.indexing.memory_tracer import MemoryTracer
+from aethersearch.configs.app_configs import INDEX_BATCH_SIZE
+from aethersearch.configs.app_configs import INDEXING_SIZE_WARNING_THRESHOLD
+from aethersearch.configs.app_configs import INDEXING_TRACER_INTERVAL
+from aethersearch.configs.app_configs import INTEGRATION_TESTS_MODE
+from aethersearch.configs.app_configs import LEAVE_CONNECTOR_ACTIVE_ON_INITIALIZATION_FAILURE
+from aethersearch.configs.app_configs import MAX_FILE_SIZE_BYTES
+from aethersearch.configs.app_configs import POLL_CONNECTOR_OFFSET
+from aethersearch.configs.constants import AetherSearchCeleryPriority
+from aethersearch.configs.constants import AetherSearchCeleryQueues
+from aethersearch.configs.constants import AetherSearchCeleryTask
+from aethersearch.connectors.connector_runner import ConnectorRunner
+from aethersearch.connectors.exceptions import ConnectorValidationError
+from aethersearch.connectors.exceptions import UnexpectedValidationError
+from aethersearch.connectors.factory import instantiate_connector
+from aethersearch.connectors.interfaces import CheckpointedConnector
+from aethersearch.connectors.models import ConnectorFailure
+from aethersearch.connectors.models import ConnectorStopSignal
+from aethersearch.connectors.models import Document
+from aethersearch.connectors.models import IndexAttemptMetadata
+from aethersearch.connectors.models import TextSection
+from aethersearch.db.connector import mark_ccpair_with_indexing_trigger
+from aethersearch.db.connector_credential_pair import get_connector_credential_pair_from_id
+from aethersearch.db.connector_credential_pair import get_last_successful_attempt_poll_range_end
+from aethersearch.db.connector_credential_pair import update_connector_credential_pair
+from aethersearch.db.constants import CONNECTOR_VALIDATION_ERROR_MESSAGE_PREFIX
+from aethersearch.db.document import mark_document_as_indexed_for_cc_pair__no_commit
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.enums import AccessType
+from aethersearch.db.enums import ConnectorCredentialPairStatus
+from aethersearch.db.enums import IndexingStatus
+from aethersearch.db.enums import IndexModelStatus
+from aethersearch.db.enums import ProcessingMode
+from aethersearch.db.hierarchy import upsert_hierarchy_node_cc_pair_entries
+from aethersearch.db.hierarchy import upsert_hierarchy_nodes_batch
+from aethersearch.db.index_attempt import create_index_attempt_error
+from aethersearch.db.index_attempt import get_index_attempt
+from aethersearch.db.index_attempt import get_recent_completed_attempts_for_cc_pair
+from aethersearch.db.index_attempt import mark_attempt_canceled
+from aethersearch.db.index_attempt import mark_attempt_failed
+from aethersearch.db.index_attempt import transition_attempt_to_in_progress
+from aethersearch.db.indexing_coordination import IndexingCoordination
+from aethersearch.db.models import IndexAttempt
+from aethersearch.file_store.document_batch_storage import DocumentBatchStorage
+from aethersearch.file_store.document_batch_storage import get_document_batch_storage
+from aethersearch.file_store.staging import build_raw_file_callback
+from aethersearch.file_store.staging import RawFileCallback
+from aethersearch.file_store.staging import reap_prior_attempt_staged_files
+from aethersearch.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from aethersearch.indexing.indexing_pipeline import index_doc_batch_prepare
+from aethersearch.redis.redis_hierarchy import cache_hierarchy_nodes_batch
+from aethersearch.redis.redis_hierarchy import ensure_source_node_exists
+from aethersearch.redis.redis_hierarchy import get_node_id_from_raw_id
+from aethersearch.redis.redis_hierarchy import get_source_node_id_from_cache
+from aethersearch.redis.redis_hierarchy import HierarchyNodeCacheEntry
+from aethersearch.redis.redis_pool import get_redis_client
+from aethersearch.server.features.build.indexing.persistent_document_writer import (
     get_persistent_document_writer,
 )
-from onyx.utils.logger import setup_logger
-from onyx.utils.middleware import make_randomized_onyx_request_id
-from onyx.utils.postgres_sanitization import sanitize_document_for_postgres
-from onyx.utils.postgres_sanitization import sanitize_hierarchy_nodes_for_postgres
-from onyx.utils.variable_functionality import global_version
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.middleware import make_randomized_aethersearch_request_id
+from aethersearch.utils.postgres_sanitization import sanitize_document_for_postgres
+from aethersearch.utils.postgres_sanitization import sanitize_hierarchy_nodes_for_postgres
+from aethersearch.utils.variable_functionality import global_version
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.contextvars import INDEX_ATTEMPT_INFO_CONTEXTVAR
 
@@ -394,9 +394,9 @@ def connector_document_extraction(
         # Use higher priority for first-time indexing to ensure new connectors
         # get processed before re-indexing of existing connectors
         docprocessing_priority = (
-            OnyxCeleryPriority.MEDIUM
+            AetherSearchCeleryPriority.MEDIUM
             if has_successful_attempt
-            else OnyxCeleryPriority.HIGH
+            else AetherSearchCeleryPriority.HIGH
         )
 
         earliest_index_time = (
@@ -735,7 +735,7 @@ def connector_document_extraction(
                             attempt_id=index_attempt_id,
                             connector_id=db_connector.id,
                             credential_id=db_credential.id,
-                            request_id=make_randomized_onyx_request_id("FSI"),
+                            request_id=make_randomized_aethersearch_request_id("FSI"),
                             structured_id=f"{tenant_id}:{cc_pair_id}:{index_attempt_id}:{batch_num}",
                             batch_num=batch_num,
                         )
@@ -791,9 +791,9 @@ def connector_document_extraction(
 
                     # Queue document processing task
                     app.send_task(
-                        OnyxCeleryTask.DOCPROCESSING_TASK,
+                        AetherSearchCeleryTask.DOCPROCESSING_TASK,
                         kwargs=processing_batch_data,
-                        queue=OnyxCeleryQueues.DOCPROCESSING,
+                        queue=AetherSearchCeleryQueues.DOCPROCESSING,
                         priority=docprocessing_priority,
                     )
 
@@ -848,13 +848,13 @@ def connector_document_extraction(
             if creator_id:
                 source_value = db_connector.source.value
                 app.send_task(
-                    OnyxCeleryTask.SANDBOX_FILE_SYNC,
+                    AetherSearchCeleryTask.SANDBOX_FILE_SYNC,
                     kwargs={
                         "user_id": str(creator_id),
                         "tenant_id": tenant_id,
                         "source": source_value,
                     },
-                    queue=OnyxCeleryQueues.SANDBOX,
+                    queue=AetherSearchCeleryQueues.SANDBOX,
                 )
                 logger.info(
                     f"Triggered sandbox file sync for user {creator_id} source={source_value} after indexing complete"
@@ -962,7 +962,7 @@ def reissue_old_batches(
     tenant_id: str,
     app: Celery,
     most_recent_attempt: IndexAttempt | None,
-    priority: OnyxCeleryPriority,
+    priority: AetherSearchCeleryPriority,
 ) -> tuple[int, int]:
     # When loading from a checkpoint, we need to start new docprocessing tasks
     # tied to the new index attempt for any batches left over in the file store
@@ -982,14 +982,14 @@ def reissue_old_batches(
             raise RuntimeError(f"Batch {batch_id} is not for cc pair {cc_pair_id}")
 
         app.send_task(
-            OnyxCeleryTask.DOCPROCESSING_TASK,
+            AetherSearchCeleryTask.DOCPROCESSING_TASK,
             kwargs={
                 "index_attempt_id": index_attempt_id,
                 "cc_pair_id": cc_pair_id,
                 "tenant_id": tenant_id,
                 "batch_num": path_info.batch_num,  # use same batch num as previously
             },
-            queue=OnyxCeleryQueues.DOCPROCESSING,
+            queue=AetherSearchCeleryQueues.DOCPROCESSING,
             priority=priority,
         )
     recent_batches = most_recent_attempt.completed_batches if most_recent_attempt else 0

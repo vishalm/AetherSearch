@@ -23,7 +23,7 @@ func NewRootCommand() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "ods ",
-		Short: "Developer utilities for working on onyx.app",
+		Short: "Developer utilities for working on aethersearch.app",
 		Run:   rootCmd,
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			if opts.Debug {

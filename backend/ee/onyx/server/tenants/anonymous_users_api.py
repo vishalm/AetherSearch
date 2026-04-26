@@ -4,22 +4,22 @@ from fastapi import HTTPException
 from fastapi import Response
 from sqlalchemy.exc import IntegrityError
 
-from ee.onyx.auth.users import generate_anonymous_user_jwt_token
-from ee.onyx.server.tenants.anonymous_user_path import get_anonymous_user_path
-from ee.onyx.server.tenants.anonymous_user_path import (
+from ee.aethersearch.auth.users import generate_anonymous_user_jwt_token
+from ee.aethersearch.server.tenants.anonymous_user_path import get_anonymous_user_path
+from ee.aethersearch.server.tenants.anonymous_user_path import (
     get_tenant_id_for_anonymous_user_path,
 )
-from ee.onyx.server.tenants.anonymous_user_path import modify_anonymous_user_path
-from ee.onyx.server.tenants.anonymous_user_path import validate_anonymous_user_path
-from ee.onyx.server.tenants.models import AnonymousUserPath
-from onyx.auth.permissions import require_permission
-from onyx.auth.users import anonymous_user_enabled
-from onyx.auth.users import User
-from onyx.configs.constants import ANONYMOUS_USER_COOKIE_NAME
-from onyx.configs.constants import FASTAPI_USERS_AUTH_COOKIE_NAME
-from onyx.db.engine.sql_engine import get_session_with_shared_schema
-from onyx.db.enums import Permission
-from onyx.utils.logger import setup_logger
+from ee.aethersearch.server.tenants.anonymous_user_path import modify_anonymous_user_path
+from ee.aethersearch.server.tenants.anonymous_user_path import validate_anonymous_user_path
+from ee.aethersearch.server.tenants.models import AnonymousUserPath
+from aethersearch.auth.permissions import require_permission
+from aethersearch.auth.users import anonymous_user_enabled
+from aethersearch.auth.users import User
+from aethersearch.configs.constants import ANONYMOUS_USER_COOKIE_NAME
+from aethersearch.configs.constants import FASTAPI_USERS_AUTH_COOKIE_NAME
+from aethersearch.db.engine.sql_engine import get_session_with_shared_schema
+from aethersearch.db.enums import Permission
+from aethersearch.utils.logger import setup_logger
 from shared_configs.contextvars import get_current_tenant_id
 
 logger = setup_logger()

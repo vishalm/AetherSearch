@@ -12,7 +12,7 @@ from requests.exceptions import RequestException
 from requests.exceptions import Timeout
 from urllib3.util.retry import Retry
 
-from onyx.utils.logger import setup_logger
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 PAGE_SIZE = 100

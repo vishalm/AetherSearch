@@ -1,18 +1,18 @@
 import json
 from typing import cast
 
-from onyx.cache.interface import CacheBackend
-from onyx.db.engine.sql_engine import get_session_with_current_tenant
-from onyx.db.models import KVStore
-from onyx.key_value_store.interface import KeyValueStore
-from onyx.key_value_store.interface import KvKeyNotFoundError
-from onyx.utils.logger import setup_logger
-from onyx.utils.special_types import JSON_ro
+from aethersearch.cache.interface import CacheBackend
+from aethersearch.db.engine.sql_engine import get_session_with_current_tenant
+from aethersearch.db.models import KVStore
+from aethersearch.key_value_store.interface import KeyValueStore
+from aethersearch.key_value_store.interface import KvKeyNotFoundError
+from aethersearch.utils.logger import setup_logger
+from aethersearch.utils.special_types import JSON_ro
 
 logger = setup_logger()
 
 
-REDIS_KEY_PREFIX = "onyx_kv_store:"
+REDIS_KEY_PREFIX = "aethersearch_kv_store:"
 KV_REDIS_KEY_EXPIRATION = 60 * 60 * 24  # 1 Day
 
 
@@ -22,7 +22,7 @@ class PgRedisKVStore(KeyValueStore):
 
     def _get_cache(self) -> CacheBackend:
         if self._cache is None:
-            from onyx.cache.factory import get_cache_backend
+            from aethersearch.cache.factory import get_cache_backend
 
             self._cache = get_cache_backend()
         return self._cache

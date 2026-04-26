@@ -1,7 +1,7 @@
-from onyx.configs.app_configs import DEV_MODE
-from onyx.feature_flags.interface import FeatureFlagProvider
-from onyx.feature_flags.interface import NoOpFeatureFlagProvider
-from onyx.utils.variable_functionality import (
+from aethersearch.configs.app_configs import DEV_MODE
+from aethersearch.feature_flags.interface import FeatureFlagProvider
+from aethersearch.feature_flags.interface import NoOpFeatureFlagProvider
+from aethersearch.utils.variable_functionality import (
     fetch_versioned_implementation_with_fallback,
 )
 from shared_configs.configs import MULTI_TENANT
@@ -22,7 +22,7 @@ def get_default_feature_flag_provider() -> FeatureFlagProvider:
     """
     if MULTI_TENANT or DEV_MODE:
         return fetch_versioned_implementation_with_fallback(
-            module="onyx.feature_flags.factory",
+            module="aethersearch.feature_flags.factory",
             attribute="get_posthog_feature_flag_provider",
             fallback=lambda: NoOpFeatureFlagProvider(),
         )()

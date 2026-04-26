@@ -8,11 +8,11 @@ from office365.graph_client import GraphClient
 from office365.teams.channels.channel import Channel
 from office365.teams.channels.channel import ConversationMember
 
-from onyx.access.models import ExternalAccess
-from onyx.connectors.interfaces import SecondsSinceUnixEpoch
-from onyx.connectors.models import BasicExpertInfo
-from onyx.connectors.teams.models import Message
-from onyx.utils.logger import setup_logger
+from aethersearch.access.models import ExternalAccess
+from aethersearch.connectors.interfaces import SecondsSinceUnixEpoch
+from aethersearch.connectors.models import BasicExpertInfo
+from aethersearch.connectors.teams.models import Message
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 

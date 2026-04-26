@@ -3,10 +3,10 @@ from uuid import uuid4
 
 import requests
 
-from onyx.connectors.models import InputType
-from onyx.db.enums import AccessType
-from onyx.server.documents.models import ConnectorUpdateRequest
-from onyx.server.documents.models import DocumentSource
+from aethersearch.connectors.models import InputType
+from aethersearch.db.enums import AccessType
+from aethersearch.server.documents.models import ConnectorUpdateRequest
+from aethersearch.server.documents.models import DocumentSource
 from tests.integration.common_utils.constants import API_SERVER_URL
 from tests.integration.common_utils.test_models import DATestConnector
 from tests.integration.common_utils.test_models import DATestUser

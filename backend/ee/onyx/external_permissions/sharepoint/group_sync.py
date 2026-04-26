@@ -2,15 +2,15 @@ from collections.abc import Generator
 
 from office365.sharepoint.client_context import ClientContext
 
-from ee.onyx.db.external_perm import ExternalUserGroup
-from ee.onyx.external_permissions.sharepoint.permission_utils import (
+from ee.aethersearch.db.external_perm import ExternalUserGroup
+from ee.aethersearch.external_permissions.sharepoint.permission_utils import (
     get_sharepoint_external_groups,
 )
-from onyx.configs.app_configs import SHAREPOINT_EXHAUSTIVE_AD_ENUMERATION
-from onyx.connectors.sharepoint.connector import acquire_token_for_rest
-from onyx.connectors.sharepoint.connector import SharepointConnector
-from onyx.db.models import ConnectorCredentialPair
-from onyx.utils.logger import setup_logger
+from aethersearch.configs.app_configs import SHAREPOINT_EXHAUSTIVE_AD_ENUMERATION
+from aethersearch.connectors.sharepoint.connector import acquire_token_for_rest
+from aethersearch.connectors.sharepoint.connector import SharepointConnector
+from aethersearch.db.models import ConnectorCredentialPair
+from aethersearch.utils.logger import setup_logger
 
 logger = setup_logger()
 
