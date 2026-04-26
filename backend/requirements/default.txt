@@ -674,7 +674,7 @@ py==1.11.0
     # via retry
 py-key-value-aio==0.4.4
     # via fastmcp
-pyairtable==3.0.1
+pyairtable==3.3.0
 pyasn1==0.6.3
     # via
     #   pyasn1-modules
