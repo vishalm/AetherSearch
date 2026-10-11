@@ -683,7 +683,7 @@ pyasn1-modules==0.4.2
     # via google-auth
 pycparser==2.23 ; implementation_name != 'PyPy'
     # via cffi
-pycryptodome==3.19.1
+pycryptodome==3.24.0
 pydantic==2.11.7
     # via
     #   agent-client-protocol
