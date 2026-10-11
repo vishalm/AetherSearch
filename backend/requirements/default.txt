@@ -528,7 +528,7 @@ multidict==6.7.0
     #   yarl
 mwparserfromhell==0.7.2
     # via pywikibot
-mypy-boto3-s3==1.39.5
+mypy-boto3-s3==1.43.106
     # via boto3-stubs
 mypy-extensions==1.0.0
     # via typing-inspect
