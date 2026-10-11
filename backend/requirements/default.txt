@@ -6,7 +6,7 @@ aioboto3==15.1.0
     # via aethersearch
 aiobotocore==2.24.0
     # via aioboto3
-aiofile==3.9.0
+aiofile==3.12.3
     # via py-key-value-aio
 aiofiles==25.1.0
     # via
